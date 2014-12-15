@@ -1,0 +1,6 @@
+interface message_sender
+{
+    void send (
+        in data_t data
+    );
+};

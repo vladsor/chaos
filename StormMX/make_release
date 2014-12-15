@@ -1,0 +1,4 @@
+mkdir  Release
+make    compile_flags="-O3 -funroll-loops -fomit-frame-pointer -D__STORM_KERNEL__" \\
+          --directory=Release \\
+          --makefile=../Makefile 

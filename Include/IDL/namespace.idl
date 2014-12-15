@@ -1,0 +1,32 @@
+interface namespace
+{
+    return_t bind (
+        in  string name, 
+        in  Object handle);
+
+    return_t rebind (
+        in  string old_name, 
+        in  string new_name);
+
+    return_t resolve (
+        in  string name, 
+        out Object handle);
+
+    return_t unbind (
+        in  string name);
+
+    return_t bind_namespace (
+        in  string name, 
+        in  namespace handle);
+
+    return_t rebind_namespace (
+        in  string old_name, 
+        in  string new_name);
+
+    return_t resolve_namespace (
+        in  string name, 
+        out namespace handle);
+
+    return_t unbind_namespace (
+        in  string name);
+};

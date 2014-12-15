@@ -1,0 +1,10 @@
+interface istring
+{
+    return_t get (
+        in  string value
+    );
+
+    return_t set (
+        out string value
+    );
+};

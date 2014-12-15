@@ -1,0 +1,6 @@
+interface message_receiver
+{
+    void receive (
+        out data_t data
+    );
+};

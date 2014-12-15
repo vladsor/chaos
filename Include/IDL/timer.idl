@@ -1,0 +1,10 @@
+valuetype timer
+    supports large_integer, synchronizer
+{
+    factory init (
+        in  unsigned long period, 
+        in  unsigned long type);
+};
+
+
+

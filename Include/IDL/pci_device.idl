@@ -1,0 +1,5 @@
+interface pci_device
+{
+    get_info ();
+    set_master ();
+};

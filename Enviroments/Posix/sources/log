@@ -1,0 +1,14 @@
+pwd.c: In function `getpwuid':
+pwd.c:36: warning: unused parameter `__uid'
+pwd.c: In function `getpwnam':
+pwd.c:46: warning: unused parameter `__name'
+dirent.c: In function `opendir':
+dirent.c:10: warning: unused parameter `__name'
+dirent.c: In function `closedir':
+dirent.c:21: warning: unused parameter `__dirp'
+dirent.c: In function `readdir':
+dirent.c:34: warning: unused parameter `__dirp'
+ctype.c: In function `tolower':
+ctype.c:14: warning: unused parameter `__c'
+ctype.c: In function `toupper':
+ctype.c:23: warning: unused parameter `__c'

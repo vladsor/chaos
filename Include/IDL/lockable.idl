@@ -1,0 +1,5 @@
+interface lockable
+{
+    void lock ();
+    void unlock ();
+};

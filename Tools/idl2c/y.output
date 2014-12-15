@@ -1,0 +1,4811 @@
+   0  $accept : specification $end
+
+   1  specification : at_least_one_definition
+
+   2  at_least_one_definition : definition at_least_one_definition
+   3                          | definition
+
+   4  definition : type_dcl ';'
+   5             | const_dcl ';'
+   6             | except_dcl ';'
+   7             | interface ';'
+   8             | module ';'
+   9             | value ';'
+
+  10  module : MODULE IDENTIFIER '{' at_least_one_definition '}'
+
+  11  interface : interface_dcl
+  12            | forward_dcl
+
+  13  interface_dcl : interface_header '{' interface_body '}'
+
+  14  forward_dcl : INTERFACE IDENTIFIER
+
+  15  interface_header : INTERFACE IDENTIFIER inheritance_spec
+  16                   | INTERFACE IDENTIFIER
+
+  17  interface_body : exports
+
+  18  exports : export exports
+  19          |
+
+  20  export : type_dcl ';'
+  21         | const_dcl ';'
+  22         | except_dcl ';'
+  23         | attr_dcl ';'
+  24         | op_dcl ';'
+
+  25  inheritance_spec : ':' scoped_name extends_inheritance
+
+  26  extends_inheritance : ',' scoped_name extends_inheritance
+  27                      |
+
+  28  interface_name : scoped_name
+
+  29  scoped_name : IDENTIFIER
+  30              | SCOPE_DELIMITOR IDENTIFIER
+  31              | scoped_name SCOPE_DELIMITOR IDENTIFIER
+
+  32  value : value_dcl
+  33        | value_abs_dcl
+  34        | value_box_dcl
+  35        | value_forward_dcl
+
+  36  value_forward_dcl : ABSTRACT VALUETYPE IDENTIFIER
+  37                    | VALUETYPE IDENTIFIER
+
+  38  value_box_dcl : VALUETYPE IDENTIFIER type_spec
+
+  39  value_abs_dcl : ABSTRACT VALUETYPE IDENTIFIER value_inheritance_spec '{' exports '}'
+  40                | ABSTRACT VALUETYPE IDENTIFIER '{' exports '}'
+
+  41  value_dcl : value_header '{' value_elements '}'
+
+  42  value_header : CUSTOM VALUETYPE IDENTIFIER value_inheritance_spec
+  43               | VALUETYPE IDENTIFIER value_inheritance_spec
+  44               | CUSTOM VALUETYPE IDENTIFIER
+  45               | VALUETYPE IDENTIFIER
+
+  46  value_inheritance_spec : ':' TRANCATABLE value_name extends_value_name SUPPORTS interface_name extends_interface_name
+  47                         | ':' value_name extends_value_name SUPPORTS interface_name extends_interface_name
+  48                         | ':' TRANCATABLE value_name extends_value_name
+  49                         | ':' value_name extends_value_name
+  50                         | SUPPORTS interface_name extends_interface_name
+
+  51  extends_interface_name : ',' interface_name extends_interface_name
+  52                         |
+
+  53  extends_value_name : ',' value_name extends_value_name
+  54                     |
+
+  55  value_name : scoped_name
+
+  56  value_elements : value_element value_elements
+  57                 |
+
+  58  value_element : export
+  59                | state_member
+  60                | init_dcl
+
+  61  state_member : PUBLIC type_spec declarators ';'
+  62               | PRIVATE type_spec declarators ';'
+
+  63  init_dcl : FACTORY IDENTIFIER '(' init_param_decls ')' ';'
+  64           | FACTORY IDENTIFIER '(' ')' ';'
+
+  65  init_param_decls : init_param_decl extends_init_param_decl
+
+  66  extends_init_param_decl : ',' init_param_decl extends_init_param_decl
+  67                          |
+
+  68  init_param_decl : init_param_attribute param_type_spec simple_declarator
+
+  69  init_param_attribute : IN
+
+  70  const_dcl : CONST const_type IDENTIFIER '=' const_exp
+
+  71  const_type : integer_type
+  72             | char_type
+  73             | boolean_type
+  74             | floating_pt_type
+  75             | string_type
+  76             | scoped_name
+
+  77  const_exp : or_expr
+
+  78  or_expr : xor_expr
+  79          | or_expr '|' xor_expr
+
+  80  xor_expr : and_expr
+  81           | xor_expr '^' and_expr
+
+  82  and_expr : shift_expr
+  83           | and_expr '&' shift_expr
+
+  84  shift_expr : add_expr
+  85             | shift_expr RIGHT_SHIFT add_expr
+  86             | shift_expr LEFT_SHIFT add_expr
+
+  87  add_expr : mult_expr
+  88           | add_expr '+' mult_expr
+  89           | add_expr '-' mult_expr
+
+  90  mult_expr : unary_expr
+  91            | mult_expr '*' unary_expr
+  92            | mult_expr '/' unary_expr
+  93            | mult_expr '%' unary_expr
+
+  94  unary_expr : unary_operator primary_expr
+  95             | primary_expr
+
+  96  unary_operator : '-'
+  97                 | '+'
+  98                 | '~'
+
+  99  primary_expr : scoped_name
+ 100               | literal
+ 101               | '(' const_exp ')'
+
+ 102  literal : INTEGER_LITERAL
+ 103          | STRING_LITERAL
+ 104          | CHARACTER_LITERAL
+ 105          | FLOATING_PT_LITERAL
+ 106          | boolean_literal
+
+ 107  boolean_literal : TRUE_TOKEN
+ 108                  | FALSE_TOKEN
+
+ 109  positive_int_const : const_exp
+
+ 110  type_dcl : TYPEDEF type_declarator
+ 111           | struct_type
+ 112           | union_type
+ 113           | enum_type
+
+ 114  type_declarator : type_spec declarators
+
+ 115  type_spec : simple_type_spec
+ 116            | constr_type_spec
+
+ 117  simple_type_spec : base_type_spec
+ 118                   | template_type_spec
+ 119                   | scoped_name
+
+ 120  base_type_spec : floating_pt_type
+ 121                 | integer_type
+ 122                 | char_type
+ 123                 | wide_char_type
+ 124                 | boolean_type
+ 125                 | octet_type
+ 126                 | any_type
+ 127                 | object_type
+
+ 128  template_type_spec : sequence_type
+ 129                     | string_type
+
+ 130  constr_type_spec : struct_type
+ 131                   | union_type
+ 132                   | enum_type
+
+ 133  declarators : declarator extend_declarators
+
+ 134  extend_declarators : ',' declarator extend_declarators
+ 135                     |
+
+ 136  declarator : simple_declarator
+ 137             | complex_declarator
+
+ 138  simple_declarator : IDENTIFIER
+
+ 139  complex_declarator : array_declarator
+
+ 140  floating_pt_type : FLOAT
+ 141                   | DOUBLE
+
+ 142  integer_type : signed_int
+ 143               | unsigned_int
+
+ 144  signed_int : signed_long_long_int
+ 145             | signed_long_int
+ 146             | signed_short_int
+
+ 147  signed_long_long_int : LONG LONG
+
+ 148  signed_long_int : LONG
+
+ 149  signed_short_int : SHORT
+
+ 150  unsigned_int : unsigned_long_long_int
+ 151               | unsigned_long_int
+ 152               | unsigned_short_int
+
+ 153  unsigned_long_long_int : UNSIGNED LONG LONG
+
+ 154  unsigned_long_int : UNSIGNED LONG
+
+ 155  unsigned_short_int : UNSIGNED SHORT
+
+ 156  char_type : CHAR
+
+ 157  wide_char_type : WCHAR
+
+ 158  boolean_type : BOOLEAN
+
+ 159  octet_type : OCTET
+
+ 160  any_type : ANY
+
+ 161  object_type : OBJECT
+
+ 162  struct_type : STRUCT IDENTIFIER '{' member_list '}'
+
+ 163  member_list : at_least_one_member
+
+ 164  at_least_one_member : member members
+
+ 165  members : member members
+ 166          |
+
+ 167  member : type_spec declarators ';'
+
+ 168  union_type : UNION IDENTIFIER SWITCH '(' switch_type_spec ')' '{' switch_body '}'
+
+ 169  switch_type_spec : integer_type
+ 170                   | char_type
+ 171                   | boolean_type
+ 172                   | enum_type
+ 173                   | scoped_name
+
+ 174  switch_body : at_least_one_case
+
+ 175  at_least_one_case : case at_least_one_case
+ 176                    | case
+
+ 177  case : at_least_one_case_label element_spec ';'
+
+ 178  at_least_one_case_label : case_label at_least_one_case_label
+ 179                          | case_label
+
+ 180  case_label : CASE const_exp ':'
+ 181             | DEFAULT ':'
+
+ 182  element_spec : type_spec declarator
+
+ 183  enum_type : ENUM IDENTIFIER '{' enumerator extends_enum '}'
+
+ 184  extends_enum : ',' enumerator extends_enum
+ 185               |
+
+ 186  enumerator : IDENTIFIER
+
+ 187  sequence_type : SEQUENCE '<' simple_type_spec ',' positive_int_const '>'
+ 188                | SEQUENCE '<' simple_type_spec '>'
+
+ 189  string_type : STRING '<' positive_int_const '>'
+ 190              | STRING
+
+ 191  array_declarator : IDENTIFIER at_least_one_fixed_array_size
+
+ 192  at_least_one_fixed_array_size : fixed_array_size at_least_one_fixed_array_size
+ 193                                | fixed_array_size
+
+ 194  fixed_array_size : '[' positive_int_const ']'
+
+ 195  attr_dcl : ATTRIBUTE param_type_spec simple_declarator extends_attr
+ 196           | READONLY ATTRIBUTE param_type_spec simple_declarator extends_attr
+
+ 197  extends_attr : ',' simple_declarator extends_attr
+ 198               |
+
+ 199  except_dcl : EXCEPTION IDENTIFIER '{' members '}'
+
+ 200  op_dcl : op_type_spec IDENTIFIER parameter_dcls
+ 201         | op_attribute op_type_spec IDENTIFIER parameter_dcls
+ 202         | op_type_spec IDENTIFIER parameter_dcls raises_expr
+ 203         | op_attribute op_type_spec IDENTIFIER parameter_dcls raises_expr
+ 204         | op_type_spec IDENTIFIER parameter_dcls raises_expr context_expr
+ 205         | op_attribute op_type_spec IDENTIFIER parameter_dcls raises_expr context_expr
+
+ 206  op_attribute : ONEWAY
+
+ 207  op_type_spec : param_type_spec
+ 208               | VOID
+
+ 209  parameter_dcls : '(' param_dcl extends_param ')'
+ 210                 | '(' ')'
+
+ 211  extends_param : ',' param_dcl extends_param
+ 212                |
+
+ 213  param_dcl : param_attribute param_type_spec simple_declarator
+
+ 214  param_attribute : IN
+ 215                  | OUT
+ 216                  | INOUT
+
+ 217  raises_expr : RAISES '(' scoped_name extends_raises ')'
+
+ 218  extends_raises : ',' scoped_name
+ 219                 |
+
+ 220  context_expr : CONTEXT '(' STRING_LITERAL extends_context ')'
+
+ 221  extends_context : ',' STRING_LITERAL extends_context
+ 222                  |
+
+ 223  param_type_spec : base_type_spec
+ 224                  | string_type
+ 225                  | scoped_name
+
+state 0
+	$accept : . specification $end  (0)
+
+	ABSTRACT  shift 1
+	CONST  shift 2
+	CUSTOM  shift 3
+	ENUM  shift 4
+	EXCEPTION  shift 5
+	INTERFACE  shift 6
+	MODULE  shift 7
+	STRUCT  shift 8
+	TYPEDEF  shift 9
+	UNION  shift 10
+	VALUETYPE  shift 11
+	.  error
+
+	specification  goto 12
+	at_least_one_definition  goto 13
+	definition  goto 14
+	type_dcl  goto 15
+	const_dcl  goto 16
+	except_dcl  goto 17
+	interface  goto 18
+	module  goto 19
+	value  goto 20
+	interface_dcl  goto 21
+	forward_dcl  goto 22
+	interface_header  goto 23
+	value_dcl  goto 24
+	value_abs_dcl  goto 25
+	value_box_dcl  goto 26
+	value_forward_dcl  goto 27
+	value_header  goto 28
+	struct_type  goto 29
+	union_type  goto 30
+	enum_type  goto 31
+
+
+state 1
+	value_forward_dcl : ABSTRACT . VALUETYPE IDENTIFIER  (36)
+	value_abs_dcl : ABSTRACT . VALUETYPE IDENTIFIER value_inheritance_spec '{' exports '}'  (39)
+	value_abs_dcl : ABSTRACT . VALUETYPE IDENTIFIER '{' exports '}'  (40)
+
+	VALUETYPE  shift 32
+	.  error
+
+
+state 2
+	const_dcl : CONST . const_type IDENTIFIER '=' const_exp  (70)
+
+	BOOLEAN  shift 33
+	CHAR  shift 34
+	DOUBLE  shift 35
+	FLOAT  shift 36
+	LONG  shift 37
+	SHORT  shift 38
+	STRING  shift 39
+	UNSIGNED  shift 40
+	SCOPE_DELIMITOR  shift 41
+	IDENTIFIER  shift 42
+	.  error
+
+	floating_pt_type  goto 43
+	integer_type  goto 44
+	signed_int  goto 45
+	signed_long_long_int  goto 46
+	signed_long_int  goto 47
+	signed_short_int  goto 48
+	unsigned_int  goto 49
+	unsigned_long_long_int  goto 50
+	unsigned_long_int  goto 51
+	unsigned_short_int  goto 52
+	char_type  goto 53
+	boolean_type  goto 54
+	string_type  goto 55
+	scoped_name  goto 56
+	const_type  goto 57
+
+
+state 3
+	value_header : CUSTOM . VALUETYPE IDENTIFIER value_inheritance_spec  (42)
+	value_header : CUSTOM . VALUETYPE IDENTIFIER  (44)
+
+	VALUETYPE  shift 58
+	.  error
+
+
+state 4
+	enum_type : ENUM . IDENTIFIER '{' enumerator extends_enum '}'  (183)
+
+	IDENTIFIER  shift 59
+	.  error
+
+
+state 5
+	except_dcl : EXCEPTION . IDENTIFIER '{' members '}'  (199)
+
+	IDENTIFIER  shift 60
+	.  error
+
+
+state 6
+	forward_dcl : INTERFACE . IDENTIFIER  (14)
+	interface_header : INTERFACE . IDENTIFIER inheritance_spec  (15)
+	interface_header : INTERFACE . IDENTIFIER  (16)
+
+	IDENTIFIER  shift 61
+	.  error
+
+
+state 7
+	module : MODULE . IDENTIFIER '{' at_least_one_definition '}'  (10)
+
+	IDENTIFIER  shift 62
+	.  error
+
+
+state 8
+	struct_type : STRUCT . IDENTIFIER '{' member_list '}'  (162)
+
+	IDENTIFIER  shift 63
+	.  error
+
+
+state 9
+	type_dcl : TYPEDEF . type_declarator  (110)
+
+	ANY  shift 64
+	BOOLEAN  shift 33
+	CHAR  shift 34
+	DOUBLE  shift 35
+	ENUM  shift 4
+	FLOAT  shift 36
+	LONG  shift 37
+	OBJECT  shift 65
+	OCTET  shift 66
+	SEQUENCE  shift 67
+	SHORT  shift 38
+	STRING  shift 39
+	STRUCT  shift 8
+	UNION  shift 10
+	UNSIGNED  shift 40
+	WCHAR  shift 68
+	SCOPE_DELIMITOR  shift 41
+	IDENTIFIER  shift 42
+	.  error
+
+	type_spec  goto 69
+	base_type_spec  goto 70
+	simple_type_spec  goto 71
+	template_type_spec  goto 72
+	constr_type_spec  goto 73
+	floating_pt_type  goto 74
+	integer_type  goto 75
+	signed_int  goto 45
+	signed_long_long_int  goto 46
+	signed_long_int  goto 47
+	signed_short_int  goto 48
+	unsigned_int  goto 49
+	unsigned_long_long_int  goto 50
+	unsigned_long_int  goto 51
+	unsigned_short_int  goto 52
+	char_type  goto 76
+	wide_char_type  goto 77
+	boolean_type  goto 78
+	octet_type  goto 79
+	any_type  goto 80
+	sequence_type  goto 81
+	string_type  goto 82
+	scoped_name  goto 83
+	object_type  goto 84
+	type_declarator  goto 85
+	struct_type  goto 86
+	union_type  goto 87
+	enum_type  goto 88
+
+
+state 10
+	union_type : UNION . IDENTIFIER SWITCH '(' switch_type_spec ')' '{' switch_body '}'  (168)
+
+	IDENTIFIER  shift 89
+	.  error
+
+
+state 11
+	value_forward_dcl : VALUETYPE . IDENTIFIER  (37)
+	value_box_dcl : VALUETYPE . IDENTIFIER type_spec  (38)
+	value_header : VALUETYPE . IDENTIFIER value_inheritance_spec  (43)
+	value_header : VALUETYPE . IDENTIFIER  (45)
+
+	IDENTIFIER  shift 90
+	.  error
+
+
+state 12
+	$accept : specification . $end  (0)
+
+	$end  accept
+
+
+state 13
+	specification : at_least_one_definition .  (1)
+
+	.  reduce 1
+
+
+state 14
+	at_least_one_definition : definition . at_least_one_definition  (2)
+	at_least_one_definition : definition .  (3)
+
+	ABSTRACT  shift 1
+	CONST  shift 2
+	CUSTOM  shift 3
+	ENUM  shift 4
+	EXCEPTION  shift 5
+	INTERFACE  shift 6
+	MODULE  shift 7
+	STRUCT  shift 8
+	TYPEDEF  shift 9
+	UNION  shift 10
+	VALUETYPE  shift 11
+	$end  reduce 3
+	'}'  reduce 3
+
+	at_least_one_definition  goto 91
+	definition  goto 14
+	type_dcl  goto 15
+	const_dcl  goto 16
+	except_dcl  goto 17
+	interface  goto 18
+	module  goto 19
+	value  goto 20
+	interface_dcl  goto 21
+	forward_dcl  goto 22
+	interface_header  goto 23
+	value_dcl  goto 24
+	value_abs_dcl  goto 25
+	value_box_dcl  goto 26
+	value_forward_dcl  goto 27
+	value_header  goto 28
+	struct_type  goto 29
+	union_type  goto 30
+	enum_type  goto 31
+
+
+state 15
+	definition : type_dcl . ';'  (4)
+
+	';'  shift 92
+	.  error
+
+
+state 16
+	definition : const_dcl . ';'  (5)
+
+	';'  shift 93
+	.  error
+
+
+state 17
+	definition : except_dcl . ';'  (6)
+
+	';'  shift 94
+	.  error
+
+
+state 18
+	definition : interface . ';'  (7)
+
+	';'  shift 95
+	.  error
+
+
+state 19
+	definition : module . ';'  (8)
+
+	';'  shift 96
+	.  error
+
+
+state 20
+	definition : value . ';'  (9)
+
+	';'  shift 97
+	.  error
+
+
+state 21
+	interface : interface_dcl .  (11)
+
+	.  reduce 11
+
+
+state 22
+	interface : forward_dcl .  (12)
+
+	.  reduce 12
+
+
+state 23
+	interface_dcl : interface_header . '{' interface_body '}'  (13)
+
+	'{'  shift 98
+	.  error
+
+
+state 24
+	value : value_dcl .  (32)
+
+	.  reduce 32
+
+
+state 25
+	value : value_abs_dcl .  (33)
+
+	.  reduce 33
+
+
+state 26
+	value : value_box_dcl .  (34)
+
+	.  reduce 34
+
+
+state 27
+	value : value_forward_dcl .  (35)
+
+	.  reduce 35
+
+
+state 28
+	value_dcl : value_header . '{' value_elements '}'  (41)
+
+	'{'  shift 99
+	.  error
+
+
+state 29
+	type_dcl : struct_type .  (111)
+
+	.  reduce 111
+
+
+state 30
+	type_dcl : union_type .  (112)
+
+	.  reduce 112
+
+
+state 31
+	type_dcl : enum_type .  (113)
+
+	.  reduce 113
+
+
+state 32
+	value_forward_dcl : ABSTRACT VALUETYPE . IDENTIFIER  (36)
+	value_abs_dcl : ABSTRACT VALUETYPE . IDENTIFIER value_inheritance_spec '{' exports '}'  (39)
+	value_abs_dcl : ABSTRACT VALUETYPE . IDENTIFIER '{' exports '}'  (40)
+
+	IDENTIFIER  shift 100
+	.  error
+
+
+state 33
+	boolean_type : BOOLEAN .  (158)
+
+	.  reduce 158
+
+
+state 34
+	char_type : CHAR .  (156)
+
+	.  reduce 156
+
+
+state 35
+	floating_pt_type : DOUBLE .  (141)
+
+	.  reduce 141
+
+
+state 36
+	floating_pt_type : FLOAT .  (140)
+
+	.  reduce 140
+
+
+state 37
+	signed_long_long_int : LONG . LONG  (147)
+	signed_long_int : LONG .  (148)
+
+	LONG  shift 101
+	IDENTIFIER  reduce 148
+	';'  reduce 148
+	','  reduce 148
+	')'  reduce 148
+	'>'  reduce 148
+
+
+state 38
+	signed_short_int : SHORT .  (149)
+
+	.  reduce 149
+
+
+state 39
+	string_type : STRING . '<' positive_int_const '>'  (189)
+	string_type : STRING .  (190)
+
+	'<'  shift 102
+	IDENTIFIER  reduce 190
+	';'  reduce 190
+	','  reduce 190
+	'>'  reduce 190
+
+
+state 40
+	unsigned_long_long_int : UNSIGNED . LONG LONG  (153)
+	unsigned_long_int : UNSIGNED . LONG  (154)
+	unsigned_short_int : UNSIGNED . SHORT  (155)
+
+	LONG  shift 103
+	SHORT  shift 104
+	.  error
+
+
+state 41
+	scoped_name : SCOPE_DELIMITOR . IDENTIFIER  (30)
+
+	IDENTIFIER  shift 105
+	.  error
+
+
+state 42
+	scoped_name : IDENTIFIER .  (29)
+
+	.  reduce 29
+
+
+state 43
+	const_type : floating_pt_type .  (74)
+
+	.  reduce 74
+
+
+state 44
+	const_type : integer_type .  (71)
+
+	.  reduce 71
+
+
+state 45
+	integer_type : signed_int .  (142)
+
+	.  reduce 142
+
+
+state 46
+	signed_int : signed_long_long_int .  (144)
+
+	.  reduce 144
+
+
+state 47
+	signed_int : signed_long_int .  (145)
+
+	.  reduce 145
+
+
+state 48
+	signed_int : signed_short_int .  (146)
+
+	.  reduce 146
+
+
+state 49
+	integer_type : unsigned_int .  (143)
+
+	.  reduce 143
+
+
+state 50
+	unsigned_int : unsigned_long_long_int .  (150)
+
+	.  reduce 150
+
+
+state 51
+	unsigned_int : unsigned_long_int .  (151)
+
+	.  reduce 151
+
+
+state 52
+	unsigned_int : unsigned_short_int .  (152)
+
+	.  reduce 152
+
+
+state 53
+	const_type : char_type .  (72)
+
+	.  reduce 72
+
+
+state 54
+	const_type : boolean_type .  (73)
+
+	.  reduce 73
+
+
+state 55
+	const_type : string_type .  (75)
+
+	.  reduce 75
+
+
+state 56
+	scoped_name : scoped_name . SCOPE_DELIMITOR IDENTIFIER  (31)
+	const_type : scoped_name .  (76)
+
+	SCOPE_DELIMITOR  shift 106
+	IDENTIFIER  reduce 76
+
+
+state 57
+	const_dcl : CONST const_type . IDENTIFIER '=' const_exp  (70)
+
+	IDENTIFIER  shift 107
+	.  error
+
+
+state 58
+	value_header : CUSTOM VALUETYPE . IDENTIFIER value_inheritance_spec  (42)
+	value_header : CUSTOM VALUETYPE . IDENTIFIER  (44)
+
+	IDENTIFIER  shift 108
+	.  error
+
+
+state 59
+	enum_type : ENUM IDENTIFIER . '{' enumerator extends_enum '}'  (183)
+
+	'{'  shift 109
+	.  error
+
+
+state 60
+	except_dcl : EXCEPTION IDENTIFIER . '{' members '}'  (199)
+
+	'{'  shift 110
+	.  error
+
+
+state 61
+	forward_dcl : INTERFACE IDENTIFIER .  (14)
+	interface_header : INTERFACE IDENTIFIER . inheritance_spec  (15)
+	interface_header : INTERFACE IDENTIFIER .  (16)
+
+	':'  shift 111
+	';'  reduce 14
+	'{'  reduce 16
+
+	inheritance_spec  goto 112
+
+
+state 62
+	module : MODULE IDENTIFIER . '{' at_least_one_definition '}'  (10)
+
+	'{'  shift 113
+	.  error
+
+
+state 63
+	struct_type : STRUCT IDENTIFIER . '{' member_list '}'  (162)
+
+	'{'  shift 114
+	.  error
+
+
+state 64
+	any_type : ANY .  (160)
+
+	.  reduce 160
+
+
+state 65
+	object_type : OBJECT .  (161)
+
+	.  reduce 161
+
+
+state 66
+	octet_type : OCTET .  (159)
+
+	.  reduce 159
+
+
+state 67
+	sequence_type : SEQUENCE . '<' simple_type_spec ',' positive_int_const '>'  (187)
+	sequence_type : SEQUENCE . '<' simple_type_spec '>'  (188)
+
+	'<'  shift 115
+	.  error
+
+
+state 68
+	wide_char_type : WCHAR .  (157)
+
+	.  reduce 157
+
+
+state 69
+	type_declarator : type_spec . declarators  (114)
+
+	IDENTIFIER  shift 116
+	.  error
+
+	simple_declarator  goto 117
+	declarators  goto 118
+	declarator  goto 119
+	complex_declarator  goto 120
+	array_declarator  goto 121
+
+
+state 70
+	simple_type_spec : base_type_spec .  (117)
+
+	.  reduce 117
+
+
+state 71
+	type_spec : simple_type_spec .  (115)
+
+	.  reduce 115
+
+
+state 72
+	simple_type_spec : template_type_spec .  (118)
+
+	.  reduce 118
+
+
+state 73
+	type_spec : constr_type_spec .  (116)
+
+	.  reduce 116
+
+
+state 74
+	base_type_spec : floating_pt_type .  (120)
+
+	.  reduce 120
+
+
+state 75
+	base_type_spec : integer_type .  (121)
+
+	.  reduce 121
+
+
+state 76
+	base_type_spec : char_type .  (122)
+
+	.  reduce 122
+
+
+state 77
+	base_type_spec : wide_char_type .  (123)
+
+	.  reduce 123
+
+
+state 78
+	base_type_spec : boolean_type .  (124)
+
+	.  reduce 124
+
+
+state 79
+	base_type_spec : octet_type .  (125)
+
+	.  reduce 125
+
+
+state 80
+	base_type_spec : any_type .  (126)
+
+	.  reduce 126
+
+
+state 81
+	template_type_spec : sequence_type .  (128)
+
+	.  reduce 128
+
+
+state 82
+	template_type_spec : string_type .  (129)
+
+	.  reduce 129
+
+
+state 83
+	scoped_name : scoped_name . SCOPE_DELIMITOR IDENTIFIER  (31)
+	simple_type_spec : scoped_name .  (119)
+
+	SCOPE_DELIMITOR  shift 106
+	IDENTIFIER  reduce 119
+	';'  reduce 119
+	','  reduce 119
+	'>'  reduce 119
+
+
+state 84
+	base_type_spec : object_type .  (127)
+
+	.  reduce 127
+
+
+state 85
+	type_dcl : TYPEDEF type_declarator .  (110)
+
+	.  reduce 110
+
+
+state 86
+	constr_type_spec : struct_type .  (130)
+
+	.  reduce 130
+
+
+state 87
+	constr_type_spec : union_type .  (131)
+
+	.  reduce 131
+
+
+state 88
+	constr_type_spec : enum_type .  (132)
+
+	.  reduce 132
+
+
+state 89
+	union_type : UNION IDENTIFIER . SWITCH '(' switch_type_spec ')' '{' switch_body '}'  (168)
+
+	SWITCH  shift 122
+	.  error
+
+
+state 90
+	value_forward_dcl : VALUETYPE IDENTIFIER .  (37)
+	value_box_dcl : VALUETYPE IDENTIFIER . type_spec  (38)
+	value_header : VALUETYPE IDENTIFIER . value_inheritance_spec  (43)
+	value_header : VALUETYPE IDENTIFIER .  (45)
+
+	ANY  shift 64
+	BOOLEAN  shift 33
+	CHAR  shift 34
+	DOUBLE  shift 35
+	ENUM  shift 4
+	FLOAT  shift 36
+	LONG  shift 37
+	OBJECT  shift 65
+	OCTET  shift 66
+	SEQUENCE  shift 67
+	SHORT  shift 38
+	STRING  shift 39
+	STRUCT  shift 8
+	SUPPORTS  shift 123
+	UNION  shift 10
+	UNSIGNED  shift 40
+	WCHAR  shift 68
+	SCOPE_DELIMITOR  shift 41
+	IDENTIFIER  shift 42
+	':'  shift 124
+	';'  reduce 37
+	'{'  reduce 45
+
+	type_spec  goto 125
+	base_type_spec  goto 70
+	simple_type_spec  goto 71
+	template_type_spec  goto 72
+	constr_type_spec  goto 73
+	floating_pt_type  goto 74
+	integer_type  goto 75
+	signed_int  goto 45
+	signed_long_long_int  goto 46
+	signed_long_int  goto 47
+	signed_short_int  goto 48
+	unsigned_int  goto 49
+	unsigned_long_long_int  goto 50
+	unsigned_long_int  goto 51
+	unsigned_short_int  goto 52
+	char_type  goto 76
+	wide_char_type  goto 77
+	boolean_type  goto 78
+	octet_type  goto 79
+	any_type  goto 80
+	sequence_type  goto 81
+	string_type  goto 82
+	scoped_name  goto 83
+	object_type  goto 84
+	value_inheritance_spec  goto 126
+	struct_type  goto 86
+	union_type  goto 87
+	enum_type  goto 88
+
+
+state 91
+	at_least_one_definition : definition at_least_one_definition .  (2)
+
+	.  reduce 2
+
+
+state 92
+	definition : type_dcl ';' .  (4)
+
+	.  reduce 4
+
+
+state 93
+	definition : const_dcl ';' .  (5)
+
+	.  reduce 5
+
+
+state 94
+	definition : except_dcl ';' .  (6)
+
+	.  reduce 6
+
+
+state 95
+	definition : interface ';' .  (7)
+
+	.  reduce 7
+
+
+state 96
+	definition : module ';' .  (8)
+
+	.  reduce 8
+
+
+state 97
+	definition : value ';' .  (9)
+
+	.  reduce 9
+
+
+state 98
+	interface_dcl : interface_header '{' . interface_body '}'  (13)
+	exports : .  (19)
+
+	ANY  shift 64
+	ATTRIBUTE  shift 127
+	BOOLEAN  shift 33
+	CHAR  shift 34
+	CONST  shift 2
+	DOUBLE  shift 35
+	ENUM  shift 4
+	EXCEPTION  shift 5
+	FLOAT  shift 36
+	LONG  shift 37
+	OBJECT  shift 65
+	OCTET  shift 66
+	ONEWAY  shift 128
+	READONLY  shift 129
+	SHORT  shift 38
+	STRING  shift 39
+	STRUCT  shift 8
+	TYPEDEF  shift 9
+	UNION  shift 10
+	UNSIGNED  shift 40
+	VOID  shift 130
+	WCHAR  shift 68
+	SCOPE_DELIMITOR  shift 41
+	IDENTIFIER  shift 42
+	'}'  reduce 19
+
+	base_type_spec  goto 131
+	floating_pt_type  goto 74
+	integer_type  goto 75
+	signed_int  goto 45
+	signed_long_long_int  goto 46
+	signed_long_int  goto 47
+	signed_short_int  goto 48
+	unsigned_int  goto 49
+	unsigned_long_long_int  goto 50
+	unsigned_long_int  goto 51
+	unsigned_short_int  goto 52
+	char_type  goto 76
+	wide_char_type  goto 77
+	boolean_type  goto 78
+	octet_type  goto 79
+	any_type  goto 80
+	string_type  goto 132
+	scoped_name  goto 133
+	object_type  goto 84
+	op_type_spec  goto 134
+	param_type_spec  goto 135
+	type_dcl  goto 136
+	const_dcl  goto 137
+	except_dcl  goto 138
+	interface_body  goto 139
+	exports  goto 140
+	export  goto 141
+	attr_dcl  goto 142
+	op_dcl  goto 143
+	struct_type  goto 29
+	union_type  goto 30
+	enum_type  goto 31
+	op_attribute  goto 144
+
+
+state 99
+	value_dcl : value_header '{' . value_elements '}'  (41)
+	value_elements : .  (57)
+
+	ANY  shift 64
+	ATTRIBUTE  shift 127
+	BOOLEAN  shift 33
+	CHAR  shift 34
+	CONST  shift 2
+	DOUBLE  shift 35
+	ENUM  shift 4
+	EXCEPTION  shift 5
+	FACTORY  shift 145
+	FLOAT  shift 36
+	LONG  shift 37
+	OBJECT  shift 65
+	OCTET  shift 66
+	ONEWAY  shift 128
+	PRIVATE  shift 146
+	PUBLIC  shift 147
+	READONLY  shift 129
+	SHORT  shift 38
+	STRING  shift 39
+	STRUCT  shift 8
+	TYPEDEF  shift 9
+	UNION  shift 10
+	UNSIGNED  shift 40
+	VOID  shift 130
+	WCHAR  shift 68
+	SCOPE_DELIMITOR  shift 41
+	IDENTIFIER  shift 42
+	'}'  reduce 57
+
+	base_type_spec  goto 131
+	floating_pt_type  goto 74
+	integer_type  goto 75
+	signed_int  goto 45
+	signed_long_long_int  goto 46
+	signed_long_int  goto 47
+	signed_short_int  goto 48
+	unsigned_int  goto 49
+	unsigned_long_long_int  goto 50
+	unsigned_long_int  goto 51
+	unsigned_short_int  goto 52
+	char_type  goto 76
+	wide_char_type  goto 77
+	boolean_type  goto 78
+	octet_type  goto 79
+	any_type  goto 80
+	string_type  goto 132
+	scoped_name  goto 133
+	object_type  goto 84
+	op_type_spec  goto 134
+	param_type_spec  goto 135
+	type_dcl  goto 136
+	const_dcl  goto 137
+	except_dcl  goto 138
+	export  goto 148
+	attr_dcl  goto 142
+	op_dcl  goto 143
+	value_elements  goto 149
+	value_element  goto 150
+	state_member  goto 151
+	init_dcl  goto 152
+	struct_type  goto 29
+	union_type  goto 30
+	enum_type  goto 31
+	op_attribute  goto 144
+
+
+state 100
+	value_forward_dcl : ABSTRACT VALUETYPE IDENTIFIER .  (36)
+	value_abs_dcl : ABSTRACT VALUETYPE IDENTIFIER . value_inheritance_spec '{' exports '}'  (39)
+	value_abs_dcl : ABSTRACT VALUETYPE IDENTIFIER . '{' exports '}'  (40)
+
+	SUPPORTS  shift 123
+	'{'  shift 153
+	':'  shift 124
+	';'  reduce 36
+
+	value_inheritance_spec  goto 154
+
+
+state 101
+	signed_long_long_int : LONG LONG .  (147)
+
+	.  reduce 147
+
+
+state 102
+	string_type : STRING '<' . positive_int_const '>'  (189)
+
+	FALSE_TOKEN  shift 155
+	TRUE_TOKEN  shift 156
+	SCOPE_DELIMITOR  shift 41
+	INTEGER_LITERAL  shift 157
+	FLOATING_PT_LITERAL  shift 158
+	CHARACTER_LITERAL  shift 159
+	STRING_LITERAL  shift 160
+	IDENTIFIER  shift 42
+	'('  shift 161
+	'+'  shift 162
+	'-'  shift 163
+	'~'  shift 164
+	.  error
+
+	scoped_name  goto 165
+	const_exp  goto 166
+	or_expr  goto 167
+	xor_expr  goto 168
+	and_expr  goto 169
+	shift_expr  goto 170
+	add_expr  goto 171
+	mult_expr  goto 172
+	unary_expr  goto 173
+	unary_operator  goto 174
+	primary_expr  goto 175
+	literal  goto 176
+	boolean_literal  goto 177
+	positive_int_const  goto 178
+
+
+state 103
+	unsigned_long_long_int : UNSIGNED LONG . LONG  (153)
+	unsigned_long_int : UNSIGNED LONG .  (154)
+
+	LONG  shift 179
+	IDENTIFIER  reduce 154
+	';'  reduce 154
+	','  reduce 154
+	')'  reduce 154
+	'>'  reduce 154
+
+
+state 104
+	unsigned_short_int : UNSIGNED SHORT .  (155)
+
+	.  reduce 155
+
+
+state 105
+	scoped_name : SCOPE_DELIMITOR IDENTIFIER .  (30)
+
+	.  reduce 30
+
+
+state 106
+	scoped_name : scoped_name SCOPE_DELIMITOR . IDENTIFIER  (31)
+
+	IDENTIFIER  shift 180
+	.  error
+
+
+state 107
+	const_dcl : CONST const_type IDENTIFIER . '=' const_exp  (70)
+
+	'='  shift 181
+	.  error
+
+
+state 108
+	value_header : CUSTOM VALUETYPE IDENTIFIER . value_inheritance_spec  (42)
+	value_header : CUSTOM VALUETYPE IDENTIFIER .  (44)
+
+	SUPPORTS  shift 123
+	':'  shift 124
+	'{'  reduce 44
+
+	value_inheritance_spec  goto 182
+
+
+state 109
+	enum_type : ENUM IDENTIFIER '{' . enumerator extends_enum '}'  (183)
+
+	IDENTIFIER  shift 183
+	.  error
+
+	enumerator  goto 184
+
+
+state 110
+	except_dcl : EXCEPTION IDENTIFIER '{' . members '}'  (199)
+	members : .  (166)
+
+	ANY  shift 64
+	BOOLEAN  shift 33
+	CHAR  shift 34
+	DOUBLE  shift 35
+	ENUM  shift 4
+	FLOAT  shift 36
+	LONG  shift 37
+	OBJECT  shift 65
+	OCTET  shift 66
+	SEQUENCE  shift 67
+	SHORT  shift 38
+	STRING  shift 39
+	STRUCT  shift 8
+	UNION  shift 10
+	UNSIGNED  shift 40
+	WCHAR  shift 68
+	SCOPE_DELIMITOR  shift 41
+	IDENTIFIER  shift 42
+	'}'  reduce 166
+
+	type_spec  goto 185
+	base_type_spec  goto 70
+	simple_type_spec  goto 71
+	template_type_spec  goto 72
+	constr_type_spec  goto 73
+	floating_pt_type  goto 74
+	integer_type  goto 75
+	signed_int  goto 45
+	signed_long_long_int  goto 46
+	signed_long_int  goto 47
+	signed_short_int  goto 48
+	unsigned_int  goto 49
+	unsigned_long_long_int  goto 50
+	unsigned_long_int  goto 51
+	unsigned_short_int  goto 52
+	char_type  goto 76
+	wide_char_type  goto 77
+	boolean_type  goto 78
+	octet_type  goto 79
+	any_type  goto 80
+	sequence_type  goto 81
+	string_type  goto 82
+	scoped_name  goto 83
+	object_type  goto 84
+	struct_type  goto 86
+	union_type  goto 87
+	enum_type  goto 88
+	member  goto 186
+	members  goto 187
+
+
+state 111
+	inheritance_spec : ':' . scoped_name extends_inheritance  (25)
+
+	SCOPE_DELIMITOR  shift 41
+	IDENTIFIER  shift 42
+	.  error
+
+	scoped_name  goto 188
+
+
+state 112
+	interface_header : INTERFACE IDENTIFIER inheritance_spec .  (15)
+
+	.  reduce 15
+
+
+state 113
+	module : MODULE IDENTIFIER '{' . at_least_one_definition '}'  (10)
+
+	ABSTRACT  shift 1
+	CONST  shift 2
+	CUSTOM  shift 3
+	ENUM  shift 4
+	EXCEPTION  shift 5
+	INTERFACE  shift 6
+	MODULE  shift 7
+	STRUCT  shift 8
+	TYPEDEF  shift 9
+	UNION  shift 10
+	VALUETYPE  shift 11
+	.  error
+
+	at_least_one_definition  goto 189
+	definition  goto 14
+	type_dcl  goto 15
+	const_dcl  goto 16
+	except_dcl  goto 17
+	interface  goto 18
+	module  goto 19
+	value  goto 20
+	interface_dcl  goto 21
+	forward_dcl  goto 22
+	interface_header  goto 23
+	value_dcl  goto 24
+	value_abs_dcl  goto 25
+	value_box_dcl  goto 26
+	value_forward_dcl  goto 27
+	value_header  goto 28
+	struct_type  goto 29
+	union_type  goto 30
+	enum_type  goto 31
+
+
+state 114
+	struct_type : STRUCT IDENTIFIER '{' . member_list '}'  (162)
+
+	ANY  shift 64
+	BOOLEAN  shift 33
+	CHAR  shift 34
+	DOUBLE  shift 35
+	ENUM  shift 4
+	FLOAT  shift 36
+	LONG  shift 37
+	OBJECT  shift 65
+	OCTET  shift 66
+	SEQUENCE  shift 67
+	SHORT  shift 38
+	STRING  shift 39
+	STRUCT  shift 8
+	UNION  shift 10
+	UNSIGNED  shift 40
+	WCHAR  shift 68
+	SCOPE_DELIMITOR  shift 41
+	IDENTIFIER  shift 42
+	.  error
+
+	type_spec  goto 185
+	base_type_spec  goto 70
+	simple_type_spec  goto 71
+	template_type_spec  goto 72
+	constr_type_spec  goto 73
+	floating_pt_type  goto 74
+	integer_type  goto 75
+	signed_int  goto 45
+	signed_long_long_int  goto 46
+	signed_long_int  goto 47
+	signed_short_int  goto 48
+	unsigned_int  goto 49
+	unsigned_long_long_int  goto 50
+	unsigned_long_int  goto 51
+	unsigned_short_int  goto 52
+	char_type  goto 76
+	wide_char_type  goto 77
+	boolean_type  goto 78
+	octet_type  goto 79
+	any_type  goto 80
+	sequence_type  goto 81
+	string_type  goto 82
+	scoped_name  goto 83
+	object_type  goto 84
+	struct_type  goto 86
+	union_type  goto 87
+	enum_type  goto 88
+	member_list  goto 190
+	at_least_one_member  goto 191
+	member  goto 192
+
+
+state 115
+	sequence_type : SEQUENCE '<' . simple_type_spec ',' positive_int_const '>'  (187)
+	sequence_type : SEQUENCE '<' . simple_type_spec '>'  (188)
+
+	ANY  shift 64
+	BOOLEAN  shift 33
+	CHAR  shift 34
+	DOUBLE  shift 35
+	FLOAT  shift 36
+	LONG  shift 37
+	OBJECT  shift 65
+	OCTET  shift 66
+	SEQUENCE  shift 67
+	SHORT  shift 38
+	STRING  shift 39
+	UNSIGNED  shift 40
+	WCHAR  shift 68
+	SCOPE_DELIMITOR  shift 41
+	IDENTIFIER  shift 42
+	.  error
+
+	base_type_spec  goto 70
+	simple_type_spec  goto 193
+	template_type_spec  goto 72
+	floating_pt_type  goto 74
+	integer_type  goto 75
+	signed_int  goto 45
+	signed_long_long_int  goto 46
+	signed_long_int  goto 47
+	signed_short_int  goto 48
+	unsigned_int  goto 49
+	unsigned_long_long_int  goto 50
+	unsigned_long_int  goto 51
+	unsigned_short_int  goto 52
+	char_type  goto 76
+	wide_char_type  goto 77
+	boolean_type  goto 78
+	octet_type  goto 79
+	any_type  goto 80
+	sequence_type  goto 81
+	string_type  goto 82
+	scoped_name  goto 83
+	object_type  goto 84
+
+
+state 116
+	simple_declarator : IDENTIFIER .  (138)
+	array_declarator : IDENTIFIER . at_least_one_fixed_array_size  (191)
+
+	'['  shift 194
+	';'  reduce 138
+	','  reduce 138
+
+	at_least_one_fixed_array_size  goto 195
+	fixed_array_size  goto 196
+
+
+state 117
+	declarator : simple_declarator .  (136)
+
+	.  reduce 136
+
+
+state 118
+	type_declarator : type_spec declarators .  (114)
+
+	.  reduce 114
+
+
+state 119
+	declarators : declarator . extend_declarators  (133)
+	extend_declarators : .  (135)
+
+	','  shift 197
+	';'  reduce 135
+
+	extend_declarators  goto 198
+
+
+state 120
+	declarator : complex_declarator .  (137)
+
+	.  reduce 137
+
+
+state 121
+	complex_declarator : array_declarator .  (139)
+
+	.  reduce 139
+
+
+state 122
+	union_type : UNION IDENTIFIER SWITCH . '(' switch_type_spec ')' '{' switch_body '}'  (168)
+
+	'('  shift 199
+	.  error
+
+
+state 123
+	value_inheritance_spec : SUPPORTS . interface_name extends_interface_name  (50)
+
+	SCOPE_DELIMITOR  shift 41
+	IDENTIFIER  shift 42
+	.  error
+
+	scoped_name  goto 200
+	interface_name  goto 201
+
+
+state 124
+	value_inheritance_spec : ':' . TRANCATABLE value_name extends_value_name SUPPORTS interface_name extends_interface_name  (46)
+	value_inheritance_spec : ':' . value_name extends_value_name SUPPORTS interface_name extends_interface_name  (47)
+	value_inheritance_spec : ':' . TRANCATABLE value_name extends_value_name  (48)
+	value_inheritance_spec : ':' . value_name extends_value_name  (49)
+
+	TRANCATABLE  shift 202
+	SCOPE_DELIMITOR  shift 41
+	IDENTIFIER  shift 42
+	.  error
+
+	scoped_name  goto 203
+	value_name  goto 204
+
+
+state 125
+	value_box_dcl : VALUETYPE IDENTIFIER type_spec .  (38)
+
+	.  reduce 38
+
+
+state 126
+	value_header : VALUETYPE IDENTIFIER value_inheritance_spec .  (43)
+
+	.  reduce 43
+
+
+state 127
+	attr_dcl : ATTRIBUTE . param_type_spec simple_declarator extends_attr  (195)
+
+	ANY  shift 64
+	BOOLEAN  shift 33
+	CHAR  shift 34
+	DOUBLE  shift 35
+	FLOAT  shift 36
+	LONG  shift 37
+	OBJECT  shift 65
+	OCTET  shift 66
+	SHORT  shift 38
+	STRING  shift 39
+	UNSIGNED  shift 40
+	WCHAR  shift 68
+	SCOPE_DELIMITOR  shift 41
+	IDENTIFIER  shift 42
+	.  error
+
+	base_type_spec  goto 131
+	floating_pt_type  goto 74
+	integer_type  goto 75
+	signed_int  goto 45
+	signed_long_long_int  goto 46
+	signed_long_int  goto 47
+	signed_short_int  goto 48
+	unsigned_int  goto 49
+	unsigned_long_long_int  goto 50
+	unsigned_long_int  goto 51
+	unsigned_short_int  goto 52
+	char_type  goto 76
+	wide_char_type  goto 77
+	boolean_type  goto 78
+	octet_type  goto 79
+	any_type  goto 80
+	string_type  goto 132
+	scoped_name  goto 133
+	object_type  goto 84
+	param_type_spec  goto 205
+
+
+state 128
+	op_attribute : ONEWAY .  (206)
+
+	.  reduce 206
+
+
+state 129
+	attr_dcl : READONLY . ATTRIBUTE param_type_spec simple_declarator extends_attr  (196)
+
+	ATTRIBUTE  shift 206
+	.  error
+
+
+state 130
+	op_type_spec : VOID .  (208)
+
+	.  reduce 208
+
+
+state 131
+	param_type_spec : base_type_spec .  (223)
+
+	.  reduce 223
+
+
+state 132
+	param_type_spec : string_type .  (224)
+
+	.  reduce 224
+
+
+state 133
+	scoped_name : scoped_name . SCOPE_DELIMITOR IDENTIFIER  (31)
+	param_type_spec : scoped_name .  (225)
+
+	SCOPE_DELIMITOR  shift 106
+	IDENTIFIER  reduce 225
+
+
+state 134
+	op_dcl : op_type_spec . IDENTIFIER parameter_dcls  (200)
+	op_dcl : op_type_spec . IDENTIFIER parameter_dcls raises_expr  (202)
+	op_dcl : op_type_spec . IDENTIFIER parameter_dcls raises_expr context_expr  (204)
+
+	IDENTIFIER  shift 207
+	.  error
+
+
+state 135
+	op_type_spec : param_type_spec .  (207)
+
+	.  reduce 207
+
+
+state 136
+	export : type_dcl . ';'  (20)
+
+	';'  shift 208
+	.  error
+
+
+state 137
+	export : const_dcl . ';'  (21)
+
+	';'  shift 209
+	.  error
+
+
+state 138
+	export : except_dcl . ';'  (22)
+
+	';'  shift 210
+	.  error
+
+
+state 139
+	interface_dcl : interface_header '{' interface_body . '}'  (13)
+
+	'}'  shift 211
+	.  error
+
+
+state 140
+	interface_body : exports .  (17)
+
+	.  reduce 17
+
+
+state 141
+	exports : export . exports  (18)
+	exports : .  (19)
+
+	ANY  shift 64
+	ATTRIBUTE  shift 127
+	BOOLEAN  shift 33
+	CHAR  shift 34
+	CONST  shift 2
+	DOUBLE  shift 35
+	ENUM  shift 4
+	EXCEPTION  shift 5
+	FLOAT  shift 36
+	LONG  shift 37
+	OBJECT  shift 65
+	OCTET  shift 66
+	ONEWAY  shift 128
+	READONLY  shift 129
+	SHORT  shift 38
+	STRING  shift 39
+	STRUCT  shift 8
+	TYPEDEF  shift 9
+	UNION  shift 10
+	UNSIGNED  shift 40
+	VOID  shift 130
+	WCHAR  shift 68
+	SCOPE_DELIMITOR  shift 41
+	IDENTIFIER  shift 42
+	'}'  reduce 19
+
+	base_type_spec  goto 131
+	floating_pt_type  goto 74
+	integer_type  goto 75
+	signed_int  goto 45
+	signed_long_long_int  goto 46
+	signed_long_int  goto 47
+	signed_short_int  goto 48
+	unsigned_int  goto 49
+	unsigned_long_long_int  goto 50
+	unsigned_long_int  goto 51
+	unsigned_short_int  goto 52
+	char_type  goto 76
+	wide_char_type  goto 77
+	boolean_type  goto 78
+	octet_type  goto 79
+	any_type  goto 80
+	string_type  goto 132
+	scoped_name  goto 133
+	object_type  goto 84
+	op_type_spec  goto 134
+	param_type_spec  goto 135
+	type_dcl  goto 136
+	const_dcl  goto 137
+	except_dcl  goto 138
+	exports  goto 212
+	export  goto 141
+	attr_dcl  goto 142
+	op_dcl  goto 143
+	struct_type  goto 29
+	union_type  goto 30
+	enum_type  goto 31
+	op_attribute  goto 144
+
+
+state 142
+	export : attr_dcl . ';'  (23)
+
+	';'  shift 213
+	.  error
+
+
+state 143
+	export : op_dcl . ';'  (24)
+
+	';'  shift 214
+	.  error
+
+
+state 144
+	op_dcl : op_attribute . op_type_spec IDENTIFIER parameter_dcls  (201)
+	op_dcl : op_attribute . op_type_spec IDENTIFIER parameter_dcls raises_expr  (203)
+	op_dcl : op_attribute . op_type_spec IDENTIFIER parameter_dcls raises_expr context_expr  (205)
+
+	ANY  shift 64
+	BOOLEAN  shift 33
+	CHAR  shift 34
+	DOUBLE  shift 35
+	FLOAT  shift 36
+	LONG  shift 37
+	OBJECT  shift 65
+	OCTET  shift 66
+	SHORT  shift 38
+	STRING  shift 39
+	UNSIGNED  shift 40
+	VOID  shift 130
+	WCHAR  shift 68
+	SCOPE_DELIMITOR  shift 41
+	IDENTIFIER  shift 42
+	.  error
+
+	base_type_spec  goto 131
+	floating_pt_type  goto 74
+	integer_type  goto 75
+	signed_int  goto 45
+	signed_long_long_int  goto 46
+	signed_long_int  goto 47
+	signed_short_int  goto 48
+	unsigned_int  goto 49
+	unsigned_long_long_int  goto 50
+	unsigned_long_int  goto 51
+	unsigned_short_int  goto 52
+	char_type  goto 76
+	wide_char_type  goto 77
+	boolean_type  goto 78
+	octet_type  goto 79
+	any_type  goto 80
+	string_type  goto 132
+	scoped_name  goto 133
+	object_type  goto 84
+	op_type_spec  goto 215
+	param_type_spec  goto 135
+
+
+state 145
+	init_dcl : FACTORY . IDENTIFIER '(' init_param_decls ')' ';'  (63)
+	init_dcl : FACTORY . IDENTIFIER '(' ')' ';'  (64)
+
+	IDENTIFIER  shift 216
+	.  error
+
+
+state 146
+	state_member : PRIVATE . type_spec declarators ';'  (62)
+
+	ANY  shift 64
+	BOOLEAN  shift 33
+	CHAR  shift 34
+	DOUBLE  shift 35
+	ENUM  shift 4
+	FLOAT  shift 36
+	LONG  shift 37
+	OBJECT  shift 65
+	OCTET  shift 66
+	SEQUENCE  shift 67
+	SHORT  shift 38
+	STRING  shift 39
+	STRUCT  shift 8
+	UNION  shift 10
+	UNSIGNED  shift 40
+	WCHAR  shift 68
+	SCOPE_DELIMITOR  shift 41
+	IDENTIFIER  shift 42
+	.  error
+
+	type_spec  goto 217
+	base_type_spec  goto 70
+	simple_type_spec  goto 71
+	template_type_spec  goto 72
+	constr_type_spec  goto 73
+	floating_pt_type  goto 74
+	integer_type  goto 75
+	signed_int  goto 45
+	signed_long_long_int  goto 46
+	signed_long_int  goto 47
+	signed_short_int  goto 48
+	unsigned_int  goto 49
+	unsigned_long_long_int  goto 50
+	unsigned_long_int  goto 51
+	unsigned_short_int  goto 52
+	char_type  goto 76
+	wide_char_type  goto 77
+	boolean_type  goto 78
+	octet_type  goto 79
+	any_type  goto 80
+	sequence_type  goto 81
+	string_type  goto 82
+	scoped_name  goto 83
+	object_type  goto 84
+	struct_type  goto 86
+	union_type  goto 87
+	enum_type  goto 88
+
+
+state 147
+	state_member : PUBLIC . type_spec declarators ';'  (61)
+
+	ANY  shift 64
+	BOOLEAN  shift 33
+	CHAR  shift 34
+	DOUBLE  shift 35
+	ENUM  shift 4
+	FLOAT  shift 36
+	LONG  shift 37
+	OBJECT  shift 65
+	OCTET  shift 66
+	SEQUENCE  shift 67
+	SHORT  shift 38
+	STRING  shift 39
+	STRUCT  shift 8
+	UNION  shift 10
+	UNSIGNED  shift 40
+	WCHAR  shift 68
+	SCOPE_DELIMITOR  shift 41
+	IDENTIFIER  shift 42
+	.  error
+
+	type_spec  goto 218
+	base_type_spec  goto 70
+	simple_type_spec  goto 71
+	template_type_spec  goto 72
+	constr_type_spec  goto 73
+	floating_pt_type  goto 74
+	integer_type  goto 75
+	signed_int  goto 45
+	signed_long_long_int  goto 46
+	signed_long_int  goto 47
+	signed_short_int  goto 48
+	unsigned_int  goto 49
+	unsigned_long_long_int  goto 50
+	unsigned_long_int  goto 51
+	unsigned_short_int  goto 52
+	char_type  goto 76
+	wide_char_type  goto 77
+	boolean_type  goto 78
+	octet_type  goto 79
+	any_type  goto 80
+	sequence_type  goto 81
+	string_type  goto 82
+	scoped_name  goto 83
+	object_type  goto 84
+	struct_type  goto 86
+	union_type  goto 87
+	enum_type  goto 88
+
+
+state 148
+	value_element : export .  (58)
+
+	.  reduce 58
+
+
+state 149
+	value_dcl : value_header '{' value_elements . '}'  (41)
+
+	'}'  shift 219
+	.  error
+
+
+state 150
+	value_elements : value_element . value_elements  (56)
+	value_elements : .  (57)
+
+	ANY  shift 64
+	ATTRIBUTE  shift 127
+	BOOLEAN  shift 33
+	CHAR  shift 34
+	CONST  shift 2
+	DOUBLE  shift 35
+	ENUM  shift 4
+	EXCEPTION  shift 5
+	FACTORY  shift 145
+	FLOAT  shift 36
+	LONG  shift 37
+	OBJECT  shift 65
+	OCTET  shift 66
+	ONEWAY  shift 128
+	PRIVATE  shift 146
+	PUBLIC  shift 147
+	READONLY  shift 129
+	SHORT  shift 38
+	STRING  shift 39
+	STRUCT  shift 8
+	TYPEDEF  shift 9
+	UNION  shift 10
+	UNSIGNED  shift 40
+	VOID  shift 130
+	WCHAR  shift 68
+	SCOPE_DELIMITOR  shift 41
+	IDENTIFIER  shift 42
+	'}'  reduce 57
+
+	base_type_spec  goto 131
+	floating_pt_type  goto 74
+	integer_type  goto 75
+	signed_int  goto 45
+	signed_long_long_int  goto 46
+	signed_long_int  goto 47
+	signed_short_int  goto 48
+	unsigned_int  goto 49
+	unsigned_long_long_int  goto 50
+	unsigned_long_int  goto 51
+	unsigned_short_int  goto 52
+	char_type  goto 76
+	wide_char_type  goto 77
+	boolean_type  goto 78
+	octet_type  goto 79
+	any_type  goto 80
+	string_type  goto 132
+	scoped_name  goto 133
+	object_type  goto 84
+	op_type_spec  goto 134
+	param_type_spec  goto 135
+	type_dcl  goto 136
+	const_dcl  goto 137
+	except_dcl  goto 138
+	export  goto 148
+	attr_dcl  goto 142
+	op_dcl  goto 143
+	value_elements  goto 220
+	value_element  goto 150
+	state_member  goto 151
+	init_dcl  goto 152
+	struct_type  goto 29
+	union_type  goto 30
+	enum_type  goto 31
+	op_attribute  goto 144
+
+
+state 151
+	value_element : state_member .  (59)
+
+	.  reduce 59
+
+
+state 152
+	value_element : init_dcl .  (60)
+
+	.  reduce 60
+
+
+state 153
+	value_abs_dcl : ABSTRACT VALUETYPE IDENTIFIER '{' . exports '}'  (40)
+	exports : .  (19)
+
+	ANY  shift 64
+	ATTRIBUTE  shift 127
+	BOOLEAN  shift 33
+	CHAR  shift 34
+	CONST  shift 2
+	DOUBLE  shift 35
+	ENUM  shift 4
+	EXCEPTION  shift 5
+	FLOAT  shift 36
+	LONG  shift 37
+	OBJECT  shift 65
+	OCTET  shift 66
+	ONEWAY  shift 128
+	READONLY  shift 129
+	SHORT  shift 38
+	STRING  shift 39
+	STRUCT  shift 8
+	TYPEDEF  shift 9
+	UNION  shift 10
+	UNSIGNED  shift 40
+	VOID  shift 130
+	WCHAR  shift 68
+	SCOPE_DELIMITOR  shift 41
+	IDENTIFIER  shift 42
+	'}'  reduce 19
+
+	base_type_spec  goto 131
+	floating_pt_type  goto 74
+	integer_type  goto 75
+	signed_int  goto 45
+	signed_long_long_int  goto 46
+	signed_long_int  goto 47
+	signed_short_int  goto 48
+	unsigned_int  goto 49
+	unsigned_long_long_int  goto 50
+	unsigned_long_int  goto 51
+	unsigned_short_int  goto 52
+	char_type  goto 76
+	wide_char_type  goto 77
+	boolean_type  goto 78
+	octet_type  goto 79
+	any_type  goto 80
+	string_type  goto 132
+	scoped_name  goto 133
+	object_type  goto 84
+	op_type_spec  goto 134
+	param_type_spec  goto 135
+	type_dcl  goto 136
+	const_dcl  goto 137
+	except_dcl  goto 138
+	exports  goto 221
+	export  goto 141
+	attr_dcl  goto 142
+	op_dcl  goto 143
+	struct_type  goto 29
+	union_type  goto 30
+	enum_type  goto 31
+	op_attribute  goto 144
+
+
+state 154
+	value_abs_dcl : ABSTRACT VALUETYPE IDENTIFIER value_inheritance_spec . '{' exports '}'  (39)
+
+	'{'  shift 222
+	.  error
+
+
+state 155
+	boolean_literal : FALSE_TOKEN .  (108)
+
+	.  reduce 108
+
+
+state 156
+	boolean_literal : TRUE_TOKEN .  (107)
+
+	.  reduce 107
+
+
+state 157
+	literal : INTEGER_LITERAL .  (102)
+
+	.  reduce 102
+
+
+state 158
+	literal : FLOATING_PT_LITERAL .  (105)
+
+	.  reduce 105
+
+
+state 159
+	literal : CHARACTER_LITERAL .  (104)
+
+	.  reduce 104
+
+
+state 160
+	literal : STRING_LITERAL .  (103)
+
+	.  reduce 103
+
+
+state 161
+	primary_expr : '(' . const_exp ')'  (101)
+
+	FALSE_TOKEN  shift 155
+	TRUE_TOKEN  shift 156
+	SCOPE_DELIMITOR  shift 41
+	INTEGER_LITERAL  shift 157
+	FLOATING_PT_LITERAL  shift 158
+	CHARACTER_LITERAL  shift 159
+	STRING_LITERAL  shift 160
+	IDENTIFIER  shift 42
+	'('  shift 161
+	'+'  shift 162
+	'-'  shift 163
+	'~'  shift 164
+	.  error
+
+	scoped_name  goto 165
+	const_exp  goto 223
+	or_expr  goto 167
+	xor_expr  goto 168
+	and_expr  goto 169
+	shift_expr  goto 170
+	add_expr  goto 171
+	mult_expr  goto 172
+	unary_expr  goto 173
+	unary_operator  goto 174
+	primary_expr  goto 175
+	literal  goto 176
+	boolean_literal  goto 177
+
+
+state 162
+	unary_operator : '+' .  (97)
+
+	.  reduce 97
+
+
+state 163
+	unary_operator : '-' .  (96)
+
+	.  reduce 96
+
+
+state 164
+	unary_operator : '~' .  (98)
+
+	.  reduce 98
+
+
+state 165
+	scoped_name : scoped_name . SCOPE_DELIMITOR IDENTIFIER  (31)
+	primary_expr : scoped_name .  (99)
+
+	SCOPE_DELIMITOR  shift 106
+	LEFT_SHIFT  reduce 99
+	RIGHT_SHIFT  reduce 99
+	';'  reduce 99
+	':'  reduce 99
+	')'  reduce 99
+	'|'  reduce 99
+	'^'  reduce 99
+	'&'  reduce 99
+	'+'  reduce 99
+	'-'  reduce 99
+	'*'  reduce 99
+	'/'  reduce 99
+	'%'  reduce 99
+	'>'  reduce 99
+	']'  reduce 99
+
+
+state 166
+	positive_int_const : const_exp .  (109)
+
+	.  reduce 109
+
+
+state 167
+	const_exp : or_expr .  (77)
+	or_expr : or_expr . '|' xor_expr  (79)
+
+	'|'  shift 224
+	';'  reduce 77
+	':'  reduce 77
+	')'  reduce 77
+	'>'  reduce 77
+	']'  reduce 77
+
+
+state 168
+	or_expr : xor_expr .  (78)
+	xor_expr : xor_expr . '^' and_expr  (81)
+
+	'^'  shift 225
+	';'  reduce 78
+	':'  reduce 78
+	')'  reduce 78
+	'|'  reduce 78
+	'>'  reduce 78
+	']'  reduce 78
+
+
+state 169
+	xor_expr : and_expr .  (80)
+	and_expr : and_expr . '&' shift_expr  (83)
+
+	'&'  shift 226
+	';'  reduce 80
+	':'  reduce 80
+	')'  reduce 80
+	'|'  reduce 80
+	'^'  reduce 80
+	'>'  reduce 80
+	']'  reduce 80
+
+
+state 170
+	and_expr : shift_expr .  (82)
+	shift_expr : shift_expr . RIGHT_SHIFT add_expr  (85)
+	shift_expr : shift_expr . LEFT_SHIFT add_expr  (86)
+
+	LEFT_SHIFT  shift 227
+	RIGHT_SHIFT  shift 228
+	';'  reduce 82
+	':'  reduce 82
+	')'  reduce 82
+	'|'  reduce 82
+	'^'  reduce 82
+	'&'  reduce 82
+	'>'  reduce 82
+	']'  reduce 82
+
+
+state 171
+	shift_expr : add_expr .  (84)
+	add_expr : add_expr . '+' mult_expr  (88)
+	add_expr : add_expr . '-' mult_expr  (89)
+
+	'+'  shift 229
+	'-'  shift 230
+	LEFT_SHIFT  reduce 84
+	RIGHT_SHIFT  reduce 84
+	';'  reduce 84
+	':'  reduce 84
+	')'  reduce 84
+	'|'  reduce 84
+	'^'  reduce 84
+	'&'  reduce 84
+	'>'  reduce 84
+	']'  reduce 84
+
+
+state 172
+	add_expr : mult_expr .  (87)
+	mult_expr : mult_expr . '*' unary_expr  (91)
+	mult_expr : mult_expr . '/' unary_expr  (92)
+	mult_expr : mult_expr . '%' unary_expr  (93)
+
+	'*'  shift 231
+	'/'  shift 232
+	'%'  shift 233
+	LEFT_SHIFT  reduce 87
+	RIGHT_SHIFT  reduce 87
+	';'  reduce 87
+	':'  reduce 87
+	')'  reduce 87
+	'|'  reduce 87
+	'^'  reduce 87
+	'&'  reduce 87
+	'+'  reduce 87
+	'-'  reduce 87
+	'>'  reduce 87
+	']'  reduce 87
+
+
+state 173
+	mult_expr : unary_expr .  (90)
+
+	.  reduce 90
+
+
+state 174
+	unary_expr : unary_operator . primary_expr  (94)
+
+	FALSE_TOKEN  shift 155
+	TRUE_TOKEN  shift 156
+	SCOPE_DELIMITOR  shift 41
+	INTEGER_LITERAL  shift 157
+	FLOATING_PT_LITERAL  shift 158
+	CHARACTER_LITERAL  shift 159
+	STRING_LITERAL  shift 160
+	IDENTIFIER  shift 42
+	'('  shift 161
+	.  error
+
+	scoped_name  goto 165
+	primary_expr  goto 234
+	literal  goto 176
+	boolean_literal  goto 177
+
+
+state 175
+	unary_expr : primary_expr .  (95)
+
+	.  reduce 95
+
+
+state 176
+	primary_expr : literal .  (100)
+
+	.  reduce 100
+
+
+state 177
+	literal : boolean_literal .  (106)
+
+	.  reduce 106
+
+
+state 178
+	string_type : STRING '<' positive_int_const . '>'  (189)
+
+	'>'  shift 235
+	.  error
+
+
+state 179
+	unsigned_long_long_int : UNSIGNED LONG LONG .  (153)
+
+	.  reduce 153
+
+
+state 180
+	scoped_name : scoped_name SCOPE_DELIMITOR IDENTIFIER .  (31)
+
+	.  reduce 31
+
+
+state 181
+	const_dcl : CONST const_type IDENTIFIER '=' . const_exp  (70)
+
+	FALSE_TOKEN  shift 155
+	TRUE_TOKEN  shift 156
+	SCOPE_DELIMITOR  shift 41
+	INTEGER_LITERAL  shift 157
+	FLOATING_PT_LITERAL  shift 158
+	CHARACTER_LITERAL  shift 159
+	STRING_LITERAL  shift 160
+	IDENTIFIER  shift 42
+	'('  shift 161
+	'+'  shift 162
+	'-'  shift 163
+	'~'  shift 164
+	.  error
+
+	scoped_name  goto 165
+	const_exp  goto 236
+	or_expr  goto 167
+	xor_expr  goto 168
+	and_expr  goto 169
+	shift_expr  goto 170
+	add_expr  goto 171
+	mult_expr  goto 172
+	unary_expr  goto 173
+	unary_operator  goto 174
+	primary_expr  goto 175
+	literal  goto 176
+	boolean_literal  goto 177
+
+
+state 182
+	value_header : CUSTOM VALUETYPE IDENTIFIER value_inheritance_spec .  (42)
+
+	.  reduce 42
+
+
+state 183
+	enumerator : IDENTIFIER .  (186)
+
+	.  reduce 186
+
+
+state 184
+	enum_type : ENUM IDENTIFIER '{' enumerator . extends_enum '}'  (183)
+	extends_enum : .  (185)
+
+	','  shift 237
+	'}'  reduce 185
+
+	extends_enum  goto 238
+
+
+state 185
+	member : type_spec . declarators ';'  (167)
+
+	IDENTIFIER  shift 116
+	.  error
+
+	simple_declarator  goto 117
+	declarators  goto 239
+	declarator  goto 119
+	complex_declarator  goto 120
+	array_declarator  goto 121
+
+
+state 186
+	members : member . members  (165)
+	members : .  (166)
+
+	ANY  shift 64
+	BOOLEAN  shift 33
+	CHAR  shift 34
+	DOUBLE  shift 35
+	ENUM  shift 4
+	FLOAT  shift 36
+	LONG  shift 37
+	OBJECT  shift 65
+	OCTET  shift 66
+	SEQUENCE  shift 67
+	SHORT  shift 38
+	STRING  shift 39
+	STRUCT  shift 8
+	UNION  shift 10
+	UNSIGNED  shift 40
+	WCHAR  shift 68
+	SCOPE_DELIMITOR  shift 41
+	IDENTIFIER  shift 42
+	'}'  reduce 166
+
+	type_spec  goto 185
+	base_type_spec  goto 70
+	simple_type_spec  goto 71
+	template_type_spec  goto 72
+	constr_type_spec  goto 73
+	floating_pt_type  goto 74
+	integer_type  goto 75
+	signed_int  goto 45
+	signed_long_long_int  goto 46
+	signed_long_int  goto 47
+	signed_short_int  goto 48
+	unsigned_int  goto 49
+	unsigned_long_long_int  goto 50
+	unsigned_long_int  goto 51
+	unsigned_short_int  goto 52
+	char_type  goto 76
+	wide_char_type  goto 77
+	boolean_type  goto 78
+	octet_type  goto 79
+	any_type  goto 80
+	sequence_type  goto 81
+	string_type  goto 82
+	scoped_name  goto 83
+	object_type  goto 84
+	struct_type  goto 86
+	union_type  goto 87
+	enum_type  goto 88
+	member  goto 186
+	members  goto 240
+
+
+state 187
+	except_dcl : EXCEPTION IDENTIFIER '{' members . '}'  (199)
+
+	'}'  shift 241
+	.  error
+
+
+state 188
+	inheritance_spec : ':' scoped_name . extends_inheritance  (25)
+	scoped_name : scoped_name . SCOPE_DELIMITOR IDENTIFIER  (31)
+	extends_inheritance : .  (27)
+
+	SCOPE_DELIMITOR  shift 106
+	','  shift 242
+	'{'  reduce 27
+
+	extends_inheritance  goto 243
+
+
+state 189
+	module : MODULE IDENTIFIER '{' at_least_one_definition . '}'  (10)
+
+	'}'  shift 244
+	.  error
+
+
+state 190
+	struct_type : STRUCT IDENTIFIER '{' member_list . '}'  (162)
+
+	'}'  shift 245
+	.  error
+
+
+state 191
+	member_list : at_least_one_member .  (163)
+
+	.  reduce 163
+
+
+state 192
+	at_least_one_member : member . members  (164)
+	members : .  (166)
+
+	ANY  shift 64
+	BOOLEAN  shift 33
+	CHAR  shift 34
+	DOUBLE  shift 35
+	ENUM  shift 4
+	FLOAT  shift 36
+	LONG  shift 37
+	OBJECT  shift 65
+	OCTET  shift 66
+	SEQUENCE  shift 67
+	SHORT  shift 38
+	STRING  shift 39
+	STRUCT  shift 8
+	UNION  shift 10
+	UNSIGNED  shift 40
+	WCHAR  shift 68
+	SCOPE_DELIMITOR  shift 41
+	IDENTIFIER  shift 42
+	'}'  reduce 166
+
+	type_spec  goto 185
+	base_type_spec  goto 70
+	simple_type_spec  goto 71
+	template_type_spec  goto 72
+	constr_type_spec  goto 73
+	floating_pt_type  goto 74
+	integer_type  goto 75
+	signed_int  goto 45
+	signed_long_long_int  goto 46
+	signed_long_int  goto 47
+	signed_short_int  goto 48
+	unsigned_int  goto 49
+	unsigned_long_long_int  goto 50
+	unsigned_long_int  goto 51
+	unsigned_short_int  goto 52
+	char_type  goto 76
+	wide_char_type  goto 77
+	boolean_type  goto 78
+	octet_type  goto 79
+	any_type  goto 80
+	sequence_type  goto 81
+	string_type  goto 82
+	scoped_name  goto 83
+	object_type  goto 84
+	struct_type  goto 86
+	union_type  goto 87
+	enum_type  goto 88
+	member  goto 186
+	members  goto 246
+
+
+state 193
+	sequence_type : SEQUENCE '<' simple_type_spec . ',' positive_int_const '>'  (187)
+	sequence_type : SEQUENCE '<' simple_type_spec . '>'  (188)
+
+	','  shift 247
+	'>'  shift 248
+	.  error
+
+
+state 194
+	fixed_array_size : '[' . positive_int_const ']'  (194)
+
+	FALSE_TOKEN  shift 155
+	TRUE_TOKEN  shift 156
+	SCOPE_DELIMITOR  shift 41
+	INTEGER_LITERAL  shift 157
+	FLOATING_PT_LITERAL  shift 158
+	CHARACTER_LITERAL  shift 159
+	STRING_LITERAL  shift 160
+	IDENTIFIER  shift 42
+	'('  shift 161
+	'+'  shift 162
+	'-'  shift 163
+	'~'  shift 164
+	.  error
+
+	scoped_name  goto 165
+	const_exp  goto 166
+	or_expr  goto 167
+	xor_expr  goto 168
+	and_expr  goto 169
+	shift_expr  goto 170
+	add_expr  goto 171
+	mult_expr  goto 172
+	unary_expr  goto 173
+	unary_operator  goto 174
+	primary_expr  goto 175
+	literal  goto 176
+	boolean_literal  goto 177
+	positive_int_const  goto 249
+
+
+state 195
+	array_declarator : IDENTIFIER at_least_one_fixed_array_size .  (191)
+
+	.  reduce 191
+
+
+state 196
+	at_least_one_fixed_array_size : fixed_array_size . at_least_one_fixed_array_size  (192)
+	at_least_one_fixed_array_size : fixed_array_size .  (193)
+
+	'['  shift 194
+	';'  reduce 193
+	','  reduce 193
+
+	at_least_one_fixed_array_size  goto 250
+	fixed_array_size  goto 196
+
+
+state 197
+	extend_declarators : ',' . declarator extend_declarators  (134)
+
+	IDENTIFIER  shift 116
+	.  error
+
+	simple_declarator  goto 117
+	declarator  goto 251
+	complex_declarator  goto 120
+	array_declarator  goto 121
+
+
+state 198
+	declarators : declarator extend_declarators .  (133)
+
+	.  reduce 133
+
+
+state 199
+	union_type : UNION IDENTIFIER SWITCH '(' . switch_type_spec ')' '{' switch_body '}'  (168)
+
+	BOOLEAN  shift 33
+	CHAR  shift 34
+	ENUM  shift 4
+	LONG  shift 37
+	SHORT  shift 38
+	UNSIGNED  shift 40
+	SCOPE_DELIMITOR  shift 41
+	IDENTIFIER  shift 42
+	.  error
+
+	integer_type  goto 252
+	signed_int  goto 45
+	signed_long_long_int  goto 46
+	signed_long_int  goto 47
+	signed_short_int  goto 48
+	unsigned_int  goto 49
+	unsigned_long_long_int  goto 50
+	unsigned_long_int  goto 51
+	unsigned_short_int  goto 52
+	char_type  goto 253
+	boolean_type  goto 254
+	scoped_name  goto 255
+	enum_type  goto 256
+	switch_type_spec  goto 257
+
+
+state 200
+	interface_name : scoped_name .  (28)
+	scoped_name : scoped_name . SCOPE_DELIMITOR IDENTIFIER  (31)
+
+	SCOPE_DELIMITOR  shift 106
+	'{'  reduce 28
+	','  reduce 28
+
+
+state 201
+	value_inheritance_spec : SUPPORTS interface_name . extends_interface_name  (50)
+	extends_interface_name : .  (52)
+
+	','  shift 258
+	'{'  reduce 52
+
+	extends_interface_name  goto 259
+
+
+state 202
+	value_inheritance_spec : ':' TRANCATABLE . value_name extends_value_name SUPPORTS interface_name extends_interface_name  (46)
+	value_inheritance_spec : ':' TRANCATABLE . value_name extends_value_name  (48)
+
+	SCOPE_DELIMITOR  shift 41
+	IDENTIFIER  shift 42
+	.  error
+
+	scoped_name  goto 203
+	value_name  goto 260
+
+
+state 203
+	scoped_name : scoped_name . SCOPE_DELIMITOR IDENTIFIER  (31)
+	value_name : scoped_name .  (55)
+
+	SCOPE_DELIMITOR  shift 106
+	SUPPORTS  reduce 55
+	'{'  reduce 55
+	','  reduce 55
+
+
+state 204
+	value_inheritance_spec : ':' value_name . extends_value_name SUPPORTS interface_name extends_interface_name  (47)
+	value_inheritance_spec : ':' value_name . extends_value_name  (49)
+	extends_value_name : .  (54)
+
+	','  shift 261
+	SUPPORTS  reduce 54
+	'{'  reduce 54
+
+	extends_value_name  goto 262
+
+
+state 205
+	attr_dcl : ATTRIBUTE param_type_spec . simple_declarator extends_attr  (195)
+
+	IDENTIFIER  shift 263
+	.  error
+
+	simple_declarator  goto 264
+
+
+state 206
+	attr_dcl : READONLY ATTRIBUTE . param_type_spec simple_declarator extends_attr  (196)
+
+	ANY  shift 64
+	BOOLEAN  shift 33
+	CHAR  shift 34
+	DOUBLE  shift 35
+	FLOAT  shift 36
+	LONG  shift 37
+	OBJECT  shift 65
+	OCTET  shift 66
+	SHORT  shift 38
+	STRING  shift 39
+	UNSIGNED  shift 40
+	WCHAR  shift 68
+	SCOPE_DELIMITOR  shift 41
+	IDENTIFIER  shift 42
+	.  error
+
+	base_type_spec  goto 131
+	floating_pt_type  goto 74
+	integer_type  goto 75
+	signed_int  goto 45
+	signed_long_long_int  goto 46
+	signed_long_int  goto 47
+	signed_short_int  goto 48
+	unsigned_int  goto 49
+	unsigned_long_long_int  goto 50
+	unsigned_long_int  goto 51
+	unsigned_short_int  goto 52
+	char_type  goto 76
+	wide_char_type  goto 77
+	boolean_type  goto 78
+	octet_type  goto 79
+	any_type  goto 80
+	string_type  goto 132
+	scoped_name  goto 133
+	object_type  goto 84
+	param_type_spec  goto 265
+
+
+state 207
+	op_dcl : op_type_spec IDENTIFIER . parameter_dcls  (200)
+	op_dcl : op_type_spec IDENTIFIER . parameter_dcls raises_expr  (202)
+	op_dcl : op_type_spec IDENTIFIER . parameter_dcls raises_expr context_expr  (204)
+
+	'('  shift 266
+	.  error
+
+	parameter_dcls  goto 267
+
+
+state 208
+	export : type_dcl ';' .  (20)
+
+	.  reduce 20
+
+
+state 209
+	export : const_dcl ';' .  (21)
+
+	.  reduce 21
+
+
+state 210
+	export : except_dcl ';' .  (22)
+
+	.  reduce 22
+
+
+state 211
+	interface_dcl : interface_header '{' interface_body '}' .  (13)
+
+	.  reduce 13
+
+
+state 212
+	exports : export exports .  (18)
+
+	.  reduce 18
+
+
+state 213
+	export : attr_dcl ';' .  (23)
+
+	.  reduce 23
+
+
+state 214
+	export : op_dcl ';' .  (24)
+
+	.  reduce 24
+
+
+state 215
+	op_dcl : op_attribute op_type_spec . IDENTIFIER parameter_dcls  (201)
+	op_dcl : op_attribute op_type_spec . IDENTIFIER parameter_dcls raises_expr  (203)
+	op_dcl : op_attribute op_type_spec . IDENTIFIER parameter_dcls raises_expr context_expr  (205)
+
+	IDENTIFIER  shift 268
+	.  error
+
+
+state 216
+	init_dcl : FACTORY IDENTIFIER . '(' init_param_decls ')' ';'  (63)
+	init_dcl : FACTORY IDENTIFIER . '(' ')' ';'  (64)
+
+	'('  shift 269
+	.  error
+
+
+state 217
+	state_member : PRIVATE type_spec . declarators ';'  (62)
+
+	IDENTIFIER  shift 116
+	.  error
+
+	simple_declarator  goto 117
+	declarators  goto 270
+	declarator  goto 119
+	complex_declarator  goto 120
+	array_declarator  goto 121
+
+
+state 218
+	state_member : PUBLIC type_spec . declarators ';'  (61)
+
+	IDENTIFIER  shift 116
+	.  error
+
+	simple_declarator  goto 117
+	declarators  goto 271
+	declarator  goto 119
+	complex_declarator  goto 120
+	array_declarator  goto 121
+
+
+state 219
+	value_dcl : value_header '{' value_elements '}' .  (41)
+
+	.  reduce 41
+
+
+state 220
+	value_elements : value_element value_elements .  (56)
+
+	.  reduce 56
+
+
+state 221
+	value_abs_dcl : ABSTRACT VALUETYPE IDENTIFIER '{' exports . '}'  (40)
+
+	'}'  shift 272
+	.  error
+
+
+state 222
+	value_abs_dcl : ABSTRACT VALUETYPE IDENTIFIER value_inheritance_spec '{' . exports '}'  (39)
+	exports : .  (19)
+
+	ANY  shift 64
+	ATTRIBUTE  shift 127
+	BOOLEAN  shift 33
+	CHAR  shift 34
+	CONST  shift 2
+	DOUBLE  shift 35
+	ENUM  shift 4
+	EXCEPTION  shift 5
+	FLOAT  shift 36
+	LONG  shift 37
+	OBJECT  shift 65
+	OCTET  shift 66
+	ONEWAY  shift 128
+	READONLY  shift 129
+	SHORT  shift 38
+	STRING  shift 39
+	STRUCT  shift 8
+	TYPEDEF  shift 9
+	UNION  shift 10
+	UNSIGNED  shift 40
+	VOID  shift 130
+	WCHAR  shift 68
+	SCOPE_DELIMITOR  shift 41
+	IDENTIFIER  shift 42
+	'}'  reduce 19
+
+	base_type_spec  goto 131
+	floating_pt_type  goto 74
+	integer_type  goto 75
+	signed_int  goto 45
+	signed_long_long_int  goto 46
+	signed_long_int  goto 47
+	signed_short_int  goto 48
+	unsigned_int  goto 49
+	unsigned_long_long_int  goto 50
+	unsigned_long_int  goto 51
+	unsigned_short_int  goto 52
+	char_type  goto 76
+	wide_char_type  goto 77
+	boolean_type  goto 78
+	octet_type  goto 79
+	any_type  goto 80
+	string_type  goto 132
+	scoped_name  goto 133
+	object_type  goto 84
+	op_type_spec  goto 134
+	param_type_spec  goto 135
+	type_dcl  goto 136
+	const_dcl  goto 137
+	except_dcl  goto 138
+	exports  goto 273
+	export  goto 141
+	attr_dcl  goto 142
+	op_dcl  goto 143
+	struct_type  goto 29
+	union_type  goto 30
+	enum_type  goto 31
+	op_attribute  goto 144
+
+
+state 223
+	primary_expr : '(' const_exp . ')'  (101)
+
+	')'  shift 274
+	.  error
+
+
+state 224
+	or_expr : or_expr '|' . xor_expr  (79)
+
+	FALSE_TOKEN  shift 155
+	TRUE_TOKEN  shift 156
+	SCOPE_DELIMITOR  shift 41
+	INTEGER_LITERAL  shift 157
+	FLOATING_PT_LITERAL  shift 158
+	CHARACTER_LITERAL  shift 159
+	STRING_LITERAL  shift 160
+	IDENTIFIER  shift 42
+	'('  shift 161
+	'+'  shift 162
+	'-'  shift 163
+	'~'  shift 164
+	.  error
+
+	scoped_name  goto 165
+	xor_expr  goto 275
+	and_expr  goto 169
+	shift_expr  goto 170
+	add_expr  goto 171
+	mult_expr  goto 172
+	unary_expr  goto 173
+	unary_operator  goto 174
+	primary_expr  goto 175
+	literal  goto 176
+	boolean_literal  goto 177
+
+
+state 225
+	xor_expr : xor_expr '^' . and_expr  (81)
+
+	FALSE_TOKEN  shift 155
+	TRUE_TOKEN  shift 156
+	SCOPE_DELIMITOR  shift 41
+	INTEGER_LITERAL  shift 157
+	FLOATING_PT_LITERAL  shift 158
+	CHARACTER_LITERAL  shift 159
+	STRING_LITERAL  shift 160
+	IDENTIFIER  shift 42
+	'('  shift 161
+	'+'  shift 162
+	'-'  shift 163
+	'~'  shift 164
+	.  error
+
+	scoped_name  goto 165
+	and_expr  goto 276
+	shift_expr  goto 170
+	add_expr  goto 171
+	mult_expr  goto 172
+	unary_expr  goto 173
+	unary_operator  goto 174
+	primary_expr  goto 175
+	literal  goto 176
+	boolean_literal  goto 177
+
+
+state 226
+	and_expr : and_expr '&' . shift_expr  (83)
+
+	FALSE_TOKEN  shift 155
+	TRUE_TOKEN  shift 156
+	SCOPE_DELIMITOR  shift 41
+	INTEGER_LITERAL  shift 157
+	FLOATING_PT_LITERAL  shift 158
+	CHARACTER_LITERAL  shift 159
+	STRING_LITERAL  shift 160
+	IDENTIFIER  shift 42
+	'('  shift 161
+	'+'  shift 162
+	'-'  shift 163
+	'~'  shift 164
+	.  error
+
+	scoped_name  goto 165
+	shift_expr  goto 277
+	add_expr  goto 171
+	mult_expr  goto 172
+	unary_expr  goto 173
+	unary_operator  goto 174
+	primary_expr  goto 175
+	literal  goto 176
+	boolean_literal  goto 177
+
+
+state 227
+	shift_expr : shift_expr LEFT_SHIFT . add_expr  (86)
+
+	FALSE_TOKEN  shift 155
+	TRUE_TOKEN  shift 156
+	SCOPE_DELIMITOR  shift 41
+	INTEGER_LITERAL  shift 157
+	FLOATING_PT_LITERAL  shift 158
+	CHARACTER_LITERAL  shift 159
+	STRING_LITERAL  shift 160
+	IDENTIFIER  shift 42
+	'('  shift 161
+	'+'  shift 162
+	'-'  shift 163
+	'~'  shift 164
+	.  error
+
+	scoped_name  goto 165
+	add_expr  goto 278
+	mult_expr  goto 172
+	unary_expr  goto 173
+	unary_operator  goto 174
+	primary_expr  goto 175
+	literal  goto 176
+	boolean_literal  goto 177
+
+
+state 228
+	shift_expr : shift_expr RIGHT_SHIFT . add_expr  (85)
+
+	FALSE_TOKEN  shift 155
+	TRUE_TOKEN  shift 156
+	SCOPE_DELIMITOR  shift 41
+	INTEGER_LITERAL  shift 157
+	FLOATING_PT_LITERAL  shift 158
+	CHARACTER_LITERAL  shift 159
+	STRING_LITERAL  shift 160
+	IDENTIFIER  shift 42
+	'('  shift 161
+	'+'  shift 162
+	'-'  shift 163
+	'~'  shift 164
+	.  error
+
+	scoped_name  goto 165
+	add_expr  goto 279
+	mult_expr  goto 172
+	unary_expr  goto 173
+	unary_operator  goto 174
+	primary_expr  goto 175
+	literal  goto 176
+	boolean_literal  goto 177
+
+
+state 229
+	add_expr : add_expr '+' . mult_expr  (88)
+
+	FALSE_TOKEN  shift 155
+	TRUE_TOKEN  shift 156
+	SCOPE_DELIMITOR  shift 41
+	INTEGER_LITERAL  shift 157
+	FLOATING_PT_LITERAL  shift 158
+	CHARACTER_LITERAL  shift 159
+	STRING_LITERAL  shift 160
+	IDENTIFIER  shift 42
+	'('  shift 161
+	'+'  shift 162
+	'-'  shift 163
+	'~'  shift 164
+	.  error
+
+	scoped_name  goto 165
+	mult_expr  goto 280
+	unary_expr  goto 173
+	unary_operator  goto 174
+	primary_expr  goto 175
+	literal  goto 176
+	boolean_literal  goto 177
+
+
+state 230
+	add_expr : add_expr '-' . mult_expr  (89)
+
+	FALSE_TOKEN  shift 155
+	TRUE_TOKEN  shift 156
+	SCOPE_DELIMITOR  shift 41
+	INTEGER_LITERAL  shift 157
+	FLOATING_PT_LITERAL  shift 158
+	CHARACTER_LITERAL  shift 159
+	STRING_LITERAL  shift 160
+	IDENTIFIER  shift 42
+	'('  shift 161
+	'+'  shift 162
+	'-'  shift 163
+	'~'  shift 164
+	.  error
+
+	scoped_name  goto 165
+	mult_expr  goto 281
+	unary_expr  goto 173
+	unary_operator  goto 174
+	primary_expr  goto 175
+	literal  goto 176
+	boolean_literal  goto 177
+
+
+state 231
+	mult_expr : mult_expr '*' . unary_expr  (91)
+
+	FALSE_TOKEN  shift 155
+	TRUE_TOKEN  shift 156
+	SCOPE_DELIMITOR  shift 41
+	INTEGER_LITERAL  shift 157
+	FLOATING_PT_LITERAL  shift 158
+	CHARACTER_LITERAL  shift 159
+	STRING_LITERAL  shift 160
+	IDENTIFIER  shift 42
+	'('  shift 161
+	'+'  shift 162
+	'-'  shift 163
+	'~'  shift 164
+	.  error
+
+	scoped_name  goto 165
+	unary_expr  goto 282
+	unary_operator  goto 174
+	primary_expr  goto 175
+	literal  goto 176
+	boolean_literal  goto 177
+
+
+state 232
+	mult_expr : mult_expr '/' . unary_expr  (92)
+
+	FALSE_TOKEN  shift 155
+	TRUE_TOKEN  shift 156
+	SCOPE_DELIMITOR  shift 41
+	INTEGER_LITERAL  shift 157
+	FLOATING_PT_LITERAL  shift 158
+	CHARACTER_LITERAL  shift 159
+	STRING_LITERAL  shift 160
+	IDENTIFIER  shift 42
+	'('  shift 161
+	'+'  shift 162
+	'-'  shift 163
+	'~'  shift 164
+	.  error
+
+	scoped_name  goto 165
+	unary_expr  goto 283
+	unary_operator  goto 174
+	primary_expr  goto 175
+	literal  goto 176
+	boolean_literal  goto 177
+
+
+state 233
+	mult_expr : mult_expr '%' . unary_expr  (93)
+
+	FALSE_TOKEN  shift 155
+	TRUE_TOKEN  shift 156
+	SCOPE_DELIMITOR  shift 41
+	INTEGER_LITERAL  shift 157
+	FLOATING_PT_LITERAL  shift 158
+	CHARACTER_LITERAL  shift 159
+	STRING_LITERAL  shift 160
+	IDENTIFIER  shift 42
+	'('  shift 161
+	'+'  shift 162
+	'-'  shift 163
+	'~'  shift 164
+	.  error
+
+	scoped_name  goto 165
+	unary_expr  goto 284
+	unary_operator  goto 174
+	primary_expr  goto 175
+	literal  goto 176
+	boolean_literal  goto 177
+
+
+state 234
+	unary_expr : unary_operator primary_expr .  (94)
+
+	.  reduce 94
+
+
+state 235
+	string_type : STRING '<' positive_int_const '>' .  (189)
+
+	.  reduce 189
+
+
+state 236
+	const_dcl : CONST const_type IDENTIFIER '=' const_exp .  (70)
+
+	.  reduce 70
+
+
+state 237
+	extends_enum : ',' . enumerator extends_enum  (184)
+
+	IDENTIFIER  shift 183
+	.  error
+
+	enumerator  goto 285
+
+
+state 238
+	enum_type : ENUM IDENTIFIER '{' enumerator extends_enum . '}'  (183)
+
+	'}'  shift 286
+	.  error
+
+
+state 239
+	member : type_spec declarators . ';'  (167)
+
+	';'  shift 287
+	.  error
+
+
+state 240
+	members : member members .  (165)
+
+	.  reduce 165
+
+
+state 241
+	except_dcl : EXCEPTION IDENTIFIER '{' members '}' .  (199)
+
+	.  reduce 199
+
+
+state 242
+	extends_inheritance : ',' . scoped_name extends_inheritance  (26)
+
+	SCOPE_DELIMITOR  shift 41
+	IDENTIFIER  shift 42
+	.  error
+
+	scoped_name  goto 288
+
+
+state 243
+	inheritance_spec : ':' scoped_name extends_inheritance .  (25)
+
+	.  reduce 25
+
+
+state 244
+	module : MODULE IDENTIFIER '{' at_least_one_definition '}' .  (10)
+
+	.  reduce 10
+
+
+state 245
+	struct_type : STRUCT IDENTIFIER '{' member_list '}' .  (162)
+
+	.  reduce 162
+
+
+state 246
+	at_least_one_member : member members .  (164)
+
+	.  reduce 164
+
+
+state 247
+	sequence_type : SEQUENCE '<' simple_type_spec ',' . positive_int_const '>'  (187)
+
+	FALSE_TOKEN  shift 155
+	TRUE_TOKEN  shift 156
+	SCOPE_DELIMITOR  shift 41
+	INTEGER_LITERAL  shift 157
+	FLOATING_PT_LITERAL  shift 158
+	CHARACTER_LITERAL  shift 159
+	STRING_LITERAL  shift 160
+	IDENTIFIER  shift 42
+	'('  shift 161
+	'+'  shift 162
+	'-'  shift 163
+	'~'  shift 164
+	.  error
+
+	scoped_name  goto 165
+	const_exp  goto 166
+	or_expr  goto 167
+	xor_expr  goto 168
+	and_expr  goto 169
+	shift_expr  goto 170
+	add_expr  goto 171
+	mult_expr  goto 172
+	unary_expr  goto 173
+	unary_operator  goto 174
+	primary_expr  goto 175
+	literal  goto 176
+	boolean_literal  goto 177
+	positive_int_const  goto 289
+
+
+state 248
+	sequence_type : SEQUENCE '<' simple_type_spec '>' .  (188)
+
+	.  reduce 188
+
+
+state 249
+	fixed_array_size : '[' positive_int_const . ']'  (194)
+
+	']'  shift 290
+	.  error
+
+
+state 250
+	at_least_one_fixed_array_size : fixed_array_size at_least_one_fixed_array_size .  (192)
+
+	.  reduce 192
+
+
+state 251
+	extend_declarators : ',' declarator . extend_declarators  (134)
+	extend_declarators : .  (135)
+
+	','  shift 197
+	';'  reduce 135
+
+	extend_declarators  goto 291
+
+
+state 252
+	switch_type_spec : integer_type .  (169)
+
+	.  reduce 169
+
+
+state 253
+	switch_type_spec : char_type .  (170)
+
+	.  reduce 170
+
+
+state 254
+	switch_type_spec : boolean_type .  (171)
+
+	.  reduce 171
+
+
+state 255
+	scoped_name : scoped_name . SCOPE_DELIMITOR IDENTIFIER  (31)
+	switch_type_spec : scoped_name .  (173)
+
+	SCOPE_DELIMITOR  shift 106
+	')'  reduce 173
+
+
+state 256
+	switch_type_spec : enum_type .  (172)
+
+	.  reduce 172
+
+
+state 257
+	union_type : UNION IDENTIFIER SWITCH '(' switch_type_spec . ')' '{' switch_body '}'  (168)
+
+	')'  shift 292
+	.  error
+
+
+state 258
+	extends_interface_name : ',' . interface_name extends_interface_name  (51)
+
+	SCOPE_DELIMITOR  shift 41
+	IDENTIFIER  shift 42
+	.  error
+
+	scoped_name  goto 200
+	interface_name  goto 293
+
+
+state 259
+	value_inheritance_spec : SUPPORTS interface_name extends_interface_name .  (50)
+
+	.  reduce 50
+
+
+state 260
+	value_inheritance_spec : ':' TRANCATABLE value_name . extends_value_name SUPPORTS interface_name extends_interface_name  (46)
+	value_inheritance_spec : ':' TRANCATABLE value_name . extends_value_name  (48)
+	extends_value_name : .  (54)
+
+	','  shift 261
+	SUPPORTS  reduce 54
+	'{'  reduce 54
+
+	extends_value_name  goto 294
+
+
+state 261
+	extends_value_name : ',' . value_name extends_value_name  (53)
+
+	SCOPE_DELIMITOR  shift 41
+	IDENTIFIER  shift 42
+	.  error
+
+	scoped_name  goto 203
+	value_name  goto 295
+
+
+state 262
+	value_inheritance_spec : ':' value_name extends_value_name . SUPPORTS interface_name extends_interface_name  (47)
+	value_inheritance_spec : ':' value_name extends_value_name .  (49)
+
+	SUPPORTS  shift 296
+	'{'  reduce 49
+
+
+state 263
+	simple_declarator : IDENTIFIER .  (138)
+
+	.  reduce 138
+
+
+state 264
+	attr_dcl : ATTRIBUTE param_type_spec simple_declarator . extends_attr  (195)
+	extends_attr : .  (198)
+
+	','  shift 297
+	';'  reduce 198
+
+	extends_attr  goto 298
+
+
+state 265
+	attr_dcl : READONLY ATTRIBUTE param_type_spec . simple_declarator extends_attr  (196)
+
+	IDENTIFIER  shift 263
+	.  error
+
+	simple_declarator  goto 299
+
+
+state 266
+	parameter_dcls : '(' . param_dcl extends_param ')'  (209)
+	parameter_dcls : '(' . ')'  (210)
+
+	IN  shift 300
+	INOUT  shift 301
+	OUT  shift 302
+	')'  shift 303
+	.  error
+
+	param_attribute  goto 304
+	param_dcl  goto 305
+
+
+state 267
+	op_dcl : op_type_spec IDENTIFIER parameter_dcls .  (200)
+	op_dcl : op_type_spec IDENTIFIER parameter_dcls . raises_expr  (202)
+	op_dcl : op_type_spec IDENTIFIER parameter_dcls . raises_expr context_expr  (204)
+
+	RAISES  shift 306
+	';'  reduce 200
+
+	raises_expr  goto 307
+
+
+state 268
+	op_dcl : op_attribute op_type_spec IDENTIFIER . parameter_dcls  (201)
+	op_dcl : op_attribute op_type_spec IDENTIFIER . parameter_dcls raises_expr  (203)
+	op_dcl : op_attribute op_type_spec IDENTIFIER . parameter_dcls raises_expr context_expr  (205)
+
+	'('  shift 266
+	.  error
+
+	parameter_dcls  goto 308
+
+
+state 269
+	init_dcl : FACTORY IDENTIFIER '(' . init_param_decls ')' ';'  (63)
+	init_dcl : FACTORY IDENTIFIER '(' . ')' ';'  (64)
+
+	IN  shift 309
+	')'  shift 310
+	.  error
+
+	init_param_decls  goto 311
+	init_param_decl  goto 312
+	init_param_attribute  goto 313
+
+
+state 270
+	state_member : PRIVATE type_spec declarators . ';'  (62)
+
+	';'  shift 314
+	.  error
+
+
+state 271
+	state_member : PUBLIC type_spec declarators . ';'  (61)
+
+	';'  shift 315
+	.  error
+
+
+state 272
+	value_abs_dcl : ABSTRACT VALUETYPE IDENTIFIER '{' exports '}' .  (40)
+
+	.  reduce 40
+
+
+state 273
+	value_abs_dcl : ABSTRACT VALUETYPE IDENTIFIER value_inheritance_spec '{' exports . '}'  (39)
+
+	'}'  shift 316
+	.  error
+
+
+state 274
+	primary_expr : '(' const_exp ')' .  (101)
+
+	.  reduce 101
+
+
+state 275
+	or_expr : or_expr '|' xor_expr .  (79)
+	xor_expr : xor_expr . '^' and_expr  (81)
+
+	'^'  shift 225
+	';'  reduce 79
+	':'  reduce 79
+	')'  reduce 79
+	'|'  reduce 79
+	'>'  reduce 79
+	']'  reduce 79
+
+
+state 276
+	xor_expr : xor_expr '^' and_expr .  (81)
+	and_expr : and_expr . '&' shift_expr  (83)
+
+	'&'  shift 226
+	';'  reduce 81
+	':'  reduce 81
+	')'  reduce 81
+	'|'  reduce 81
+	'^'  reduce 81
+	'>'  reduce 81
+	']'  reduce 81
+
+
+state 277
+	and_expr : and_expr '&' shift_expr .  (83)
+	shift_expr : shift_expr . RIGHT_SHIFT add_expr  (85)
+	shift_expr : shift_expr . LEFT_SHIFT add_expr  (86)
+
+	LEFT_SHIFT  shift 227
+	RIGHT_SHIFT  shift 228
+	';'  reduce 83
+	':'  reduce 83
+	')'  reduce 83
+	'|'  reduce 83
+	'^'  reduce 83
+	'&'  reduce 83
+	'>'  reduce 83
+	']'  reduce 83
+
+
+state 278
+	shift_expr : shift_expr LEFT_SHIFT add_expr .  (86)
+	add_expr : add_expr . '+' mult_expr  (88)
+	add_expr : add_expr . '-' mult_expr  (89)
+
+	'+'  shift 229
+	'-'  shift 230
+	LEFT_SHIFT  reduce 86
+	RIGHT_SHIFT  reduce 86
+	';'  reduce 86
+	':'  reduce 86
+	')'  reduce 86
+	'|'  reduce 86
+	'^'  reduce 86
+	'&'  reduce 86
+	'>'  reduce 86
+	']'  reduce 86
+
+
+state 279
+	shift_expr : shift_expr RIGHT_SHIFT add_expr .  (85)
+	add_expr : add_expr . '+' mult_expr  (88)
+	add_expr : add_expr . '-' mult_expr  (89)
+
+	'+'  shift 229
+	'-'  shift 230
+	LEFT_SHIFT  reduce 85
+	RIGHT_SHIFT  reduce 85
+	';'  reduce 85
+	':'  reduce 85
+	')'  reduce 85
+	'|'  reduce 85
+	'^'  reduce 85
+	'&'  reduce 85
+	'>'  reduce 85
+	']'  reduce 85
+
+
+state 280
+	add_expr : add_expr '+' mult_expr .  (88)
+	mult_expr : mult_expr . '*' unary_expr  (91)
+	mult_expr : mult_expr . '/' unary_expr  (92)
+	mult_expr : mult_expr . '%' unary_expr  (93)
+
+	'*'  shift 231
+	'/'  shift 232
+	'%'  shift 233
+	LEFT_SHIFT  reduce 88
+	RIGHT_SHIFT  reduce 88
+	';'  reduce 88
+	':'  reduce 88
+	')'  reduce 88
+	'|'  reduce 88
+	'^'  reduce 88
+	'&'  reduce 88
+	'+'  reduce 88
+	'-'  reduce 88
+	'>'  reduce 88
+	']'  reduce 88
+
+
+state 281
+	add_expr : add_expr '-' mult_expr .  (89)
+	mult_expr : mult_expr . '*' unary_expr  (91)
+	mult_expr : mult_expr . '/' unary_expr  (92)
+	mult_expr : mult_expr . '%' unary_expr  (93)
+
+	'*'  shift 231
+	'/'  shift 232
+	'%'  shift 233
+	LEFT_SHIFT  reduce 89
+	RIGHT_SHIFT  reduce 89
+	';'  reduce 89
+	':'  reduce 89
+	')'  reduce 89
+	'|'  reduce 89
+	'^'  reduce 89
+	'&'  reduce 89
+	'+'  reduce 89
+	'-'  reduce 89
+	'>'  reduce 89
+	']'  reduce 89
+
+
+state 282
+	mult_expr : mult_expr '*' unary_expr .  (91)
+
+	.  reduce 91
+
+
+state 283
+	mult_expr : mult_expr '/' unary_expr .  (92)
+
+	.  reduce 92
+
+
+state 284
+	mult_expr : mult_expr '%' unary_expr .  (93)
+
+	.  reduce 93
+
+
+state 285
+	extends_enum : ',' enumerator . extends_enum  (184)
+	extends_enum : .  (185)
+
+	','  shift 237
+	'}'  reduce 185
+
+	extends_enum  goto 317
+
+
+state 286
+	enum_type : ENUM IDENTIFIER '{' enumerator extends_enum '}' .  (183)
+
+	.  reduce 183
+
+
+state 287
+	member : type_spec declarators ';' .  (167)
+
+	.  reduce 167
+
+
+state 288
+	extends_inheritance : ',' scoped_name . extends_inheritance  (26)
+	scoped_name : scoped_name . SCOPE_DELIMITOR IDENTIFIER  (31)
+	extends_inheritance : .  (27)
+
+	SCOPE_DELIMITOR  shift 106
+	','  shift 242
+	'{'  reduce 27
+
+	extends_inheritance  goto 318
+
+
+state 289
+	sequence_type : SEQUENCE '<' simple_type_spec ',' positive_int_const . '>'  (187)
+
+	'>'  shift 319
+	.  error
+
+
+state 290
+	fixed_array_size : '[' positive_int_const ']' .  (194)
+
+	.  reduce 194
+
+
+state 291
+	extend_declarators : ',' declarator extend_declarators .  (134)
+
+	.  reduce 134
+
+
+state 292
+	union_type : UNION IDENTIFIER SWITCH '(' switch_type_spec ')' . '{' switch_body '}'  (168)
+
+	'{'  shift 320
+	.  error
+
+
+state 293
+	extends_interface_name : ',' interface_name . extends_interface_name  (51)
+	extends_interface_name : .  (52)
+
+	','  shift 258
+	'{'  reduce 52
+
+	extends_interface_name  goto 321
+
+
+state 294
+	value_inheritance_spec : ':' TRANCATABLE value_name extends_value_name . SUPPORTS interface_name extends_interface_name  (46)
+	value_inheritance_spec : ':' TRANCATABLE value_name extends_value_name .  (48)
+
+	SUPPORTS  shift 322
+	'{'  reduce 48
+
+
+state 295
+	extends_value_name : ',' value_name . extends_value_name  (53)
+	extends_value_name : .  (54)
+
+	','  shift 261
+	SUPPORTS  reduce 54
+	'{'  reduce 54
+
+	extends_value_name  goto 323
+
+
+state 296
+	value_inheritance_spec : ':' value_name extends_value_name SUPPORTS . interface_name extends_interface_name  (47)
+
+	SCOPE_DELIMITOR  shift 41
+	IDENTIFIER  shift 42
+	.  error
+
+	scoped_name  goto 200
+	interface_name  goto 324
+
+
+state 297
+	extends_attr : ',' . simple_declarator extends_attr  (197)
+
+	IDENTIFIER  shift 263
+	.  error
+
+	simple_declarator  goto 325
+
+
+state 298
+	attr_dcl : ATTRIBUTE param_type_spec simple_declarator extends_attr .  (195)
+
+	.  reduce 195
+
+
+state 299
+	attr_dcl : READONLY ATTRIBUTE param_type_spec simple_declarator . extends_attr  (196)
+	extends_attr : .  (198)
+
+	','  shift 297
+	';'  reduce 198
+
+	extends_attr  goto 326
+
+
+state 300
+	param_attribute : IN .  (214)
+
+	.  reduce 214
+
+
+state 301
+	param_attribute : INOUT .  (216)
+
+	.  reduce 216
+
+
+state 302
+	param_attribute : OUT .  (215)
+
+	.  reduce 215
+
+
+state 303
+	parameter_dcls : '(' ')' .  (210)
+
+	.  reduce 210
+
+
+state 304
+	param_dcl : param_attribute . param_type_spec simple_declarator  (213)
+
+	ANY  shift 64
+	BOOLEAN  shift 33
+	CHAR  shift 34
+	DOUBLE  shift 35
+	FLOAT  shift 36
+	LONG  shift 37
+	OBJECT  shift 65
+	OCTET  shift 66
+	SHORT  shift 38
+	STRING  shift 39
+	UNSIGNED  shift 40
+	WCHAR  shift 68
+	SCOPE_DELIMITOR  shift 41
+	IDENTIFIER  shift 42
+	.  error
+
+	base_type_spec  goto 131
+	floating_pt_type  goto 74
+	integer_type  goto 75
+	signed_int  goto 45
+	signed_long_long_int  goto 46
+	signed_long_int  goto 47
+	signed_short_int  goto 48
+	unsigned_int  goto 49
+	unsigned_long_long_int  goto 50
+	unsigned_long_int  goto 51
+	unsigned_short_int  goto 52
+	char_type  goto 76
+	wide_char_type  goto 77
+	boolean_type  goto 78
+	octet_type  goto 79
+	any_type  goto 80
+	string_type  goto 132
+	scoped_name  goto 133
+	object_type  goto 84
+	param_type_spec  goto 327
+
+
+state 305
+	parameter_dcls : '(' param_dcl . extends_param ')'  (209)
+	extends_param : .  (212)
+
+	','  shift 328
+	')'  reduce 212
+
+	extends_param  goto 329
+
+
+state 306
+	raises_expr : RAISES . '(' scoped_name extends_raises ')'  (217)
+
+	'('  shift 330
+	.  error
+
+
+state 307
+	op_dcl : op_type_spec IDENTIFIER parameter_dcls raises_expr .  (202)
+	op_dcl : op_type_spec IDENTIFIER parameter_dcls raises_expr . context_expr  (204)
+
+	CONTEXT  shift 331
+	';'  reduce 202
+
+	context_expr  goto 332
+
+
+state 308
+	op_dcl : op_attribute op_type_spec IDENTIFIER parameter_dcls .  (201)
+	op_dcl : op_attribute op_type_spec IDENTIFIER parameter_dcls . raises_expr  (203)
+	op_dcl : op_attribute op_type_spec IDENTIFIER parameter_dcls . raises_expr context_expr  (205)
+
+	RAISES  shift 306
+	';'  reduce 201
+
+	raises_expr  goto 333
+
+
+state 309
+	init_param_attribute : IN .  (69)
+
+	.  reduce 69
+
+
+state 310
+	init_dcl : FACTORY IDENTIFIER '(' ')' . ';'  (64)
+
+	';'  shift 334
+	.  error
+
+
+state 311
+	init_dcl : FACTORY IDENTIFIER '(' init_param_decls . ')' ';'  (63)
+
+	')'  shift 335
+	.  error
+
+
+state 312
+	init_param_decls : init_param_decl . extends_init_param_decl  (65)
+	extends_init_param_decl : .  (67)
+
+	','  shift 336
+	')'  reduce 67
+
+	extends_init_param_decl  goto 337
+
+
+state 313
+	init_param_decl : init_param_attribute . param_type_spec simple_declarator  (68)
+
+	ANY  shift 64
+	BOOLEAN  shift 33
+	CHAR  shift 34
+	DOUBLE  shift 35
+	FLOAT  shift 36
+	LONG  shift 37
+	OBJECT  shift 65
+	OCTET  shift 66
+	SHORT  shift 38
+	STRING  shift 39
+	UNSIGNED  shift 40
+	WCHAR  shift 68
+	SCOPE_DELIMITOR  shift 41
+	IDENTIFIER  shift 42
+	.  error
+
+	base_type_spec  goto 131
+	floating_pt_type  goto 74
+	integer_type  goto 75
+	signed_int  goto 45
+	signed_long_long_int  goto 46
+	signed_long_int  goto 47
+	signed_short_int  goto 48
+	unsigned_int  goto 49
+	unsigned_long_long_int  goto 50
+	unsigned_long_int  goto 51
+	unsigned_short_int  goto 52
+	char_type  goto 76
+	wide_char_type  goto 77
+	boolean_type  goto 78
+	octet_type  goto 79
+	any_type  goto 80
+	string_type  goto 132
+	scoped_name  goto 133
+	object_type  goto 84
+	param_type_spec  goto 338
+
+
+state 314
+	state_member : PRIVATE type_spec declarators ';' .  (62)
+
+	.  reduce 62
+
+
+state 315
+	state_member : PUBLIC type_spec declarators ';' .  (61)
+
+	.  reduce 61
+
+
+state 316
+	value_abs_dcl : ABSTRACT VALUETYPE IDENTIFIER value_inheritance_spec '{' exports '}' .  (39)
+
+	.  reduce 39
+
+
+state 317
+	extends_enum : ',' enumerator extends_enum .  (184)
+
+	.  reduce 184
+
+
+state 318
+	extends_inheritance : ',' scoped_name extends_inheritance .  (26)
+
+	.  reduce 26
+
+
+state 319
+	sequence_type : SEQUENCE '<' simple_type_spec ',' positive_int_const '>' .  (187)
+
+	.  reduce 187
+
+
+state 320
+	union_type : UNION IDENTIFIER SWITCH '(' switch_type_spec ')' '{' . switch_body '}'  (168)
+
+	CASE  shift 339
+	DEFAULT  shift 340
+	.  error
+
+	switch_body  goto 341
+	at_least_one_case  goto 342
+	case  goto 343
+	at_least_one_case_label  goto 344
+	case_label  goto 345
+
+
+state 321
+	extends_interface_name : ',' interface_name extends_interface_name .  (51)
+
+	.  reduce 51
+
+
+state 322
+	value_inheritance_spec : ':' TRANCATABLE value_name extends_value_name SUPPORTS . interface_name extends_interface_name  (46)
+
+	SCOPE_DELIMITOR  shift 41
+	IDENTIFIER  shift 42
+	.  error
+
+	scoped_name  goto 200
+	interface_name  goto 346
+
+
+state 323
+	extends_value_name : ',' value_name extends_value_name .  (53)
+
+	.  reduce 53
+
+
+state 324
+	value_inheritance_spec : ':' value_name extends_value_name SUPPORTS interface_name . extends_interface_name  (47)
+	extends_interface_name : .  (52)
+
+	','  shift 258
+	'{'  reduce 52
+
+	extends_interface_name  goto 347
+
+
+state 325
+	extends_attr : ',' simple_declarator . extends_attr  (197)
+	extends_attr : .  (198)
+
+	','  shift 297
+	';'  reduce 198
+
+	extends_attr  goto 348
+
+
+state 326
+	attr_dcl : READONLY ATTRIBUTE param_type_spec simple_declarator extends_attr .  (196)
+
+	.  reduce 196
+
+
+state 327
+	param_dcl : param_attribute param_type_spec . simple_declarator  (213)
+
+	IDENTIFIER  shift 263
+	.  error
+
+	simple_declarator  goto 349
+
+
+state 328
+	extends_param : ',' . param_dcl extends_param  (211)
+
+	IN  shift 300
+	INOUT  shift 301
+	OUT  shift 302
+	.  error
+
+	param_attribute  goto 304
+	param_dcl  goto 350
+
+
+state 329
+	parameter_dcls : '(' param_dcl extends_param . ')'  (209)
+
+	')'  shift 351
+	.  error
+
+
+state 330
+	raises_expr : RAISES '(' . scoped_name extends_raises ')'  (217)
+
+	SCOPE_DELIMITOR  shift 41
+	IDENTIFIER  shift 42
+	.  error
+
+	scoped_name  goto 352
+
+
+state 331
+	context_expr : CONTEXT . '(' STRING_LITERAL extends_context ')'  (220)
+
+	'('  shift 353
+	.  error
+
+
+state 332
+	op_dcl : op_type_spec IDENTIFIER parameter_dcls raises_expr context_expr .  (204)
+
+	.  reduce 204
+
+
+state 333
+	op_dcl : op_attribute op_type_spec IDENTIFIER parameter_dcls raises_expr .  (203)
+	op_dcl : op_attribute op_type_spec IDENTIFIER parameter_dcls raises_expr . context_expr  (205)
+
+	CONTEXT  shift 331
+	';'  reduce 203
+
+	context_expr  goto 354
+
+
+state 334
+	init_dcl : FACTORY IDENTIFIER '(' ')' ';' .  (64)
+
+	.  reduce 64
+
+
+state 335
+	init_dcl : FACTORY IDENTIFIER '(' init_param_decls ')' . ';'  (63)
+
+	';'  shift 355
+	.  error
+
+
+state 336
+	extends_init_param_decl : ',' . init_param_decl extends_init_param_decl  (66)
+
+	IN  shift 309
+	.  error
+
+	init_param_decl  goto 356
+	init_param_attribute  goto 313
+
+
+state 337
+	init_param_decls : init_param_decl extends_init_param_decl .  (65)
+
+	.  reduce 65
+
+
+state 338
+	init_param_decl : init_param_attribute param_type_spec . simple_declarator  (68)
+
+	IDENTIFIER  shift 263
+	.  error
+
+	simple_declarator  goto 357
+
+
+state 339
+	case_label : CASE . const_exp ':'  (180)
+
+	FALSE_TOKEN  shift 155
+	TRUE_TOKEN  shift 156
+	SCOPE_DELIMITOR  shift 41
+	INTEGER_LITERAL  shift 157
+	FLOATING_PT_LITERAL  shift 158
+	CHARACTER_LITERAL  shift 159
+	STRING_LITERAL  shift 160
+	IDENTIFIER  shift 42
+	'('  shift 161
+	'+'  shift 162
+	'-'  shift 163
+	'~'  shift 164
+	.  error
+
+	scoped_name  goto 165
+	const_exp  goto 358
+	or_expr  goto 167
+	xor_expr  goto 168
+	and_expr  goto 169
+	shift_expr  goto 170
+	add_expr  goto 171
+	mult_expr  goto 172
+	unary_expr  goto 173
+	unary_operator  goto 174
+	primary_expr  goto 175
+	literal  goto 176
+	boolean_literal  goto 177
+
+
+state 340
+	case_label : DEFAULT . ':'  (181)
+
+	':'  shift 359
+	.  error
+
+
+state 341
+	union_type : UNION IDENTIFIER SWITCH '(' switch_type_spec ')' '{' switch_body . '}'  (168)
+
+	'}'  shift 360
+	.  error
+
+
+state 342
+	switch_body : at_least_one_case .  (174)
+
+	.  reduce 174
+
+
+state 343
+	at_least_one_case : case . at_least_one_case  (175)
+	at_least_one_case : case .  (176)
+
+	CASE  shift 339
+	DEFAULT  shift 340
+	'}'  reduce 176
+
+	at_least_one_case  goto 361
+	case  goto 343
+	at_least_one_case_label  goto 344
+	case_label  goto 345
+
+
+state 344
+	case : at_least_one_case_label . element_spec ';'  (177)
+
+	ANY  shift 64
+	BOOLEAN  shift 33
+	CHAR  shift 34
+	DOUBLE  shift 35
+	ENUM  shift 4
+	FLOAT  shift 36
+	LONG  shift 37
+	OBJECT  shift 65
+	OCTET  shift 66
+	SEQUENCE  shift 67
+	SHORT  shift 38
+	STRING  shift 39
+	STRUCT  shift 8
+	UNION  shift 10
+	UNSIGNED  shift 40
+	WCHAR  shift 68
+	SCOPE_DELIMITOR  shift 41
+	IDENTIFIER  shift 42
+	.  error
+
+	type_spec  goto 362
+	base_type_spec  goto 70
+	simple_type_spec  goto 71
+	template_type_spec  goto 72
+	constr_type_spec  goto 73
+	floating_pt_type  goto 74
+	integer_type  goto 75
+	signed_int  goto 45
+	signed_long_long_int  goto 46
+	signed_long_int  goto 47
+	signed_short_int  goto 48
+	unsigned_int  goto 49
+	unsigned_long_long_int  goto 50
+	unsigned_long_int  goto 51
+	unsigned_short_int  goto 52
+	char_type  goto 76
+	wide_char_type  goto 77
+	boolean_type  goto 78
+	octet_type  goto 79
+	any_type  goto 80
+	sequence_type  goto 81
+	string_type  goto 82
+	scoped_name  goto 83
+	object_type  goto 84
+	struct_type  goto 86
+	union_type  goto 87
+	enum_type  goto 88
+	element_spec  goto 363
+
+
+state 345
+	at_least_one_case_label : case_label . at_least_one_case_label  (178)
+	at_least_one_case_label : case_label .  (179)
+
+	CASE  shift 339
+	DEFAULT  shift 340
+	ANY  reduce 179
+	BOOLEAN  reduce 179
+	CHAR  reduce 179
+	DOUBLE  reduce 179
+	ENUM  reduce 179
+	FLOAT  reduce 179
+	LONG  reduce 179
+	OBJECT  reduce 179
+	OCTET  reduce 179
+	SEQUENCE  reduce 179
+	SHORT  reduce 179
+	STRING  reduce 179
+	STRUCT  reduce 179
+	UNION  reduce 179
+	UNSIGNED  reduce 179
+	WCHAR  reduce 179
+	SCOPE_DELIMITOR  reduce 179
+	IDENTIFIER  reduce 179
+
+	at_least_one_case_label  goto 364
+	case_label  goto 345
+
+
+state 346
+	value_inheritance_spec : ':' TRANCATABLE value_name extends_value_name SUPPORTS interface_name . extends_interface_name  (46)
+	extends_interface_name : .  (52)
+
+	','  shift 258
+	'{'  reduce 52
+
+	extends_interface_name  goto 365
+
+
+state 347
+	value_inheritance_spec : ':' value_name extends_value_name SUPPORTS interface_name extends_interface_name .  (47)
+
+	.  reduce 47
+
+
+state 348
+	extends_attr : ',' simple_declarator extends_attr .  (197)
+
+	.  reduce 197
+
+
+state 349
+	param_dcl : param_attribute param_type_spec simple_declarator .  (213)
+
+	.  reduce 213
+
+
+state 350
+	extends_param : ',' param_dcl . extends_param  (211)
+	extends_param : .  (212)
+
+	','  shift 328
+	')'  reduce 212
+
+	extends_param  goto 366
+
+
+state 351
+	parameter_dcls : '(' param_dcl extends_param ')' .  (209)
+
+	.  reduce 209
+
+
+state 352
+	scoped_name : scoped_name . SCOPE_DELIMITOR IDENTIFIER  (31)
+	raises_expr : RAISES '(' scoped_name . extends_raises ')'  (217)
+	extends_raises : .  (219)
+
+	SCOPE_DELIMITOR  shift 106
+	','  shift 367
+	')'  reduce 219
+
+	extends_raises  goto 368
+
+
+state 353
+	context_expr : CONTEXT '(' . STRING_LITERAL extends_context ')'  (220)
+
+	STRING_LITERAL  shift 369
+	.  error
+
+
+state 354
+	op_dcl : op_attribute op_type_spec IDENTIFIER parameter_dcls raises_expr context_expr .  (205)
+
+	.  reduce 205
+
+
+state 355
+	init_dcl : FACTORY IDENTIFIER '(' init_param_decls ')' ';' .  (63)
+
+	.  reduce 63
+
+
+state 356
+	extends_init_param_decl : ',' init_param_decl . extends_init_param_decl  (66)
+	extends_init_param_decl : .  (67)
+
+	','  shift 336
+	')'  reduce 67
+
+	extends_init_param_decl  goto 370
+
+
+state 357
+	init_param_decl : init_param_attribute param_type_spec simple_declarator .  (68)
+
+	.  reduce 68
+
+
+state 358
+	case_label : CASE const_exp . ':'  (180)
+
+	':'  shift 371
+	.  error
+
+
+state 359
+	case_label : DEFAULT ':' .  (181)
+
+	.  reduce 181
+
+
+state 360
+	union_type : UNION IDENTIFIER SWITCH '(' switch_type_spec ')' '{' switch_body '}' .  (168)
+
+	.  reduce 168
+
+
+state 361
+	at_least_one_case : case at_least_one_case .  (175)
+
+	.  reduce 175
+
+
+state 362
+	element_spec : type_spec . declarator  (182)
+
+	IDENTIFIER  shift 116
+	.  error
+
+	simple_declarator  goto 117
+	declarator  goto 372
+	complex_declarator  goto 120
+	array_declarator  goto 121
+
+
+state 363
+	case : at_least_one_case_label element_spec . ';'  (177)
+
+	';'  shift 373
+	.  error
+
+
+state 364
+	at_least_one_case_label : case_label at_least_one_case_label .  (178)
+
+	.  reduce 178
+
+
+state 365
+	value_inheritance_spec : ':' TRANCATABLE value_name extends_value_name SUPPORTS interface_name extends_interface_name .  (46)
+
+	.  reduce 46
+
+
+state 366
+	extends_param : ',' param_dcl extends_param .  (211)
+
+	.  reduce 211
+
+
+state 367
+	extends_raises : ',' . scoped_name  (218)
+
+	SCOPE_DELIMITOR  shift 41
+	IDENTIFIER  shift 42
+	.  error
+
+	scoped_name  goto 374
+
+
+state 368
+	raises_expr : RAISES '(' scoped_name extends_raises . ')'  (217)
+
+	')'  shift 375
+	.  error
+
+
+state 369
+	context_expr : CONTEXT '(' STRING_LITERAL . extends_context ')'  (220)
+	extends_context : .  (222)
+
+	','  shift 376
+	')'  reduce 222
+
+	extends_context  goto 377
+
+
+state 370
+	extends_init_param_decl : ',' init_param_decl extends_init_param_decl .  (66)
+
+	.  reduce 66
+
+
+state 371
+	case_label : CASE const_exp ':' .  (180)
+
+	.  reduce 180
+
+
+state 372
+	element_spec : type_spec declarator .  (182)
+
+	.  reduce 182
+
+
+state 373
+	case : at_least_one_case_label element_spec ';' .  (177)
+
+	.  reduce 177
+
+
+state 374
+	scoped_name : scoped_name . SCOPE_DELIMITOR IDENTIFIER  (31)
+	extends_raises : ',' scoped_name .  (218)
+
+	SCOPE_DELIMITOR  shift 106
+	')'  reduce 218
+
+
+state 375
+	raises_expr : RAISES '(' scoped_name extends_raises ')' .  (217)
+
+	.  reduce 217
+
+
+state 376
+	extends_context : ',' . STRING_LITERAL extends_context  (221)
+
+	STRING_LITERAL  shift 378
+	.  error
+
+
+state 377
+	context_expr : CONTEXT '(' STRING_LITERAL extends_context . ')'  (220)
+
+	')'  shift 379
+	.  error
+
+
+state 378
+	extends_context : ',' STRING_LITERAL . extends_context  (221)
+	extends_context : .  (222)
+
+	','  shift 376
+	')'  reduce 222
+
+	extends_context  goto 380
+
+
+state 379
+	context_expr : CONTEXT '(' STRING_LITERAL extends_context ')' .  (220)
+
+	.  reduce 220
+
+
+state 380
+	extends_context : ',' STRING_LITERAL extends_context .  (221)
+
+	.  reduce 221
+
+
+78 terminals, 113 nonterminals
+226 grammar rules, 381 states

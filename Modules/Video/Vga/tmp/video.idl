@@ -1,0 +1,27 @@
+interface video
+{
+  typedef cursor_position
+  {
+    unsigned x;
+    unsigned y;
+  }
+//  cursor_place
+  attribute cursor_position;
+
+  typedef font
+  {
+  };
+
+//  font_set
+  attribute font;
+
+//  mode_set
+  attribute mode;
+
+//  palette_set
+  typedef palette
+  {
+  };
+
+  attribute palette;
+};

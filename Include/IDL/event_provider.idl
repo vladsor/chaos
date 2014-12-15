@@ -1,0 +1,8 @@
+interface event_provider
+{
+    typedef sequence<octet> event_data_t;
+
+    return_t write (
+        in  event_data_t data
+    );
+};

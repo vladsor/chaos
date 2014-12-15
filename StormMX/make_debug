@@ -1,0 +1,4 @@
+mkdir   Debug
+make    compile_flags="-O0 -g -D__STORM_KERNEL__" \\
+          --directory=Debug \\
+          --makefile=../Makefile 

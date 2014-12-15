@@ -1,0 +1,8 @@
+valuetype irq_channel 
+    supports event_observer, large_integer
+{
+    factory init ();
+};
+
+
+

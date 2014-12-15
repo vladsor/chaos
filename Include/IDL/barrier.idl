@@ -1,0 +1,9 @@
+valuetype barrier
+    supports synchronizer
+{
+    factory init (
+        in  unsigned long number_of_wait);
+};
+
+
+

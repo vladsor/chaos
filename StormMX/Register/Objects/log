@@ -1,0 +1,39 @@
+namespace.c: In function `namespace_bind':
+namespace.c:393: warning: assignment from incompatible pointer type
+namespace.c:397: warning: implicit declaration of function `THROW_SYSTEM'
+namespace.c:462: invalid type argument of `->'
+namespace.c:462: invalid type argument of `->'
+namespace.c:384: warning: `current_namespace' might be used uninitialized in this function
+namespace.c: At top level:
+namespace.c:482: conflicting types for `namespace_resolve'
+../../../Include/Storm/namespace.h:8: previous declaration of `namespace_resolve'
+namespace.c: In function `namespace_resolve':
+namespace.c:497: warning: assignment from incompatible pointer type
+namespace.c:545: invalid type argument of `->'
+namespace.c:545: invalid type argument of `->'
+namespace.c:552: warning: control reaches end of non-void function
+namespace.c:488: warning: `current_namespace' might be used uninitialized in this function
+namespace.c: At top level:
+namespace.c:555: conflicting types for `namespace_unbind'
+../../../Include/Storm/namespace.h:9: previous declaration of `namespace_unbind'
+namespace.c: In function `namespace_unbind':
+namespace.c:570: warning: assignment from incompatible pointer type
+namespace.c:612: invalid type argument of `->'
+namespace.c:612: invalid type argument of `->'
+namespace.c:619: warning: control reaches end of non-void function
+namespace.c:561: warning: `current_namespace' might be used uninitialized in this function
+namespace.c: At top level:
+namespace.c:627: warning: no previous prototype for `namespace_bind_namespace'
+namespace.c: In function `namespace_bind_namespace':
+namespace.c:636: `handle' undeclared (first use in this function)
+namespace.c:636: (Each undeclared identifier is reported only once
+namespace.c:636: for each function it appears in.)
+namespace.c:642: warning: assignment from incompatible pointer type
+namespace.c:714: invalid type argument of `->'
+namespace.c:714: invalid type argument of `->'
+namespace.c:721: warning: control reaches end of non-void function
+namespace.c:633: warning: `current_namespace' might be used uninitialized in this function
+namespace.c: At top level:
+namespace.c:725: warning: initialization from incompatible pointer type
+namespace.c:735: warning: initialization from incompatible pointer type
+make: *** [namespace.o] Error 1

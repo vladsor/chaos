@@ -1,0 +1,25 @@
+# Project: Console App
+# Makefile created by Dev-C++ 4.9.6.0
+
+CC   = gcc.exe
+WINDRES = windres.exe
+RES  = 
+OBJ  = pool_of_integers.o $(RES)
+LIBS =  -L"D:/Dev-Cpp/lib" 
+INCS =  -I"D:/Dev-Cpp/include"  -I"D:/chaos.latest/Chaos.MyRev/Include" 
+BIN  = pool.exe
+CFLAGS = $(INCS)  -g3
+
+.PHONY: all all-before all-after clean clean-custom
+
+all: all-before pool.exe all-after
+
+
+clean: clean-custom
+	rm -f $(OBJ) $(BIN)
+
+$(BIN): $(OBJ)
+	$(CC) $(OBJ) -o "pool.exe" $(LIBS) $(CFLAGS)
+
+pool_of_integers.o: pool_of_integers.c
+	$(CC) -c pool_of_integers.c -o pool_of_integers.o $(CFLAGS)

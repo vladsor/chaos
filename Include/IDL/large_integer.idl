@@ -1,0 +1,10 @@
+interface large_integer
+{
+    return_t get (
+        in  long long value
+    );
+
+    return_t set (
+        out long long value
+    );
+};

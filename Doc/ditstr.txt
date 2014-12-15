@@ -1,0 +1,28 @@
+CORE:
+ - [debug]
+ - init
+ - [cpu]
+
+BASE:
+ - CORE
+ - irq
+ - timer
+ - [dma]
+ - [memory]
+ - [PTS]
+
+MODULEZ:
+ - BASE
+ - elf
+ - exception
+ - PTS
+
+SERDULEZ:
+ - MODULEZ
+ - IPCChannel
+ - I-O Repository
+
+DISTREZ:
+ - SERDULEZ
+ - Storm Control Protocol
+ - Net

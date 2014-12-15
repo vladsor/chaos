@@ -1,8 +1,0 @@
-README ($Id: README,v 1.1 2002/06/21 08:01:02 per Exp $)
-======
-
-The chaos libraries are used to define the protocol used by a service
-provider. For example, if a module provides the service "log", it will
-use structures from a library called "log".
-
--- Per Lundberg <per@chaosdev.org>  Fri, 21 Jun 2002 09:31:14 +0200

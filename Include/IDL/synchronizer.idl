@@ -1,0 +1,4 @@
+interface synchronizer
+{
+    return_t wait ();
+};

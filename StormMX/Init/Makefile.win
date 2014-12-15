@@ -1,0 +1,38 @@
+# Project: init
+# Makefile created by Dev-C++ 4.9.6.0
+
+CC   = gcc.exe
+WINDRES = windres.exe
+RES  = 
+OBJ  = parse.o gdt.o idt.o init.o multiboot.o $(RES)
+LIBS =  -L"C:/Dev-Cpp/lib" 
+INCS =  -I"d:/chaos.latest/chaos.MyRev/Include" 
+BIN  = init.a
+CFLAGS = $(INCS)  -s
+
+.PHONY: all all-before all-after clean clean-custom
+
+all: all-before init.a all-after
+
+
+clean: clean-custom
+	rm -f $(OBJ) $(BIN)
+
+$(BIN): $(OBJ)
+	ar r $(BIN) $(OBJ)
+	ranlib $(BIN)
+
+parse.o: parse.c
+	$(CC) -c parse.c -o parse.o $(CFLAGS)
+
+gdt.o: gdt.c
+	$(CC) -c gdt.c -o gdt.o $(CFLAGS)
+
+idt.o: idt.c
+	$(CC) -c idt.c -o idt.o $(CFLAGS)
+
+init.o: init.c
+	$(CC) -c init.c -o init.o $(CFLAGS)
+
+multiboot.o: multiboot.c
+	$(CC) -c multiboot.c -o multiboot.o $(CFLAGS)
