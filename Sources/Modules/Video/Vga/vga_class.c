@@ -12,18 +12,22 @@
 
 static description_reference_t class_description;
 
-class_reference_t vga_class_register (interface_reference_t interfaces[])
+class_reference_t vga_class_register (
+	interface_reference_t interfaces[],
+	event_supplier_interface_reference_t supplier_interfaces[],
+	event_consumer_interface_reference_t consumer_interfaces[])
 {
-    sequence_t empty_seq = {data: NULL, count: 0};
-    sequence_t ints_seq = {data: interfaces, count: 1};
+    sequence_t int_seq = {data: interfaces, count: 1};
+    sequence_t sup_seq = {data: supplier_interfaces, count: 1};
+    sequence_t cons_seq = {data: consumer_interfaces, count: 0};
     
     class_description = class_description_register (
         CLASS_VGA_ID,
-        L"VGA",
+        L"vga",
         CLASS_TYPE_STATIC,
-        1, 0, 0);
+        1, 1, 0);
     
-    return class_create (class_description, ints_seq, empty_seq, empty_seq, 
+    return class_create (class_description, int_seq, sup_seq, cons_seq, 
         REFERENCE_NULL, 0);
 }
 

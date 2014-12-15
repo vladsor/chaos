@@ -1,22 +1,28 @@
 #include <enviroment.h>
 
-#include <Interfaces/namespace.h>
-
-#include <Classes/pci_bus_object.h>
-#include <Classes/pci_device_object.h>
+#include <Classes/pci_bus.h>
+#include <Classes/pci_device.h>
 
 #include "Include/interface.h"
 #include "Include/pci.h"
 
-#include "Include/pci_bus_interface.h"
-#include "Include/pci_device_interface.h"
+#include "Include/pci_manager_class.h"
+#include "Include/pci_bus_class.h"
+#include "Include/pci_device_class.h"
 
-#include "Include/pci_bus_object_class.h"
-#include "Include/pci_device_object_class.h"
+#include "Include/pci_bus_control_interface.h"
+#include "Include/pci_device_control_interface.h"
 
-#define DEBUG_MODULE_NAME "PCI"
+#include "Include/debug_event_class.h"
+
+#define DEBUG_MODULE_NAME L"PCI"
 //#define DEBUG_LEVEL DEBUG_LEVEL_INFORMATIVE
 #define DEBUG_LEVEL DEBUG_LEVEL_NONE
+
+#ifndef __STORM_KERNEL__
+#   define DEBUG_SUPPLIER (pci_debug_supplier)
+#endif
+
 #include <debug/macros.h>
 
 /* Get the amount of PCI devices in this system. */
@@ -33,9 +39,9 @@ static uint32_t pci_bus_get_devices (context_t context UNUSED,
     uint32_t counter;
     uint32_t real_devices = 0;
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
-         "%s: %s (%p, %u, %u)\n",
-        __FILE__, __FUNCTION__,
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE,
+         L"%S: %s (%p, %u, %u)\n",
+        DEBUG_MODULE_NAME, __FUNCTION__,
         devices.data, devices.count, start);
 
     for (counter = 0; (device != NULL) && 
@@ -50,9 +56,10 @@ static uint32_t pci_bus_get_devices (context_t context UNUSED,
         }
     }
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
-         "%s::%s DONE (%u)\n",
-        __FILE__, __FUNCTION__, real_devices);
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1,
+        L"%S: %s: DONE (%u)\n",
+        DEBUG_MODULE_NAME, __FUNCTION__, 
+        real_devices);
 
     return real_devices;
 }
@@ -67,9 +74,9 @@ static uint32_t pci_bus_find_devices (context_t context UNUSED,
     uint32_t counter;
     uint32_t real_devices = 0;
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
-         "%s::%s (%X, %X, %X, %X, %X, %p, %u, %u)\n",
-        __FILE__, __FUNCTION__,
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE,
+        L"%S: %s (%X, %X, %X, %X, %X, %p, %u, %u)\n",
+        DEBUG_MODULE_NAME, __FUNCTION__,
         vendor_id, device_id, class_id, subclass_id, interface_id,
         devices.data, devices.count, start);
 
@@ -96,29 +103,29 @@ static uint32_t pci_bus_find_devices (context_t context UNUSED,
         }
     }
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
-         "%s::%s DONE (%u)\n",
-        __FILE__, __FUNCTION__, real_devices);
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1,
+        L"%S: %s: DONE (%u)\n",
+        DEBUG_MODULE_NAME, __FUNCTION__, real_devices);
 
     return real_devices;
 }
 
 
-static pci_bus_interface_table_t pci_bus_table =
+static pci_bus_control_interface_table_t pci_bus_control_table =
 {
-    pci_bus_get_amount,
-    pci_bus_get_devices,
-    pci_bus_find_devices,
+    get_amount: pci_bus_get_amount,
+    get_devices: pci_bus_get_devices,
+    find_devices: pci_bus_find_devices,
 };
 
 
 static void interface_pci_device_get_info (context_t context, 
     pci_device_info_t *device_info)
 {
-    pci_device_t *device = (pci_device_t *) context.object_data;
+    pci_device_t *device = (pci_device_t *) (address_t) context.object_data;
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
-         "%s: %s (%p, %p)\n",
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE,
+         L"%S: %s (%p, %p)\n",
         DEBUG_MODULE_NAME, __FUNCTION__,
         device, device_info);
 
@@ -138,10 +145,10 @@ static void interface_pci_device_enable (context_t context)
 {
     pci_device_t *device;
 
-    device = (pci_device_t *) context.object_data;
+    device = (pci_device_t *) (address_t) context.object_data;
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
-         "%s: %s (%p)\n",
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE,
+        L"%S: %s (%p)\n",
         DEBUG_MODULE_NAME, __FUNCTION__,
         device);
     
@@ -152,10 +159,10 @@ static void interface_pci_device_disable (context_t context)
 {
     pci_device_t *device;
 
-    device = (pci_device_t *) context.object_data;
+    device = (pci_device_t *) (address_t) context.object_data;
     
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
-         "%s: %s (%p)\n",
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE,
+        L"%S: %s (%p)\n",
         DEBUG_MODULE_NAME, __FUNCTION__,
         device);
     
@@ -166,37 +173,43 @@ static void interface_pci_device_set_master (context_t context)
 {
     pci_device_t *device;
 
-    device = (pci_device_t *) context.object_data;
+    device = (pci_device_t *) (address_t) context.object_data;
     
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
-         "%s: %s (%p)\n",
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE,
+        L"%S: %s (%p)\n",
         DEBUG_MODULE_NAME, __FUNCTION__,
         device);
     
     pci_set_master (device);
 }
 
-static pci_device_interface_table_t pci_device_table =
+static pci_device_control_interface_table_t pci_device_control_table =
 {
-    interface_pci_device_get_info,
-    interface_pci_device_enable,
-    interface_pci_device_disable,
-    interface_pci_device_set_master,
+    get_info: interface_pci_device_get_info,
+    enable: interface_pci_device_enable,
+    disable: interface_pci_device_disable,
+    set_master: interface_pci_device_set_master,
 };
 
-extern handle_reference_t kernel_handle_namespace;
 static class_reference_t pci_bus_class = REFERENCE_NULL;
 static object_reference_t pci_bus = REFERENCE_NULL;
 static class_reference_t pci_device_class = REFERENCE_NULL;
+
+event_supplier_reference_t pci_debug_supplier = REFERENCE_NULL;
+static object_reference_t manager_object;
+static class_reference_t manager_class;
 
 /* Main function. */
 
 return_t pci_main (int argc UNUSED, char *argv[] UNUSED, char **envp UNUSED)
 {
+    sequence_t empty_seq = {data: NULL, count: 0};
+
     pci_device_t *device;
     wchar_t device_name[WSTRING_MAX_LENGTH];
     interface_reference_t pci_bus_interfaces[1];
     interface_reference_t pci_device_interfaces[1];
+    event_supplier_interface_reference_t manager_supplier_interfaces[1];
 
     /* Initialise the PCI support. */
 
@@ -204,34 +217,50 @@ return_t pci_main (int argc UNUSED, char *argv[] UNUSED, char **envp UNUSED)
     {
         return -1;
     }
+
+    // Init manager
+    manager_supplier_interfaces[0] = debug_supplier_interface_register (
+        EVENT_CONSUMER_TYPE_PUSH, NULL, REFERENCE_NULL);
+    manager_class = pci_manager_class_register (NULL, 
+        manager_supplier_interfaces, NULL);
+    manager_object = object_create (manager_class, SECURITY_CURRENT, 
+        empty_seq, 0);
+
+    pci_debug_supplier = debug$supplier$create (manager_object);
+    event_supplier_set_queue (pci_debug_supplier, kernel_debug_queue);
     
-    pci_bus_interfaces[0] = pci_bus_interface_register (&pci_bus_table);
-    pci_bus_class = pci_bus_object_class_register (pci_bus_interfaces);
+    pci_bus_interfaces[0] = pci_bus_control_interface_register (
+        &pci_bus_control_table);
+    pci_bus_class = pci_bus_class_register (pci_bus_interfaces, NULL, NULL);
 
-    pci_bus = pci_bus_object$create (pci_bus_class);
-    namespace$bind (kernel_handle_namespace, L"/devices/pci", pci_bus);
+    // Init pci bus
+    pci_bus = pci_bus$object$create (pci_bus_class);
+    namespace$bind (kernel_handle_namespace, L"/devices/buses/pci", pci_bus);
 
-    pci_device_interfaces[0] = pci_device_interface_register (&pci_device_table);
-    pci_device_class = pci_device_object_class_register (pci_device_interfaces);
+    pci_device_interfaces[0] = pci_device_control_interface_register (
+        &pci_device_control_table);
+    pci_device_class = pci_device_class_register (pci_device_interfaces, NULL, 
+        NULL);
 
-    device = (pci_device_t *) pci_device_list.first;
-
-    while (device != NULL)
+    // Init pci devices
+    for (device = (pci_device_t *) pci_device_list.first; device != NULL;
+        device = (pci_device_t *) device->next)
     {
-        DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
-            "PCI: Device: %s, BIST: %s\n",
+        DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1, 
+            L"%S: Device: %s, BIST: %s\n",
+            DEBUG_MODULE_NAME,
             device->device_name, device->has_bist ? "TRUE" : "FALSE");
 
-        device->reference = pci_device_object$create (pci_device_class, device);
+        device->reference = pci_device$object$create (pci_device_class);
+        object_set_data (device->reference, (address_t) device);
         
-        wstring_print (device_name, L"/devices/pci-devices/%s", 
+        wstring_print (device_name, L"/devices/pci/%s", 
             device->slot_name);
-        namespace$bind (kernel_handle_namespace, device_name, device->reference);
-            
-        device = (pci_device_t *) device->next;
+        namespace$bind (kernel_handle_namespace, device_name, 
+            device->reference);
     }
     
-    return 0;
+    return STORM_RETURN_SUCCESS;
 }
 
 

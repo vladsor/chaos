@@ -10,11 +10,17 @@
 #include "Include/console_output.h"
 #include "Include/console.h"
 #include "Include/charset.h"
+#include "Include/interface.h"
 
-#define DEBUG_MODULE_NAME "Console"
+#define DEBUG_MODULE_NAME L"Console"
 //#define DEBUG_LEVEL DEBUG_LEVEL_INFORMATIVE
 //#define DEBUG_LEVEL 11
 #define DEBUG_LEVEL DEBUG_LEVEL_NONE
+
+#ifndef __STORM_KERNEL__
+#   define DEBUG_SUPPLIER (console_debug_supplier)
+#endif
+
 #include <debug/macros.h>
 
 /* Table for converting between ANSI and EGA colors. */
@@ -26,7 +32,7 @@ uint8_t color_table[] = { 0, 4, 2, 6, 1, 5, 3, 7 };
    Returns:     Nothing.
    Parameters:  Pointer to console-struct for console to scroll. */
 
-/* FIXME: Optimize things like this: Let the outputting function wait
+/** @todo Optimize things like this: Let the outputting function wait
    a bit before scrolling and if multiple lines were written, we can
    call this function with console_scroll (console,
    number_of_lines). This needs the buffer for the console to be
@@ -293,7 +299,7 @@ static void console_n (console_t *console, int argument)
    Parameters:  Pointer to console-struct for console.
                 Pointer to string to output. */
 
-/* FIXME: Write small inline functions for all escape sequences and
+/** @todo Write small inline functions for all escape sequences and
    call them, so code won't have to be duplicated. */
 
 void console_output (console_t *console, const wchar_t *string)
@@ -303,8 +309,8 @@ void console_output (console_t *console, const wchar_t *string)
     int old_cursor_y;
     char character;
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
-        "%s: %s (%p, %p)\n",
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE,
+        L"%S: %s (%p, %p)\n",
         DEBUG_MODULE_NAME, __FUNCTION__, 
         console, string);
   
@@ -804,11 +810,6 @@ void console_output (console_t *console, const wchar_t *string)
         (old_cursor_x != console->cursor_x || 
          old_cursor_y != console->cursor_y))
     {
-//        video_cursor_t video_cursor;
-        //    message_parameter_type message_parameter;
-
-//        video_cursor.x = console->cursor_x;
-//        video_cursor.y = console->cursor_y;
         video$cursor_set (video, console->cursor_x, console->cursor_y);
     }
 }
@@ -857,13 +858,11 @@ void console_output_at (console_t *console, int x, int y, const wchar_t *string)
             default:
             {
                 int buffer_index;
-                ucs2_t ucs2;
-
-                ucs2 = string[string_index];
-                string_index++;
 
                 /* The ASCII characters are always the same. */
-                character = convert_to_printable_char (ucs2, CODEPAGE_KOI8_R);
+                character = convert_to_printable_char (string[string_index], 
+                    CODEPAGE_KOI8_R);
+                string_index++;
                 
                 if (character == '\0')
                 {
@@ -889,13 +888,13 @@ void console_output_at (console_t *console, int x, int y, const wchar_t *string)
 
 void keyboard_cursor_set (console_t *console, bool visibility)
 {
-//    video_cursor_t video_cursor;
     uint32_t x, y;
  
     if (visibility == console->keyboard_cursor_visibility)
     {
         return;
     }
+
     console->keyboard_cursor_visibility = visibility;
   
     if (!has_video || (current_console != console))
@@ -915,8 +914,6 @@ void keyboard_cursor_set (console_t *console, bool visibility)
     }
 
     video$cursor_set (video, x, y);    
-  
-    return;
 }
 
 void mouse_cursor_draw (int width, int height, bool visibility)

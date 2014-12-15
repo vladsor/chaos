@@ -70,7 +70,7 @@ make -s deps \
     --makefile=$SOURCES_DIR/Makefile
 
 
-make $TARGET_NAME\
+make -s $TARGET_NAME\
     target_name="$TARGET_NAME" \
     compile_flags="$COMPILE_FLAGS" \
     preprocessor_flags="$PREPROCESSOR_FLAGS" \

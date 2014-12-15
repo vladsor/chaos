@@ -3,7 +3,7 @@
 #include <Interfaces/timer.h>
 #include "timer_interface.h"
 
-#define DEBUG_MODULE_NAME "Timer"
+#define DEBUG_MODULE_NAME "Kernel{Timer}"
 #define DEBUG_LEVEL DEBUG_LEVEL_INFORMATIVE
 
 #include <debug/macros.h>

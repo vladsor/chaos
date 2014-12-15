@@ -31,13 +31,19 @@
 #include "Include/console_manager_class.h"
 #include "Include/console_class.h"
 
+#include "Include/debug_event_class.h"
 #include "Include/keyboard_event_class.h"
 #include "Include/mouse_event_class.h"
 
-#define DEBUG_MODULE_NAME "Console"
+#define DEBUG_MODULE_NAME L"Console"
 //#define DEBUG_LEVEL DEBUG_LEVEL_INFORMATIVE
 //#define DEBUG_LEVEL 11
 #define DEBUG_LEVEL DEBUG_LEVEL_NONE
+
+#ifndef __STORM_KERNEL__
+#   define DEBUG_SUPPLIER (console_debug_supplier)
+#endif
+
 #include <debug/macros.h>
 
 handle_reference_t video = REFERENCE_NULL;
@@ -50,8 +56,8 @@ static uint64_t interface_console_create (context_t context UNUSED,
     console_t *console = NULL;
 //    video_mode_t video_mode;
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
-        "%s: %s (%u, %u, %u, %u)\n",
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE,
+        L"%S: %s (%u, %u, %u, %u)\n",
         DEBUG_MODULE_NAME, __FUNCTION__,
         console_width, console_height, console_depth, console_mode_type);
 
@@ -154,8 +160,8 @@ static void interface_console_output (context_t context, const wchar_t *text)
 {
     console_t *console = (console_t *) (address_t) context.object_data;
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
-        "%s: %s (%p, %p)\n",
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE,
+        L"%S: %s (%p, %p)\n",
         DEBUG_MODULE_NAME, __FUNCTION__, 
         console, text);
   
@@ -183,8 +189,8 @@ static void interface_console_output_at (context_t context, int x, int y,
 {
     console_t *console = (console_t *) (address_t) context.object_data;
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
-        "%s: %s (%u, %u, %p)\n",
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE,
+        L"%S: %s (%u, %u, %p)\n",
         DEBUG_MODULE_NAME, __FUNCTION__,
         x, y, text);
     
@@ -301,18 +307,17 @@ static void interface_console_video_mode_set (context_t context,
      
     video$mode_set (video, video_mode_width, video_mode_height, 
         video_mode_depth, video_mode_type);
-    {
-        console->width = video_mode_width;
-        console->height = video_mode_height;
-        console->depth = video_mode_depth;
-        console->type = video_mode_type;
+
+    console->width = video_mode_width;
+    console->height = video_mode_height;
+    console->depth = video_mode_depth;
+    console->type = video_mode_type;
         
-        console->cursor_x = 0;
-        console->cursor_y = 0;
+    console->cursor_x = 0;
+    console->cursor_y = 0;
         
-        console->cursor_saved_x = -1;
-        console->cursor_saved_y = -1;
-    }
+    console->cursor_saved_x = -1;
+    console->cursor_saved_y = -1;
 }
 
 static console_control_interface_table_t console_control_table = 
@@ -332,8 +337,8 @@ static uint32_t interface_console_read (context_t context, sequence_t bytes)
     uint32_t counter = 0;
 	p_keyboard_event_data_t keyboard_packet;
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
-        "%s: %s (%p, {%p, %u})\n",
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE,
+        L"%S: %s (%p, {%p, %u})\n",
         DEBUG_MODULE_NAME, __FUNCTION__, 
         console, bytes.data, bytes.count);
 
@@ -359,8 +364,8 @@ static uint32_t interface_console_read (context_t context, sequence_t bytes)
         }        
     }    
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1,
-        "%s: %s: [%c]\n",
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1,
+        L"%S: %s: [%c]\n",
         DEBUG_MODULE_NAME, __FUNCTION__, 
         ((char *) bytes.data)[0]);
         
@@ -378,21 +383,22 @@ static uint32_t interface_console_write (context_t context, sequence_t bytes)
     wchar_t text[2] = {0, 0};
     uint32_t i;
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
-        "%s: %s (%p, {%p, %u})\n",
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE,
+        L"%S: %s (%p, {%p, %u})\n",
         DEBUG_MODULE_NAME, __FUNCTION__, 
         console, bytes.data, bytes.count);
 
     for (i = 0; i < bytes.count; i++)
     {
         text[0] = ((p_uint8_t) bytes.data)[i];
-        DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1,
-            "{%c}%X", (char) text[0], (uint32_t) text[0]);
+        
+        DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1,
+            L"{%c}%X", (char) text[0], (uint32_t) text[0]);
 
         console_output (console, (const wchar_t *) text);
     }
     
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1, ".\n");
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1, L".\n");
     
     return bytes.count;
 }
@@ -406,19 +412,16 @@ static object_reference_t system_console;
 static class_reference_t console_class;
 static interface_reference_t console_interfaces[3];
 
-//static handle_reference_t console_factory_handle;
-static object_reference_t console_manager;
-static class_reference_t console_manager_class;
-static interface_reference_t console_manager_interfaces[1];
-//static interface_reference_t keyboard_handler_interface;
-static event_consumer_interface_reference_t 
-    console_manager_consumer_interfaces[2];
+static object_reference_t manager_object;
+static class_reference_t manager_class;
     
 static event_consumer_reference_t key_consumer;
 static event_supplier_reference_t key_supplier;
 static event_queue_reference_t key_queue;
 
+//static event_consumer_reference_t mouse_consumer;
 //static event_supplier_reference_t mouse_supplier;
+//static event_queue_reference_t mouse_queue;
 
 object_reference_t keyboard_object;
 object_reference_t mouse_object;
@@ -429,9 +432,12 @@ object_reference_t vga;
 return_t console_main (int argc UNUSED, char *argv[] UNUSED, char **envp UNUSED)
 {
     sequence_t empty_seq = {data: NULL, count: 0};
+    interface_reference_t manager_interfaces[1];
+    event_supplier_interface_reference_t manager_supplier_interfaces[1];
+    event_consumer_interface_reference_t manager_consumer_interfaces[2];
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
-        "%s: %s (%u, %p, %p)\n",
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE,
+        L"%S: %s (%u, %p, %p)\n",
         DEBUG_MODULE_NAME, __FUNCTION__, 
         argc, argv, envp);
     
@@ -450,25 +456,27 @@ return_t console_main (int argc UNUSED, char *argv[] UNUSED, char **envp UNUSED)
 
 //    mouse_supplier = mouse$supplier$create (mouse_object);
 
-    vga = namespace$resolve (kernel_handle_namespace, L"/devices/video");
+    vga = namespace$resolve (kernel_handle_namespace, L"/devices/vga");
     video = video$handle$create (vga);
     
-    console_manager_interfaces[0] = console_factory_interface_register (
+    manager_interfaces[0] = console_factory_interface_register (
         &console_factory_table);
-
-    console_manager_consumer_interfaces[0] = 
-        keyboard_consumer_interface_register (EVENT_CONSUMER_TYPE_PUSH, 
-            &console_keyboard_handler, REFERENCE_NULL, REFERENCE_NULL);
-
-    console_manager_consumer_interfaces[1] = 
-        mouse_consumer_interface_register (EVENT_CONSUMER_TYPE_PUSH, 
-            &console_mouse_handler, REFERENCE_NULL, REFERENCE_NULL);
-
-    console_manager_class = console_manager_class_register (
-        console_manager_interfaces, NULL, console_manager_consumer_interfaces);
-    
-    console_manager = object_create (console_manager_class, SECURITY_CURRENT, 
+    manager_supplier_interfaces[0] = debug_supplier_interface_register (
+        EVENT_CONSUMER_TYPE_PUSH, NULL, REFERENCE_NULL);
+    manager_consumer_interfaces[0] = keyboard_consumer_interface_register (
+        EVENT_CONSUMER_TYPE_PUSH, &console_keyboard_handler, 
+        REFERENCE_NULL, REFERENCE_NULL);
+    manager_consumer_interfaces[1] = mouse_consumer_interface_register (
+        EVENT_CONSUMER_TYPE_PUSH, &console_mouse_handler, 
+        REFERENCE_NULL, REFERENCE_NULL);
+    manager_class = console_manager_class_register (
+        manager_interfaces, manager_supplier_interfaces, 
+        manager_consumer_interfaces);
+    manager_object = object_create (manager_class, SECURITY_CURRENT, 
         empty_seq, 0);
+
+    console_debug_supplier = debug$supplier$create (manager_object);
+    event_supplier_set_queue (console_debug_supplier, kernel_debug_queue);
 
     console_interfaces[0] = console_control_interface_register (
         &console_control_table);
@@ -478,9 +486,9 @@ return_t console_main (int argc UNUSED, char *argv[] UNUSED, char **envp UNUSED)
         &output_stream_table);
 
     console_class = console_class_register (console_interfaces, NULL, NULL, 
-        console_manager_interfaces[0]);
+        manager_interfaces[0]);
 
-    key_consumer = keyboard$consumer$create (console_manager);
+    key_consumer = keyboard$consumer$create (manager_object);
     key_queue = event_queue_create (keyboard_description_register (), 
         EVENT_QUEUE_TYPE_SYNCHRONOUS, 0);
     event_supplier_set_queue (key_supplier, key_queue);

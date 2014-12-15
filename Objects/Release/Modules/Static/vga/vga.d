@@ -145,6 +145,13 @@
   /root/Chaos/Include/Interfaces/video.h \
   /root/Chaos/Sources/Modules/Video/Vga/Include/font_8x8.h \
   /root/Chaos/Sources/Modules/Video/Vga/Include/vga.h \
+  /root/Chaos/Sources/Modules/Video/Vga/Include/interface.h \
+  /root/Chaos/Include/Classes/kernel.h \
+  /root/Chaos/Include/Interfaces/init.h \
+  /root/Chaos/Include/Interfaces/namespace.h \
+  /root/Chaos/Include/Interfaces/timer.h \
+  /root/Chaos/Include/EventClasses/irq.h \
+  /root/Chaos/Include/EventClasses/debug.h \
   /root/Chaos/Include/debug/macros.h /root/Chaos/Include/string.h \
   /root/Chaos/Sources/Libraries/string/string.h \
   /root/Chaos/Sources/Libraries/string/defines.h \

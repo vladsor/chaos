@@ -8,12 +8,16 @@
 
 #include "Include/console.h"
 #include "Include/console_output.h"
+#include "Include/interface.h"
 
-
-#define DEBUG_MODULE_NAME "Console"
+#define DEBUG_MODULE_NAME L"Console"
 //#define DEBUG_LEVEL DEBUG_LEVEL_INFORMATIVE
 //#define DEBUG_LEVEL 11
 #define DEBUG_LEVEL DEBUG_LEVEL_NONE
+
+#ifndef __STORM_KERNEL__
+#   define DEBUG_SUPPLIER (console_debug_supplier)
+#endif
 
 #include <debug/macros.h>
 
@@ -231,22 +235,23 @@ hot_key_record_t table_of_hot_keys[] =
     },
 
 #if SCROLL
- /* Left Shift + Arrow Up -> scroll screen up */
- { 
-   { FALSE, TRUE, TRUE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, 
-     FALSE, IPC_KEYBOARD_SPECIAL_KEY_ARROW_UP, { 0, 0, 0, 0, 0, 0 },
+   /* Left Shift + Arrow Up -> scroll screen up */
+   { 
+       { FALSE, TRUE, TRUE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, 
+         FALSE, IPC_KEYBOARD_SPECIAL_KEY_ARROW_UP, { 0, 0, 0, 0, 0, 0 },
+       },
+       scroll_screen, (void*)1,
    },
-   scroll_screen, (void*)1,
- },
- /* Left Shift + Arrow Down -> scroll screen down */
- { 
-   { FALSE, TRUE, TRUE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, 
-     FALSE, IPC_KEYBOARD_SPECIAL_KEY_ARROW_DOWN, { 0, 0, 0, 0, 0, 0 },
+
+   /* Left Shift + Arrow Down -> scroll screen down */
+   { 
+       { FALSE, TRUE, TRUE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, 
+         FALSE, IPC_KEYBOARD_SPECIAL_KEY_ARROW_DOWN, { 0, 0, 0, 0, 0, 0 },
+       },
+       scroll_screen, (void*)-1,
    },
-   scroll_screen, (void*)-1,
- },
 #endif
- /* #FIXME: add more hotkeys */ 
+ /** @todo add more hotkeys */ 
  
 };
 
@@ -257,8 +262,8 @@ static bool hot_key_search (p_keyboard_event_data_t keyboard_packet)
 {
     unsigned int i;
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1,
-        "%s: %s (%p)\n",
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1,
+        L"%S: %s (%p)\n",
         DEBUG_MODULE_NAME, __FUNCTION__, 
         keyboard_packet);
   
@@ -274,8 +279,8 @@ static bool hot_key_search (p_keyboard_event_data_t keyboard_packet)
 
         if (is_equals && (function != NULL))
         {
-            DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1,
-                "%s: %s Function is %p.\n",
+            DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1,
+                L"%S: %s Function is %p.\n",
                 DEBUG_MODULE_NAME, __FUNCTION__, 
                 function);
 
@@ -285,8 +290,8 @@ static bool hot_key_search (p_keyboard_event_data_t keyboard_packet)
         }
     }
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1,
-        "%s: %s Not a hot key.\n",
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1,
+        L"%S: %s Not a hot key.\n",
         DEBUG_MODULE_NAME, __FUNCTION__);
     
     return FALSE;
@@ -295,13 +300,13 @@ static bool hot_key_search (p_keyboard_event_data_t keyboard_packet)
 void console_keyboard_handler (context_t context UNUSED, 
     p_keyboard_event_data_t keyboard_packet)
 {
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
-        "%s: %s (%p)\n",
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE,
+        L"%S: %s (%p)\n",
         DEBUG_MODULE_NAME, __FUNCTION__, 
         keyboard_packet);
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1,
-        "%s: %s Current console: %p, Char: %c {%u}\n",
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1,
+        L"%S: %s Current console: %p, Char: %c {%u}\n",
         DEBUG_MODULE_NAME, __FUNCTION__, 
         current_console, (char) keyboard_packet->character, 
         (uint32_t) keyboard_packet->character);
@@ -365,8 +370,8 @@ void console_keyboard_handler (context_t context UNUSED,
         count_up (&((console_t *) current_console)->keyboard_count);
     }
     
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1,
-        "%s: %s Done\n",
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1,
+        L"%S: %s Done\n",
         DEBUG_MODULE_NAME, __FUNCTION__);
   
     return;
@@ -378,8 +383,8 @@ static void switch_to_next_console (void *parameter UNUSED)
 {
     console_t *new_console; 
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
-        "%s: %s ()\n",
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE,
+        L"%S: %s ()\n",
         DEBUG_MODULE_NAME, __FUNCTION__);
   
     if (current_console == NULL)
@@ -405,8 +410,8 @@ static void switch_to_next_console (void *parameter UNUSED)
       system_call_dispatch_next ();
     }
 */            
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
-        "%s: %s: new is %p\n",
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE,
+        L"%S: %s: new is %p\n",
         DEBUG_MODULE_NAME, __FUNCTION__, 
         new_console);
         

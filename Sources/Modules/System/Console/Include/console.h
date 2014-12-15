@@ -36,7 +36,7 @@ typedef struct
     uint8_t character;
     uint8_t attribute;
 
-} PACKED character_t;
+} character_t PACKED;
 
 /* A virtual console structure. */
 

@@ -8,10 +8,12 @@
 
 #include <enviroment.h>
 
-#include "realtek-pci.h"
+#include "Include/interface.h"
+#include "Include/realtek-pci.h"
 
 #define DEBUG_LEVEL DEBUG_LEVEL_INFORMATIVE
 //#define DEBUG_LEVEL DEBUG_LEVEL_NONE
+
 #include <debug/macros.h>
 
 /* User-tunable variables. */
@@ -158,15 +160,16 @@ int realtek_receive (realtek_device_t *device)
   uint16_t current_rx = device->current_rx;
   unsigned int counter;
   
-  if (realtek_debug > 4)
-  {
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
-                         "In %s (), current %4.4x BufAddr %4.4x,"
-                         " free to %4.4x, Command %2.2x.\n",
-                         __FUNCTION__, current_rx, 
-                         port_uint16_in (io_address + RxBufferAddress),
-                         port_uint16_in (io_address + RxBufferPointer),
-                         port_uint8_in (io_address + ChipCommand));
+    if (realtek_debug > 4)
+    {
+        DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE, 
+            L"%S: %s: current %4.4x BufAddr %4.4x, free to %4.4x, \
+            Command %2.2x.\n",
+            DEBUG_MODULE_NAME, __FUNCTION__, 
+            current_rx, 
+            port_uint16_in (io_address + RxBufferAddress),
+            port_uint16_in (io_address + RxBufferPointer),
+            port_uint8_in (io_address + ChipCommand));
   }
   
   while ((port_uint8_in (io_address + ChipCommand) & 1) == 0) 
@@ -194,8 +197,8 @@ int realtek_receive (realtek_device_t *device)
     {
       if (realtek_debug > 0)
       {
-        DEBUG_PRINT (DEBUG_LEVEL_WARNING,
-                             "Oversized Ethernet frame, status %x!\n",
+        DEBUG_PRINTW (DEBUG_LEVEL_WARNING,
+            L"Oversized Ethernet frame, status %x!\n",
                              rx_status);
       }
 
@@ -206,8 +209,8 @@ int realtek_receive (realtek_device_t *device)
     {
       if (realtek_debug > 1)
       {
-        DEBUG_PRINT (DEBUG_LEVEL_WARNING, 
-          "Ethernet frame had errors, status %x.\n", rx_status);
+        DEBUG_PRINTW (DEBUG_LEVEL_WARNING, 
+          L"Ethernet frame had errors, status %x.\n", rx_status);
       }
 
       // tp->stats.rx_errors++;
@@ -306,8 +309,8 @@ int realtek_receive (realtek_device_t *device)
 
   if (realtek_debug > 4)
   {
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
-                         "Done %s (), current %4.4x BufferAddress %4.4x,"
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE,
+                         L"Done %s (), current %4.4x BufferAddress %4.4x,"
                          " free to %4.4x, Command %2.2x.\n",
                          __FUNCTION__, current_rx,
                          port_uint16_in (io_address + RxBufferAddress),
@@ -365,8 +368,8 @@ bool realtek_start_transmit (uint8_t *data, unsigned int length,
 
   if (realtek_debug > 4)
   {
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
-                         "Queued Tx packet at %p size %d to slot %d.\n",
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE,
+                         L"Queued Tx packet at %p size %d to slot %d.\n",
                          data, length, entry);
   }
   

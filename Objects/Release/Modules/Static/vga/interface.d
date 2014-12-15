@@ -154,6 +154,7 @@
   /root/Chaos/Sources/Modules/Video/Vga/Include/vga.h \
   /root/Chaos/Sources/Modules/Video/Vga/Include/video_interface.h \
   /root/Chaos/Sources/Modules/Video/Vga/Include/vga_class.h \
+  /root/Chaos/Sources/Modules/Video/Vga/Include/debug_event_class.h \
   /root/Chaos/Include/debug/macros.h /root/Chaos/Include/string.h \
   /root/Chaos/Sources/Libraries/string/string.h \
   /root/Chaos/Sources/Libraries/string/defines.h \

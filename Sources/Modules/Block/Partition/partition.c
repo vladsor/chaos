@@ -5,8 +5,14 @@
 #include "Include/interface.h"
 #include "Include/partition.h"
 
+#define DEBUG_MODULE_NAME L"Partition"
 #define DEBUG_LEVEL DEBUG_LEVEL_INFORMATIVE
 //#define DEBUG_LEVEL DEBUG_LEVEL_NONE
+
+#ifndef __STORM_KERNEL__
+#   define DEBUG_SUPPLIER (partition_debug_supplier)
+#endif
+
 #include <debug/macros.h>
 
 #define _STATIC
@@ -322,8 +328,9 @@ static return_t check_extended (
 
         if (partition_type == PARTITION_TYPE_NORMAL)
         {
-            DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
-                "Partition:  LP: %s(Type 0x%02X), [%u, %uMB]\n",
+            DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE,
+                L"%S:  LP: %s(Type 0x%02X), [%u, %uMB]\n",
+                DEBUG_MODULE_NAME,
                 search_partition_name (partition[index].type),
                 partition[index].type,
                 partition[index].lba_starting_sector_number,
@@ -410,8 +417,9 @@ return_t scan_for_partitions (handle_reference_t generic, wchar_t *name)
 
         if (partition_type == PARTITION_TYPE_NORMAL)
         {
-            DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
-                "Parition: PP: %s(Type 0x%02X), [%u, %uMB]%s\n",
+            DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE,
+                L"%S: PP: %s(Type 0x%02X), [%u, %uMB]%s\n",
+                DEBUG_MODULE_NAME,
                 search_partition_name (partition[index].type),
                 partition[index].type,
                 partition[index].lba_starting_sector_number,

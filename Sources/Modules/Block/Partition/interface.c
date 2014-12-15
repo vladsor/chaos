@@ -3,17 +3,27 @@
 #include <Classes/kernel.h>
 #include <Classes/partition.h>
 
+#include "Include/partition_manager_class.h"
 #include "Include/partition_class.h"
 #include "Include/block_interface.h"
 
 #include "Include/interface.h"
 #include "Include/partition.h"
 
+#include "Include/debug_event_class.h"
+#include "Include/irq_event_class.h"
+
+#define DEBUG_MODULE_NAME L"Partition"
 //#define DEBUG_LEVEL DEBUG_LEVEL_INFORMATIVE
 #define DEBUG_LEVEL DEBUG_LEVEL_NONE
+
+#ifndef __STORM_KERNEL__
+#   define DEBUG_SUPPLIER (partition_debug_supplier)
+#endif
+
 #include <debug/macros.h>
 
-static uint32_t partition_block_read (
+static uint32_t block_read (
     context_t context,
     sequence_t blocks,
     uint32_t offset)
@@ -28,7 +38,7 @@ static uint32_t partition_block_read (
     return count;
 }
 
-static uint32_t partition_block_write (
+static uint32_t block_write (
     context_t context,
     sequence_t blocks,
     uint32_t offset)
@@ -45,8 +55,8 @@ static uint32_t partition_block_write (
 
 static block_interface_table_t block_table = 
 {
-    &partition_block_read,
-    &partition_block_write
+    read: &block_read,
+    write: &block_write
 };
 
 class_reference_t partition_class;
@@ -64,15 +74,30 @@ static generic_device_t generic_devices[] =
 #define number_of_generic_devices sizeof (generic_devices) / \
     sizeof (generic_device_t)
 
-extern handle_reference_t kernel_handle_namespace;
+event_supplier_reference_t partition_debug_supplier = REFERENCE_NULL;
+static object_reference_t manager_object;
+static class_reference_t manager_class;
 
-return_t partition_main (int argc UNUSED, char *argv[] UNUSED, char **envp UNUSED)
+return_t partition_main (int argc UNUSED, char *argv[] UNUSED, 
+    char **envp UNUSED)
 {
+    sequence_t empty_seq = {data: NULL, count: 0};
     unsigned int i;
     interface_reference_t interfaces[1];
+    event_supplier_interface_reference_t manager_supplier_interfaces[1];
     
     object_reference_t generic_object;
     handle_reference_t block_device;
+
+    manager_supplier_interfaces[0] = debug_supplier_interface_register (
+        EVENT_CONSUMER_TYPE_PUSH, NULL, REFERENCE_NULL);
+    manager_class = partition_manager_class_register (NULL, 
+        manager_supplier_interfaces, NULL);
+    manager_object = object_create (manager_class, SECURITY_CURRENT, 
+        empty_seq, 0);
+
+    partition_debug_supplier = debug$supplier$create (manager_object);
+    event_supplier_set_queue (partition_debug_supplier, kernel_debug_queue);
 
     interfaces[0] = block_interface_register (&block_table);
     partition_class = partition_class_register (interfaces);
@@ -104,8 +129,8 @@ return_t partition_block_create (
     wchar_t object_name[WSTRING_MAX_LENGTH];
     object_reference_t object;
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
-        "%s: Creating new object...\n",
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE, 
+        L"%S: Creating new object...\n",
         DEBUG_MODULE_NAME);
 
     memory_allocate ((void **) &data, sizeof (p_partition_data_t));
@@ -122,8 +147,8 @@ return_t partition_block_create (
     
     reference_release (object);
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
-        "%s: Creating new object...DONE\n",
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE, 
+        L"%S: Creating new object...DONE\n",
         DEBUG_MODULE_NAME);
     
     return 0;

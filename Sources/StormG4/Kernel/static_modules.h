@@ -1,13 +1,16 @@
-#define NO_STATIC_MODULES
-#define TEST_EXC
+//#define TEST_EXC
+#define MODULE_TYPE_MODULE
+
+//#define NO_STATIC_MODULES
 //#define STATIC_MODULE_KEYBOARD
 //#define STATIC_MODULE_MOUSE
 
 //#define STATIC_MODULE_VGA
 //#define STATIC_MODULE_CONSOLE
 
-//#define STATIC_MODULE_ATA
-//#define STATIC_MODULE_PARTITION
+#define STATIC_MODULE_ATA
+#define STATIC_MODULE_PARTITION
+#define STATIC_MODULE_VFAT
 
 extern return_t pci_main (int argc, char *argv[], char **envp);
 extern return_t pcnet32_main (int argc, char *argv[], char **envp);

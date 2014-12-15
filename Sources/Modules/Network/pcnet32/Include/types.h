@@ -105,13 +105,13 @@ typedef struct
     net_device_stats_t stats;
     char tx_full;
     int	 options;
-    int	 shared_irq:1,			/* shared irq possible */
-	ltint:1,
+    bool shared_irq;			/* shared irq possible */
+    bool ltint;
 #ifdef DO_DXSUFLO
-	      dxsuflo:1,						    /* disable transmit stop on uflo */
+    bool dxsuflo;						    /* disable transmit stop on uflo */
 #endif
-	full_duplex:1,				/* full duplex possible */
-	mii:1;					/* mii port available */
+    bool full_duplex;				/* full duplex possible */
+    bool mii;					/* mii port available */
     
 //    ethernet_device_t *next;
 } pcnet32_private_t;

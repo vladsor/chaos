@@ -11,11 +11,16 @@
 #include <Interfaces/video.h>
 
 #include "Include/font_8x8.h"
-
 #include "Include/vga.h"
+#include "Include/interface.h"
 
 #define DEBUG_MODULE_NAME "VGA"
 #define DEBUG_LEVEL DEBUG_LEVEL_INFORMATIVE
+
+#ifndef __STORM_KERNEL__
+#   define DEBUG_SUPPLIER (vga_debug_supplier)
+#endif
+
 #include <debug/macros.h>
 
 static void vga_set_mode (uint32_t mode UNUSED)

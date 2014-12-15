@@ -2,7 +2,7 @@
 
 TARGET="storm"
 TYPE="Kernel"
-VERSION="G4.5.0"
+VERSION="G4.5.5"
 
 SOURCES_DIR=$STORM_SOURCES
 ARCHIVES_DIR=$CHAOS_ARCHIVES/$TYPE
@@ -94,7 +94,7 @@ make -s \
     objects_directory=$OBJECTS_DIR \
     destination_directory=$BINARIES_DIR \
     libraries="list.a pool_of_integers.a pool_of_ranges.a avl_tree.a string.a hash_table.a" \
-    modules="keyboard.a vga.a console.a" \
+    modules="ata.a partition.a vfat.a" \
     linker_flags="$LINKER_FLAGS" \
     reformat_command="$REFORMAT_COMMAND" \
     --directory=$OBJECTS_DIR \
@@ -103,9 +103,9 @@ make -s \
 #libraries := list.a pool_of_integers.a pool_of_ranges.a avl_tree.a string.a
 #unicode.a
 #hash_table.a\
-
+#"keyboard.a vga.a console.a"
 
 #ata.a partition.a
 # 
 # vga.a console.a 
-#pci.a pcnet32.a ata.a partition.a vfat.a 
+#pci.a pcnet32.a 

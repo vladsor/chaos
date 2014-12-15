@@ -3,7 +3,7 @@
 #include <Interfaces/storm_module_control.h>
 #include "storm_module_control_interface.h"
 
-#define DEBUG_MODULE_NAME "StormModuleControl"
+#define DEBUG_MODULE_NAME "{StormModule}StormModuleControl"
 #define DEBUG_LEVEL DEBUG_LEVEL_INFORMATIVE
 
 #include <debug/macros.h>

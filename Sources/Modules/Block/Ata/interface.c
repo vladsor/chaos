@@ -6,17 +6,24 @@
 #include <Classes/kernel.h>
 #include <Classes/ata_drive.h>
 
-#include "Include/ata_class.h"
+#include "Include/ata_manager_class.h"
 #include "Include/ata_drive_class.h"
 #include "Include/block_interface.h"
+
+#include "Include/debug_event_class.h"
 #include "Include/irq_event_class.h"
 
-#define DEBUG_MODULE_NAME "ATA"
+#define DEBUG_MODULE_NAME L"ATA"
 #define DEBUG_LEVEL DEBUG_LEVEL_INFORMATIVE
 //#define DEBUG_LEVEL DEBUG_LEVEL_NONE
+
+#ifndef __STORM_KERNEL__
+#   define DEBUG_SUPPLIER (ata_debug_supplier)
+#endif
+
 #include <debug/macros.h>
 
-static uint32_t ata_block_read (
+static uint32_t block_read (
     context_t context,
     sequence_t block,
     uint32_t start_block)
@@ -27,8 +34,8 @@ static uint32_t ata_block_read (
     
     drive = (p_drive_t) (address_t) context.object_data;
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
-        "%s: %s (%p, {%p, %u}, %u)\n",
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE,
+        L"%S: %s (%p, {%p, %u}, %u)\n",
         DEBUG_MODULE_NAME, __FUNCTION__, 
         drive, block.data, block.count, start_block);
     
@@ -39,8 +46,8 @@ static uint32_t ata_block_read (
     
     Temp = ata_command (drive, &cmd);
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1,
-        "%s: %s Result=%i, Data=%X %X %X %X\n",
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1,
+        L"%S: %s Result=%i, Data=%X %X %X %X\n",
         DEBUG_MODULE_NAME, __FUNCTION__, 
         Temp, ((p_uint32_t) cmd.data)[0], ((p_uint32_t) cmd.data)[1],
         ((p_uint32_t) cmd.data)[2], ((p_uint32_t) cmd.data)[3]);
@@ -48,7 +55,7 @@ static uint32_t ata_block_read (
     return block.count;
 }
 
-static uint32_t ata_block_write (
+static uint32_t block_write (
     context_t context,
     sequence_t block,
     uint32_t start_block)
@@ -59,8 +66,8 @@ static uint32_t ata_block_write (
 
     drive = (p_drive_t) (address_t) context.object_data;
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
-        "%s: %s (%p, {%p, %u}, %u)\n",
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE,
+        L"%S: %s (%p, {%p, %u}, %u)\n",
         DEBUG_MODULE_NAME, __FUNCTION__, 
         drive, block.data, block.count, start_block);
 
@@ -71,8 +78,8 @@ static uint32_t ata_block_write (
 
     Temp = ata_command (drive, &cmd);
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1,
-        "%s: %s Result=%i, Data=%X %X %X %X\n",
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1,
+        L"%S: %s Result=%i, Data=%X %X %X %X\n",
         DEBUG_MODULE_NAME, __FUNCTION__, 
         Temp, ((p_uint32_t) cmd.data)[0], ((p_uint32_t) cmd.data)[1],
         ((p_uint32_t) cmd.data)[2], ((p_uint32_t) cmd.data)[3]);
@@ -82,14 +89,15 @@ static uint32_t ata_block_write (
 
 static block_interface_table_t block_table = 
 {
-    &ata_block_read,
-    &ata_block_write
+    read: &block_read,
+    write: &block_write
 };
 
 class_reference_t ata_drive_class;
 
-static object_reference_t ata_object;
-static class_reference_t ata_class;
+event_supplier_reference_t ata_debug_supplier = REFERENCE_NULL;
+static object_reference_t manager_object;
+static class_reference_t manager_class;
 
 event_consumer_reference_t irq14_consumer;
 event_consumer_reference_t irq15_consumer;
@@ -105,26 +113,33 @@ event_queue_reference_t irq15_queue;
 return_t ata_main (int argc UNUSED, char *argv[] UNUSED, char **envp UNUSED)
 {
     interface_reference_t ata_drive_interfaces[1];
-    event_consumer_interface_reference_t ata_event_consumer_interfaces[1];
+    event_supplier_interface_reference_t manager_supplier_interfaces[1];
+    event_consumer_interface_reference_t manager_consumer_interfaces[1];
     sequence_t empty_seq = {data: NULL, count: 0};
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
-        "%s: %s ()\n",
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE,
+        L"%S: %s ()\n",
         DEBUG_MODULE_NAME, __FUNCTION__);
  
     ata_drive_interfaces[0] = block_interface_register (&block_table);
     ata_drive_class = ata_drive_class_register (ata_drive_interfaces);
 
+    manager_supplier_interfaces[0] = debug_supplier_interface_register (
+        EVENT_CONSUMER_TYPE_PUSH, NULL, REFERENCE_NULL);
 
-    ata_event_consumer_interfaces[0] = irq_consumer_interface_register (
+    manager_consumer_interfaces[0] = irq_consumer_interface_register (
         EVENT_CONSUMER_TYPE_PULL, NULL, REFERENCE_NULL);
         
-    ata_class = ata_class_register (NULL, NULL, ata_event_consumer_interfaces);
-    ata_object = object_create (ata_class, SECURITY_CURRENT, 
+    manager_class = ata_manager_class_register (NULL, 
+        manager_supplier_interfaces, manager_consumer_interfaces);
+    manager_object = object_create (manager_class, SECURITY_CURRENT, 
         empty_seq, 0);
 
+    ata_debug_supplier = debug$supplier$create (manager_object);
+    event_supplier_set_queue (ata_debug_supplier, kernel_debug_queue);
+
     irq14_supplier = irq$supplier$create (OBJECT_KERNEL, 14);        
-    irq14_consumer = irq$consumer$create (ata_object);
+    irq14_consumer = irq$consumer$create (manager_object);
 
     irq14_queue = event_queue_create (irq_description_register (), 
         EVENT_QUEUE_TYPE_ASYNCHRONOUS, 1);
@@ -132,7 +147,7 @@ return_t ata_main (int argc UNUSED, char *argv[] UNUSED, char **envp UNUSED)
     event_consumer_set_queue (irq14_consumer, irq14_queue);
 
     irq15_supplier = irq$supplier$create (OBJECT_KERNEL, 15);        
-    irq15_consumer = irq$consumer$create (ata_object);
+    irq15_consumer = irq$consumer$create (manager_object);
 
     irq15_queue = event_queue_create (irq_description_register (), 
         EVENT_QUEUE_TYPE_ASYNCHRONOUS, 1);

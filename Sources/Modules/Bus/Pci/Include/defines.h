@@ -854,12 +854,16 @@
 
 #define PCI_RESOURCE_BITS               0x000000FF
 
+#ifndef PCI_RESOURCE_DEFINED
+
 /* Resource type. */
 
 #define PCI_RESOURCE_IO                 0x00000100
 #define PCI_RESOURCE_MEMORY             0x00000200
 #define PCI_RESOURCE_IRQ                0x00000400
 #define PCI_RESOURCE_DMA                0x00000800
+
+#endif
 
 /* No side effects. */
 

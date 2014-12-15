@@ -1,4 +1,68 @@
-int main(int argc, char *argv[]) 
+#include <enviroment.h>
+
+#include "Include/interface.h"
+#include "Include/ne2000.h"
+
+
+ne_start_card ()
+{
+        printf ("Starting card.. (pid %ld wants this..)", from);
+        ne_init_chip (&card, 1);
+        break;
+}
+
+ne_stop_card ()
+{
+        printf ("Stopping card.. (pid %ld wants this..)", from);
+        ne_init_chip (&card, 0);
+
+}
+
+ne_get_status ()
+{
+        printf ("** Status of NE2k card at 0x%x on irq %d:", card.io, card.irq);
+        printf ("** Interrupts processed: %ld", card.num_interrupts);
+        printf ("** Dropped packets: %ld", card.num_dropped);
+        printf ("** Status: 0x%x", card.status);
+}
+
+ne_rst_overrun ()
+{
+        printf ("-- RX overrun occured. Stop, reset, start card..");
+        ne_init_chip (&card, 0);
+
+        ne_handle_overflow (&card);
+        /* XXX - fix this */
+
+        ne_init_chip (&card, 1);
+}
+/*
+      case ETHERNET_REGISTER_TARGET:
+        if (num_users == MAX_USERS)
+        {
+          printf ("Too many users on card!");
+          break;
+        }
+
+        users[num_users].pid = from;
+        users[num_users].proto = htons (message[1]);
+        printf ("** Pid %ld requested ETHERNET_REGISTER_TARGET", from);
+        num_users++;
+        break;
+
+      case ETHERNET_PACKET_SEND:
+        printf ("** Pid %ld requested PACKET_SEND", from);
+        break;
+*/
+
+get_ethernet_address ()
+{
+        memcpy (&message[1], card.mac, 6);
+        printf ("** Pid %ld requested ETHERNET_ADDRESS_GET", from);
+        syscall_message_send (from, &message, 12);
+}
+
+int main (int argc, char *argv[], char **envp UNUSED) 
 {
   pid_type from;
 
@@ -47,84 +111,6 @@ int main(int argc, char *argv[])
 
   printf ("NE2000 card found at 0x%x using irq %d", card.io, card.irq);
   ne_init_chip (&card, 1);
-
-  /* Infinite loop */
-  for (;;)
-  {
-    from = syscall_message_receive (ERROR, &message, 1024);
-    if (from <= 0)
-    {
-      /* XXX - fix this after overflow bug is fixed */
-//      if(!x++) printf ("Hmm, Damnit, Got from=0x%lx", from);
-      continue;
-    }
-
-
-    switch (message[0])
-    {
-      case NE_START_CARD:
-        printf ("Starting card.. (pid %ld wants this..)", from);
-        ne_init_chip (&card, 1);
-        break;
-
-      case NE_STOP_CARD:
-        printf ("Stopping card.. (pid %ld wants this..)", from);
-        ne_init_chip (&card, 0);
-        break;
-
-      case NE_GET_STATUS:
-        printf ("** Status of NE2k card at 0x%x on irq %d:", card.io, card.irq);
-        printf ("** Interrupts processed: %ld", card.num_interrupts);
-        printf ("** Dropped packets: %ld", card.num_dropped);
-        printf ("** Status: 0x%x", card.status);
-        break;
-
-
-      case NE_RST_OVERRUN:
-        printf ("-- RX overrun occured. Stop, reset, start card..");
-        ne_init_chip (&card, 0);
-
-
-        ne_handle_overflow (&card);
-        /* XXX - fix this */
-
-        ne_init_chip (&card, 1);
-        break;
-
-
-      case ETHERNET_REGISTER_TARGET:
-        if (num_users == MAX_USERS)
-        {
-          printf ("Too many users on card!");
-          break;
-        }
-
-        users[num_users].pid = from;
-        users[num_users].proto = htons (message[1]);
-        printf ("** Pid %ld requested ETHERNET_REGISTER_TARGET", from);
-        num_users++;
-        break;
-
-      case ETHERNET_PACKET_SEND:
-        printf ("** Pid %ld requested PACKET_SEND", from);
-        break;
-	
-      case ETHERNET_ADDRESS_GET:
-        memcpy (&message[1], card.mac, 6);
-        printf ("** Pid %ld requested ETHERNET_ADDRESS_GET", from);
-        syscall_message_send (from, &message, 12);
-	break;
-
-
-      default:
-        printf ("** Pid %ld requested UNKNOWN type 0x%lx", from, message[0]);
-        message[0] = 42;
-/* If from == 0 (kernel?) wee get a pf here */
-//        syscall_message_send (from, &message, 4);
-        break;
-    }
-  }  
-
 
 
 }

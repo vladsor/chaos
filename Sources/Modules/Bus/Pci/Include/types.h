@@ -38,7 +38,9 @@ typedef struct
     const char *name;
     unsigned long start, end;
     unsigned long flags;
+
 } pci_resource_t;
+
 #endif /* !PCI_RESOURCE_DEFINED */
 
 /*
@@ -225,37 +227,38 @@ typedef struct
 
 typedef struct
 {
-  uint8_t (*read_u8) (pci_device_t *, int where);
-  uint16_t (*read_u16) (pci_device_t *, int where);
-  uint32_t (*read_u32) (pci_device_t *, int where);
-  void (*write_u8) (pci_device_t *, int where, uint8_t value);
-  void (*write_u16) (pci_device_t *, int where, uint16_t value);
-  void (*write_u32) (pci_device_t *, int where, uint32_t value);
+    uint8_t (*read_u8) (pci_device_t *, int where);
+    uint16_t (*read_u16) (pci_device_t *, int where);
+    uint32_t (*read_u32) (pci_device_t *, int where);
+    void (*write_u8) (pci_device_t *, int where, uint8_t value);
+    void (*write_u16) (pci_device_t *, int where, uint16_t value);
+    void (*write_u32) (pci_device_t *, int where, uint32_t value);
 
 } pci_operation_t;
 
 typedef struct
 {
-  uint16_t vendor_id;
+    uint16_t vendor_id;
 
-  uint16_t device_id;
+    uint16_t device_id;
 
-  char *name;
+    const char *name;
 
 } pci_device_id_t;
 
 typedef struct
 {
-  uint16_t vendor_id;
+    uint16_t vendor_id;
 
-  char *name;
+    const char *name;
 
 } pci_vendor_id_t;
 
 typedef struct
 {
-  uint8_t class_id;
-  char *class_name;
+    uint8_t class_id;
+    
+    const char *class_name;
 //  u8 sub_class_id;
 //  char *sub_class_name;
 //  u8 programming_interface;

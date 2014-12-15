@@ -1,14 +1,17 @@
 
 #include <enviroment.h>
 
-#include <Interfaces/pci_device.h>
-
 #include "Include/types.h"
 #include "Include/pcnet32_lowlevel.h"
 #include "Include/pcnet32.h"
+#include "Include/interface.h"
 
-#define DEBUG_MODULE_NAME "PCNet32"
+#define DEBUG_MODULE_NAME L"PCNet32"
 #define DEBUG_LEVEL DEBUG_LEVEL_INFORMATIVE
+
+#ifndef __STORM_KERNEL__
+#   define DEBUG_SUPPLIER (pcnet32_debug_supplier)
+#endif
 
 #include <debug/macros.h>
 
@@ -34,8 +37,8 @@ void pcnet32_purge_tx_ring (ethernet_device_t *dev)
     pcnet32_private_t *lp = dev->priv;
     int i;
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
-        "%s: %s (%p)\n", 
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE, 
+        L"%S: %s (%p)\n", 
         DEBUG_MODULE_NAME, __FUNCTION__,
         dev);
 
@@ -60,8 +63,8 @@ int pcnet32_init_ring (ethernet_device_t *dev)
     pcnet32_private_t *lp = dev->priv;
     int i;
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
-        "%s: %s (%p)\n", 
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE, 
+        L"%S: %s (%p)\n", 
         DEBUG_MODULE_NAME, __FUNCTION__,
         dev);
 
@@ -120,10 +123,10 @@ int pcnet32_init_ring (ethernet_device_t *dev)
     {
         lp->init_block.phys_addr[i] = dev->ethernet_address[i];
 
-        DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1, 
-            " %x", lp->init_block.phys_addr[i]);
+        DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1, 
+            L" %x", lp->init_block.phys_addr[i]);
     }
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1, "\n");
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1, L"\n");
         
     lp->init_block.rx_ring = little_endian_to_native_uint32 (lp->dma_addr + 
         offset_of (pcnet32_private_t, rx_ring));
@@ -131,7 +134,7 @@ int pcnet32_init_ring (ethernet_device_t *dev)
     lp->init_block.tx_ring = little_endian_to_native_uint32 (lp->dma_addr + 
         offset_of (pcnet32_private_t, tx_ring));
 
-	asm volatile ("wbinvd": : :"memory");
+//	asm volatile ("wbinvd": : :"memory");
         
     return 0;
 }
@@ -142,15 +145,16 @@ void pcnet32_tx_timeout (ethernet_device_t *dev)
     pcnet32_private_t *lp = dev->priv;
     unsigned int ioaddr = dev->base_addr;
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
-        "%s: %s (%p)\n", 
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE, 
+        L"%S: %s (%p)\n", 
         DEBUG_MODULE_NAME, __FUNCTION__,
         dev);
 
     /* Transmitter timeout, serious problems. */
-	DEBUG_PRINT (DEBUG_LEVEL_ERROR,
-        "%s: transmit timed out, status %4.4x, resetting.\n",
-	    dev->name, lp->a.read_csr (ioaddr, 0));
+    DEBUG_PRINTW (DEBUG_LEVEL_ERROR,
+        L"%S: transmit timed out, status %4.4x, resetting.\n",
+        DEBUG_MODULE_NAME,
+        lp->a.read_csr (ioaddr, 0));
            
 	lp->a.write_csr (ioaddr, 0, 0x0004);
 	lp->stats.tx_errors++;
@@ -159,28 +163,28 @@ void pcnet32_tx_timeout (ethernet_device_t *dev)
     {
         int i;
         
-        DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
-            " Ring data dump: dirty_tx %d cur_tx %d%s cur_rx %d.",
+        DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE2,
+            L" Ring data dump: dirty_tx %d cur_tx %d%s cur_rx %d.",
             lp->dirty_tx, lp->cur_tx, lp->tx_full ? " (full)" : "",
             lp->cur_rx);
 
         for (i = 0 ; i < RX_RING_SIZE; i++)
         {
-            DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
-                "%s %08x %04x %08x %04x", i & 1 ? "" : "\n ",
+            DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE2,
+                L"%s %08x %04x %08x %04x", i & 1 ? "" : "\n ",
                 lp->rx_ring[i].base, -lp->rx_ring[i].buf_length,
                 lp->rx_ring[i].msg_length, (unsigned)lp->rx_ring[i].status);
         }
         
         for (i = 0 ; i < TX_RING_SIZE; i++)
         {
-            DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
-                "%s %08x %04x %08x %04x", i & 1 ? "" : "\n ",
+            DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE2,
+                L"%s %08x %04x %08x %04x", i & 1 ? "" : "\n ",
                 lp->tx_ring[i].base, -lp->tx_ring[i].length,
                 lp->tx_ring[i].misc, (unsigned)lp->tx_ring[i].status);
         }
            
-        DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, "\n");
+        DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE, L"\n");
 	}
     
 	pcnet32_restart (dev, 0x0042);
@@ -197,16 +201,17 @@ int pcnet32_start_xmit (ethernet_device_t *dev, void *data, size_t length)
     int entry;
     unsigned long flags;
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
-        "%s: %s (%p)\n", 
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE, 
+        L"%S: %s (%p)\n", 
         DEBUG_MODULE_NAME, __FUNCTION__,
         dev);
 
     if (pcnet32_debug > 3) 
     {
-        DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
-            "%s: pcnet32_start_xmit() called, csr0 %4.4x.\n",
-            dev->name, lp->a.read_csr (ioaddr, 0));
+        DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE,
+            L"%S: %s: csr0 %4.4x.\n",
+            DEBUG_MODULE_NAME, __FUNCTION__,
+            lp->a.read_csr (ioaddr, 0));
     }
 
     spin_lock_irqsave (&lp->lock, flags);
@@ -277,49 +282,10 @@ int pcnet32_rx (ethernet_device_t *dev)
     pcnet32_private_t *lp = dev->priv;
     int entry = lp->cur_rx & RX_RING_MOD_MASK;
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
-        "%s: %s (%p)\n", 
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE, 
+        L"%S: %s (%p)\n", 
         DEBUG_MODULE_NAME, __FUNCTION__,
         dev);
-
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1, 
-        "%s: %s: Entry=%i, base=%x, buf_len=%x, status=%x, msg_len=%x\n", 
-        DEBUG_MODULE_NAME, __FUNCTION__,
-        entry, lp->rx_ring[entry].base, 
-        (uint32_t) lp->rx_ring[entry].buf_length,
-        (uint32_t) lp->rx_ring[entry].status, 
-        lp->rx_ring[entry].msg_length);
-
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1, 
-        "%s: %s: rx=%x.%x.%x.%x.%x\n", 
-        DEBUG_MODULE_NAME, __FUNCTION__,
-        ((uint32_t *) lp->rx_ring[entry].base)[0],
-        ((uint32_t *) lp->rx_ring[entry].base)[1],
-        ((uint32_t *) lp->rx_ring[entry].base)[2],
-        ((uint32_t *) lp->rx_ring[entry].base)[3],
-        ((uint32_t *) lp->rx_ring[entry].base)[4]);
-
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1, 
-        "%s: %s: Init rx=%x, tx=%x mode=%x, rx=%x.%x.%x.%x.%x.%x.%x.%x\n", 
-        DEBUG_MODULE_NAME, __FUNCTION__,
-        lp->init_block.rx_ring, lp->init_block.tx_ring, lp->init_block.mode,
-        ((uint32_t *)lp->init_block.rx_ring)[0],
-        ((uint32_t *)lp->init_block.rx_ring)[1],
-        ((uint32_t *)lp->init_block.rx_ring)[2],
-        ((uint32_t *)lp->init_block.rx_ring)[3],
-        ((uint32_t *)lp->init_block.rx_ring)[4],
-        ((uint32_t *)lp->init_block.rx_ring)[5],
-        ((uint32_t *)lp->init_block.rx_ring)[6],
-        ((uint32_t *)lp->init_block.rx_ring)[7]);
-
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1, 
-        "%s: %s: Init tx=%x.%x.%x.%x.%x\n", 
-        DEBUG_MODULE_NAME, __FUNCTION__,
-        ((uint32_t *)lp->init_block.tx_ring)[0],
-        ((uint32_t *)lp->init_block.tx_ring)[1],
-        ((uint32_t *)lp->init_block.tx_ring)[2],
-        ((uint32_t *)lp->init_block.tx_ring)[3],
-        ((uint32_t *)lp->init_block.tx_ring)[4]);
 
     /* If we own the next entry, it's a new packet. Send it up. */
     while ((short) little_endian_to_native_uint16 (lp->rx_ring[entry].status) 
@@ -358,16 +324,16 @@ int pcnet32_rx (ethernet_device_t *dev)
 //            sk_buff_t *skb;
             void *data = NULL;
             			
-            DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1, 
-                "%s: New packet: %u bytes.\n", 
-                __FUNCTION__,
+            DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1, 
+                L"%S: %s: New packet: %u bytes.\n", 
+                DEBUG_MODULE_NAME, __FUNCTION__,
                 pkt_len);
 
             if (pkt_len < 60) 
             {
-                DEBUG_PRINT (DEBUG_LEVEL_ERROR, 
-                    "%s: Runt packet!\n", 
-                    dev->name);
+                DEBUG_PRINTW (DEBUG_LEVEL_ERROR, 
+                    L"%S: Runt packet!\n", 
+                    DEBUG_MODULE_NAME);
 
                 lp->stats.rx_errors++;
             } 
@@ -378,11 +344,10 @@ int pcnet32_rx (ethernet_device_t *dev)
                 if (pkt_len > rx_copybreak)
                 {
 //                    struct sk_buff *newskb;
-				
-				    void *new_data;
-                    memory_allocate (&new_data, PKT_BUF_SZ);
+                    void *new_data;
                     
 //                    if ((newskb = dev_alloc_skb (PKT_BUF_SZ)))
+                    memory_allocate (&new_data, PKT_BUF_SZ);
                     if (new_data != NULL)
                     {
 //                        skb_reserve (newskb, 2);
@@ -421,9 +386,9 @@ int pcnet32_rx (ethernet_device_t *dev)
                 {
                     int i;
                 
-                    DEBUG_PRINT (DEBUG_LEVEL_ERROR,
-                        "\"%s\": Memory squeeze, deferring packet.\n", 
-                        dev->name);
+                    DEBUG_PRINTW (DEBUG_LEVEL_ERROR,
+                        L"%S: Memory squeeze, deferring packet.\n", 
+                        DEBUG_MODULE_NAME);
                     
                     for (i = 0; i < RX_RING_SIZE; i++)
                     {
@@ -462,9 +427,9 @@ int pcnet32_rx (ethernet_device_t *dev)
 //                netif_rx(skb);
                 lp->stats.rx_packets++;
 
-                DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1, 
-                    "%s Receive packet: %lu (%u bytes).\n", 
-                    __FUNCTION__,
+                DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1, 
+                    L"%S: %s: Receive packet: %lu (%u bytes).\n", 
+                    DEBUG_MODULE_NAME, __FUNCTION__,
                     lp->stats.rx_packets, pkt_len);
             }
         }
@@ -479,8 +444,8 @@ int pcnet32_rx (ethernet_device_t *dev)
         entry = (++lp->cur_rx) & RX_RING_MOD_MASK;
     }
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1, 
-        "%s: %s return.\n", 
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1, 
+        L"%S: %s return.\n", 
         DEBUG_MODULE_NAME, __FUNCTION__);
 
     return 0;

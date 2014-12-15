@@ -44,7 +44,7 @@ wchar_t * wstring_append (wchar_t *destination, const wchar_t *source)
 {
     wchar_t *result = destination;
 
-    while (*destination != L'\0')
+    while (*destination++ != L'\0')
     {
         /* nothing */
     }

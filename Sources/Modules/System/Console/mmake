@@ -44,6 +44,7 @@ case "$2" in
 	FORMAT="Dynamic"
 	PREPROCESSOR_FLAGS="-D__STORM_KERNEL_MODULE__ $PREPROCESSOR_FLAGS"
 	BINARY_NAME="$TARGET.so"
+	LIBRARIES="string.a irq_event.a"
 	;;
 *)
 	FORMAT="Static"
@@ -75,6 +76,7 @@ make -s $TARGET_NAME\
     preprocessor_flags="$PREPROCESSOR_FLAGS" \
     include_directories="$CHAOS_INCLUDES" \
     library_directories="$CHAOS_LIBRARIES" \
+    libraries="$LIBRARIES" \
     source_directory=$SOURCES_DIR \
     destination_directory=$BINARIES_DIR \
     --directory=$OBJECTS_DIR \

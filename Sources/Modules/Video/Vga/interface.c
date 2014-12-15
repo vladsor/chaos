@@ -8,9 +8,16 @@
 #include "Include/video_interface.h"
 #include "Include/vga_class.h"
 
-#define DEBUG_MODULE_NAME "VGA"
+#include "Include/debug_event_class.h"
+
+#define DEBUG_MODULE_NAME L"VGA"
 #define DEBUG_LEVEL DEBUG_LEVEL_INFORMATIVE
 //#define DEBUG_LEVEL DEBUG_LEVEL_NONE
+
+#ifndef __STORM_KERNEL__
+#   define DEBUG_SUPPLIER (vga_debug_supplier)
+#endif
+
 #include <debug/macros.h>
 
 //extern return_t video_get_palette (video_palette_t *palette);
@@ -90,23 +97,25 @@ static return_t video_set_palette (video_palette_t *palette)
 
 static video_interface_table_t table =
 {
-    &video_mode_set,
-    &video_cursor_set,
-    &video_font_set,
+    mode_set: &video_mode_set,
+    cursor_set: &video_cursor_set,
+    font_set: &video_font_set,
 };    
 
-static interface_reference_t interfaces[1];
-static class_reference_t class;
-static object_reference_t video = REFERENCE_NULL;
+static class_reference_t vga_class = REFERENCE_NULL;
+static object_reference_t vga_object = REFERENCE_NULL;
+event_supplier_reference_t vga_debug_supplier = REFERENCE_NULL;
 
 /* Main function. */
 
 return_t vga_main (int argc UNUSED, char *argv[] UNUSED, char **envp UNUSED)
 {
     sequence_t empty_seq = {data: NULL, count: 0};
+    interface_reference_t interfaces[1];
+    event_supplier_interface_reference_t supplier_interfaces[1];
     
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
-        "%s: %s (%u, %p, %p).\n",
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE, 
+        L"%S: %s (%u, %p, %p).\n",
         DEBUG_MODULE_NAME, __FUNCTION__,
         argc, argv, envp);
     
@@ -121,8 +130,8 @@ return_t vga_main (int argc UNUSED, char *argv[] UNUSED, char **envp UNUSED)
 
     if (io_port_register (VGA_PORT_BASE, VGA_PORTS, "VGA adapter"))
     {
-        DEBUG_PRINT (DEBUG_LEVEL_ERROR, 
-            "%s: Couldn't register portrange 0x%X - 0x%X.",
+        DEBUG_PRINTW (DEBUG_LEVEL_ERROR, 
+            L"%S: Couldn't register portrange 0x%X - 0x%X.",
             DEBUG_MODULE_NAME,
             VGA_PORT_BASE, VGA_PORT_BASE + VGA_PORTS - 1);
 
@@ -145,27 +154,28 @@ return_t vga_main (int argc UNUSED, char *argv[] UNUSED, char **envp UNUSED)
                       PAGE_WRITABLE | PAGE_NON_PRIVILEGED | 
                       PAGE_CACHE_DISABLE);
 
+    graphic_video_memory = memory_create_direct_data (MEMORY_CURRENT, 
+        VGA_MEMORY, VGA_MEMORY_SIZE,
+        MEMORY_OPTION_WRITABLE | MEMORY_OPTION_NON_PRIVILEGED | 
+        MEMORY_OPTION_CACHE_DISABLE);
+
   graphic_video_memory = (void *) (virtual_page_number * PAGE_SIZE);
 */
     graphic_video_memory = (p_uint8_t) VGA_MEMORY;
 
 //    vga_set_mode (1);
 
-/*
-    register_interface_register (&video_interface_id, IID_VIDEO, 
-        INTERFACE_TYPE_DYNAMIC, number_of_methods, methods, NULL);
-
-    register_class_register (&video_class_id, CID_VGA, CLASS_TYPE_DYNAMIC,
-        1, &video_interface_id, IID_NONE);
-
-    register_object_create (&video, video_class_id, NULL);
-*/
     interfaces[0] = video_interface_register (&table);
-    class = vga_class_register (interfaces);
-    video = object_create (class, SECURITY_CURRENT, empty_seq, 0);
+    supplier_interfaces[0] = debug_supplier_interface_register (
+        EVENT_CONSUMER_TYPE_PUSH, NULL, REFERENCE_NULL);
+    vga_class = vga_class_register (interfaces, supplier_interfaces, NULL);
+    vga_object = object_create (vga_class, SECURITY_CURRENT, empty_seq, 0);
 
-    namespace$bind (kernel_handle_namespace, L"/devices/video", video);
+    vga_debug_supplier = debug$supplier$create (vga_object);
+    event_supplier_set_queue (vga_debug_supplier, kernel_debug_queue);
 
-    return 0;
+    namespace$bind (kernel_handle_namespace, L"/devices/vga", vga_object);
+
+    return STORM_RETURN_SUCCESS;
 }
 

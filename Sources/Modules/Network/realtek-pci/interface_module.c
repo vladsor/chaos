@@ -1,37 +1,33 @@
 #include <enviroment.h>
 
 //#include <Classes/kernel.h>
-#include "interface.h"
+#include "Include/interface.h"
 
 //#define DEBUG_LEVEL DEBUG_LEVEL_INFORMATIVE
 #define DEBUG_LEVEL DEBUG_LEVEL_NONE
 #include <debug/macros.h>
 
-handle_t handle_namespace = {HANDLE_HEADER_KERNEL, NULL};
-handle_t handle_cpu = {HANDLE_HEADER_KERNEL, NULL};;
-handle_t handle_debug = {HANDLE_HEADER_KERNEL, NULL};;
-handle_t handle_dma = {HANDLE_HEADER_KERNEL, NULL};;
-handle_t handle_io_port = {HANDLE_HEADER_KERNEL, NULL};;
-handle_t handle_irq = {HANDLE_HEADER_KERNEL, NULL};;
-handle_t handle_memory = {HANDLE_HEADER_KERNEL, NULL};;
-handle_t handle_timer = {HANDLE_HEADER_KERNEL, NULL};;
-handle_t handle_thread = {HANDLE_HEADER_KERNEL, NULL};;
+#if defined (__STORM_KERNEL_MODULE__)
 
-return_t module_start (int argc, char *argv[])
+handle_reference_t kernel_handle_namespace = REFERENCE_NULL;
+event_queue_reference_t kernel_debug_queue = REFERENCE_NULL;
+
+return_t module_start (int argc, char *argv[], char **envp)
 {
     return_t return_value;
 
-    register_object_open (&handle_namespace, IID_NAMESPACE);
-    register_object_open (&handle_cpu, IID_CPU);
-    register_object_open (&handle_debug, IID_DEBUG);
-    register_object_open (&handle_dma, IID_DMA);
-    register_object_open (&handle_io_port, IID_IO_PORT);
-    register_object_open (&handle_irq, IID_IRQ);
-    register_object_open (&handle_memory, IID_MEMORY);
-    register_object_open (&handle_timer, IID_TIMER);
-    register_object_open (&handle_thread, IID_THREAD);
-
-    return_value = realtek_pci_main (argc, argv);
+    kernel_handle_namespace = namespace$handle$create (OBJECT_KERNEL);
+    kernel_debug_queue = namespace$resolve (kernel_handle_namespace, 
+        L"/Kernel/EventQueue/debug");
+ 
+    return_value = realtek_pci_main (argc, argv, envp);
     
     return return_value;
 }
+
+return_t module_stop (void)
+{
+    return 0;
+}
+
+#endif /* defined (__STORM_KERNEL_MODULE__) */

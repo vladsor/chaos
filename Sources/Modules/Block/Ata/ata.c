@@ -8,9 +8,13 @@
 #include "Include/ata.h"
 #include "Include/interface.h"
 
-#define DEBUG_MODULE_NAME "ATA"
+#define DEBUG_MODULE_NAME L"ATA"
 //#define DEBUG_LEVEL DEBUG_LEVEL_INFORMATIVE
 //#define DEBUG_LEVEL DEBUG_LEVEL_NONE
+
+#ifndef __STORM_KERNEL__
+#   define DEBUG_SUPPLIER (ata_debug_supplier)
+#endif
 
 #include <debug/macros.h>
 #include <exception/macros.h>
@@ -23,8 +27,8 @@ bool ata_select (uint16_t io_base, uint8_t command)
     unsigned int state;
     unsigned int timeout;
     
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
-        "%s: %s (%x, %x)\n",
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE, 
+        L"%S: %s (%x, %x)\n",
         DEBUG_MODULE_NAME, __FUNCTION__,
         io_base, command);
 
@@ -32,8 +36,8 @@ bool ata_select (uint16_t io_base, uint8_t command)
     
     if (((state ^ command) & 0x10) == 0)
     {
-        DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1, 
-            "%s: %s: Already selected.\n", 
+        DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1, 
+            L"%S: %s: Already selected.\n", 
             DEBUG_MODULE_NAME, __FUNCTION__);
     
         return TRUE;
@@ -54,8 +58,8 @@ bool ata_select (uint16_t io_base, uint8_t command)
         cpu_sleep_milli (CPU_CURRENT, 1);
     }    /* this _must_ be polled, I guess (sigh) */
     
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1, 
-        "%s: %s: Timeout %u.\n", 
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1, 
+        L"%S: %s: Timeout %u.\n", 
         DEBUG_MODULE_NAME, __FUNCTION__,
         timeout);
     
@@ -73,8 +77,8 @@ bool ata_probe (void)
     unsigned IOAdr;
     uint32_t timeout;
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
-        "%s: %s ()\n",
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE, 
+        L"%S: %s ()\n",
         DEBUG_MODULE_NAME, __FUNCTION__);
 
     /* set initial values */
@@ -93,8 +97,8 @@ bool ata_probe (void)
         IOAdr = drive[WhichDrive].io_address;
         /* poke at the interface to see if anything's there */
 
-        DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1,
-            "%s: %s: poking interface 0x%03X\n", 
+        DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1,
+            L"%S: %s: poking interface 0x%03X\n", 
             DEBUG_MODULE_NAME, __FUNCTION__,
             IOAdr);
 
@@ -114,8 +118,8 @@ bool ata_probe (void)
         if ((Temp1 != 0x55) || (Temp2 != 0xAA))
         /* no master: clobber both master and slave */
         {
-            DEBUG_PRINT (DEBUG_LEVEL_WARNING, 
-                "%s: %s: no master on I/F 0x%03X\n", 
+            DEBUG_PRINTW (DEBUG_LEVEL_WARNING, 
+                L"%S: %s: no master on I/F 0x%03X\n", 
                 DEBUG_MODULE_NAME, __FUNCTION__,
                 IOAdr);
 
@@ -123,8 +127,8 @@ bool ata_probe (void)
         }
         
         /* soft reset both drives on this I/F (selects master) */
-        DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1,
-            "%s: %s: found something on I/F 0x%03X, doing soft reset...\n",
+        DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1,
+            L"%S: %s: found something on I/F 0x%03X, doing soft reset...\n",
             DEBUG_MODULE_NAME, __FUNCTION__,
             IOAdr);
 
@@ -152,8 +156,8 @@ bool ata_probe (void)
              
         if (timeout == 0)
         {
-            DEBUG_PRINT (DEBUG_LEVEL_WARNING, 
-                "%s: %s: no master on I/F 0x%03X\n", 
+            DEBUG_PRINTW (DEBUG_LEVEL_WARNING, 
+                L"%S: %s: no master on I/F 0x%03X\n", 
                 DEBUG_MODULE_NAME, __FUNCTION__,
                 IOAdr);
 
@@ -172,7 +176,7 @@ bool ata_probe (void)
             object_reference_t device;
             wchar_t name[STRING_MAX_LENGTH];
 
-            device = ata$create (ata_drive_class);
+            device = ata_drive$object$create (ata_drive_class);
             object_set_data (device, (address_t) &drive[WhichDrive]);
             
             wstring_print (name, L"/devices/hdd/ata%u", WhichDrive);
@@ -185,8 +189,8 @@ bool ata_probe (void)
         {
             ata_select (IOAdr, 0xA0);
             
-            DEBUG_PRINT (DEBUG_LEVEL_WARNING, 
-                "%s: %s: no slave on I/F 0x%03X\n", 
+            DEBUG_PRINTW (DEBUG_LEVEL_WARNING, 
+                L"%S: %s: no slave on I/F 0x%03X\n", 
                 DEBUG_MODULE_NAME, __FUNCTION__,
                 IOAdr);
             continue; 
@@ -202,7 +206,7 @@ bool ata_probe (void)
             object_reference_t device;
             wchar_t name[STRING_MAX_LENGTH];
 
-            device = ata$create (ata_drive_class);
+            device = ata_drive$object$create (ata_drive_class);
             object_set_data (device, (address_t) &drive[WhichDrive + 1]);
             
             wstring_print (name, L"/devices/hdd/ata%u", WhichDrive + 1);
@@ -229,8 +233,8 @@ int ata_command (p_drive_t drive, p_drive_command_t command)
     uint16_t IOAdr;
     uint32_t timeout;
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
-        "%s: %s (%p, %p)\n",
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE, 
+        L"%S: %s (%p, %p)\n",
         DEBUG_MODULE_NAME, __FUNCTION__,
         drive, command);
 
@@ -239,8 +243,8 @@ int ata_command (p_drive_t drive, p_drive_command_t command)
     /* select the drive */
     if (!ata_select (IOAdr, drive->drive_select))
     {
-        DEBUG_PRINT (DEBUG_LEVEL_ERROR, 
-            "%s: %s: could not select drive\n",
+        DEBUG_PRINTW (DEBUG_LEVEL_ERROR, 
+            L"%s: %s: could not select drive\n",
             DEBUG_MODULE_NAME, __FUNCTION__);
         
         return (-1);
@@ -267,8 +271,8 @@ int ata_command (p_drive_t drive, p_drive_command_t command)
             Temp = (command->count + ATA_SECTSIZE - 1) >> ATA_LG_SECTSIZE;
             Count = MIN (Temp, drive->multi_sectors);
             
-            DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1, 
-                "%s: %s: ready to read %u sector(s) of %u\n", 
+            DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1, 
+                L"%S: %s: ready to read %u sector(s) of %u\n", 
                 DEBUG_MODULE_NAME, __FUNCTION__,
                 Count, Temp);
 
@@ -288,11 +292,16 @@ int ata_command (p_drive_t drive, p_drive_command_t command)
             }   
             EXCEPTION_CATCH_ALL (e) 
             {
-                DEBUG_PRINT (DEBUG_LEVEL_ERROR, "ataCmd: read timed out\n");
+                DEBUG_PRINTW (DEBUG_LEVEL_ERROR, 
+                    L"%S: %s: read timed out\n",
+                    DEBUG_MODULE_NAME, __FUNCTION__);
         
                 (void) port_uint8_in (IOAdr + ATA_REG_STAT);
         
                 return (-3);
+            }
+            EXCEPTION_FINALLY
+            {
             }
             EXCEPTION_END_TRY;
             
@@ -301,8 +310,8 @@ int ata_command (p_drive_t drive, p_drive_command_t command)
         
             if ((Stat & (0x81 | 0x58)) != 0x58)
             {
-                DEBUG_PRINT (DEBUG_LEVEL_ERROR, 
-                    "%s: %s: bad status (0x%02X) during read\n", 
+                DEBUG_PRINTW (DEBUG_LEVEL_ERROR, 
+                    L"%S: %s: bad status (0x%02X) during read\n", 
                     DEBUG_MODULE_NAME, __FUNCTION__,
                     Stat);
             
@@ -343,8 +352,8 @@ int ata_command (p_drive_t drive, p_drive_command_t command)
             Temp = (command->count + ATA_SECTSIZE - 1) >> ATA_LG_SECTSIZE;
             Count = MIN (Temp, drive->multi_sectors);
         
-            DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1, 
-                "%s: %s: ready to write %u sector(s) of %u\n", 
+            DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1, 
+                L"%S: %s: ready to write %u sector(s) of %u\n", 
                 DEBUG_MODULE_NAME, __FUNCTION__,
                 Count, Temp);
 
@@ -365,8 +374,8 @@ int ata_command (p_drive_t drive, p_drive_command_t command)
             
             if (timeout == 0)
             {
-                DEBUG_PRINT (DEBUG_LEVEL_ERROR, 
-                    "%s: %s: no DRQ during write\n",
+                DEBUG_PRINTW (DEBUG_LEVEL_ERROR, 
+                    L"%S: %s: no DRQ during write\n",
                     DEBUG_MODULE_NAME, __FUNCTION__);
                 
                 (void) port_uint8_in (IOAdr + ATA_REG_STAT);
@@ -391,12 +400,16 @@ int ata_command (p_drive_t drive, p_drive_command_t command)
             }    
             EXCEPTION_CATCH_ALL (e)
             {
-                DEBUG_PRINT (DEBUG_LEVEL_ERROR, 
-                    "ataCmd: write timed out\n");
+                DEBUG_PRINTW (DEBUG_LEVEL_ERROR, 
+                    L"%S: %s: write timed out\n",
+                    DEBUG_MODULE_NAME, __FUNCTION__);
                 
                 (void) port_uint8_in (IOAdr + ATA_REG_STAT);
                 
                 return(-3); 
+            }
+            EXCEPTION_FINALLY
+            {
             }
             EXCEPTION_END_TRY;
             
@@ -404,8 +417,8 @@ int ata_command (p_drive_t drive, p_drive_command_t command)
             Stat = port_uint8_in (IOAdr + ATA_REG_STAT);
             if ((Stat & (0xA1 | 0x50)) != 0x50)
             {
-                DEBUG_PRINT (DEBUG_LEVEL_ERROR, 
-                    "%s: %s: bad status (0x%02X) during write\n", 
+                DEBUG_PRINTW (DEBUG_LEVEL_ERROR, 
+                    L"%S: %s: bad status (0x%02X) during write\n", 
                     DEBUG_MODULE_NAME, __FUNCTION__,
                     Stat);
                     
@@ -423,8 +436,8 @@ int ata_command (p_drive_t drive, p_drive_command_t command)
     }
     else
     {
-        DEBUG_PRINT (DEBUG_LEVEL_ERROR, 
-            "%s: %s: bad cmd (%u)\n", 
+        DEBUG_PRINTW (DEBUG_LEVEL_ERROR, 
+            L"%S: %s: bad cmd (%u)\n", 
             DEBUG_MODULE_NAME, __FUNCTION__,
             command->command);
         

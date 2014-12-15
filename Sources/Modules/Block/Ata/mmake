@@ -41,14 +41,18 @@ case "$2" in
 	BINARY_NAME="$TARGET.a"
 	;;
 "-d")
+        echo "Format: Dynamic module"
 	FORMAT="Dynamic"
 	PREPROCESSOR_FLAGS="-D__STORM_KERNEL_MODULE__ $PREPROCESSOR_FLAGS"
 	BINARY_NAME="$TARGET.so"
+	LIBRARIES="string.a irq_event.a"
 	;;
 "-p")
+        echo "Format: Server"
 	FORMAT="Server"
 	PREPROCESSOR_FLAGS="-D__STORM_PROGRAM__ $PREPROCESSOR_FLAGS"
 	BINARY_NAME="$TARGET"
+	LIBRARIES="string.a irq_event.a"
 	;;
 *)
 	FORMAT="Static"
@@ -73,12 +77,13 @@ make -s deps \
     --makefile=$SOURCES_DIR/Makefile
 
 
-make -s $TARGET_NAME\
-	target="$TARGET" \
+make -s $TARGET_NAME \
+    target=$BINARIES_DIR/$TARGET \
     compile_flags="$COMPILE_FLAGS" \
     preprocessor_flags="$PREPROCESSOR_FLAGS" \
     include_directories="$CHAOS_INCLUDES" \
     library_directories="$CHAOS_LIBRARIES" \
+    libraries="$LIBRARIES" \
     source_directory=$SOURCES_DIR \
     --directory=$OBJECTS_DIR \
     --makefile=$SOURCES_DIR/Makefile

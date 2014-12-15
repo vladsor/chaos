@@ -1,0 +1,4 @@
+
+#define CLASS_PCNET32_MANAGER_ID 0x0013
+
+

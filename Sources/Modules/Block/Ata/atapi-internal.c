@@ -5,9 +5,13 @@
 
 #include <Classes/kernel.h>
 
-#define DEBUG_MODULE_NAME "ATA"
+#define DEBUG_MODULE_NAME L"ATA"
 //#define DEBUG_LEVEL DEBUG_LEVEL_INFORMATIVE
 //#define DEBUG_LEVEL DEBUG_LEVEL_NONE
+
+#ifndef __STORM_KERNEL__
+#   define DEBUG_SUPPLIER (ata_debug_supplier)
+#endif
 
 #include <debug/macros.h>
 #include <exception/macros.h>
@@ -45,8 +49,8 @@ int atapi_internal_command (p_drive_t drive, p_drive_command_t command,
     uint32_t Temp;
     uint32_t timeout;
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
-        "%s: %s (%p, %p, %p)\n",
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE, 
+        L"%S: %s (%p, %p, %p)\n",
         DEBUG_MODULE_NAME, __FUNCTION__,
         drive, command, packet);
 
@@ -54,15 +58,15 @@ int atapi_internal_command (p_drive_t drive, p_drive_command_t command,
 
     if (!ata_select (IOAdr, drive->drive_select))
     {
-        DEBUG_PRINT (DEBUG_LEVEL_ERROR, 
-            "%s: %s: could not select drive\n",
+        DEBUG_PRINTW (DEBUG_LEVEL_ERROR, 
+            L"%S: %s: could not select drive.\n",
             DEBUG_MODULE_NAME, __FUNCTION__);
         
         return (-1); 
     }
     
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
-        "%s: %s: writing register file\n",
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE, 
+        "%S: %s: writing register file.\n",
         DEBUG_MODULE_NAME, __FUNCTION__);
     
     port_uint8_out (IOAdr + ATA_REG_FEAT, 0);  /* irrelevant? */
@@ -88,8 +92,8 @@ int atapi_internal_command (p_drive_t drive, p_drive_command_t command,
     
     if (timeout == 0)
     {
-        DEBUG_PRINT (DEBUG_LEVEL_ERROR, 
-            "%s: %s: drive did not accept pkt cmd byte\n",
+        DEBUG_PRINTW (DEBUG_LEVEL_ERROR, 
+            L"%S: %s: drive did not accept pkt cmd byte\n",
             DEBUG_MODULE_NAME, __FUNCTION__);
         
         return (-3);
@@ -112,11 +116,14 @@ int atapi_internal_command (p_drive_t drive, p_drive_command_t command,
         {
             (void) port_uint8_in (IOAdr + ATA_REG_STAT);
             
-            DEBUG_PRINT (DEBUG_LEVEL_ERROR, 
-                "%s: %s: pkt cmd timed out\n",
+            DEBUG_PRINTW (DEBUG_LEVEL_ERROR, 
+                L"%S: %s: Packet command timed out.\n",
                 DEBUG_MODULE_NAME, __FUNCTION__);
             
             return (-4);
+        }
+        EXCEPTION_FINALLY
+        {
         }
         EXCEPTION_END_TRY;
         
@@ -128,8 +135,8 @@ int atapi_internal_command (p_drive_t drive, p_drive_command_t command,
             if (command->count != 0)
             {
                 /* could mean no CD or audio CD */
-                DEBUG_PRINT (DEBUG_LEVEL_ERROR, 
-                    "%s: %s: data shortage\n",
+                DEBUG_PRINTW (DEBUG_LEVEL_ERROR, 
+                    L"%S: %s: data shortage\n",
                     DEBUG_MODULE_NAME, __FUNCTION__);
 
                 return (-5); 
@@ -139,8 +146,8 @@ int atapi_internal_command (p_drive_t drive, p_drive_command_t command,
         }
         else if (phase == ATAPI_PHASE_ABORT)
         {
-            DEBUG_PRINT (DEBUG_LEVEL_WARNING, 
-                "%s: %s: cmd aborted\n",
+            DEBUG_PRINTW (DEBUG_LEVEL_WARNING, 
+                L"%S: %s: cmd aborted\n",
                 DEBUG_MODULE_NAME, __FUNCTION__);
             
             return (-6);
@@ -148,8 +155,8 @@ int atapi_internal_command (p_drive_t drive, p_drive_command_t command,
         else if (phase != ATAPI_PHASE_DATAIN)
         /* ATAPI_PH_DATAOUT or ATAPI_PH_CMDOUT or something completely bogus */
         {
-            DEBUG_PRINT (DEBUG_LEVEL_ERROR, 
-                "%s: %s: bad phase %u\n",
+            DEBUG_PRINTW (DEBUG_LEVEL_ERROR, 
+                L"%S: %s: bad phase %u\n",
                 DEBUG_MODULE_NAME, __FUNCTION__, 
                 phase);
             
@@ -159,7 +166,7 @@ int atapi_internal_command (p_drive_t drive, p_drive_command_t command,
         Got = port_uint8_in (IOAdr + ATA_REG_HICNT);
         Got = (Got << 8) | port_uint8_in (IOAdr + ATA_REG_LOCNT);
         
-        DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, "<%5u bytes>   ", Got);
+        DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE, L"<%5u bytes>   ", Got);
         
         /* Cmd->Count=how many bytes we want to transfer
            Got=how many bytes are available for transfer

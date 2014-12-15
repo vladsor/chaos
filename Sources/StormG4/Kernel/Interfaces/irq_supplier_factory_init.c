@@ -1,6 +1,6 @@
 #include <enviroment.h>
 
-#define DEBUG_MODULE_NAME "Kernel"
+#define DEBUG_MODULE_NAME "Kernel{IrqSupplierFactory}"
 //#define DEBUG_LEVEL DEBUG_LEVEL_INFORMATIVE
 #define DEBUG_LEVEL DEBUG_LEVEL_NONE
 

@@ -8,7 +8,7 @@
 
 #include "flat_namespace_object_factory_interface.h"
 
-#define DEBUG_MODULE_NAME L"FlatNamespaceObjectFactory"
+#define DEBUG_MODULE_NAME L"Kernel{FlatNamespaceFactory}"
 
 //#define DEBUG_LEVEL DEBUG_LEVEL_INFORMATIVE1
 //#define DEBUG_LEVEL DEBUG_LEVEL_INFORMATIVE

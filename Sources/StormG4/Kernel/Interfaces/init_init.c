@@ -79,6 +79,7 @@ event_consumer_reference_t kernel_consumer_debug = REFERENCE_NULL;
 
 extern description_reference_t debug_event_class;
 extern description_reference_t irq_event_class;
+
 #include "../static_modules.h"
 static void init (context_t context UNUSED)
 {
@@ -144,61 +145,31 @@ static void init (context_t context UNUSED)
         kernel_debug_queue);
 
 #if defined (TEST_EXC)
-/*
-    {
-    uint32_t esp;
-    volatile exception_context_t __context__;
-
-    esp = cpu_esp_get ();
-    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1, 
-        L"%S: ESP: %X\n",
-        DEBUG_MODULE_NAME,
-        esp);
-
-    computer_add_exception_context (COMPUTER_CURRENT, 
-        (p_exception_context_t) &__context__);
-
-//    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1, 
-//        L"%S: Is raised: %s\n",
-//        DEBUG_MODULE_NAME,
-//        __context__.is_raised ? "TRUE" : "FALSE");
-        
-    if (!__context__.is_raised)
-*/
     EXCEPTION_TRY
     {
 //        reference_t test;
 //        test = namespace$resolve (kernel_handle_namespace, L"/Kernel2");
         ((p_uint32_t) NULL)[0] = UINT32_MAX;
     }
-/*    
-    else 
-    { 
-        exception_info_t name UNUSED;
-*/        
     EXCEPTION_CATCH_ALL (e)
     {
         uint32_t eflags;
         
         cpu_flags_save (eflags);
         
-//        DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1, 
-//            L"%S: Exception, current flags: %X\n",
-//            DEBUG_MODULE_NAME, 
-//            eflags);
+        DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1, 
+            L"%S: Exception, current flags: %X\n",
+            DEBUG_MODULE_NAME, 
+            eflags);
+    }
+    EXCEPTION_FINALLY
+    {
     }
     EXCEPTION_END_TRY;    
-/*    
-    } 
-    if (!__context__.is_raised) 
-    { 
-        computer_remove_exception_context (COMPUTER_CURRENT); 
-    } 
-}
-*/
-//    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1, 
-//        L"%S: Exception block done.\n",
-//        DEBUG_MODULE_NAME);
+
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1, 
+        L"%S: Exception block done.\n",
+        DEBUG_MODULE_NAME);
 #endif
 }
 
@@ -317,10 +288,9 @@ static void start (context_t context UNUSED)
         for (index = 0; index < storm_info.number_of_modules; index++)
         {
             DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1, 
-                L"%S: Starting module \"%s\", start: %X.\n", 
+                L"%S: Starting module \"%s\".\n", 
                 DEBUG_MODULE_NAME,
-                storm_info.module_info[index].name,
-                storm_info.module_info[index].start);
+                storm_info.module_info[index].name);
             
             storm_module_objects[index] = storm_module_factory$create (
                 kernel_classes_info[KERNEL_CLASS_STORM_MODULE_INDEX].class, 
@@ -331,7 +301,7 @@ static void start (context_t context UNUSED)
             number_of_arguments = arguments_parse (temp_buffer, 
                 array_of_arguments);
        
-            wstring_print (module_name, L"/storm/modules%s", 
+            wstring_print (module_name, L"/Kernel/Modules%s", 
                 string_find_last_char (array_of_arguments[0], '/'));
             namespace$bind (kernel_handle_namespace, module_name, 
                 storm_module_objects[index]);
@@ -361,10 +331,9 @@ static void start (context_t context UNUSED)
         for (index = 0; index < storm_info.number_of_modules; index++)
         {
             DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1,
-                L"%S: Starting program \"%s\", start: %X.\n",
+                L"%S: Starting program \"%s\".\n",
                 DEBUG_MODULE_NAME,
-                storm_info.module_info[index].name,
-                storm_info.module_info[index].start);
+                storm_info.module_info[index].name);
 
             object = storm_program_factory$create (
                 kernel_classes_info[KERNEL_CLASS_STORM_PROGRAM_INDEX].class,

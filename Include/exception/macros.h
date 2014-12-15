@@ -1,8 +1,9 @@
-/*
-    __context__.catch_point = &&try_label; \
-    __context__.catch_stack_pointer = cpu_esp_get (); \
-    cpu_flags_save (__context__.eflags); \
-    asm  \
+
+#define EXCEPTION_TRY \
+do { \
+    exception_context_t __context__; \
+    bool __is_processed = FALSE; \
+    asm volatile \
     ( \
         "movl %%edi, %0\n" \
         "movl %%esi, %1\n" \
@@ -17,17 +18,9 @@
                 "=m" (__context__.ebx), \
                 "=m" (__context__.edx), \
                 "=m" (__context__.ecx), \
-                "=m" (__context__.eax) \
+                "=m" (__context__.eax)  \
     ); \
-    __label__ try_label; \
-try_label: \
-*/
-
-#define EXCEPTION_TRY \
-do { \
-    volatile exception_context_t __context__; \
-    computer_add_exception_context (COMPUTER_CURRENT, \
-        (p_exception_context_t) &__context__); \
+    computer_add_exception_context (COMPUTER_CURRENT, &__context__); \
     if (!__context__.is_raised)
     
 #define EXCEPTION_THROW(exception_info) \
@@ -47,20 +40,25 @@ throw_label: \
     computer_fire_exception (COMPUTER_CURRENT, &__info); \
 })
 
-#define EXCEPTION_FINALY
-
 #define EXCEPTION_CATCH_ALL(name) \
     else \
     { \
-        exception_info_t name UNUSED;
-    
-#define EXCEPTION_END_TRY \
+        exception_info_t name UNUSED; \
+        __is_processed = TRUE;
+
+#define EXCEPTION_FINALLY \
     } \
     if (!__context__.is_raised) \
     { \
         computer_remove_exception_context (COMPUTER_CURRENT); \
+    }
+
+    
+#define EXCEPTION_END_TRY \
+    if (__context__.is_raised && !__is_processed) \
+    { \
+        exception_info_t __info; \
+        computer_fire_exception (COMPUTER_CURRENT, &__info); \
     } \
 } while (0)
-
- 
-
+

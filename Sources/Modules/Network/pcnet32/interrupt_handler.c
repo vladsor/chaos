@@ -4,18 +4,26 @@
 #include "Include/pcnet32_lowlevel.h"
 #include "Include/pcnet32.h"
 
-#define DEBUG_MODULE_NAME "PCNet32"
+#include "Include/interface.h"
+
+#define DEBUG_MODULE_NAME L"PCNet32"
 #define DEBUG_LEVEL DEBUG_LEVEL_INFORMATIVE
 //#define DEBUG_LEVEL DEBUG_LEVEL_NONE
+
+#ifndef __STORM_KERNEL__
+#   define DEBUG_SUPPLIER (pcnet32_debug_supplier)
+#endif
+
 #include <debug/macros.h>
 
 static const int max_interrupt_work = 80;
 
 /* The PCNET32 interrupt handler. */
-void pcnet32_interrupt (unsigned int irq_number UNUSED, p_void_t parameter, 
-    irq_cpu_registers_t registers UNUSED)
+//void pcnet32_interrupt (unsigned int irq_number UNUSED, p_void_t parameter, 
+//    irq_cpu_registers_t registers UNUSED)
+void pcnet32_irq_handler (context_t context)
 {
-    ethernet_device_t *dev = (ethernet_device_t *) parameter;
+    ethernet_device_t *dev;
     
     pcnet32_private_t *lp;
     unsigned long ioaddr;
@@ -23,16 +31,20 @@ void pcnet32_interrupt (unsigned int irq_number UNUSED, p_void_t parameter,
     int boguscnt =  max_interrupt_work;
     int must_restart;
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
-        "%s: %s: (%p)\n",
-        DEBUG_MODULE_NAME, __FUNCTION__, dev);
+    dev = (ethernet_device_t *) (address_t) context.object_data;
+    
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE,
+        L"%S: %s: (%p)\n",
+        DEBUG_MODULE_NAME, __FUNCTION__, 
+        dev);
         
-	asm volatile ("lock; addl $0,0(%%esp); invd": : :"memory");
+//	asm volatile ("lock; addl $0,0(%%esp); invd": : :"memory");
 
     if (dev == NULL) 
     {
-        DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
-            "pcnet32_interrupt(): irq %d for unknown device.\n", dev->irq);
+        DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1,
+            L"%S: irq for unknown device.\n",
+            DEBUG_MODULE_NAME);
         
         return;
     }
@@ -51,15 +63,15 @@ void pcnet32_interrupt (unsigned int irq_number UNUSED, p_void_t parameter,
 
         must_restart = 0;
 
-        DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
-            "%s: interrupt  csr0=%#2.2x new csr=%#2.2x.\n",
+        DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1,
+            L"%S: interrupt  csr0=%#2.2x new csr=%#2.2x.\n",
             DEBUG_MODULE_NAME, 
             csr0, lp->a.read_csr (ioaddr, 0));
 
         if (csr0 & 0x0400)      /* Rx interrupt */
         {
-            DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
-                "%s: Rx interrupt.\n",
+            DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1,
+                L"%S: Rx interrupt.\n",
                 DEBUG_MODULE_NAME);
                 
             pcnet32_rx (dev);
@@ -69,8 +81,9 @@ void pcnet32_interrupt (unsigned int irq_number UNUSED, p_void_t parameter,
         {       /* Tx-done interrupt */
             unsigned int dirty_tx = lp->dirty_tx;
 
-            DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
-                "Tx-done interrupt.\n");
+            DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1,
+                L"%S: Tx-done interrupt.\n",
+                DEBUG_MODULE_NAME);
 
             while (dirty_tx < lp->cur_tx) 
             {
@@ -103,9 +116,10 @@ void pcnet32_interrupt (unsigned int irq_number UNUSED, p_void_t parameter,
                         
                         /* Ackk!  On FIFO errors the Tx unit is turned off! */
                         /* Remove this verbosity later! */
-                        DEBUG_PRINT (DEBUG_LEVEL_ERROR,
-                            "%s: Tx FIFO error! CSR0=%4.4x\n",
-                            dev->name, csr0);
+                        DEBUG_PRINTW (DEBUG_LEVEL_ERROR,
+                            L"%S: Tx FIFO error! CSR0=%4.4x\n",
+                            DEBUG_MODULE_NAME, 
+                            csr0);
                             
                         must_restart = 1;
                     }
@@ -118,9 +132,9 @@ void pcnet32_interrupt (unsigned int irq_number UNUSED, p_void_t parameter,
                         {  /* If controller doesn't recover ... */
                             /* Ackk!  On FIFO errors the Tx unit is turned off! */
                             /* Remove this verbosity later! */
-                            DEBUG_PRINT (DEBUG_LEVEL_ERROR,
-                                "%s: Tx FIFO error! CSR0=%4.4x\n",
-                                dev->name, csr0);
+                            DEBUG_PRINTW (DEBUG_LEVEL_ERROR,
+                                L"%S: Tx FIFO error! CSR0=%4.4x\n",
+                                DEBUG_MODULE_NAME, csr0);
                                 
                             must_restart = 1;
                         }
@@ -157,8 +171,9 @@ void pcnet32_interrupt (unsigned int irq_number UNUSED, p_void_t parameter,
 #ifndef final_version
             if (lp->cur_tx - dirty_tx >= TX_RING_SIZE) 
             {
-                DEBUG_PRINT (DEBUG_LEVEL_ERROR,
-                    "out-of-sync dirty pointer, %d vs. %d, full=%d.\n",
+                DEBUG_PRINTW (DEBUG_LEVEL_ERROR,
+                    L"%S: out-of-sync dirty pointer, %d vs. %d, full=%d.\n",
+                    DEBUG_MODULE_NAME,
                     dirty_tx, lp->cur_tx, lp->tx_full);
                     
                 dirty_tx += TX_RING_SIZE;
@@ -201,9 +216,9 @@ void pcnet32_interrupt (unsigned int irq_number UNUSED, p_void_t parameter,
     
         if (csr0 & 0x0800) 
         {
-            DEBUG_PRINT (DEBUG_LEVEL_ERROR,
-                "%s: Bus master arbitration failure, status %4.4x.\n",
-                dev->name, csr0);
+            DEBUG_PRINTW (DEBUG_LEVEL_ERROR,
+                L"%S: Bus master arbitration failure, status %4.4x.\n",
+                DEBUG_MODULE_NAME, csr0);
             /* unlike for the lance, there is no restart needed */
         }
 
@@ -221,8 +236,8 @@ void pcnet32_interrupt (unsigned int irq_number UNUSED, p_void_t parameter,
     
     if (pcnet32_debug > 4)
     {
-        DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
-            "%s: exiting interrupt, csr0=%#4.4x.\n",
+        DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1,
+            L"%S: exiting interrupt, csr0=%#4.4x.\n",
             DEBUG_MODULE_NAME, lp->a.read_csr (ioaddr, 0));
     }
 

@@ -1,19 +1,15 @@
 #include <enviroment.h>
 
-#include <Interfaces/pci_bus.h>
-#include <Interfaces/pci_device.h>
+#include <Interfaces/pci_bus_control.h>
+#include <Interfaces/pci_device_control.h>
 
-#include "interface.h"
-#include "realtek-pci.h"
+#include "Include/interface.h"
+#include "Include/realtek-pci.h"
 
 #define DEBUG_LEVEL DEBUG_LEVEL_INFORMATIVE
 //#define DEBUG_LEVEL DEBUG_LEVEL_NONE
-#include <debug/macros.h>
 
-#define PCI_RESOURCE_IO                 0x00000100
-#define PCI_RESOURCE_MEMORY             0x00000200
-#define PCI_RESOURCE_IRQ                0x00000400
-#define PCI_RESOURCE_DMA                0x00000800
+#include <debug/macros.h>
 
 int realtek_debug = 10;
 int max_interrupt_work = 20;
@@ -24,7 +20,7 @@ typedef struct
 {
     uint16_t vendor_id;
     uint16_t device_id;
-} pci_device_probe_t;
+} pci_device_probe_t;
 
 pci_device_probe_t pci_device_probe[] =
 {
@@ -79,7 +75,8 @@ static void rt_irq_handler (p_void_t parameter,
 {
     int bogus_count = max_interrupt_work;
     unsigned status, link_changed = 0;
-    realtek_device_t *device = (realtek_device_t *) parameter;
+    realtek_device_t *device = (
+realtek_device_t *) parameter;
       
     do 
     {
@@ -212,7 +209,7 @@ static void rt_irq_handler (p_void_t parameter,
                     status);
             }
           
-            if (status == 0xFFFFFFFF)
+            if (status == UINT32_MAX)
             {
                 break;
             }
@@ -276,8 +273,8 @@ static void rt_irq_handler (p_void_t parameter,
         
         if (--bogus_count < 0) 
         {
-            DEBUG_PRINT (DEBUG_LEVEL_WARNING,
-                "Too much work at interrupt, InterruptStatus = 0x%4.4x.\n",
+            DEBUG_PRINTW (DEBUG_LEVEL_WARNING,
+                L"Too much work at interrupt, InterruptStatus = 0x%4.4x.\n",
                 status);
           
             /* Clear all interrupt sources. */
@@ -289,7 +286,7 @@ static void rt_irq_handler (p_void_t parameter,
     } while (TRUE);
 }
 
-static void rt_register_irq_handler (int irq, realtek_device_t *device)
+static void rt_register_irq_handler (int irq, realtek_device_t *device)
 {
 //    system_thread_name_set ("IRQ handler");
 
@@ -320,8 +317,8 @@ static void handle_8139 (pci_device_info_t *device_info)
 
     if (port_base == UINT16_MAX)
     {
-        DEBUG_PRINT (DEBUG_LEVEL_ERROR, 
-            "No port range found -- hardware possibly broken or incompatible?");
+        DEBUG_PRINTW (DEBUG_LEVEL_ERROR, 
+            L"No port range found -- hardware possibly broken or incompatible?");
             
         return;
     }
@@ -355,8 +352,8 @@ static void handle_8139 (pci_device_info_t *device_info)
         }
     }
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
-        "Realtek 8139 at 0x%X, IRQ %d, \
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE,
+        L"Realtek 8139 at 0x%X, IRQ %d, \
         ethernet address: %02X:%02X:%02X:%02X:%02X:%02X\n",
         port_base, device_info->irq, device->ethernet_address[0], 
         device->ethernet_address[1], device->ethernet_address[2], 
@@ -404,7 +401,8 @@ static void handle_8139 (pci_device_info_t *device_info)
     pci_allocate_buffer ((void **) &device->rx_ring_dma,
         (void **) &device->rx_ring,
         RX_BUFFER_LENGTH + 16);
-*/
+
+*/
     memory_allocate ((void **) &device->tx_buffers, 
         TX_BUFFER_SIZE * NUMBER_OF_TX_DESCRIPTORS);
     device->tx_buffers_dma = device->tx_buffers;
@@ -486,35 +484,6 @@ static void handle_8139 (pci_device_info_t *device_info)
         RxFIFOOverrun | TxError | TxOK | RxError | RxOK);
 
     rt_register_irq_handler (device_info->irq, device);
-
-    /* Now, use the remaining thread for the service handler. */
-
-//    system_thread_name_set ("Service handler");
-
-  /* Create the service. */
-/*
-  if (ipc_service_create ("ethernet", &ipc_structure, &empty_tag) !=
-      IPC_RETURN_SUCCESS)
-  {
-    log_print (&log_structure, LOG_URGENCY_EMERGENCY,
-               "Couldn't create ethernet service.");
-    return;
-  }
-
-  while (TRUE)
-  {
-    mailbox_id_type reply_mailbox_id;
-
-    ipc_service_connection_wait (&ipc_structure);
-    reply_mailbox_id = ipc_structure.output_mailbox_id;
-
-    if (system_thread_create () == SYSTEM_RETURN_THREAD_NEW)
-    {
-      system_call_thread_name_set ("Handling connection");
-      handle_connection (reply_mailbox_id, device);
-    }
-  }    
-*/  
 }
 
 return_t realtek_pci_main (int argc UNUSED, char *argv[] UNUSED)
@@ -525,8 +494,8 @@ return_t realtek_pci_main (int argc UNUSED, char *argv[] UNUSED)
     handle_t pci;
     handle_t rt_device;
     
-    global_namespace_resolve ("/devices/pci", &pci);
-    register_object_open (&pci, IID_PCI_BUS);
+    pci_object = namespace_resolve (L"/devices/bus/pci");
+    pci = pci_bus_control$handle$create (pci_object);
   
     for (probe_counter = 0; pci_device_probe[probe_counter].vendor_id != 
         0xFFFF; probe_counter++)
@@ -540,8 +509,8 @@ return_t realtek_pci_main (int argc UNUSED, char *argv[] UNUSED)
 
         if (number_of_devices == 1)
         {
-            DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
-                "Found Realtek8139 adapter.\n");
+            DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE, 
+                L"Found Realtek8139 adapter.\n");
             
             register_object_open (&rt_device, IID_PCI_DEVICE);
             pci_device$get_info (&rt_device, &device_info);
@@ -549,6 +518,6 @@ return_t realtek_pci_main (int argc UNUSED, char *argv[] UNUSED)
         }
     }
 
-    return 0;
+    return STORM_RETURN_SUCCESS;
 }
 

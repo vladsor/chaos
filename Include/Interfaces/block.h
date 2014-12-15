@@ -1,3 +1,5 @@
+#ifndef __INTERFACE_BLOCK_H__
+#define __INTERFACE_BLOCK_H__
 
 #define INTERFACE_BLOCK_ID 0x000B
 
@@ -30,7 +32,7 @@ typedef block_interface_table_t * p_block_interface_table_t;
 
 static inline handle_reference_t block$handle$create (object_reference_t object)
 {
-    sequence_t seq_empty = {NULL, 0, 0};
+    sequence_t seq_empty = {data: NULL, count: 0};
 
     return handle_create (object, INTERFACE_BLOCK_ID, seq_empty, 0);
 }    
@@ -42,7 +44,7 @@ static inline uint32_t block$read (handle_reference_t handle,
     uint32_t pars_in[] = {start};
     sequence_t pars_in_seq = {data: pars_in, count: 1};
 
-    sequence_t empty_seq = {data: NULL, count: 0, block_size: 0};
+    sequence_t empty_seq = {data: NULL, count: 0};
 
     uint32_t pars_out[] = {0, (uint32_t) block.data, block.count};
     sequence_t pars_out_seq = {data: pars_out, count: 2};
@@ -59,7 +61,7 @@ static inline uint32_t block$write (handle_reference_t handle,
     uint32_t pars_in[] = {(uint32_t) block.data, block.count, start};
     sequence_t pars_in_seq = {data: pars_in, count: 2};
 
-    sequence_t empty_seq = {data: NULL, count: 0, block_size: 0};
+    sequence_t empty_seq = {data: NULL, count: 0};
 
     uint32_t pars_out[] = {0};
     sequence_t pars_out_seq = {data: pars_out, count: 1};
@@ -70,3 +72,4 @@ static inline uint32_t block$write (handle_reference_t handle,
     return pars_out[0];
 }    
 
+#endif /* !__INTERFACE_BLOCK_H__ */

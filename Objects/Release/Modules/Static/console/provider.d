@@ -165,4 +165,10 @@
   /root/Chaos/Include/EventClasses/mouse.h \
   /root/Chaos/Include/Interfaces/video.h \
   /root/Chaos/Sources/Modules/System/Console/Include/console_output.h \
+  /root/Chaos/Sources/Modules/System/Console/Include/interface.h \
+  /root/Chaos/Include/Classes/kernel.h \
+  /root/Chaos/Include/Interfaces/init.h \
+  /root/Chaos/Include/Interfaces/namespace.h \
+  /root/Chaos/Include/Interfaces/timer.h \
+  /root/Chaos/Include/EventClasses/debug.h \
   /root/Chaos/Include/debug/macros.h

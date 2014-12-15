@@ -1,118 +1,63 @@
 #include <enviroment.h>
 
+#include "Include/return_values.h"
 #include "Include/fat.h"
+#include "Include/structs.h"
+#include "Include/entry.h"
+
+#include "Include/types.h"
+#include "Include/volume.h"
+#include "Include/file.h"
+
 #include "Include/common.h"
+#include "Include/low_fat.h"
+#include "Include/read_write.h"
+#include "Include/directory_entry.h"
 
 /*
  * FUNCTION: Converts the cluster number to a sector number for this physical
  *           device
  */
 uint32_t cluster_to_sector (
-  vfat_volume_t *vfat_volume,
-  uint32_t cluster)
+    p_vfat_volume_t vfat_volume,
+    uint32_t cluster)
 {
-  return vfat_volume->data_offset +
-    ((cluster - 2) * vfat_volume->sectors_per_cluster);
+    return vfat_volume->data_offset +
+        ((cluster - 2) * vfat_volume->sectors_per_cluster);
 }
 
-#if FALSE
-/*
- * FUNCTION: Read the volume label
- */
-return_t ReadVolumeLabel (
-  PDEVICE_EXTENSION DeviceExt,
-  PVPB Vpb)
+void vfat_8_dot_3_to_wstring (
+    const char *base_name,
+    const char *extension,
+    wchar_t *name)
 {
-  return_t return_value;
+    unsigned int from_index, to_index;
+  
+    from_index = to_index = 0; 
 
-  ULONG i = 0;
-  ULONG j;
-  ULONG Size;
-  char *block;
-  ULONG StartingSector;
-  ULONG NextCluster;
-
-  Size = DeviceExt->rootDirectorySectors;      /* FIXME : in fat32, no limit */
-  StartingSector = DeviceExt->rootStart;
-  NextCluster = 0;
-
-  block = ExAllocatePool (NonPagedPool, BLOCKSIZE);
-
-  DPRINT ("ReadVolumeLabel : start at sector %lx, entry %ld\n", StartingSector, i);
-  for (j = 0; j < Size; j++)
-  {
-    return_value = VfatReadSectors (DeviceExt->StorageDevice, StartingSector, 1, block);
-
-    if (return_value != VFAT_RETURN_SUCCESS)
+    while (from_index < 8 && base_name[from_index] != ' ')
     {
-      *(Vpb->VolumeLabel) = 0;
-      Vpb->VolumeLabelLength = 0;
-      ExFreePool(block);
-      return return_value;
+        name[to_index++] = (wchar_t) base_name[from_index++];
     }
 
-    for (i = 0; i < ENTRIES_PER_SECTOR; i++)
+    if (extension[0] != ' ')
     {
-      if (IsVolEntry ((PVOID) block, i))
-      {
-        FATDirEntry *test = (FATDirEntry *) block;
+        name[to_index++] = L'.';
 
-        /* copy volume label */
-        vfat8Dot3ToVolumeLabel (test[i].Filename, test[i].Ext, Vpb->VolumeLabel);
-        Vpb->VolumeLabelLength = wcslen (Vpb->VolumeLabel);
-
-        ExFreePool (block);
-        return VFAT_RETURN_SUCCESS;
-      }
-
-      if (IsLastEntry ((PVOID) block, i))
-      {
-        *(Vpb->VolumeLabel) = 0;
-        Vpb->VolumeLabelLength = 0;
-        ExFreePool (block);
-
-        return VFAT_RETURN_STATUS_UNSUCCESSFULL;
-      }
-    }
-
-    /* not found in this sector, try next : */
-
-    /* directory can be fragmented although it is best to keep them
-       unfragmented.*/
-    StartingSector++;
-
-    if (DeviceExt->FatType == FAT32)
-    {
-      if (StartingSector == ClusterToSector (DeviceExt, NextCluster + 1))
-      {
-        return_Value = GetNextCluster (DeviceExt, NextCluster, &NextCluster,
-                                       FALSE);
-        if (NextCluster == 0 || NextCluster == 0xffffffff)
+        from_index = 0;
+        while (from_index < 3 && extension[from_index] != ' ')
         {
-          *(Vpb->VolumeLabel) = 0;
-          Vpb->VolumeLabelLength = 0;
-          ExFreePool (block);
-
-          return VFAT_RETURN_UNSUCCESSFULL;
+            name[to_index++] = (wchar_t) extension[from_index++];
         }
-        
-        StartingSector = ClusterToSector (DeviceExt, NextCluster);
-      }
     }
-  }
 
-  *(Vpb->VolumeLabel) = 0;
-  Vpb->VolumeLabelLength = 0;
-  ExFreePool (block);
-
-  return VFAT_RETURN_UNSUCCESSFULL;
+    name[to_index] = L'\0';
 }
-#endif
 
-void vfat_8_dot_3_to_string (
-    uint8_t *base_name,
-    uint8_t *extension,
-    uint8_t *name)
+void vfat_8_dot_3_to_volume_label (
+    const char *base_name,
+    const char *extension,
+    char *name)
 {
     unsigned int from_index, to_index;
   
@@ -135,4 +80,65 @@ void vfat_8_dot_3_to_string (
     }
 
     name[to_index] = '\0';
+}
+
+/*
+ * FUNCTION: Compare two wide character strings, s2 with jokers (* or ?)
+ * return TRUE if s1 like s2
+ */
+bool wstrcmpjoki (const wchar_t *s1, const wchar_t *s2)
+{
+   while ((*s2 == L'*') || (*s2 == L'?') || 
+          (char_to_lower_case (*s1) == char_to_lower_case (*s2)))
+   {
+     if ((*s1)==0 && (*s2)==0)
+     {
+       return TRUE;
+     }
+     
+     if (*s2 == L'*')
+     {
+       s2++;
+       while (*s1)
+        if (wstrcmpjoki (s1, s2)) return TRUE;
+         else s1++;
+      }
+      else
+      {
+        s1++;
+        s2++;
+      }
+   }
+   if ((*s2) == L'.')
+   {
+   	for (; ((*s2) == L'.') || ((*s2) == L'*') || ((*s2) == L'?'); s2++);
+   }
+
+  if ((*s1)==0 && (*s2)==0)
+  {
+    return TRUE;
+  }
+
+  return FALSE;
+}
+
+wchar_t * vfat_get_next_path_element (wchar_t *file_name)
+{
+  if (file_name[0] == L'\0')
+  {
+    return  0;
+  }
+
+  while (file_name[0] != L'\0' && file_name[0] != L'/')
+  {
+    file_name++;
+  }
+
+  return file_name;
+}
+
+void vfat_sub_string (wchar_t *target, const wchar_t *source, uint32_t length)
+{
+    wstring_copy_max (target, source, length);
+    target [length] = L'\0';
 }

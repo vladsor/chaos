@@ -189,6 +189,7 @@
   /root/Chaos/Sources/Modules/System/Console/Include/handler_interface.h \
   /root/Chaos/Sources/Modules/System/Console/Include/console_manager_class.h \
   /root/Chaos/Sources/Modules/System/Console/Include/console_class.h \
+  /root/Chaos/Sources/Modules/System/Console/Include/debug_event_class.h \
   /root/Chaos/Sources/Modules/System/Console/Include/keyboard_event_class.h \
   /root/Chaos/Sources/Modules/System/Console/Include/mouse_event_class.h \
   /root/Chaos/Include/debug/macros.h

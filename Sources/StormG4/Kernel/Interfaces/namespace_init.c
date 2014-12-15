@@ -8,7 +8,7 @@
 
 #include <Classes/flat_namespace_object.h>
 
-#define DEBUG_MODULE_NAME L"Namespace"
+#define DEBUG_MODULE_NAME L"Kernel{Namespace}"
 #define DEBUG_LEVEL DEBUG_LEVEL_INFORMATIVE
 //#define DEBUG_LEVEL DEBUG_LEVEL_INFORMATIVE1
 //#define DEBUG_LEVEL DEBUG_LEVEL_NONE

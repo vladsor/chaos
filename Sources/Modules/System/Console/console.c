@@ -16,11 +16,17 @@
 
 #include "Include/console.h"
 #include "Include/console_output.h"
+#include "Include/interface.h"
 
-#define DEBUG_MODULE_NAME "Console"
+#define DEBUG_MODULE_NAME L"Console"
 #define DEBUG_LEVEL DEBUG_LEVEL_INFORMATIVE
 //#define DEBUG_LEVEL 11
 //define DEBUG_LEVEL DEBUG_LEVEL_NONE
+
+#ifndef __STORM_KERNEL__
+#   define DEBUG_SUPPLIER (console_debug_supplier)
+#endif
+
 #include <debug/macros.h>
 
 volatile position_t mouse_cursor_position = { 0 , 0 };
@@ -60,8 +66,8 @@ volatile console_t *console_shortcut[12] =
 
 void console_link (console_t *console)
 {
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
-        "%s: %s (%p)\n",
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE,
+        L"%s: %s (%p)\n",
         DEBUG_MODULE_NAME, __FUNCTION__,
         console);
 
@@ -88,8 +94,8 @@ void console_link (console_t *console)
 
 void console_flip (console_t *console)
 {
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
-        "%s: %s (%p)\n",
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE,
+        L"%s: %s (%p)\n",
         DEBUG_MODULE_NAME, __FUNCTION__,
         console);
 
@@ -148,8 +154,8 @@ void console_flip (console_t *console)
 
     if (console->type == VIDEO_MODE_TYPE_TEXT)
     {
-        DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
-            "%s: %s: copying data.\n",
+        DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE,
+            L"%S: %s: copying data.\n",
             DEBUG_MODULE_NAME, __FUNCTION__);
         
         memory_copy (console->output, console->buffer, console->width * 

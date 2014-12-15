@@ -7,9 +7,14 @@
 
 #include <Classes/ata_drive.h>
 
-#define DEBUG_MODULE_NAME "ATA"
+#define DEBUG_MODULE_NAME L"ATA"
 //#define DEBUG_LEVEL DEBUG_LEVEL_INFORMATIVE
 //#define DEBUG_LEVEL DEBUG_LEVEL_NONE
+
+#ifndef __STORM_KERNEL__
+#   define DEBUG_SUPPLIER (ata_debug_supplier)
+#endif
+
 #include <debug/macros.h>
 
 /*****************************************************************************
@@ -30,8 +35,8 @@ int atapi_command (p_drive_t drive, p_drive_command_t command)
     uint8_t packet[12];
     uint32_t count;
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
-        "%s: %s (%p, %p)\n",
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE, 
+        L"%S: %s (%p, %p)\n",
         DEBUG_MODULE_NAME, __FUNCTION__,
         drive, command);
 
@@ -42,8 +47,8 @@ int atapi_command (p_drive_t drive, p_drive_command_t command)
     }
     else
     {
-        DEBUG_PRINT (DEBUG_LEVEL_ERROR, 
-            "%s: %s: bad cmd: %u\n",
+        DEBUG_PRINTW (DEBUG_LEVEL_ERROR, 
+            L"%S: %s: bad cmd: %u\n",
             DEBUG_MODULE_NAME, __FUNCTION__,
             command->command);
         
@@ -80,8 +85,8 @@ int atapi_eject (p_drive_t drive, bool load)
         
     drive_command_t command;
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
-        "%s: %s (%p, %u)\n",
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE, 
+        L"%S: %s (%p, %u)\n",
         DEBUG_MODULE_NAME, __FUNCTION__,
         drive, load);
     
@@ -111,8 +116,8 @@ int atapi_play (p_drive_t drive, uint32_t start, uint32_t end)
         
     drive_command_t command;
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
-        "%s: %s (%p, %u, %u)\n",
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE, 
+        L"%S: %s (%p, %u, %u)\n",
         DEBUG_MODULE_NAME, __FUNCTION__,
         drive, start, end);
     
@@ -151,8 +156,8 @@ int atapi_toc_read (p_drive_t drive, p_atapi_toc_t contents, unsigned count)
         
     drive_command_t command;
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
-        "%s: %s (%p, %p, %u)\n",
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE, 
+        L"%S: %s (%p, %p, %u)\n",
         DEBUG_MODULE_NAME, __FUNCTION__,
         drive, contents, count);
     
@@ -185,8 +190,8 @@ int atapi_pause (p_drive_t drive, bool play)
 
     drive_command_t command;
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
-        "%s: %s (%p, %u)\n",
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE, 
+        L"%S: %s (%p, %u)\n",
         DEBUG_MODULE_NAME, __FUNCTION__,
         drive, play);
     

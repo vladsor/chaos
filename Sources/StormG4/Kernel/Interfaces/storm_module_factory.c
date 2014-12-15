@@ -8,7 +8,7 @@
 
 #include "storm_module_factory_interface.h"
 
-#define DEBUG_MODULE_NAME "StormModuleFactory"
+#define DEBUG_MODULE_NAME "Kernel{StormModuleFactory}"
 
 #define DEBUG_LEVEL DEBUG_LEVEL_INFORMATIVE1
 //#define DEBUG_LEVEL DEBUG_LEVEL_INFORMATIVE
@@ -25,6 +25,8 @@ static void dummy (void)
    to keep the API clean. */
 function_info_t functions_table[] = 
 {
+    { "reference_acquire",
+        (p_function_t) &reference_acquire },
     { "reference_release",
         (p_function_t) &reference_release },
 
@@ -50,12 +52,17 @@ function_info_t functions_table[] =
     
     { "object_create",      
         (p_function_t) &object_create },
+    { "object_get_data",      
+        (p_function_t) &object_get_data },
+    { "object_set_data",      
+        (p_function_t) &object_set_data },
     { "object_get_current", 
         (p_function_t) &object_get_current },
     { "object_get_kernel",
         (p_function_t) &object_get_kernel },
     
     { "handle_create",      (p_function_t) &handle_create },
+    { "handle_destroy",      (p_function_t) &handle_destroy },
     { "handle_invoke_method",      (p_function_t) &handle_invoke_method },
     
     { "event_supplier_interface_create", 
@@ -96,13 +103,27 @@ function_info_t functions_table[] =
         (p_function_t) &computer_create },
     { "computer_fire_exception",
         (p_function_t) &computer_fire_exception },
+    { "computer_add_exception_context",
+        (p_function_t) &computer_add_exception_context },
+    { "computer_remove_exception_context",
+        (p_function_t) &computer_remove_exception_context },
     { "computer_get_current",
         (p_function_t) &computer_get_current },
 
+/** @todo rewrite next entries */
     { "quality_set",
         (p_function_t) &dummy },
     { "quality_reset",
         (p_function_t) &dummy },
+
+    { "cpu_halt",
+        (p_function_t) &cpu_halt },
+    { "io_port_register",
+        (p_function_t) &io_port_register },
+    { "memory_allocate",
+        (p_function_t) &memory_allocate },
+    { "memory_deallocate",
+        (p_function_t) &memory_deallocate },
         
     { NULL,
         (p_function_t) NULL } /* End of list. */
@@ -115,9 +136,9 @@ static uint64_t storm_module_create (context_t context UNUSED,
     storm_module_data_t *data;
     
     DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
-        "%s: %s (%llX, %p)\n",
+        "%s: %s (%p)\n",
         DEBUG_MODULE_NAME, __FUNCTION__, 
-        context.object_data, elf_header);
+        elf_header);
 
     memory_allocate ((void **) &data, sizeof (storm_module_data_t));
     memory_clear (data, sizeof (storm_module_data_t));

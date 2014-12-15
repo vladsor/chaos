@@ -129,10 +129,10 @@ void computer_invoke_internal (p_computer_t computer,
         
         cpu_interrupts_disable ();
         
-        computer_current->nested = (struct computer_t *) computer;
+        computer_current->nested = computer;
         computer_current->nested_is_sync = TRUE;
 
-        computer->upper = (struct computer_t *) computer_current;
+        computer->upper = computer_current;
         computer->upper_is_sync = TRUE;
 
         computer_start (computer);

@@ -8,7 +8,7 @@
 
 #include "storm_program_factory_interface.h"
 
-#define DEBUG_MODULE_NAME "StormProgramFactory"
+#define DEBUG_MODULE_NAME "Kernel{StormProgramFactory}"
 
 #define DEBUG_LEVEL DEBUG_LEVEL_INFORMATIVE1
 //#define DEBUG_LEVEL DEBUG_LEVEL_INFORMATIVE

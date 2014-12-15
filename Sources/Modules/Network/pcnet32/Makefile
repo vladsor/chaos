@@ -1,66 +1,83 @@
-library_name := pcnet32
+source_dirs := . 
 
-source_dirs := .
+warning_flags := \
+    -Wmissing-prototypes -Wmissing-declarations \
+    -Wmissing-noreturn -Wformat=2 -Wparentheses -Wmissing-braces -Wreturn-type\
+    -Wunused -Wwrite-strings -Winline \
+    -fmessage-length=80 -fdiagnostics-show-location=once \
+    -Wpadded -W -Wall -Werror
 
-
-override compile_flags += -pipe -fno-leading-underscore -fno-builtin -funsigned-char  -Wall -W -Werror -Wmissing-prototypes -Wmissing-declarations -Wmissing-noreturn
-override compile_flags += $(flags)
+override compile_flags += -pipe -fno-leading-underscore -fno-builtin \
+    -funsigned-char -fpack-struct $(warning_flags)
 
 override preprocessor_flags += -nostdinc
-override preprocessor_flags += -D__STORM_KERNEL__ -DSTORM_VERSION_STRING='"G4 v0.0.8"' -DCREATOR='"Vladimir Sorokin"' -DCOMPILER='"gcc"'
+override preprocessor_flags += -DCREATOR='"Vladimir Sorokin"' \
+	-DCOMPILER='"gcc"'
 
 include_flags := $(addprefix -I,$(include_directories))
 
-source_dirs          := $(addprefix ../,$(source_dirs))
+source_dirs          := $(addprefix $(source_directory)/,$(source_dirs))
 
 c_search_wildcards   := $(addsuffix /*.c,$(source_dirs)) 
 asm_search_wildcards := $(addsuffix /*.S,$(source_dirs))
 
 sources := $(wildcard $(c_search_wildcards))
-objects          := $(patsubst %.c,%.o,$(wildcard $(c_search_wildcards)))
-objects          += $(patsubst %.S,%.o,$(wildcard $(asm_search_wildcards)))
+sources += $(wildcard $(asm_search_wildcards))
 
-objects := $(patsubst ../%,%,$(objects))
-#objects := $(addprefix $(destination_directory)/Objects,$(objects))
+objects := $(patsubst %.c,%.o,$(sources))
+objects := $(patsubst $(source_directory)/%,%,$(objects))
 
-dependencies          := $(patsubst %.c,%.d,$(wildcard $(c_search_wildcards)))
-dependencies          += $(patsubst %.S,%.d,$(wildcard $(asm_search_wildcards)))
+override libraries := $(addprefix $(library_directories)/, $(libraries))
 
-dependencies := $(patsubst ../%,%,$(dependencies))
+dependencies         := $(patsubst %.c,%.d,$(wildcard $(c_search_wildcards)))
+dependencies         += $(patsubst %.S,%.d,$(wildcard $(asm_search_wildcards)))
 
+dependencies         := $(patsubst $(source_directory)/%,%,$(dependencies))
 
-$(library_name).a: $(objects) $(libraries)
-	@echo Linking $@...
-	ar cru $(@) $(objects) $(libraries)
-	ranlib $(@)
+%.a: $(objects) $(libraries)
+	@echo Linking: $@
+	ar cru $@ $(objects) $(libraries)
+	ranlib $@
+
+%.so: $(objects) $(libraries)
+	@echo Linking: $@
+	ld -shared $(objects) $(libraries) -o $@
 
 VPATH := $(source_dirs)
 
 deps: $(dependencies) 
 
-pci-id.c: pci.pl pci.ids
-	./pci.pl pci.ids
-
 %.d: %.c
-	@echo Generate dependencies for $<...
-	mkdir -p $(patsubst ../%,%, $(<D))
-	cpp -M $(preprocessor_flags) $(include_flags) -MF $@ $< >/dev/null
+	@echo Generate dependencies for: $<
+	mkdir -p $(patsubst $(source_directory)/%,%, $(@D))
+	cpp -M $(preprocessor_flags) $(include_flags) \
+        -MT '$(patsubst $(source_directory)/%,%,$(patsubst %.c,%.o,$<))' \
+        -MF $@ $< >/dev/null
 
 %.d: %.S
-	@echo Generate dependencies for $<...
-	mkdir -p $(patsubst ../%,%, $(<D))
-	cpp -M $(preprocessor_flags) $(include_flags) -MF $@ $< >/dev/null
+	@echo Generate dependencies for: $<
+	mkdir -p $(patsubst $(source_directory)/%,%, $(@D))
+	cpp -M $(preprocessor_flags) $(include_flags) \
+        -MT '$(patsubst $(source_directory)/%,%,$(patsubst %.S,%.o,$<))' \
+        -MF $@ $< >/dev/null
 
 %.o: %.c
-	@echo Compiling $<... 
-	mkdir -p $(patsubst ../%,./%, $(<D))
+	@echo Compiling: $<
+	mkdir -p $(patsubst $(source_directory)/%,%, $(@D))
 	gcc -c $(preprocessor_flags) $(compile_flags) $(include_flags) $< -o $@
 
 %.o: %.S
-	@echo Compiling $<...
-	mkdir -p $(patsubst ../%,%, $(<D))
+	@echo Compiling: $<
+	mkdir -p $(patsubst $(source_directory)/%,%, $(@D))
 	gcc -c $(preprocessor_flags) $(compile_flags) $(include_flags) $< -o $@
 
+install: $(compressed_kernel_name)
+	@echo mounting $(IMAGE_FILE)...
+	mount $(IMAGE_FILE) /mnt/floppy
+	@echo Coping $(compressed_kernel_name) to /system/kernel/storm...
+	cp $(compressed_kernel_name) /mnt/floppy/system/kernel/storm
+	sync
+	@echo unmounting $(IMAGE_FILE)...
+	umount /mnt/floppy
 
-
-include $(dependencies)
+-include $(dependencies)

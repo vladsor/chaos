@@ -5,33 +5,34 @@
 /* Copyright 1999-2000 chaos development. */
 
 
-#include <config.h>
-#include "ne2000.h"
+#include <enviroment.h>
+
+#include "Include/ne2000.h"
 
 
-u8 ne_detect(NIC *);
-u8 ne_reset_chip(NIC *);
-void ne_init_chip(NIC *, u8);
+uint8_t ne_detect(NIC *);
+uint8_t ne_reset_chip(NIC *);
+void ne_init_chip(NIC *, uint8_t);
 void ne_int_handler(void);
 void ne_recv(NIC *);
 void ne_xmit(NIC *);
-void ne_download_buf(NIC *, u16, u8 *, u16);
+void ne_download_buf(NIC *, uint16_t, uint8_t *, uint16_t);
 void ne_handle_overflow(NIC *);
-u16 hex2dec(u8 *);
+uint16_t hex2dec(uint8_t *);
 int main(int, char **);
 
 
 NIC card;
-u32 message[1024];
-u32 data_buffer[1024]; /* xxx - was 400 before.. */
+uint32_t message[1024];
+uint32_t data_buffer[1024]; /* xxx - was 400 before.. */
 struct ne_user_t users[MAX_USERS];
-u8 num_users = 0;
+uint8_t num_users = 0;
 
 
-u8 ne_detect (NIC *n)
+uint8_t ne_detect (NIC *n)
 {
-  u8 chk = 0, x;
-  u32 i;
+  uint8_t chk = 0, x;
+  uint32_t i;
 
   if (!n || !n->io || !n->irq)
   {
@@ -45,7 +46,7 @@ u8 ne_detect (NIC *n)
     return ERROR;
   }
 
-  chk = port_in_u8 (n->io);
+  chk = port_in_uint8_t (n->io);
   if (chk == 0xff) /* No card found */
   {
     printf ("-- Nothing found on 0x%x", n->io);
@@ -127,9 +128,9 @@ u8 ne_detect (NIC *n)
 }
 
 
-u8 ne_reset_chip (NIC *n)
+uint8_t ne_reset_chip (NIC *n)
 {
-  u16 i;
+  uint16_t i;
   
 
   outb (inb (n->io + NE_RESET), n->io + NE_RESET);
@@ -151,9 +152,9 @@ u8 ne_reset_chip (NIC *n)
 }
 
 
-void ne_init_chip (NIC *n, u8 startp)
+void ne_init_chip (NIC *n, uint8_t startp)
 {
-  u16 i;
+  uint16_t i;
 
   /* This is what the datasheet recommends */
   /* Read more in ne2000.h */
@@ -210,7 +211,7 @@ void ne_init_chip (NIC *n, u8 startp)
 void ne_int_handler (void)
 {
   int sreg;
-  u8 num_handled;
+  uint8_t num_handled;
 
   for (card.num_interrupts = 1;;card.num_interrupts++)
   {
@@ -250,7 +251,7 @@ void ne_int_handler (void)
 #else /* XXX - this code probably DONT work */
 #error "Tomtevarning; DEN HÄR KODEN FUNKAR INTE"
         {
-          u32 tomte;
+          uint32_t tomte;
 
           if (debug >= 1)
             printf ("** resetting card..");
@@ -282,7 +283,7 @@ void ne_int_handler (void)
 
       if (sreg & BIT_ISR_CNTRS)
       {
-        u8 x,y,z;
+        uint8_t x,y,z;
         x = inb (card.io+NE_R0_CNTR0);
         y = inb (card.io+NE_R0_CNTR1);
         z = inb (card.io+NE_R0_CNTR2);
@@ -331,11 +332,11 @@ void ne_int_handler (void)
 void ne_recv (NIC *card)
 {
 /* xxx - moved data_buffer to global .. */
-   u8 *data = ((u8 *)data_buffer) + ((u8) 8);
-   u8 rx_packets = 0;
-   u8 rx_page;
-   u8 frame, next_frame, pkt_status;
-   u16 current_offset, pkt_len;
+   uint8_t *data = ((uint8_t *)data_buffer) + ((uint8_t) 8);
+   uint8_t rx_packets = 0;
+   uint8_t rx_page;
+   uint8_t frame, next_frame, pkt_status;
+   uint16_t current_offset, pkt_len;
    struct ne_pkt_hdr pkt_hdr;
 
   frame = 0;
@@ -396,14 +397,14 @@ void ne_recv (NIC *card)
 
     /* Ok, let's start */
     outb (NE_RREAD+NE_START, card->io);
-    *((u32 *)&pkt_hdr) = 0;
+    *((uint32_t *)&pkt_hdr) = 0;
     if (debug >= 2)
       printf ("** Before: stat:0x%x next:0x%x len:0x%x",
              pkt_hdr.status, pkt_hdr.next,pkt_hdr.len);
  
-/* xxx - chnaged void * from u32 *, och till _u16 ist.f. u32 etc.. */
+/* xxx - chnaged void * from uint32_t *, och till _uint16_t ist.f. uint32_t etc.. */
 
-    port_in_u16_string (card->io+NE_DATAPORT,
+    port_in_uint16_t_string (card->io+NE_DATAPORT,
                         (void *)&pkt_hdr, sizeof (struct ne_pkt_hdr)>>1);
        
     /* Ack. dma */
@@ -456,8 +457,8 @@ void ne_recv (NIC *card)
           struct ethhdr *e;
           struct iphdr *i;
           struct tcphdr *t;
-          u8 *p = data;
-          u8 n;
+          uint8_t *p = data;
+          uint8_t n;
 
           printf ("** proto is [%.4x] ==> %s", PROTO,
                  PROTO == 0x800? "IP/ETH": 
@@ -474,7 +475,7 @@ void ne_recv (NIC *card)
             printf ("** IP: ver:0x%x prot:0x%x len:0x%x", 
                     i->version, i->protocol, 
                     htons(i->tot_len)-sizeof(struct ethhdr)-sizeof(struct iphdr));
-            p = (u8 *)&i->saddr;
+            p = (uint8_t *)&i->saddr;
             printf ("++ %s/IP Packet received [%u.%u.%u.%u ==> %u.%u.%u.%u]",
                     i->protocol == 0x11? "UDP": i->protocol == 0x6? "TCP":
                     i->protocol == 0x1? "ICMP": "Unknown", 
@@ -527,7 +528,7 @@ void ne_recv (NIC *card)
 
 void ne_xmit (NIC *card)
 {
-  u8 status;
+  uint8_t status;
 
   status = inb (card->io+NE_R0_TSR);
   if (debug >= 1)
@@ -542,7 +543,7 @@ void ne_xmit (NIC *card)
 }
 
 
-void ne_download_buf (NIC *n, u16 len, u8 *data, u16 offset)
+void ne_download_buf (NIC *n, uint16_t len, uint8_t *data, uint16_t offset)
 {
   if (debug >= 2)
     printf ("** ne_download_buf(): Gonna read 0x%x bytes", len);
@@ -558,7 +559,7 @@ void ne_download_buf (NIC *n, u16 len, u8 *data, u16 offset)
   if (debug >= 2)
     printf ("** ne_download_buf(): now we're about to read..");
 
-  port_in_u16_string (n->io+NE_DATAPORT, (u16 *)data, len>>1);
+  port_in_uint16_t_string (n->io+NE_DATAPORT, (uint16_t *)data, len>>1);
   if (len & 0x01)
     data[len-1] = inb (n->io+NE_DATAPORT);
 
@@ -576,8 +577,8 @@ void ne_download_buf (NIC *n, u16 len, u8 *data, u16 offset)
 void ne_handle_overflow (NIC *n)
 {
  
-  u8 txing, resend = 0;
-  u16 x;
+  uint8_t txing, resend = 0;
+  uint16_t x;
   
   txing = inb (n->io) & NE_TRANS;
 
@@ -626,10 +627,10 @@ void ne_handle_overflow (NIC *n)
 
 
 
-u16 hex2dec (u8 *s)
+uint16_t hex2dec (uint8_t *s)
 {
-  u16 ret = 0;
-  u8 shift;
+  uint16_t ret = 0;
+  uint8_t shift;
   
 
   if (s[0] != '0' || s[1] != 'x')

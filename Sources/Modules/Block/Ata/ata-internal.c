@@ -3,9 +3,13 @@
 #include "Include/ata.h"
 #include "Include/interface.h"
 
-#define DEBUG_MODULE_NAME "ATA"
+#define DEBUG_MODULE_NAME L"ATA"
 //#define DEBUG_LEVEL DEBUG_LEVEL_INFORMATIVE
 //#define DEBUG_LEVEL DEBUG_LEVEL_NONE
+
+#ifndef __STORM_KERNEL__
+#   define DEBUG_SUPPLIER (ata_debug_supplier)
+#endif
 
 #include <debug/macros.h>
 #include <exception/macros.h>
@@ -20,8 +24,8 @@ bool ata_internal_probe (p_drive_t drive)
     unsigned int timeout;
     ata_id_t drive_info;
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
-        "%s: %s (%p)\n",
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE, 
+        L"%S: %s (%p)\n",
         DEBUG_MODULE_NAME, __FUNCTION__,
         drive);
 
@@ -31,7 +35,8 @@ bool ata_internal_probe (p_drive_t drive)
     
     if ((Temp1 != 0x01) || (Temp2 != 0x01))
     {
-        DEBUG_PRINT (DEBUG_LEVEL_WARNING, "%s: nothing there\n",
+        DEBUG_PRINTW (DEBUG_LEVEL_WARNING, 
+            L"%S: nothing there.\n",
             DEBUG_MODULE_NAME);
      
         return FALSE;
@@ -43,8 +48,8 @@ bool ata_internal_probe (p_drive_t drive)
 
     if ((Temp1 == 0x14) && (Temp2 == 0xEB))
     {
-        DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1, 
-            "%s: ATAPI CD-ROM, ",
+        DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1, 
+            L"%S: ATAPI CD-ROM, ",
             DEBUG_MODULE_NAME);
             
         drive->flags |= ATA_FLG_ATAPI;
@@ -57,8 +62,8 @@ bool ata_internal_probe (p_drive_t drive)
     }
     else if ((Temp1 == 0) && (Temp2 == 0) && (Temp != 0))
     {
-        DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
-            "%s: ATA hard drive, ",
+        DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE, 
+            L"%S: ATA hard drive, ",
             DEBUG_MODULE_NAME);
         
         /* issue ATA 'identify drive' command */
@@ -69,8 +74,8 @@ bool ata_internal_probe (p_drive_t drive)
     }
     else
     {
-        DEBUG_PRINT (DEBUG_LEVEL_WARNING, 
-            "%s: unknown drive type.\n",
+        DEBUG_PRINTW (DEBUG_LEVEL_WARNING, 
+            L"%S: unknown drive type.\n",
             DEBUG_MODULE_NAME);
         
         return FALSE;
@@ -92,10 +97,14 @@ bool ata_internal_probe (p_drive_t drive)
     /* XXX - could be old drive that doesn't support 'identify'.
        Read geometry from partition table? Use (* gag *) CMOS? */
     {
-        DEBUG_PRINT (DEBUG_LEVEL_ERROR, "%s: 'identify' failed\n",
+        DEBUG_PRINTW (DEBUG_LEVEL_ERROR, 
+            L"%S: 'identify' failed.\n",
             DEBUG_MODULE_NAME);
         
         return FALSE;
+    }
+    EXCEPTION_FINALLY
+    {
     }
     EXCEPTION_END_TRY;
     
@@ -125,16 +134,16 @@ bool ata_internal_probe (p_drive_t drive)
 
     for (Temp = 0; Temp < 40; Temp += 2)
     {
-        DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1, 
-            "%c", drive_info.Model[Temp ^ Temp2]);
-        DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1, 
-            "%c", drive_info.Model[Temp ^ Temp2 ^ 1]);
+        DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1, 
+            L"%c", drive_info.Model[Temp ^ Temp2]);
+        DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1, 
+            L"%c", drive_info.Model[Temp ^ Temp2 ^ 1]);
     }
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1, "\n");
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1, L"\n");
     
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1,
-        "%s: CHS=%u:%u:%u, ",
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1,
+        L"%S: CHS=%u:%u:%u, ",
         DEBUG_MODULE_NAME,
         drive_info.PhysCyls, drive_info.PhysHeads, drive_info.PhysSects);
             
@@ -144,13 +153,13 @@ bool ata_internal_probe (p_drive_t drive)
         
     if (drive_info.Capability & 1)
     {
-        DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1, "DMA, ");
+        DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1, L"DMA, ");
         drive->flags |= ATA_FLG_DMA;
     }
         
     if (drive_info.Capability & 2)
     {
-        DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1, "LBA, ");
+        DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1, L"LBA, ");
         drive->flags |= ATA_FLG_LBA; 
     }
 /* By Dobbs, I'll figure this out yet. Linux ide.c requires
@@ -167,8 +176,8 @@ Conner Peripherals 850MB - CFS850A
     if ((drive_info.MultSectValid & 1) && drive_info.MultSect)
     {
         Temp = drive_info.MaxMult;
-        DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1, 
-            "MaxMult=%u, ", Temp);
+        DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1, 
+            L"MaxMult=%u, ", Temp);
     }
     else
     {
@@ -176,8 +185,8 @@ Conner Peripherals 850MB - CFS850A
     }
 
     drive->multi_sectors = Temp;
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1, 
-        "%uK cache\n", 
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1, 
+        L"%uK cache\n", 
         drive_info.BufSize >> 1);
 
 #if 0
@@ -215,9 +224,6 @@ DriveInfo.EIDEPIOIORdy);
     return TRUE;
 }
 
-/*****************************************************************************
-        name:   ataCmd2
-*****************************************************************************/
 void ata_internal_command (p_drive_t drive, p_drive_command_t command, 
     uint8_t count, uint8_t command_byte)
 {
@@ -227,8 +233,8 @@ void ata_internal_command (p_drive_t drive, p_drive_command_t command,
     uint16_t io_base;
     uint32_t Temp;
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
-        "%s: %s (%p, %p, %u, %u)\n",
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE, 
+        L"%S: %s (%p, %p, %u, %u)\n",
         DEBUG_MODULE_NAME, __FUNCTION__,
         drive, command, count, command_byte);
     
@@ -245,8 +251,8 @@ void ata_internal_command (p_drive_t drive, p_drive_command_t command,
         head = Temp >> 24;       /* high nybble */
         head = (head & 0x0F) | 0x40;/* b6 enables LBA */
         
-        DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1, 
-            "%s: %s: LBA = %u\n", 
+        DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1, 
+            L"%S: %s: LBA = %u\n", 
             DEBUG_MODULE_NAME, __FUNCTION__,
             Temp);
     }
@@ -257,16 +263,16 @@ void ata_internal_command (p_drive_t drive, p_drive_command_t command,
         head = Temp % drive->heads;
         cylinder = Temp / drive->heads;
         
-        DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1, 
-            "%s: %s: CHS = %u:%u:%u\n",
+        DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1, 
+            L"%S: %s: CHS = %u:%u:%u\n",
             DEBUG_MODULE_NAME, __FUNCTION__,
             cylinder, head, sector);
     }
     
     head |= drive->drive_select;
     
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
-        "%s: %s: writing register file\n",
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE, 
+        L"%S: %s: writing register file\n",
         DEBUG_MODULE_NAME, __FUNCTION__);
         
     port_uint8_out (io_base + ATA_REG_CNT, count);

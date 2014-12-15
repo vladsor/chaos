@@ -1,14 +1,17 @@
 #include <enviroment.h>
 
-#include <Interfaces/pci_device.h>
-
 #include "Include/types.h"
 #include "Include/pcnet32_lowlevel.h"
 #include "Include/pcnet32.h"
 #include "Include/pci-util.h"
+#include "Include/interface.h"
 
-#define DEBUG_MODULE_NAME "PCNet32"
+#define DEBUG_MODULE_NAME L"PCNet32"
 #define DEBUG_LEVEL DEBUG_LEVEL_INFORMATIVE
+
+#ifndef __STORM_KERNEL__
+#   define DEBUG_SUPPLIER (pcnet32_debug_supplier)
+#endif
 
 #include <debug/macros.h>
 
@@ -19,7 +22,8 @@
  * table to translate option values from tulip
  * to internal options
  */
-static unsigned char options_mapping[] = {
+static unsigned char options_mapping[] = 
+{
     PORT_ASEL,			   /*  0 Auto-select	  */
     PORT_AUI,			   /*  1 BNC/AUI	  */
     PORT_AUI,			   /*  2 AUI/BNC	  */ 
@@ -58,12 +62,12 @@ static ethernet_device_t * pcnet32_probe1 (unsigned long ioaddr,
 #endif
     int ltint = 0;
     int chip_version;
-    char *chipname;
+    const char *chipname;
     ethernet_device_t *dev;
     pcnet32_access_t *a = NULL;
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
-        "%s: %s ().\n", 
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE, 
+        L"%S: %s ().\n", 
         DEBUG_MODULE_NAME, __FUNCTION__);
 
     /* reset the chip */
@@ -71,21 +75,21 @@ static ethernet_device_t * pcnet32_probe1 (unsigned long ioaddr,
     pcnet32_wio_reset (ioaddr);
 
     /* NOTE: 16-bit check is first, otherwise some older PCnet chips fail */
-    if (pcnet32_wio_read_csr (ioaddr, 0) == 4 && pcnet32_wio_check (ioaddr)) 
+    if ((pcnet32_wio_read_csr (ioaddr, 0) == 4) && (pcnet32_wio_check (ioaddr)))
     {
-        DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1, 
-            "%s: Using 16 bits lowlevel routines.\n", 
+        DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1, 
+            L"%S: Using 16 bits lowlevel routines.\n", 
             DEBUG_MODULE_NAME);
             
         a = &pcnet32_wio;
     }
     else 
     {
-        if (pcnet32_dwio_read_csr (ioaddr, 0) == 4 && 
-            pcnet32_dwio_check (ioaddr)) 
+        if ((pcnet32_dwio_read_csr (ioaddr, 0) == 4) && 
+            (pcnet32_dwio_check (ioaddr)))
         {
-            DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1, 
-                "%s: Using 32 bits lowlevel routines.\n", 
+            DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1, 
+                L"%S: Using 32 bits lowlevel routines.\n", 
                 DEBUG_MODULE_NAME);
                 
             a = &pcnet32_dwio;
@@ -98,8 +102,8 @@ static ethernet_device_t * pcnet32_probe1 (unsigned long ioaddr,
 
     chip_version = a->read_csr (ioaddr, 88) | (a->read_csr (ioaddr, 89) << 16);
     
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1,
-        "%s: PCnet chip version is %#x.\n", 
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1,
+        L"%S: PCnet chip version is %#x.\n", 
         DEBUG_MODULE_NAME, 
         chip_version);
         
@@ -121,9 +125,11 @@ static ethernet_device_t * pcnet32_probe1 (unsigned long ioaddr,
         case 0x2430:
         {
             if (shared)
-                chipname = "PCnet/PCI 79C970"; /* 970 gives the wrong chip id back */
+            /* 970 gives the wrong chip id back */
+                chipname = "PCnet/PCI 79C970"; 
             else
-                chipname = "PCnet/32 79C965"; /* 486/VL bus */
+            /* 486/VL bus */
+                chipname = "PCnet/32 79C965"; 
             break;
         }
         
@@ -170,13 +176,17 @@ static ethernet_device_t * pcnet32_probe1 (unsigned long ioaddr,
             /* switch to home wiring mode */
             media = a->read_bcr (ioaddr, 49);
 #if 0
-            DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1,
-                "pcnet32: pcnet32 media value %#x.\n",  media);
+            DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1,
+                L"%S: pcnet32 media value %#x.\n",
+                DEBUG_MODULE_NAME, media);
+                
             media &= ~3;
             media |= 1;
 #endif
-            DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1,
-                "pcnet32: pcnet32 media reset to %#x.\n",  media);
+            DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1,
+                L"%S: pcnet32 media reset to %#x.\n",
+                DEBUG_MODULE_NAME,
+                media);
 
             a->write_bcr (ioaddr, 49, media);
             break;
@@ -191,8 +201,10 @@ static ethernet_device_t * pcnet32_probe1 (unsigned long ioaddr,
         
         default:
         {
-            DEBUG_PRINT (DEBUG_LEVEL_WARNING,
-                "pcnet32: PCnet version %#x, no PCnet32 chip.\n", chip_version);
+            DEBUG_PRINTW (DEBUG_LEVEL_WARNING,
+                L"%S: PCnet version %#x, no PCnet32 chip.\n", 
+                DEBUG_MODULE_NAME,
+                chip_version);
             
             return NULL;
         }
@@ -225,8 +237,8 @@ static ethernet_device_t * pcnet32_probe1 (unsigned long ioaddr,
     memory_allocate ((void **) &dev, sizeof (ethernet_device_t));
     memory_clear ((uint8_t *) dev, sizeof (ethernet_device_t));
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1,
-        "%s: \"%s\": \"%s\" at %#3lx,\n", 
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1,
+        L"%S: \"%s\": \"%s\" at %#3lx,\n", 
         DEBUG_MODULE_NAME,
         dev->name, chipname, ioaddr);
 
@@ -258,11 +270,13 @@ static ethernet_device_t * pcnet32_probe1 (unsigned long ioaddr,
         
         if (!memory_compare (promaddr, dev->ethernet_address, 6))
         {
-            DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1, 
-                " warning PROM address does not match CSR address\n");
+            DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1, 
+                L" warning PROM address does not match CSR address\n");
 #if defined(__i386__)
-            DEBUG_PRINT (DEBUG_LEVEL_WARNING,
-                "%s: Probably a Compaq, using the PROM address of", dev->name);
+            DEBUG_PRINTW (DEBUG_LEVEL_WARNING,
+                L"%S: Probably a Compaq, using the PROM address of",
+                DEBUG_MODULE_NAME);
+                
             memory_copy (dev->ethernet_address, promaddr, 6);
 #endif
         }               
@@ -279,71 +293,83 @@ static ethernet_device_t * pcnet32_probe1 (unsigned long ioaddr,
     
     for (i = 0; i < 6; i++)
     {
-        DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1,
-            " %2.2x", dev->ethernet_address[i]);
+        DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1,
+            L" %2.2x", dev->ethernet_address[i]);
     }
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1, "\n");
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1, L"\n");
 
     if (((chip_version + 1) & 0xfffe) == 0x2624)
     { /* Version 0x2623 or 0x2624 */
     
         i = a->read_csr (ioaddr, 80) & 0x0C00;  /* Check tx_start_pt */
         
-        DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1,
-            "    tx_start_pt(0x%04x):", i);
+        DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1,
+            L"    tx_start_pt(0x%04x):", i);
         
         switch (i>>10) 
         {
             case 0:
             {
-                DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, "  20 bytes,"); 
+                DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE, L"  20 bytes,"); 
                 break;
             }
             
             case 1:
             {
-                DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, "  64 bytes,"); 
+                DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE, L"  64 bytes,"); 
                 break;
             }
             
             case 2:
             {
-                DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, " 128 bytes,"); 
+                DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE, L" 128 bytes,"); 
                 break;
             }
             
             case 3:
             {
-                DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, "~220 bytes,"); 
+                DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE, L"~220 bytes,"); 
                 break;
             }
         }
         
         i = a->read_bcr (ioaddr, 18);  /* Check Burst/Bus control */
         
-        DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1, " BCR18(%x):", i & 0xFFFF);
+        DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1, L" BCR18(%x):", i & 0xFFFF);
         
-        if (i & (1<<5)) DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1, "BurstWrEn ");
+        if (i & BIT_VALUE (5))
+        {
+            DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1, L"BurstWrEn ");
+        }    
         
-        if (i & (1<<6)) DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1, "BurstRdEn ");
+        if (i & BIT_VALUE (6))
+        {
+            DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1, L"BurstRdEn ");
+        }    
         
-        if (i & (1<<7)) DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1, "DWordIO ");
+        if (i & BIT_VALUE (7))
+        {
+            DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1, L"DWordIO ");
+        }    
         
-        if (i & (1<<11)) DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1, "NoUFlow ");
+        if (i & BIT_VALUE (11))
+        {
+            DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1, L"NoUFlow ");
+        }    
         
         i = a->read_bcr (ioaddr, 25);
         
-        DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1, "    SRAMSIZE=0x%04x,",i<<8);
+        DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1, L"    SRAMSIZE=0x%04x,",i<<8);
         
         i = a->read_bcr (ioaddr, 26);
         
-        DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1, " SRAM_BND=0x%04x,",i<<8);
+        DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1, L" SRAM_BND=0x%04x,",i<<8);
         
         i = a->read_bcr (ioaddr, 27);
     
-        if (i & (1<<14)) 
+        if (i & BIT_VALUE (14)) 
         {
-            DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1, "LowLatRx");
+            DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1, L"LowLatRx");
         }
     }
 
@@ -369,12 +395,13 @@ static ethernet_device_t * pcnet32_probe1 (unsigned long ioaddr,
     memory_allocate ((void **) &lp, sizeof(*lp));
     lp_dma_addr = (dma_addr_t) lp;
 
-    memory_set_uint8 ((uint8_t *) lp, 0, sizeof(*lp));
+    memory_clear (lp, sizeof(*lp));
     lp->dma_addr = lp_dma_addr;
     lp->pci_device = device;
     
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1, 
-        "pcnet32: pcnet32_private lp=%p lp_dma_addr=%#08x\n", 
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1, 
+        L"%S: lp=%p lp_dma_addr=%#08x\n", 
+        DEBUG_MODULE_NAME,
         lp, lp_dma_addr);
 
 //    spin_lock_init(&lp->lock);
@@ -406,7 +433,9 @@ static ethernet_device_t * pcnet32_probe1 (unsigned long ioaddr,
     
     if (a == NULL) 
     {
-        DEBUG_PRINT (DEBUG_LEVEL_ERROR, "pcnet32: No access methods\n");
+        DEBUG_PRINTW (DEBUG_LEVEL_ERROR, 
+            L"%S: No access methods.\n",
+            DEBUG_MODULE_NAME);
         
 //        pci_free_consistent(lp->pci_dev, sizeof(*lp), lp, lp->dma_addr);
 //        release_resource(res);
@@ -459,7 +488,8 @@ static ethernet_device_t * pcnet32_probe1 (unsigned long ioaddr,
     
     if (dev->irq >= 2)
     {
-        DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1, " assigned IRQ %d.\n", dev->irq);
+        DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1, 
+            L" assigned IRQ %d.\n", dev->irq);
     }
     else
     {
@@ -473,20 +503,20 @@ static ethernet_device_t * pcnet32_probe1 (unsigned long ioaddr,
          
         /* Trigger an initialization just for the interrupt. */
         a->write_csr (ioaddr, 0, 0x41);
-        cpu_sleep_milli (VIRTUAL_CPU_CURRENT, 1);
+        cpu_sleep_milli (CPU_CURRENT, 1);
     
 //        dev->irq = probe_irq_off (irq_mask);
         
         if (dev->irq)
         {
-            DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1, 
-                ", probed IRQ %d.\n", 
+            DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1, 
+                L", probed IRQ %d.\n", 
                 dev->irq);
         }
         else 
         {
-            DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1, 
-                ", failed to detect IRQ line.\n");
+            DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1, 
+                L", failed to detect IRQ line.\n");
 //            pci_free_consistent(lp->pci_dev, sizeof(*lp), lp, lp->dma_addr);
 //            release_resource(res);
             memory_deallocate (lp);
@@ -495,16 +525,13 @@ static ethernet_device_t * pcnet32_probe1 (unsigned long ioaddr,
         }
     }
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1, "%s\n", version);
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1, 
+        L"%S: %s\n",
+        DEBUG_MODULE_NAME,
+        version);
     
     /* The PCNET32-specific entries in the device structure. */
 /*    
-    dev->open = &pcnet32_open;
-    dev->hard_start_xmit = &pcnet32_start_xmit;
-    dev->stop = &pcnet32_close;
-    dev->get_stats = &pcnet32_get_stats;
-    dev->set_multicast_list = &pcnet32_set_multicast_list;
-    
 #ifdef HAVE_PRIVATE_IOCTL
     dev->do_ioctl = &pcnet32_mii_ioctl;
 #endif
@@ -512,12 +539,6 @@ static ethernet_device_t * pcnet32_probe1 (unsigned long ioaddr,
 */    
     dev->watchdog_timeo = (100 >> 1);
 
-//    lp->next = pcnet32_dev;
-//    pcnet32_dev = dev;
-
-    /* Fill in the generic fields of the device structure. */
-//    ether_setup(dev);
-    
     return dev;
 }
 
@@ -526,38 +547,26 @@ ethernet_device_t * pcnet32_probe_pci (handle_reference_t device,
 {
     static int card_idx;
     long ioaddr;
-//    int err = 0;
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
-        "%s: %s: found device %#08x.%#08x\n", 
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE, 
+        L"%S: %s: found device %#08x.%#08x\n", 
         DEBUG_MODULE_NAME, __FUNCTION__, 
         device_info->vendor_id, device_info->device_id);
-/*
-    if ((err = ) != 0) 
-    {
-        DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
-            "%s: %s: failed to enable device -- err=%d\n", 
-            DEBUG_MODULE_NAME, __FUNCTION__,
-            err);
-        
-        return NULL;
-    }
-*/
 
-//    pci_device$enable (device);
-    pci_device$set_master (device);
+    pci_device_control$enable (device);
+    pci_device_control$set_master (device);
 
     ioaddr = pci_resource_start (device_info, 0);
     
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1,
-        "%s: %s: ioaddr=%#08lx  resource_flags=%#08lx\n", 
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1,
+        L"%S: %s: ioaddr=%#08lx  resource_flags=%#08lx\n", 
         DEBUG_MODULE_NAME, __FUNCTION__,
         ioaddr, pci_resource_flags (device_info, 0));
 
     if (!ioaddr) 
     {
-        DEBUG_PRINT (DEBUG_LEVEL_ERROR,
-            "%s: %s: no PCI IO resources, aborting\n",
+        DEBUG_PRINTW (DEBUG_LEVEL_ERROR,
+            L"%S: %s: no PCI IO resources, aborting\n",
             DEBUG_MODULE_NAME, __FUNCTION__);
         
         return NULL;
@@ -565,8 +574,8 @@ ethernet_device_t * pcnet32_probe_pci (handle_reference_t device,
     
     if (!pci_dma_supported (device, PCNET32_DMA_MASK)) 
     {
-       DEBUG_PRINT (DEBUG_LEVEL_ERROR,
-           "%s: %s: architecture does not support 32bit PCI busmaster DMA\n",
+       DEBUG_PRINTW (DEBUG_LEVEL_ERROR,
+           L"%S: %s: architecture does not support 32bit PCI busmaster DMA\n",
            DEBUG_MODULE_NAME, __FUNCTION__);
        
        return NULL;

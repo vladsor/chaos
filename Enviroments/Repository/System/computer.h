@@ -23,7 +23,11 @@ typedef struct
 
 typedef computer_node_t * p_computer_node_t;
 
-typedef struct
+struct computer_struct;
+typedef struct computer_struct computer_t;
+typedef computer_t * p_computer_t;
+
+struct computer_struct
 {
     volatile uint32_t state;
     
@@ -43,17 +47,14 @@ typedef struct
     list_t exception_context_stack;
     uint32_t exception_top;
     
-    struct computer_t * upper;
-    struct computer_t * nested;
+    p_computer_t upper;
+    p_computer_t nested;
 
     computer_node_t node;
     
     bool upper_is_sync;
     bool nested_is_sync;
-    
-} computer_t;    
-
-typedef computer_t * p_computer_t;
+};    
 
 
 #if defined (__STORM_KERNEL__)

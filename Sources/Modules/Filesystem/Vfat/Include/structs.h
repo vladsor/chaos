@@ -110,15 +110,8 @@ typedef struct
   uint8_t filesystem_type[8];
   
   uint8_t reserved2[450];
-} PACKED boot_sector_t;
+} boot_sector_t PACKED;
 
-//PACKED;
-/*
-#define BOOT_SIZE sizeof (boot_sector_t)
-#if (BOOT_SIZE) != 512
-#error "Invalid boot sector size."
-#endif
-*/
 /* FAT32 specific data. */
 
 typedef struct
@@ -274,100 +267,7 @@ typedef struct
   
   uint8_t reserved5[418];
   uint32_t signature1;
-} PACKED boot_sector_32_t;
-/*
-#if sizeof (boot_sector_32_t) != 512
-#error "Invalid boot sector 32 size."
-#endif
-*/
-/* A FAT directory entry. */
-
-typedef struct
-{
-  /* The file name. If name[0] == 0xE5, this entry is free. If name[0]
-     == 0x00, the rest of this directory is free. If name[0] == 0x05,
-     the real value for this byte is 0xE5. This is because 0xE5 is
-     used in the KANJI character set... */
-  
-  uint8_t file_name[8];
-  uint8_t extension[3];
-  
-  /* File attributes. */
-/*
-  u8 read_only : 1;
-  u8 hidden : 1;
-  u8 system : 1;
-  u8 volume_id : 1;
-  u8 directory : 1;
-  u8 archive : 1;
-  u8 reserved : 2;
-*/
-  uint8_t attribute;
-    
-  /* Reserved for Windows NT. Set to zero when creating, and never
-     rely upon. */
-
-  uint8_t nt_reserved;
-  
-  /* Time stamp the file was created. */
-
-  uint8_t creation_hundreds;
-
-  fat_time_t creation_time;
-  fat_date_t creation_date;
-
-  /* Last access date. Updated when the file is read from or written
-     to. */
-
-  fat_date_t access_date;
-
-  /* High word of this entry's first cluster number. This should be
-     zero for FAT12 or FAT16. */
-  
-  uint16_t first_cluster_number_high;
-
-  /* Time for last update. */
-
-  fat_time_t update_time;
-  fat_date_t update_date;
-
-  /* Low word of this entry's first cluster number. */
-
-  uint16_t first_cluster_number_low;
-
-  /* File size in bytes. */
-
-  uint32_t file_size;
-
-} PACKED fat_entry_t;
-
-typedef struct
-{
-  /* sequence number for slot */
-  uint8_t id;
-
-  /* first 5 characters in name */
-  ucs2_t name0_4[5];
-  
-  /* attribute byte */
-  uint8_t attribute;
-
-  /* always 0 */
-  uint8_t reserved;
-
-  /* checksum for 8.3 alias */
-  uint8_t alias_checksum;
-
-  /* 6 more characters in name */
-  ucs2_t name5_10[6];
-
-  /* starting cluster number */
-  uint16_t first_cluster_number;
-
-  /* last 2 characters in name */
-  ucs2_t name11_12[2];
-  
-} PACKED lfn_fat_entry_t;
+} boot_sector_32_t PACKED;
 
 typedef struct
 {
@@ -378,20 +278,5 @@ typedef struct
   uint32_t next_cluster;                             /* 492 */
   uint8_t  reserved7[12];                            /* 496 */
   uint32_t signature2;                               /* 508 */
-} PACKED boot_backup_sector_t;
-
-#define BLOCK_SIZE 512
-#define ENTRIES_PER_SECTOR (BLOCK_SIZE / sizeof (fat_entry_t))
-
-#define FAT_ENTRY_DELETED(entry)	\
-    ((entry)->file_name[0] == 0xe5)
-    
-#define FAT_ENTRY_END(entry)	\
-    ((entry)->file_name[0] == 0)
-    
-#define FAT_ENTRY_LONG(entry)	\
-    (((entry)->attribute & 0x3f) == 0x0f)
-    
-#define FAT_ENTRY_VOLUME(entry)	\
-    (((entry)->attribute & 0x1f) == 0x08)
+} boot_backup_sector_t PACKED;
 

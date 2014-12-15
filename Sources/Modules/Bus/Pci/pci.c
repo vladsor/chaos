@@ -7,27 +7,31 @@
 /* Copyright 1999-2000 chaos development. */
 
 #include <enviroment.h>
-
-#define DEBUG_MODULE_NAME "PCI"
-#define DEBUG_LEVEL DEBUG_LEVEL_INFORMATIVE
-//#define DEBUG_LEVEL DEBUG_LEVEL_NONE
-#include <debug/macros.h>
-
 #include <list.h>
 
 #include "Include/pci.h"
 #include "Include/types.h"
 #include "Include/pci_lowlevel.h"
+#include "Include/interface.h"
 
-#include <Classes/kernel.h>
+#define DEBUG_MODULE_NAME L"PCI"
+#define DEBUG_LEVEL DEBUG_LEVEL_INFORMATIVE
+//#define DEBUG_LEVEL DEBUG_LEVEL_NONE
+
+#ifndef __STORM_KERNEL__
+#   define DEBUG_SUPPLIER (pci_debug_supplier)
+#endif
+
+#include <debug/macros.h>
+
 
 /* Linked list of all PCI devices. */
 
-list_t pci_device_list = LIST_EMPTY;
+list_t pci_device_list = LIST_INIT;
 
 /* Linked list of all buses. */
 
-list_t pci_bus_list = LIST_EMPTY;
+list_t pci_bus_list = LIST_INIT;
 
 extern pci_device_id_t pci_device_id[];
 extern unsigned int number_of_devices;
@@ -199,7 +203,9 @@ static pci_operation_t *pci_detect (void)
 
     if ((port_uint8_in (PCI_BASE) == 0) && (port_uint8_in (PCI_BASE + 2) == 0))
     {
-        DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, "PCI Type 2.\n");
+        DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE, 
+            L"%S: Type 2.\n",
+            DEBUG_MODULE_NAME);
 
         operation = &pci_type2_operation;
     }
@@ -210,12 +216,17 @@ static pci_operation_t *pci_detect (void)
 
         if (port_uint32_in (PCI_BASE) == 0x80000000)
         {
-            DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, "PCI Type 1.\n");
+            DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE, 
+                L"%S: Type 1.\n",
+                DEBUG_MODULE_NAME);
+                
             operation = &pci_type1_operation;
         }
         else
         {
-            DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, "PCI not present.\n");
+            DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE, 
+                L"%S: Bus not present.\n",
+                DEBUG_MODULE_NAME);
         }
 
         port_uint32_out (PCI_BASE, tmp);
@@ -230,20 +241,16 @@ static bool device_has_bist (pci_device_t *pci_device)
         PCI_BIST_CAPABLE) != 0);
 }
 
-extern handle_reference_t kernel_handle_timer;
-
 uint8_t device_bist (pci_device_t *pci_device)
 {
     uint32_t start_time, current_time;
   
     pci_write_config_u8 (pci_device, PCI_BIST, PCI_BIST_START);
 
-//    timer_system_read (&start_time);
     start_time = timer$read_milli (kernel_handle_timer);
   
     while ((pci_read_config_u8 (pci_device, PCI_BIST) & PCI_BIST_START) != 0)
     {
-//        timer_system_read (&current_time);
         current_time = timer$read_milli (kernel_handle_timer);
         
         if ((current_time - start_time) > 2000)
@@ -297,7 +304,7 @@ static void pci_read_bases (pci_device_t *device, unsigned int amount,
 {
     unsigned int position, register_number, next;
 
-    /* FIXME: Find a better name for the 'l' variable. */
+    /** @todo Find a better name for the 'l' variable. */
 
     uint32_t l, size;
     pci_resource_t *resource;
@@ -314,12 +321,12 @@ static void pci_read_bases (pci_device_t *device, unsigned int amount,
         size = pci_read_config_u32 (device, register_number);
         pci_write_config_u32 (device, register_number, l);
 
-        if (size == 0 || size == 0xFFFFFFFF)
+        if ((size == 0) || (size == UINT32_MAX))
         {
-          continue;
+            continue;
         }
 
-        if (l == 0xFFFFFFFF)
+        if (l == UINT32_MAX)
         {
             l = 0;
         }
@@ -363,16 +370,17 @@ static void pci_read_bases (pci_device_t *device, unsigned int amount,
         size = pci_read_config_u32 (device, rom);
         pci_write_config_u32 (device, rom, l);
 
-        if (l == 0xFFFFFFFF)
+        if (l == UINT32_MAX)
         {
             l = 0;
         }
 
-        if (size != 0 && size != 0xFFFFFFFF) 
+        if ((size != 0) && (size != UINT32_MAX))
         {
             resource->flags = ((l & PCI_ROM_ADDRESS_ENABLE) |
                 PCI_RESOURCE_MEMORY | PCI_RESOURCE_PREFETCH | 
                 PCI_RESOURCE_READONLY | PCI_RESOURCE_CACHEABLE);
+                
             resource->start = l & PCI_ROM_ADDRESS_MASK;
             size = ~(size & PCI_ROM_ADDRESS_MASK);
             resource->end = resource->start + (unsigned long) size;
@@ -389,9 +397,9 @@ static bool pci_setup_device (pci_device_t *device)
     uint32_t class;
     char *p;
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, "%s: ", __FUNCTION__);
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1, L"%s: ", __FUNCTION__);
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, "{%p} ", device);
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1, L"{%p} ", device);
 
     /* Set the name. */
 
@@ -420,8 +428,8 @@ static bool pci_setup_device (pci_device_t *device)
         string_copy (device->device_name, "<UNKNOWN>");
     }
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
-        "Slot name=\"%s\", Vendor=\"%s\", Device=\"%s\", ", 
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1, 
+        L"Slot name=\"%s\", Vendor=\"%s\", Device=\"%s\", ", 
         device->slot_name, device->vendor_name, device->device_name);
 
     device->has_bist = device_has_bist (device);
@@ -510,8 +518,8 @@ static bool pci_setup_device (pci_device_t *device)
     device->min_dma_time = pci_read_config_u8 (device, PCI_MINIMUM_GRANULARITY);
     device->max_dma_latency = pci_read_config_u8 (device, PCI_MAXIMUM_LATENCY);
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
-        "command = %X, status = %X, ", 
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1, 
+        L"command = %X, status = %X, ", 
         device->command, device->status);
   
     if( p != NULL)
@@ -523,8 +531,8 @@ static bool pci_setup_device (pci_device_t *device)
         string_copy (device->class_name, "<UNKNOWN>");
     }
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
-        "Device class=\"%s\"\n", 
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1, 
+        L"Device class=\"%s\"\n", 
         device->class_name);
 
     /* We found a fine healthy device, go go go... */
@@ -616,9 +624,9 @@ static pci_device_t *pci_scan_slot (pci_device_t *input_device)
 }
 
 /**
- * pci_find_capability - query for devices' capabilities 
- * @dev: PCI device to query
- * @cap: capability code
+ * @brief query for devices' capabilities 
+ * @param device PCI device to query
+ * @param capability capability code
  *
  * Tell if a device supports a given PCI capability.
  * Returns the address of the requested capability structure within the
@@ -652,15 +660,23 @@ static return_t pci_find_capability (pci_device_t *device, int capability)
     
     switch (device->header_type) 
     {
-    case PCI_HEADER_TYPE_NORMAL:
-    case PCI_HEADER_TYPE_BRIDGE:
-        pos = pci_read_config_u8 (device, PCI_CAPABILITY_LIST);
-		break;
-    case PCI_HEADER_TYPE_CARDBUS:
-		pos = pci_read_config_u8 (device, PCI_CARDBUS_CAPABILITY_LIST);
-		break;
-    default:
-        return 0;
+        case PCI_HEADER_TYPE_NORMAL:
+        case PCI_HEADER_TYPE_BRIDGE:
+        {
+            pos = pci_read_config_u8 (device, PCI_CAPABILITY_LIST);
+            break;
+        }
+            
+        case PCI_HEADER_TYPE_CARDBUS:
+        {
+    		pos = pci_read_config_u8 (device, PCI_CARDBUS_CAPABILITY_LIST);
+            break;
+        }
+    		
+        default:
+        {
+            return 0;
+        }    
 	}
 	
 	while (ttl-- && pos >= 0x40)
@@ -685,9 +701,9 @@ static return_t pci_find_capability (pci_device_t *device, int capability)
 }
 
 /**
- * pci_set_power_state - Set the power state of a PCI device
- * @dev: PCI device to be suspended
- * @state: Power state we're entering
+ * @brief Set the power state of a PCI device
+ * @param device PCI device to be suspended
+ * @param state Power state we're entering
  *
  * Transition a device to a new power state, using the Power Management 
  * Capabilities in the device's config space.
@@ -775,7 +791,7 @@ return_t pci_set_power_state (pci_device_t *device, uint32_t state)
     {
 //        udelay(200);
 //        timer_sleep_milli (200);
-        cpu_sleep_milli (VIRTUAL_CPU_CURRENT, 200);
+        cpu_sleep_milli (CPU_CURRENT, 200);
     }
     
     device->current_state = state;
@@ -799,8 +815,9 @@ return_t pci_enable_resources (pci_device_t *device)
         
         if (!r->start && r->end) 
         {
-            DEBUG_PRINT (DEBUG_LEVEL_ERROR,
-                "PCI: Device %s not available because of resource collisions\n", 
+            DEBUG_PRINTW (DEBUG_LEVEL_ERROR,
+                L"%S: Device %s not available because of resource collisions\n", 
+                DEBUG_MODULE_NAME,
                 device->slot_name);
                 
             return -1;
@@ -824,8 +841,9 @@ return_t pci_enable_resources (pci_device_t *device)
     
     if (cmd != old_cmd) 
     {
-        DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
-            "PCI: Enabling device %s (%04x -> %04x)\n", 
+        DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE, 
+            L"%S: Enabling device %s (%04x -> %04x)\n", 
+            DEBUG_MODULE_NAME,
             device->slot_name, old_cmd, cmd);
         
         pci_write_config_u16 (device, PCI_COMMAND, cmd);
@@ -835,8 +853,8 @@ return_t pci_enable_resources (pci_device_t *device)
 }
 
 /**
- * pci_enable_device - Initialize device before it's used by a driver.
- * @dev: PCI device to be initialized
+ * @brief Initialize device before it's used by a driver.
+ * @param device PCI device to be initialized
  *
  *  Initialize device before it's used by a driver. Ask low-level code
  *  to enable I/O and memory. Wake up the device if it was suspended.
@@ -845,8 +863,8 @@ return_t pci_enable_resources (pci_device_t *device)
 return_t pci_enable_device (pci_device_t *device)
 {
 //	int err;
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
-        "%s: %s (%p)\n", 
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE, 
+        L"%S: %s (%p)\n", 
         DEBUG_MODULE_NAME, __FUNCTION__,
         device);
 
@@ -860,8 +878,8 @@ return_t pci_enable_device (pci_device_t *device)
 }
 
 /**
- * pci_disable_device - Disable PCI device after use
- * @dev: PCI device to be disabled
+ * @brief Disable PCI device after use
+ * @param device PCI device to be disabled
  *
  * Signal to the system that the PCI device is not in use by the system
  * anymore.  This only involves disabling PCI bus-mastering, if active.
@@ -870,8 +888,8 @@ void pci_disable_device (pci_device_t *device)
 {
     uint16_t pci_command;
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
-        "%s: %s (%p)\n", 
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE, 
+        L"%S: %s (%p)\n", 
         DEBUG_MODULE_NAME, __FUNCTION__,
         device);
 
@@ -885,10 +903,10 @@ void pci_disable_device (pci_device_t *device)
 }
 
 /**
- * pci_enable_wake - enable device to generate PME# when suspended
- * @dev: - PCI device to operate on
- * @state: - Current state of device.
- * @enable: - Flag to enable or disable generation
+ * @brief enable device to generate PME# when suspended
+ * @param device PCI device to operate on
+ * @param state Current state of device.
+ * @param enable Flag to enable or disable generation
  * 
  * Set the bits in the device's PM Capabilities to generate PME# when
  * the system is suspended. 
@@ -943,8 +961,8 @@ return_t pci_enable_wake (pci_device_t *device, uint32_t state, int enable)
 static unsigned int pci_max_latency = 255;
 
 /**
- * pci_set_master - enables bus-mastering for device dev
- * @dev: the PCI device to enable
+ * @brief enables bus-mastering for device dev
+ * @param device the PCI device to enable
  *
  * Enables bus-mastering on the device and calls pcibios_set_master()
  * to do the needed arch specific settings.
@@ -954,16 +972,16 @@ void pci_set_master (pci_device_t *device)
     uint16_t cmd = 0;
     uint8_t latency;
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
-        "%s: %s (%p)\n", 
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE, 
+        L"%S: %s (%p)\n", 
         DEBUG_MODULE_NAME, __FUNCTION__,
         device);
 
     device->command = pci_read_config_u16 (device, PCI_COMMAND);
     device->status = pci_read_config_u16 (device, PCI_STATUS);
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
-        "%s: command = %X, status = %X\n", 
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1, 
+        L"%S: command = %X, status = %X\n", 
         DEBUG_MODULE_NAME,
         device->command, device->status);
 
@@ -971,8 +989,8 @@ void pci_set_master (pci_device_t *device)
     
 //    if (!(cmd & PCI_COMMAND_MASTER))
     {
-        DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
-            "%s: Enabling bus mastering for device %s\n", 
+        DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE, 
+            L"%S: Enabling bus mastering for device %s\n", 
             DEBUG_MODULE_NAME,
             device->slot_name);
             
@@ -982,8 +1000,8 @@ void pci_set_master (pci_device_t *device)
 
     latency = pci_read_config_u8 (device, PCI_LATENCY_TIMER);
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
-        "%s: latency = %u\n", 
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1, 
+        L"%S: latency = %u\n", 
         DEBUG_MODULE_NAME,
         latency);
     
@@ -1000,8 +1018,8 @@ void pci_set_master (pci_device_t *device)
         return;
     }
     
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
-        "%s: Setting latency timer of device %s to %d\n", 
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE, 
+        L"%S: Setting latency timer of device %s to %d\n", 
         DEBUG_MODULE_NAME,
         device->slot_name, latency);
 
@@ -1016,7 +1034,10 @@ static pci_bus_t *pci_scan_bus (int bus_number, pci_operation_t *operation)
     unsigned int device_function;
     pci_device_t device;
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, "Scaning bus: %u.\n", bus_number);
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE, 
+        L"%S: Scaning bus: %u.\n", 
+        DEBUG_MODULE_NAME,
+        bus_number);
 
     memory_allocate ((void **) &bus, sizeof (pci_bus_t));
     
@@ -1051,7 +1072,9 @@ bool pci_init (void)
         return FALSE;
     }
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, "PCI Detected.\n");
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1, 
+        L"%S: Detected.\n",
+        DEBUG_MODULE_NAME);
 
     /* Scan this bus. */
 
@@ -1065,7 +1088,9 @@ bool pci_init (void)
 //        (pci_bus_t *) root_bus->next = pci_scan_bus (1, pci_operation);
     }
 */
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, "PCI init ends.\n");
+    DEBUG_PRINTW (DEBUG_LEVEL_INFORMATIVE1, 
+        L"%S: %s: ends.\n",
+        DEBUG_MODULE_NAME, __FUNCTION__);
 
     return TRUE;
 }

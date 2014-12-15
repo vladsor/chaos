@@ -34,7 +34,6 @@ debug_event_class.o:  \
   /root/Chaos/Enviroments/Common/ia32/Atomic/uint32.h \
   /root/Chaos/Enviroments/Common/ia32/Atomic/bit.h \
   /root/Chaos/Enviroments/Common/ia32/bit.h \
-  /root/Chaos/Sources/configuration.h \
   /root/Chaos/Enviroments/System/system_enviroment.h \
   /root/Chaos/Enviroments/System/ia32/cpu_common.h \
   /root/Chaos/Enviroments/System/ia32/cpuid.h \
@@ -62,6 +61,7 @@ debug_event_class.o:  \
   /root/Chaos/Enviroments/System/ia32/limits.h \
   /root/Chaos/Enviroments/System/ia32/locks.h \
   /root/Chaos/Enviroments/Kernel/kernel.h \
+  /root/Chaos/Sources/configuration.h \
   /root/Chaos/Enviroments/Kernel/defines.h \
   /root/Chaos/Enviroments/Kernel/limits.h \
   /root/Chaos/Enviroments/Kernel/Common/debug.h \
@@ -143,6 +143,11 @@ debug_event_class.o:  \
   /root/Chaos/Enviroments/Repository/Interfaces/handle_factory.h \
   /root/Chaos/Enviroments/Repository/Interfaces/event_supplier_factory.h \
   /root/Chaos/Enviroments/Repository/Interfaces/event_consumer_factory.h \
+  /root/Chaos/Include/modules.h /root/Chaos/Include/Classes/kernel.h \
+  /root/Chaos/Include/Interfaces/init.h \
+  /root/Chaos/Include/Interfaces/namespace.h \
+  /root/Chaos/Include/Interfaces/timer.h \
+  /root/Chaos/Include/EventClasses/irq.h \
   /root/Chaos/Include/EventClasses/debug.h \
   /root/Chaos/Sources/Libraries/irq_event/Include/debug_event_class.h \
   /root/Chaos/Include/debug/macros.h /root/Chaos/Include/string.h \

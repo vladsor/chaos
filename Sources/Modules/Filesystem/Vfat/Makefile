@@ -1,4 +1,3 @@
-
 source_dirs := . 
 
 warning_flags := \
@@ -12,8 +11,7 @@ override compile_flags += -pipe -fno-leading-underscore -fno-builtin \
     -funsigned-char -fpack-struct $(warning_flags)
 
 override preprocessor_flags += -nostdinc
-override preprocessor_flags += -DCREATOR='"Vladimir Sorokin"' \
-	-DCOMPILER='"gcc"'
+override preprocessor_flags += -DCREATOR='"Vladimir Sorokin"' -DCOMPILER='"gcc"'
 
 include_flags := $(addprefix -I,$(include_directories))
 
@@ -28,27 +26,25 @@ sources += $(wildcard $(asm_search_wildcards))
 objects := $(patsubst %.c,%.o,$(sources))
 objects := $(patsubst $(source_directory)/%,%,$(objects))
 
-libraries := 
-#list.a pool_of_integers.a pool_of_ranges.a avl_tree.a hash_table.a\
-#    string.a
-#unicode.a
-
-
-libraries := $(addprefix $(library_directories)/, $(libraries))
+override libraries := $(addprefix $(library_directories)/, $(libraries))
 
 dependencies         := $(patsubst %.c,%.d,$(wildcard $(c_search_wildcards)))
 dependencies         += $(patsubst %.S,%.d,$(wildcard $(asm_search_wildcards)))
 
 dependencies         := $(patsubst $(source_directory)/%,%,$(dependencies))
 
-%.a: $(objects) $(libraries)
+$(target).a: $(objects) $(libraries)
 	@echo Linking: $@
 	ar cru $@ $(objects) $(libraries)
 	ranlib $@
 
-%.so: $(objects) $(libraries)
+$(target).so: $(objects) $(libraries)
 	@echo Linking: $@
 	ld -shared $(objects) $(libraries) -o $@
+
+$(target): $(objects) $(libraries)
+	@echo Linking: $@
+	ld $(objects) $(libraries) -o $@ -nostdlib -Wl,-T,program.ld
 
 VPATH := $(source_dirs)
 
