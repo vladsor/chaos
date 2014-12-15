@@ -86,6 +86,8 @@ static bool init (unsigned int port_number)
     
   /* Register ports. */
 
+  log_print (&log_structure, LOG_URGENCY_DEBUG, "init.");
+
   if (system_call_port_range_register (serial_port[port_number].port, 8,
                                        "Serial (UART controller)") !=
       STORM_RETURN_SUCCESS)
@@ -392,6 +394,9 @@ static int task_port (u8 port_number)
   ipc_structure_type ipc_structure;
   u8 *service_name = "serial0";
 
+  log_print (&log_structure, LOG_URGENCY_DEBUG,
+             "task.");
+
   /* TODO: command-line options. */
   
   if (init (port_number) == FALSE)
@@ -403,11 +408,10 @@ static int task_port (u8 port_number)
 
   /* Handle IRQ. */
   /* TODO: change if 2 serial ports can have the same irq. */
-
-  if (system_call_thread_create () == SYSTEM_RETURN_THREAD_NEW)
+  if (system_thread_create () == SYSTEM_RETURN_THREAD_NEW)
   {
     irq_handler (port_number);
-    return -1;
+    while (TRUE);
   }
 
   /* Create service. */
@@ -423,6 +427,9 @@ static int task_port (u8 port_number)
   /* Main loop.	*/
 
   system_call_thread_name_set ("Service handler");
+
+  log_print (&log_structure, LOG_URGENCY_DEBUG,
+             "Begin working 1.");
   
   while (TRUE)
   {
@@ -453,21 +460,23 @@ int main (void)
   system_call_thread_name_set ("Initialising");
 
   log_init (&log_structure, PACKAGE_NAME, &empty_tag);
-  
+
+  system_call_process_parent_unblock ();
+
   /* Create threads handling COM1. */
 
-  if (system_call_thread_create () == SYSTEM_RETURN_THREAD_NEW)
+  if (system_thread_create () == SYSTEM_RETURN_THREAD_NEW)
   {
     task_port (0);
-    return -1;
+    while (TRUE);
   }
 
   /* Create threads handling COM2. */
 
-  if (system_call_thread_create () == SYSTEM_RETURN_THREAD_NEW)
+  if (system_thread_create () == SYSTEM_RETURN_THREAD_NEW)
   {
     task_port (1);
-    return -1;
+    while (TRUE);
   }
 
   return 0;

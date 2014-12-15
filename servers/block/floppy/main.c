@@ -25,10 +25,13 @@
 
 #define DEBUG TRUE
 
+#define BLOCK_SIZE       512
+#define NUMBER_OF_BLOCKS 2881
+
 static ipc_block_info_type ipc_block_info =
 {
-  0, 
-  0,
+  BLOCK_SIZE, 
+  NUMBER_OF_BLOCKS,
   
   /* Writable. */
 
@@ -40,7 +43,7 @@ static ipc_block_info_type ipc_block_info =
   
   /* Label. */
 
-  "Initial ramdisk " PACKAGE_VERSION
+  "Floppy Drive " PACKAGE_VERSION
 };
 
 log_structure_type log_structure;
@@ -109,11 +112,22 @@ static void handle_connection (mailbox_id_type reply_mailbox_id)
                                ipc_block_read->start_block_number +
                                ipc_block_read->number_of_blocks);
 #endif
-#if FALSE
-          read_block(ipc_block_read->start_block_number,
-	    message_parameter.data, ipc_block_read->number_of_blocks);
-          message_parameter.length = ipc_block_read->number_of_blocks;
-#endif
+          if (!read_block(ipc_block_read->start_block_number,
+	    message_parameter.data, ipc_block_read->number_of_blocks))
+	  {
+            log_print_formatted (&log_structure, LOG_URGENCY_ERROR,
+	                         "Read Error");
+	    message_parameter.data = NULL;
+	    message_parameter.length = 0;
+	  }
+	  else
+	  {
+            message_parameter.length = ipc_block_read->number_of_blocks;
+
+            log_print_formatted (&log_structure, LOG_URGENCY_DEBUG,
+                               "Data: %X %X %X %X", 
+			       data[0], data[1], data[2], data[3]);
+	  }
         }
         message_parameter.block = TRUE;
         
@@ -132,10 +146,8 @@ static void handle_connection (mailbox_id_type reply_mailbox_id)
                                ipc_block_write->start_block_number +
                                ipc_block_write->number_of_blocks);
 #endif
-#if FALSE	
         write_block(ipc_block_write->start_block_number,
 	    ipc_block_write->data, ipc_block_write->number_of_blocks);
-#endif
         break;
       }
       
@@ -161,7 +173,12 @@ int main (void)
 
   log_init (&log_structure, PACKAGE_NAME, &empty_tag);
 
-  init();  
+  if (!init())
+  {
+    log_print (&log_structure, LOG_URGENCY_EMERGENCY,
+               "No Floppy Drive found.");
+    return -1;
+  }
   
   /* Create the service. */
 

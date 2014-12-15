@@ -97,7 +97,20 @@ static void connection_client
 
     case IPC_CONSOLE_MOUSE_CURSOR_SET:
     {
-      mouse_cursor_set (*our_console, *((bool *)message_parameter->data));
+      if ( (*our_console)->mouse_cursor_visibility != 
+           *((bool *)message_parameter->data))
+      {
+        (*our_console)->mouse_cursor_visibility = 
+           *((bool *)message_parameter->data);
+        mouse_cursor_draw ( (*our_console)->width, (*our_console)->height, 
+	                     *((bool *)message_parameter->data));
+      }
+      break;
+    }
+    
+    case IPC_CONSOLE_PRINT_CHAR_SET:
+    {
+      console_print_char_set (*our_console);
       break;
     }
     

@@ -27,34 +27,28 @@
 typedef struct
 {
 
-/*
-EXT External event (bit 0). When set, indicates that an event external to the
-program caused the exception, such as a hardware interrupt.
-*/
+  /* EXT External event (bit 0). When set, indicates that an event external to 
+         the program caused the exception, such as a hardware interrupt. */
   int EXT : 1;
 
-/*
-IDT Descriptor location (bit 1). When set, indicates that the index portion of the
-error code refers to a gate descriptor in the IDT; when clear, indicates that the
-index refers to a descriptor in the GDT or the current LDT.
-*/
+  /* IDT Descriptor location (bit 1). When set, indicates that the index portion
+         of the error code refers to a gate descriptor in the IDT; when clear, 
+         indicates that the index refers to a descriptor in the GDT or the 
+         current LDT. */
   int IDT : 1; 
 
-/*
-TI GDT/LDT (bit 2). Only used when the IDT flag is clear. When set, the TI flag
-indicates that the index portion of the error code refers to a segment or gate
-descriptor in the LDT; when clear, it indicates that the index refers to a
-descriptor in the current GDT.
-*/
+  /* TI GDT/LDT (bit 2). Only used when the IDT flag is clear. When set, the TI 
+        flag indicates that the index portion of the error code refers to a 
+        segment or gate descriptor in the LDT; when clear, it indicates that the 
+        index refers to a descriptor in the current GDT. */
   int TI : 1;
 
-/*
-The segment selector index field provides an index into the IDT, GDT, or current LDT to the
-segment or gate selector being referenced by the error code. In some cases the error code is null
-(that is, all bits in the lower word are clear). A null error code indicates that the error was not
-caused by a reference to a specific segment or that a null segment descriptor was referenced in
-an operation.
-*/
+  /* The segment selector index field provides an index into the IDT, GDT, or 
+     current LDT to the segment or gate selector being referenced by the error 
+     code. In some cases the error code is null (that is, all bits in the lower 
+     word are clear). A null error code indicates that the error was not caused
+     by a reference to a specific segment or that a null segment descriptor was 
+     referenced in an operation. */
   int segment_selector_index : 13;
 
   int reserved : 16;
@@ -63,45 +57,56 @@ an operation.
 typedef struct
 {
 
-/*
-P 0 The fault was caused by a nonpresent page.
-  1 The fault was caused by a page-level protection violation.
-*/
+  /* P 0 The fault was caused by a nonpresent page.
+       1 The fault was caused by a page-level protection violation. */
   int P : 1;
 
-/*
-W/R 0 The access causing the fault was a read.
-    1 The access causing the fault was a write.
-*/
-  int R_W : 1;
+  /* W/R 0 The access causing the fault was a read.
+         1 The access causing the fault was a write. */
+  int W_R : 1;
 
-/*
-U/S 0 The access causing the fault originated when the processor
-      was executing in supervisor mode.
-    1 The access causing the fault originated when the processor
-      was executing in user mode.
-*/
+  /* U/S 0 The access causing the fault originated when the processor
+           was executing in supervisor mode.
+         1 The access causing the fault originated when the processor
+           was executing in user mode. */
   int U_S : 1; 
 
-/*
-RSVD 0 The fault was not caused by a reserved bit violation.
-     1 The page fault occured because a 1 was detected in one of the
-       reserved bit positions of a page table entry or directory entry
-       that was marked present.
-*/
+  /* RSVD 0 The fault was not caused by a reserved bit violation.
+          1 The page fault occured because a 1 was detected in one of the
+            reserved bit positions of a page table entry or directory entry
+            that was marked present. */
   int RSVD : 1;
 
   int reserved : 28;
 
-} __attribute__ ((packed)) Page_Fault_Error_Code_type;
+} __attribute__ ((packed)) page_error_type;
 
+enum
+{
+  EXCEPTION_CODE_NONE,
+  EXCEPTION_CODE_PAGE,
+  EXCEPTION_CODE_SEGMENT,
+};
 
 /* Prototypes. */
 
 extern void trap_init (void) INIT_CODE;
+extern void trap0_handler(void);
 extern void trap1_handler(void);
+extern void trap2_handler(void);
 extern void trap3_handler(void);
+extern void trap4_handler(void);
+extern void trap5_handler(void);
+extern void trap6_handler(void);
+extern void trap7_handler(void);
+extern void trap8_handler(void);
+extern void trap9_handler(void);
+extern void trap10_handler(void);
+extern void trap11_handler(void);
+extern void trap12_handler(void);
+extern void trap13_handler(void);
 extern void trap14_handler(void);
+extern void trap_reserved_handler(void);
 /* External variables. */
 
 extern tss_type *trap_tss;

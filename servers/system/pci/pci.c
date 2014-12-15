@@ -31,7 +31,7 @@
 
 /* Define as TRUE if you are debugging this server. */
 
-#define DEBUG TRUE
+#define DEBUG FALSE
 
 
 static log_structure_type log_structure;
@@ -579,6 +579,31 @@ static pci_operation_type *pci_detect (void)
   return operation;
 }
 
+static bool device_has_bist (pci_device_type *pci_device)
+{
+  return ((pci_read_config_u8 (pci_device, PCI_BIST) & PCI_BIST_CAPABLE) != 0);
+}
+
+
+static u8 device_bist (pci_device_type *pci_device)
+{
+  time_type start_time, current_time;
+  
+  pci_write_config_u8 (pci_device, PCI_BIST, PCI_BIST_START);
+
+  system_call_timer_read (&start_time);
+  
+  while ((pci_read_config_u8 (pci_device, PCI_BIST) & PCI_BIST_START) != 0)
+  {
+    system_call_timer_read (&current_time);
+    if ((current_time - start_time) > 2000)
+    {
+      return 0xFF;
+    }
+  }
+  return (pci_read_config_u8 (pci_device, PCI_BIST) & PCI_BIST_CODE_MASK);
+}
+
 /* Read interrupt line. */
 
 static void pci_read_irq (pci_device_type *device)
@@ -589,6 +614,8 @@ static void pci_read_irq (pci_device_type *device)
   
   if (irq != 0)
   {
+    /* The value 255 is defined as meaning "unknown" or "no connection" 
+       to the interrupt controller (as sample: IDE controller say so).  */
     irq = pci_read_config_u8 (device, PCI_INTERRUPT_LINE);
   }
 
@@ -621,15 +648,9 @@ static void pci_read_bases (pci_device_type *device, unsigned int amount,
 
   /* FIXME: Find a better name for the 'l' variable. */
 
-  u32 l, size, temp;
-  u16 command;
+  u32 l, size;
   pci_resource_type *resource;
   
-  /* Disable IO and memory while we fiddle */
-  command = pci_read_config_u16(device, PCI_COMMAND);
-  temp = command & ~(PCI_COMMAND_IO | PCI_COMMAND_MEMORY);
-  pci_write_config_u16(device, PCI_COMMAND, temp);
-
   for (position = 0; position < amount; position = next) 
   {
     next = position + 1;
@@ -641,11 +662,6 @@ static void pci_read_bases (pci_device_type *device, unsigned int amount,
     pci_write_config_u32 (device, register_number, MAX_U32);
     size = pci_read_config_u32 (device, register_number);
     pci_write_config_u32 (device, register_number, l);
-
-#if DEBUG
-  log_print_formatted 
-      (&log_structure, LOG_URGENCY_DEBUG, "size: %u", size);
-#endif
 
     if (size == 0 || size == 0xFFFFFFFF)
     {
@@ -670,12 +686,6 @@ static void pci_read_bases (pci_device_type *device, unsigned int amount,
 
     resource->end = resource->start + (unsigned long) size;
     resource->flags |= (l & 0xF) | pci_get_resource_type (l);
-
-#if DEBUG
-  log_print_formatted 
-      (&log_structure, LOG_URGENCY_DEBUG, "resource: %x.%x.%x", resource->start,
-      resource->end,resource->flags);
-#endif
 
     if ((l & (PCI_BASE_ADDRESS_SPACE | PCI_BASE_ADDRESS_MEM_TYPE_MASK)) ==
         (PCI_BASE_ADDRESS_SPACE_MEMORY | PCI_BASE_ADDRESS_MEM_TYPE_64)) 
@@ -717,16 +727,11 @@ static void pci_read_bases (pci_device_type *device, unsigned int amount,
       resource->start = l & PCI_ROM_ADDRESS_MASK;
       size = ~(size & PCI_ROM_ADDRESS_MASK);
       resource->end = resource->start + (unsigned long) size;
-#if DEBUG
-  log_print_formatted 
-      (&log_structure, LOG_URGENCY_DEBUG, "resource: %x.%x.%x", resource->start,
-      resource->end,resource->flags);
-#endif
     }
     
     resource->name = device->device_name;
   }
-  pci_write_config_u16(device, PCI_COMMAND, command);
+
 }
 
 /* Fill in class and map information of a device. */
@@ -772,7 +777,7 @@ static bool pci_setup_device (pci_device_type *device)
   class >>= 8;
   device->class = class;
 
-  device->class_id = (class >> 16) & 0xFF;
+//  device->class_id = (class >> 16) & 0xFF;
   device->subclass_id = (class >> 8) & 0xFF;
   device->interface_id = class & 0xFF;
 
@@ -805,10 +810,6 @@ static bool pci_setup_device (pci_device_type *device)
 
     case PCI_HEADER_TYPE_NORMAL:
     {
-#if DEBUG
-  log_print_formatted 
-      (&log_structure, LOG_URGENCY_DEBUG, "normal device");
-#endif
       pci_read_irq (device);
       pci_read_bases (device, 6, PCI_ROM_ADDRESS);
       device->subsystem_vendor_id = pci_read_config_u16 
@@ -822,10 +823,6 @@ static bool pci_setup_device (pci_device_type *device)
 
     case PCI_HEADER_TYPE_BRIDGE:
     {
-#if DEBUG
-  log_print_formatted 
-      (&log_structure, LOG_URGENCY_DEBUG, "bridge");
-#endif
       pci_read_bases (device, 2, PCI_ROM_ADDRESS1);
       break;
     }
@@ -834,10 +831,6 @@ static bool pci_setup_device (pci_device_type *device)
 
     case PCI_HEADER_TYPE_CARDBUS:
     {
-#if DEBUG
-  log_print_formatted 
-      (&log_structure, LOG_URGENCY_DEBUG, "cardbus");
-#endif
       pci_read_irq (device);
       pci_read_bases (device, 1, 0);
       device->subsystem_vendor_id = pci_read_config_u16
@@ -1038,8 +1031,14 @@ int main (void)
   while (device != NULL)
   {
     log_print_formatted 
-      (&log_structure, LOG_URGENCY_DEBUG, "found: %s, name: %s, class: %x",
-       device->class_name, device->device_name, device->class);
+      (&log_structure, LOG_URGENCY_DEBUG, "found: %s, name: %s",
+       device->class_name, device->device_name);
+
+    if (device_has_bist(device))
+    {
+      log_print_formatted (&log_structure, LOG_URGENCY_DEBUG, "BIST result: %u",
+                           device_bist(device));
+    }
     device = (pci_device_type *) device->next;
   }
 

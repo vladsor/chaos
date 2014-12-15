@@ -43,7 +43,7 @@ extern void cpuid_init (void) INIT_CODE;
 #define VENDOR_RiseTechnology_STRING	"RiseRiseRise"
 #define VENDOR_Transmeta_STRING         "GenuineTMx86"
 
-typedef enum
+enum
 {
     VENDOR_UNKNOWN,
     VENDOR_AMD,
@@ -52,11 +52,11 @@ typedef enum
     VENDOR_Centaur,
     VENDOR_UMC,
     VENDOR_NexGen,
-    VENDOR_RiseTechnology,
+    VENDOR_RiseTechnology,
     VENDOR_Transmeta,
-} CPU_vendor;
+};
 
-typedef enum
+enum
 {
     CPU_TYPE_UNKNOWN_PROCESSOR,
     CPU_TYPE_UNKNOWN_INTEL,
@@ -119,9 +119,9 @@ typedef enum
     CPU_TYPE_INTEL_Pentium_III,
     CPU_TYPE_INTEL_Pentium_IV,
     
-} CPU_type;
+};
 
-typedef enum
+enum
 {
     CPU_SUB_TYPE_A_step,
     CPU_SUB_TYPE_Standart,
@@ -137,81 +137,157 @@ typedef enum
     
     CPU_SUB_TYPE_Duron,
     CPU_SUB_TYPE_Thinderbird
-    
-} CPU_sub_type;
+};
 
-typedef enum
+enum
 {
-    FPU_NONE,
-    FPU_8087,
-    FPU_80287,
-    FPU_80387,
-    FPU_BUILT_IN
-} FPU_type;
+    FPU_TYPE_NONE,
+    FPU_TYPE_8087,
+    FPU_TYPE_80287,
+    FPU_TYPE_80387,
+    FPU_TYPE_BUILT_IN, 
+};
 
-// Detected CPU capabilities - used as input to the GetCPUCaps() function
-typedef enum
+/* Detected CPU features */
+enum
 {
-    /* Processor Features - returned as boolean values			*/
-    FEATURE_CPUID,     	/* Supports CPUID instruction			*/
-    FEATURE_CPU_NAME,	/* Supports get cpu name			*/
+  /* Processor Features - returned as boolean values */
+
+  /* Supports CPUID instruction */
+  CPU_FEATURE_CPUID,
+
+  /* Supports get cpu name */
+  CPU_FEATURE_CPU_NAME,	
     
-    FEATURE_FPU,        /* FPU present					*/
-    FEATURE_VME,        /* Virtual Mode Extensions			*/
-    FEATURE_DEBUG,	/* Debug extensions				*/
-    FEATURE_PSE,        /* Page Size Extensions				*/
-    FEATURE_TSC,        /* Time Stamp Counter				*/
-    FEATURE_MSR,	/* Model Specific Registers			*/
-    FEATURE_PAE,        /* Physical Address Extensions			*/
-    FEATURE_MCE,        /* Machine Check Extensions			*/
-    FEATURE_CMPXCHG8,	/* CMPXCHG8 instruction				*/
-    FEATURE_APIC,	/* APIC						*/
-    FEATURE_SYSENTER,	/* SYSENTER/SYSEXIT instruction			*/
-    FEATURE_MTRR,	/* Memory Type Range Registers			*/
-    FEATURE_GPE,	/* Global Paging Extensions			*/
-    FEATURE_PGE = FEATURE_GPE,	
-    FEATURE_MCA,	/* Machine Check Architecture			*/
-    FEATURE_CMOV,	/* CMOV instruction				*/
-    FEATURE_PAT,	/* Page Attribue Table				*/
-    FEATURE_PSE36,	/* PSE36 (Page Size Extensions)			*/
+  /* FPU present */
+  CPU_FEATURE_FPU,
 
-    FEATURE_MMX,	/* MMX support					*/
-    FEATURE_MMX_EXT,	/* MMX Extensions				*/
-    FEATURE_FXSAVE,	/* FXSAVE/FXRSTOR instruction			*/
+  /* Supports cache L1 info */
+  CPU_FEATURE_CACHE_L1_INFO,
 
-    FEATURE_3DNOW,	/* 3DNow! support				*/
-    FEATURE_3DNOW_EXT,	/* Extended 3DNow! support			*/
+  /* Supports cache L2 info */
+  CPU_FEATURE_CACHE_L2_INFO,
 
-    FEATURE_SSE,	/* SSE						*/
-    FEATURE_SSE_FP,	/* SSE FP support				*/
-    FEATURE_SSE_MMX,	/* SSE MMX support (same as FEATURE_MMXEXT)	*/
+  /* Supports hardware get cpu name */
+  CPU_FEATURE_HARD_NAME,
 
-    FEATURE_SELF_SNOOP,	/* Self Snoop					*/
-    FEATURE_ACC,	/* Automatic Clock Control			*/
-    FEATURE_IA_64,	/* Intel Architecture - 64			*/
-    FEATURE_PSN,	/* Product Serial Number			*/
-    FEATURE_CLFLSH,	/* Cache line flush instruction CLFLSH		*/
-    FEATURE_DTES,	/* Debug Trace and EMON Store			*/
-    FEATURE_ACPI,	/* processor duty cycle control (ACPI)		*/
-    FEATURE_SSE_2,	/* SSE2 instructions				*/
-    FEATURE_AA_64,	/* AMD Architecture - 64			*/
-    FEATURE_VIDC,	/* Voltage ID Control Suport			*/
-    FEATURE_BMC,	/* Bus Multiplier Control			*/
+  /* Product Serial Number */
+  CPU_FEATURE_PSN,
 
-    FEATURE_CACHE_L1_INFO,
-    FEATURE_CACHE_L2_INFO,
-    FEATURE_HARD_NAME,
-    
-} CPU_Capability;
+  /* Virtual Mode Extensions */
+  CPU_FEATURE_VME,
+
+  /* Debug extensions */
+  CPU_FEATURE_DEBUG,
+
+  /* Page Size Extensions	*/
+  CPU_FEATURE_PSE,
+
+  /* Time Stamp Counter */
+  CPU_FEATURE_TSC,
+
+  /* Model Specific Registers */
+  CPU_FEATURE_MSR,
+
+  /* Physical Address Extensions */
+  CPU_FEATURE_PAE,
+
+  /* Machine Check Extensions */
+  CPU_FEATURE_MCE,
+
+  /* CMPXCHG8 instruction */
+  CPU_FEATURE_CMPXCHG8,
+
+  /* APIC */
+  CPU_FEATURE_APIC,
+
+  /* SYSENTER/SYSEXIT instruction */
+  CPU_FEATURE_SYSENTER,
+
+  /* Memory Type Range Registers */
+  CPU_FEATURE_MTRR,
+
+  /* Global Paging Extensions */
+  CPU_FEATURE_GPE,
+  CPU_FEATURE_PGE = CPU_FEATURE_GPE,	
+
+  /* Machine Check Architecture */
+  CPU_FEATURE_MCA,
+
+  /* CMOV instruction */
+  CPU_FEATURE_CMOV,
+
+  /* Page Attribue Table */
+  CPU_FEATURE_PAT,
+
+  /* PSE36 (Page Size Extensions) */
+  CPU_FEATURE_PSE36,
+
+  /* MMX support */
+  CPU_FEATURE_MMX,
+
+  /* MMX Extensions */
+  CPU_FEATURE_MMX_EXT,
+
+  /* FXSAVE/FXRSTOR instruction */
+  CPU_FEATURE_FXSAVE,
+
+  /* 3DNow! support */
+  CPU_FEATURE_3DNOW,
+
+  /* Extended 3DNow! support */
+  CPU_FEATURE_3DNOW_EXT,
+
+  /* SSE */
+  CPU_FEATURE_SSE,
+
+  /* SSE FP support */
+  CPU_FEATURE_SSE_FP,
+
+  /* SSE MMX support (same as FEATURE_MMXEXT) */
+  CPU_FEATURE_SSE_MMX,
+
+  /* Undocumented features or not released */
+  /* Self Snoop */
+  CPU_FEATURE_SELF_SNOOP,
+
+  /* Automatic Clock Control */
+  CPU_FEATURE_ACC,
+
+  /* Intel Architecture - 64 */
+  CPU_FEATURE_IA_64,
+
+  /* Cache line flush instruction CLFLSH */
+  CPU_FEATURE_CLFLSH,
+
+  /* Debug Trace and EMON Store */
+  CPU_FEATURE_DTES,
+
+  /* processor duty cycle control (ACPI) */
+  CPU_FEATURE_ACPI,
+
+  /* SSE2 instructions */
+  CPU_FEATURE_SSE_2,
+
+  /* AMD Architecture - 64 */
+  CPU_FEATURE_AA_64,
+
+  /* Voltage ID Control Suport */
+  CPU_FEATURE_VIDC,
+
+  /* Bus Multiplier Control */
+  CPU_FEATURE_BMC,  
+};
 
 #define NAME_LENGTH 49
 #define FEATURES_NUMBER 50
 typedef struct
 {
-  CPU_type cpu_type_id;
-  CPU_sub_type cpu_sub_type_id;
-  FPU_type fpu_type_id;
-  CPU_vendor vendor_id;
+  u16 cpu_type_id;
+  u16 cpu_sub_type_id;
+  u8 fpu_type_id;
+  u8 vendor_id;
+
   char cpu_name[NAME_LENGTH];
   char hardware_cpu_name[49];
   char additional_info[NAME_LENGTH];
@@ -234,9 +310,9 @@ typedef struct
 extern unsigned int cpus;
 extern full_cpu_info CPU;
 										
-static inline bool cpu_feature_get(full_cpu_info cpu,CPU_Capability cap)
+static inline bool cpu_feature_get (full_cpu_info cpu,unsigned int feature)
 {
-  return ((cpu.features[cap]));
+  return cpu.features[feature];
 }
 
 #endif /* !__STORM_IA32_CPUID_H__ */

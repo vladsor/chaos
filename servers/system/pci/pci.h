@@ -921,6 +921,10 @@ typedef struct
 
   u8 header_type;
 
+  /* if device has BIST */
+
+  bool has_bist;
+
   /* Which config register controls the ROM? */
 
   u8 rom_base_reg;

@@ -468,7 +468,7 @@ static return_type thread_delete (storm_tss_type *tss)
   /* Free port ranges possible allocated. */
 
   /* FIXME: This doesn't seem to really work... */
-  //  port_range_free_all (thread_id);
+  port_range_free_all (tss->thread_id);
   
   thread_unlink_list (&process_info->thread_list, tss->thread_id);
   process_info->number_of_threads--;

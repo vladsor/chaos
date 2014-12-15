@@ -26,8 +26,8 @@
 
 /* Define as TRUE if you are debugging this server. */
 
-#undef DEBUG
-
+//#undef DEBUG
+#define DEBUG TRUE
 /* Information about this block device. */
 
 static ipc_block_info_type ipc_block_info =
@@ -128,13 +128,41 @@ static void handle_connection (mailbox_id_type reply_mailbox_id)
       case IPC_BLOCK_WRITE:
       {
         /* FIXME: Implement this. */
+        ipc_block_write_type *ipc_block_write = (ipc_block_write_type *) data;
 
+        /* Do some boundary checking. */
+        
+        if (ipc_block_write->start_block_number +
+            ipc_block_write->number_of_blocks > ipc_block_info.number_of_blocks)
+        {
+          /* FIXME: Should we do the error handling in some way? */
+
+          log_print (&log_structure, LOG_URGENCY_ERROR,
+                     "Tried to write out of range.");
+        }
+        else
+        {
+
+#ifdef DEBUG
+          log_print_formatted (&log_structure, LOG_URGENCY_DEBUG,
+                               "Writing blocks %u-%u data.", 
+                               ipc_block_write->start_block_number,
+                               ipc_block_write->start_block_number +
+                               ipc_block_write->number_of_blocks);
+#endif
+          memory_copy ((u8 *) &ramdisk[ipc_block_write->start_block_number *
+	             ipc_block_info.block_size], ipc_block_write->data, 
+	     ipc_block_write->number_of_blocks * ipc_block_info.block_size);
+	}
         break;
       }
       
       case IPC_BLOCK_GET_INFO:
       {
         /* FIXME: Implement this. */
+        message_parameter.data = &ipc_block_info;
+        message_parameter.length = sizeof (ipc_block_info_type);
+        ipc_send (ipc_structure.output_mailbox_id, &message_parameter);
 
         break;
       }

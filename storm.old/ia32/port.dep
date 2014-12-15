@@ -26,4 +26,5 @@ port.o: port.c ../include/storm/state.h ../include/storm/generic/bit.h \
  ../include/storm/current-arch/string.h \
  ../include/storm/generic/thread.h ../include/storm/thread.h \
  ../include/storm/current-arch/thread.h ../include/storm/ia32/flags.h \
- ../include/storm/ia32/gdt.h ../include/storm/ia32/tss.h
+ ../include/storm/ia32/gdt.h ../include/storm/ia32/port.h \
+ ../include/storm/ia32/tss.h

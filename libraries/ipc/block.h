@@ -29,6 +29,7 @@ enum
   IPC_BLOCK_READ = (IPC_PROTOCOL_BLOCK << 16),
   IPC_BLOCK_WRITE,
   IPC_BLOCK_GET_INFO,
+  IPC_BLOCK_CONTROL,
 };
 
 /* This structure is passed into IPC_BLOCK_READ. */

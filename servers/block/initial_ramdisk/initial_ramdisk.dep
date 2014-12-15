@@ -67,6 +67,7 @@ initial_ramdisk.o: initial_ramdisk.c config.h \
  /mnt/chaos/data/programming/c/headers/memory/set.h \
  /mnt/chaos/data/programming/c/headers/memory/types.h \
  /mnt/chaos/data/programming/c/headers/memory/slab.h \
+ /mnt/chaos/data/programming/c/headers/memory/inlines.h \
  /mnt/chaos/data/programming/c/headers/string/string.h \
  /mnt/chaos/data/programming/c/headers/string/functions.h \
  /usr/lib/gcc-lib/i386-redhat-linux/2.95.1/include/stdarg.h \

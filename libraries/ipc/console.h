@@ -57,6 +57,8 @@ enum
   IPC_CONSOLE_ENABLE_SCROLL,
   
   IPC_CONSOLE_DISABLE_SCROLL,
+  
+  IPC_CONSOLE_PRINT_CHAR_SET,
 };
 
 /* Connection classes. */

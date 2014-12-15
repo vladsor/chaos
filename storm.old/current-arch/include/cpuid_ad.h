@@ -1,15 +1,21 @@
-
-int process_vendor(char vendor[12]);
-int response_cpu(u32 signature);
-int response_cpu_sub_type(void);
-int get_cpu_name(void);
-int get_cpu_sub_name(void);
+int process_vendor(char vendor[12]);
+int response_cpu(u32 signature);
+int response_cpu_sub_type(void);
+int get_cpu_name(void);
+int get_cpu_sub_name(void);
 int get_fpu_name(void);
 
-void feature_set(CPU_Capability cap,bool value);
-//bool feature_get(CPU_Capability cap);
+static inline void feature_set (unsigned int feature,bool value)
+{
+  CPU.features[feature] = value;
+}
 
-void process_features(u32 features);
+static inline bool feature_get (unsigned int feature)
+{
+  return CPU.features[feature];
+}
+
+void process_features(u32 features);
 void process_amd_features(u32 features);
 void detect_cpu(void);
 void process_cpu_id(void);
@@ -19,26 +25,27 @@ void scaled_frequency(void);
 
 typedef struct
 {
-  CPU_vendor vendor_id;
+  u8 vendor_id;
   char* vendor_name;
   char* vendor_string;
 } vendor_record;
 
-vendor_record Vendor_records[] = {
-  { VENDOR_UNKNOWN	,"Unknown"	 ,VENDOR_UNKNOWN_STRING },
-  { VENDOR_AMD		,"AMD"		 ,VENDOR_AMD_STRING },
-  { VENDOR_Intel	,"Intel"	 ,VENDOR_Intel_STRING },
-  { VENDOR_Cyrix	,"Cyrix"	 ,VENDOR_Cyrix_STRING },
-  { VENDOR_Centaur	,"Centaur"	 ,VENDOR_Centaur_STRING },
-  { VENDOR_UMC		,"UMC"		 ,VENDOR_UMC_STRING },
-  { VENDOR_NexGen	,"NexGen"	 ,VENDOR_NexGen_STRING },
+vendor_record Vendor_records[] =
+ {
+  { VENDOR_UNKNOWN	,"Unknown"	,VENDOR_UNKNOWN_STRING },
+  { VENDOR_AMD		,"AMD"		,VENDOR_AMD_STRING },
+  { VENDOR_Intel	,"Intel"	,VENDOR_Intel_STRING },
+  { VENDOR_Cyrix	,"Cyrix"	,VENDOR_Cyrix_STRING },
+  { VENDOR_Centaur	,"Centaur"	,VENDOR_Centaur_STRING },
+  { VENDOR_UMC		,"UMC"		,VENDOR_UMC_STRING },
+  { VENDOR_NexGen	,"NexGen"	,VENDOR_NexGen_STRING },
   { VENDOR_RiseTechnology,"RiseTechnology",VENDOR_RiseTechnology_STRING },
   { VENDOR_Transmeta	,"Transmeta"	,VENDOR_Transmeta_STRING }
 };
 
 typedef struct
 {
-  CPU_type type_id;
+  u16 type_id;
   char* name;
 } cpu_type_record;
 
@@ -55,9 +62,9 @@ cpu_type_record CPU_type_records[] =
 
   { CPU_TYPE_AMD_486		,"Am486" },
 
-  { CPU_TYPE_AMD_486DX2		,"Am486DX2" },
+  { CPU_TYPE_AMD_486DX2		,"Am486DX2" },
   { CPU_TYPE_AMD_486DX4		,"Am486DX4" },
-  { CPU_TYPE_AMD_5x86		,"Am5x86" },
+  { CPU_TYPE_AMD_5x86		,"Am5x86" },
 
   { CPU_TYPE_AMD_K5		,"AMD K5" },
   { CPU_TYPE_AMD_K6		,"AMD K6" },
@@ -80,11 +87,11 @@ cpu_type_record CPU_type_records[] =
   { CPU_TYPE_INTEL_Pentium_II	,"Genuine Intel Pentium II" },
   { CPU_TYPE_INTEL_Pentium_III	,"Genuine Intel Pentium III" },
 
-  { CPU_TYPE_Cyrix_5x86		,"5x86" },
-  { CPU_TYPE_Cyrix_MediaGX	,"MediaGX" },
-  { CPU_TYPE_Cyrix_MediaGXm	,"MediaGX MMX Enhanced" },
-  { CPU_TYPE_Cyrix_6x86		,"6x86(L)" },
-  { CPU_TYPE_Cyrix_6x86MX	,"6x86MX" },
+  { CPU_TYPE_Cyrix_5x86		,"5x86" },
+  { CPU_TYPE_Cyrix_MediaGX	,"MediaGX" },
+  { CPU_TYPE_Cyrix_MediaGXm	,"MediaGX MMX Enhanced" },
+  { CPU_TYPE_Cyrix_6x86		,"6x86(L)" },
+  { CPU_TYPE_Cyrix_6x86MX	,"6x86MX" },
 /*    
     Cyrix_M1,
     Cyrix_M2,
@@ -102,7 +109,7 @@ cpu_type_record CPU_type_records[] =
 
 typedef struct
 {
-  CPU_sub_type sub_type_id;
+  u16 sub_type_id;
   char* name;
 } cpu_sub_type_record;
 
@@ -125,26 +132,27 @@ cpu_sub_type_record CPU_sub_type_records[] =
 
 typedef struct
 {
-  FPU_type type_id;
+  u8 type_id;
   char* name;
 } fpu_type_record;
 
 fpu_type_record FPU_type_records[] = 
 {
-    {FPU_NONE		,"none"},
-    {FPU_8087		,"8087"},
-    {FPU_80287		,"80287"},
-    {FPU_80387		,"80387"},
-    {FPU_BUILT_IN	,"built-in"}
-};
+  { FPU_TYPE_NONE		,"none"},
+  { FPU_TYPE_8087		,"8087"},
+  { FPU_TYPE_80287		,"80287"},
+  { FPU_TYPE_80387		,"80387"},
+  { FPU_TYPE_BUILT_IN		,"built-in"}, 
+}
+;
 
 typedef struct
 {
   u8 family;
   u8 from_model;
   u8 to_model;
-  CPU_vendor vendor_id;
-  CPU_type cpu_type_id;
+  u8 vendor_id;
+  u16 cpu_type_id;
 } cpu_record;
 
 
@@ -155,8 +163,8 @@ typedef struct
 {
   u8 from_model;
   u8 to_model;
-  CPU_vendor vendor_id;
-  CPU_type cpu_type_id;
+  u8 vendor_id;
+  u16 cpu_type_id;
 } cpu_family_record;
 
 cpu_family_record family0[] =
@@ -189,17 +197,17 @@ cpu_family_record family4[] =
   { 8,   9,VENDOR_Intel		,CPU_TYPE_INTEL_486DX4 },
   { 0,LAST,VENDOR_Intel		,CPU_TYPE_INTEL_486 },
 
-  { 3,   7,VENDOR_AMD		,CPU_TYPE_AMD_486DX2 },
-  { 8,   9,VENDOR_AMD		,CPU_TYPE_AMD_486DX4 },
-  {0xE,0xF,VENDOR_AMD		,CPU_TYPE_AMD_5x86 },
+  { 3,   7,VENDOR_AMD		,CPU_TYPE_AMD_486DX2 },
+  { 8,   9,VENDOR_AMD		,CPU_TYPE_AMD_486DX4 },
+  {0xE,0xF,VENDOR_AMD		,CPU_TYPE_AMD_5x86 },
 
   { 0,LAST,VENDOR_AMD		,CPU_TYPE_AMD_486 },
 
-  { 4,   4,VENDOR_Cyrix		,CPU_TYPE_Cyrix_MediaGX },
-  { 0,LAST,VENDOR_Cyrix		,CPU_TYPE_Cyrix_5x86 },
+  { 4,   4,VENDOR_Cyrix		,CPU_TYPE_Cyrix_MediaGX },
+  { 0,LAST,VENDOR_Cyrix		,CPU_TYPE_Cyrix_5x86 },
 
-  { 1,   1,VENDOR_UMC		,CPU_TYPE_UMC_U5D },
-  { 2,   2,VENDOR_UMC		,CPU_TYPE_UMC_U5S },
+  { 1,   1,VENDOR_UMC		,CPU_TYPE_UMC_U5D },
+  { 2,   2,VENDOR_UMC		,CPU_TYPE_UMC_U5S },
 
   { 0,LAST,VENDOR_UNKNOWN	,CPU_TYPE_UNKNOWN_80486 },
 };
@@ -215,12 +223,12 @@ cpu_family_record family5[] =
   { 0,   8,VENDOR_Intel		,CPU_TYPE_INTEL_Pentium },
   { 0,LAST,VENDOR_Intel		,CPU_TYPE_UNKNOWN_INTEL_Pentium },
 
-  { 4,   4,VENDOR_Cyrix		,CPU_TYPE_Cyrix_MediaGXm },
-  { 0,LAST,VENDOR_Cyrix		,CPU_TYPE_Cyrix_6x86 },
+  { 4,   4,VENDOR_Cyrix		,CPU_TYPE_Cyrix_MediaGXm },
+  { 0,LAST,VENDOR_Cyrix		,CPU_TYPE_Cyrix_6x86 },
 
-  { 4,   4,VENDOR_Centaur	,CPU_TYPE_Centaur_C6 },
-  { 8,   8,VENDOR_Centaur	,CPU_TYPE_Centaur_C2 },
-  { 9,   9,VENDOR_Centaur	,CPU_TYPE_Centaur_C3 },
+  { 4,   4,VENDOR_Centaur	,CPU_TYPE_Centaur_C6 },
+  { 8,   8,VENDOR_Centaur	,CPU_TYPE_Centaur_C2 },
+  { 9,   9,VENDOR_Centaur	,CPU_TYPE_Centaur_C3 },
 
   { 0,   2,VENDOR_RiseTechnology,CPU_TYPE_Rise_mP6 },
 
@@ -236,7 +244,7 @@ cpu_family_record family6[] =
 
   { 0,LAST,VENDOR_AMD		,CPU_TYPE_AMD_Athlon },
 
-  { 0,   0,VENDOR_Cyrix		,CPU_TYPE_Cyrix_6x86MX },
+  { 0,   0,VENDOR_Cyrix		,CPU_TYPE_Cyrix_6x86MX },
 
   { 0,LAST,VENDOR_UNKNOWN	,CPU_TYPE_UNKNOWN_80686 },
 };
@@ -260,10 +268,10 @@ families_type CPU_families[] =
 
 typedef struct
 {
-  CPU_type cpu_type_id;
+  u16 cpu_type_id;
   u8 model;
   u8 stepping;
-  CPU_sub_type cpu_sub_type_id;
+  u16 cpu_sub_type_id;
   char* additional_info;
 } cpu_sub_record;
 
@@ -284,7 +292,7 @@ cpu_sub_record CPU_sub_records[] =
   { CPU_TYPE_INTEL_Pentium	,   7,NONE,CPU_SUB_TYPE_Standart,"iP54C 75-200MHz" },
   { CPU_TYPE_INTEL_Pentium	,   8,NONE,CPU_SUB_TYPE_MMX	,"iP55C (0.25µm)" },
 
-  { CPU_TYPE_AMD_K5		,   0,NONE,CPU_SUB_TYPE_Standart,"(75/90/100)MHz" },
+  { CPU_TYPE_AMD_K5		,   0,NONE,CPU_SUB_TYPE_Standart,"(75/90/100)MHz" },
   { CPU_TYPE_AMD_K5		,   1,NONE,CPU_SUB_TYPE_Standart,"(120/133)MHz" },
   { CPU_TYPE_AMD_K5		,   2,NONE,CPU_SUB_TYPE_Standart,"(166)MHz" },
   { CPU_TYPE_AMD_K5		,   3,NONE,CPU_SUB_TYPE_Standart,"(200)MHz" },

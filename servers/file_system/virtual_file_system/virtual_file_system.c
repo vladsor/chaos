@@ -32,6 +32,10 @@
 #include "config.h"
 #include "virtual_file_system.h"
 
+/* Define as TRUE if you are debugging this server. */
+
+#define DEBUG TRUE
+
 /* This array holds the list of mounted file systems and their
    services. Some stuff is always present. */
 /* FIXME: Make this a linked list. */
@@ -643,6 +647,9 @@ static void handle_connection (mailbox_id_type reply_mailbox_id)
         file_directory_entry_read_type *directory_entry_read =
           (file_directory_entry_read_type *) data;
 
+        log_print_formatted (&log_structure, LOG_URGENCY_EMERGENCY,
+                             "VFS: Directory Entry Read.");
+
         if (!vfs_directory_entry_read (directory_entry_read))
         {
           log_print_formatted (&log_structure, LOG_URGENCY_ERROR,
@@ -662,6 +669,9 @@ static void handle_connection (mailbox_id_type reply_mailbox_id)
         file_verbose_directory_entry_type *directory_entry =
           (file_verbose_directory_entry_type *) data;
 
+        log_print_formatted (&log_structure, LOG_URGENCY_EMERGENCY,
+                             "VFS: File Get Info.");
+
         vfs_file_get_info (directory_entry);
         ipc_send (ipc_structure.output_mailbox_id, &message_parameter);
         break;
@@ -672,6 +682,9 @@ static void handle_connection (mailbox_id_type reply_mailbox_id)
         virtual_file_system_mount_type *mount =
           (virtual_file_system_mount_type *) data;
 
+        log_print_formatted (&log_structure, LOG_URGENCY_EMERGENCY,
+                             "VFS: Mount.");
+
         vfs_mount (mount);
         break;
       }
@@ -680,6 +693,9 @@ static void handle_connection (mailbox_id_type reply_mailbox_id)
       {
         virtual_file_system_assign_type *assign = 
           (virtual_file_system_assign_type *) data;
+
+        log_print_formatted (&log_structure, LOG_URGENCY_EMERGENCY,
+                             "VFS: Assign.");
 
         vfs_assign (assign);
         break;
@@ -690,9 +706,21 @@ static void handle_connection (mailbox_id_type reply_mailbox_id)
         file_open_type *open = (file_open_type *) data;
         file_handle_type handle = 42;
 
-        vfs_file_open (open, &handle);
-        message_parameter.data = &handle;
-        message_parameter.length = sizeof (file_handle_type);
+        log_print_formatted (&log_structure, LOG_URGENCY_EMERGENCY,
+                             "VFS: File Open.");
+
+        if (!vfs_file_open (open, &handle))
+	{
+          log_print (&log_structure, LOG_URGENCY_ERROR, 
+                     "Failed to open file.");
+          message_parameter.data = NULL;
+          message_parameter.length = 0;
+	}
+	else
+	{
+          message_parameter.data = &handle;
+          message_parameter.length = sizeof (file_handle_type);
+	}
         ipc_send (ipc_structure.output_mailbox_id, &message_parameter);
         break;
       }
@@ -701,6 +729,9 @@ static void handle_connection (mailbox_id_type reply_mailbox_id)
       {
         file_read_type *read = (file_read_type *) data;
         u8 *buffer;
+
+        log_print_formatted (&log_structure, LOG_URGENCY_EMERGENCY,
+                             "VFS: File Read.");
 
         memory_allocate ((void **) &buffer, read->bytes);
 

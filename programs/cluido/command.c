@@ -92,7 +92,53 @@ void command_unset (int number_of_arguments, char **argument);
 void command_uptime (int number_of_arguments, char **argument);
 void command_version (int number_of_arguments, char **argument);
 
+void command_cdrom (int number_of_arguments, char **argument);
+
 void command_bug (int number_of_arguments, char **argument);
+
+
+void command_cdrom (int number_of_arguments __attribute__ ((unused)), 
+char **argument __attribute__ ((unused)))
+{
+  mailbox_id_type mailbox_id[10];
+  unsigned int services = 1;  
+  message_parameter_type message_parameter;
+  unsigned int cdrom_command;
+
+  ipc_structure_type ipc_structure;
+
+  if (number_of_arguments != 2)
+  {
+    return;
+  }
+
+  if (ipc_service_resolve ("cdrom", mailbox_id, &services, 5, &empty_tag) !=
+      IPC_RETURN_SUCCESS)
+  {
+    log_print (&log_structure, LOG_URGENCY_EMERGENCY, 
+               "No block services found.");
+    return;
+  }
+
+  ipc_structure.output_mailbox_id = mailbox_id[0];
+
+  /* Connect to this service. */
+
+  if (ipc_service_connection_request (&ipc_structure) != IPC_RETURN_SUCCESS)
+  {
+    return;
+  }
+  
+  string_to_number(argument[1], &cdrom_command, NULL);
+
+  message_parameter.protocol = IPC_PROTOCOL_BLOCK;
+  message_parameter.message_class = IPC_BLOCK_CONTROL;
+  message_parameter.data = &cdrom_command;
+  message_parameter.length = sizeof (cdrom_command);
+  message_parameter.block = TRUE;
+  ipc_send (ipc_structure.output_mailbox_id, &message_parameter);
+}
+
 
 static void rec(int level)
 {
@@ -187,6 +233,7 @@ command_type command[] =
   { "cd", "DIRECTORY",
     "Change the current working directory.",
     command_directory_change_working },
+  { "cdrom", "", "Control CD-ROM", command_cdrom },
   { "demo", "", "A little graphic demo.", command_demo },
   { "dir", "", "List the contents of the current directory.",
     command_directory_list },
@@ -356,12 +403,18 @@ void command_event_queue (int number_of_arguments __attribute__ ((unused)),
 void command_char_set (int number_of_arguments __attribute__ ((unused)),
                   char **argument __attribute__ ((unused)))
 {
-  unsigned char ch;
-  for(ch=32;ch<255;ch++)
-  {
-    console_print_formatted( &console_structure, "%c", ch );
-  }
-  console_print (&console_structure, "\n" );
+  message_parameter_type message_parameter;
+
+  message_parameter.protocol = IPC_PROTOCOL_CONSOLE;
+  message_parameter.message_class = IPC_CONSOLE_PRINT_CHAR_SET;
+  message_parameter.data = NULL;
+  message_parameter.length = 0;
+  message_parameter.block = TRUE;
+
+  system_call_mailbox_send (console_structure.ipc_structure.output_mailbox_id,
+                            &message_parameter);
+
+  console_print (&console_structure, "\n");
 }
 
 void command_ipc_info (int number_of_arguments __attribute__ ((unused)),
@@ -384,6 +437,11 @@ void command_mount (int number_of_arguments __attribute__ ((unused)),
   virtual_file_system_mount_type mount;
   message_parameter_type message_parameter;
 
+  if (number_of_arguments != 2)
+  {
+    return;
+  }
+
   if (ipc_service_resolve ("block", mailbox_id, &services, 5, &empty_tag) !=
       IPC_RETURN_SUCCESS)
   {
@@ -393,7 +451,7 @@ void command_mount (int number_of_arguments __attribute__ ((unused)),
   }
 
   mount.mailbox_id = mailbox_id[0];
-  string_copy (mount.location, "ramdisk");
+  string_copy (mount.location, argument[1]);
 
   /* That's it. Send the message. */
 
@@ -404,8 +462,9 @@ void command_mount (int number_of_arguments __attribute__ ((unused)),
   message_parameter.block = TRUE;
   ipc_send (vfs_structure.output_mailbox_id, &message_parameter);
 
-  log_print (&log_structure, LOG_URGENCY_DEBUG,
-             "Mounted the first available block service as //ramdisk.");
+  log_print_formatted (&log_structure, LOG_URGENCY_DEBUG,
+             "Mounted the first available block service as //%s.",
+	     argument[1]);
 }
 
 /* Show the entries in the ARP table. */
@@ -510,53 +569,53 @@ void command_clear (int number_of_arguments __attribute__ ((unused)),
 /* Get information about installed CPU:s. */
 typedef struct
 {
-  CPU_Capability cap;
+  unsigned int cap;
   char* info;
 } cpu_cap_record;
 
 cpu_cap_record CPU_Cap_records [] =
 {
-    {FEATURE_CPUID	,"Supports CPUID instruction"},
-    {FEATURE_FPU  	,"FPU present"},
-    {FEATURE_VME  	,"Virtual Mode Extensions"},
-    {FEATURE_DEBUG	,"Debug Extensions"},
-    {FEATURE_PSE  	,"Page Size Extensions"},
-    {FEATURE_TSC  	,"Time Stamp Counter"},
-    {FEATURE_MSR  	,"Model Specific Registers"},
-    {FEATURE_PAE  	,"Page Address Exceptions"},
-    {FEATURE_MCE  	,"Machine Check Extensions"},
-    {FEATURE_CMPXCHG8,"CMPXCHG8 instruction"},
-    {FEATURE_APIC	,"APIC"},
-    {FEATURE_SYSENTER,"SYSENTER/SYSEXIT instruction"},
-    {FEATURE_MTRR	,"Memory Type Range Registers"},
-    {FEATURE_GPE	,"Global Paging Extensions"},
-    {FEATURE_MCA	,"Machine Check Architecture"},
-    {FEATURE_CMOV	,"CMOV instruction"},
-    {FEATURE_PAT	,"Page Attribue Table"},
-    {FEATURE_PSE36	,"PSE36 (Page Size Extensions)"},
-    {FEATURE_FXSAVE	,"FXSAVE/FXRSTOR instruction"},
+  { CPU_FEATURE_CPUID	,"Supports CPUID instruction"},
+  { CPU_FEATURE_FPU  	,"FPU present"},
+  { CPU_FEATURE_VME  	,"Virtual Mode Extensions"},
+  { CPU_FEATURE_DEBUG	,"Debug Extensions"},
+  { CPU_FEATURE_PSE  	,"Page Size Extensions"},
+  { CPU_FEATURE_TSC  	,"Time Stamp Counter"},
+  { CPU_FEATURE_MSR  	,"Model Specific Registers"},
+  { CPU_FEATURE_PAE  	,"Page Address Exceptions"},
+  { CPU_FEATURE_MCE  	,"Machine Check Extensions"},
+  { CPU_FEATURE_CMPXCHG8,"CMPXCHG8 instruction"},
+  { CPU_FEATURE_APIC	,"APIC"},
+  { CPU_FEATURE_SYSENTER,"SYSENTER/SYSEXIT instruction"},
+  { CPU_FEATURE_MTRR	,"Memory Type Range Registers"},
+  { CPU_FEATURE_GPE	,"Global Paging Extensions"},
+  { CPU_FEATURE_MCA	,"Machine Check Architecture"},
+  { CPU_FEATURE_CMOV	,"CMOV instruction"},
+  { CPU_FEATURE_PAT	,"Page Attribue Table"},
+  { CPU_FEATURE_PSE36	,"PSE36 (Page Size Extensions)"},
+  { CPU_FEATURE_FXSAVE	,"FXSAVE/FXRSTOR instruction"},
 
-    {FEATURE_MMX	,"MMX support"},
-    {FEATURE_MMX_EXT,"MMX Extensions"},
+  { CPU_FEATURE_MMX	,"MMX support"},
+  { CPU_FEATURE_MMX_EXT	,"MMX Extensions"},
 
-    {FEATURE_SSE	,"SSE"},
-    {FEATURE_SSE_FP	,"SSE FP support"},
-    {FEATURE_SSE_MMX,"SSE MMX support (same as MMX extensions)"},
+  { CPU_FEATURE_SSE	,"SSE"},
+  { CPU_FEATURE_SSE_FP	,"SSE FP support"},
+  { CPU_FEATURE_SSE_MMX	,"SSE MMX support (same as MMX extensions)"},
 
-    {FEATURE_3DNOW	,"3DNow! support"},
-    {FEATURE_3DNOW_EXT,"Extended 3DNow! support"},
+  { CPU_FEATURE_3DNOW	,"3DNow! support"},
+  { CPU_FEATURE_3DNOW_EXT,"Extended 3DNow! support"},
     
-    {FEATURE_SELF_SNOOP,"Self Snoop"},
-    {FEATURE_ACC,"Automatic Clock Control"},
-    {FEATURE_IA_64,"Intel Architecture - 64"},
-    {FEATURE_PSN,"Product Serial Number"},
-    {FEATURE_CLFLSH,"Cache line flush instruction CLFLSH"},
-    {FEATURE_DTES,"Debug Trace and EMON Store"},
-    {FEATURE_ACPI,"Processor duty cycle control (ACPI)"},
-    {FEATURE_SSE_2,"SSE2 instructions"},
-    {FEATURE_AA_64,"AMD Architecture - 64"},
-    {FEATURE_VIDC,"Voltage ID Control Suport"},
-    {FEATURE_BMC,"Bus Multiplier Control"}
+  { CPU_FEATURE_SELF_SNOOP,"Self Snoop"},
+  { CPU_FEATURE_ACC	,"Automatic Clock Control"},
+  { CPU_FEATURE_IA_64	,"Intel Architecture - 64"},
+  { CPU_FEATURE_PSN	,"Product Serial Number"},
+  { CPU_FEATURE_CLFLSH	,"Cache line flush instruction CLFLSH"},
+  { CPU_FEATURE_DTES	,"Debug Trace and EMON Store"},
+  { CPU_FEATURE_ACPI	,"Processor duty cycle control (ACPI)"},
+  { CPU_FEATURE_SSE_2	,"SSE2 instructions"},
+  { CPU_FEATURE_AA_64	,"AMD Architecture - 64"},
+  { CPU_FEATURE_VIDC	,"Voltage ID Control Suport"},
+  { CPU_FEATURE_BMC	,"Bus Multiplier Control"}
 };
 
 kernelfs_cpu_info_type cpu_info;
@@ -597,12 +656,18 @@ void command_cpu (int number_of_arguments __attribute__ ((unused)),
             console_print_formatted (&console_structure, "frequency %u Hz\n",
                                cpu_info.info.frequency);
 
-            console_print_formatted (&console_structure, "Cache L1 size"	    
-	    " data: %uKB, instruction: %uKB, L2 size: %uKB\n",
+            if (cpu_feature_get(cpu_info.info, CPU_FEATURE_CACHE_L1_INFO))
+	    {
+              console_print_formatted (&console_structure, "Cache L1 size"	    
+	    " data: %uKB, instruction: %uKB\n",
                                cpu_info.info.data_cache_l1_size,
-			       cpu_info.info.instructions_cache_l1_size,
+			       cpu_info.info.instructions_cache_l1_size);
+	    }       
+            if (cpu_feature_get(cpu_info.info, CPU_FEATURE_CACHE_L2_INFO))
+            {
+              console_print_formatted (&console_structure, "Cache L2 size: %uKB\n",
 			       cpu_info.info.cache_l2_size);
-
+	    }
             console_print (&console_structure, "Supports:\n");
 	    for(i=0; i<number ;i++)
 	    {
@@ -1427,10 +1492,7 @@ void command_pci (int number_of_arguments __attribute__ ((unused)),
   message_parameter.data = &number_of_devices;
   message_parameter.length = sizeof (unsigned int);
   ipc_receive (pci_structure.input_mailbox_id, &message_parameter, &size);
-/*
-  console_print_formatted (&console_structure, "Number of PCI devices: %lu\n",
-                           number_of_devices);
-*/
+
   memory_allocate ((void **) &device_info,
                          number_of_devices * sizeof (pci_device_info_type));
 
@@ -1688,8 +1750,19 @@ void command_show_file (int number_of_arguments,
   }
 
   memory_allocate ((void **) &buffer, VFS_BUFFER_SIZE);
-  
-  string_copy (directory_entry.path_name, argument[1]);
+
+  if (argument[1][0] == '.' && argument[1][1] == '/')
+  {
+    string_copy (directory_entry.path_name, working_directory);    
+    string_append (directory_entry.path_name, argument[1] + 1);    
+  }
+  else
+  {
+    string_copy (directory_entry.path_name, argument[1]);
+  }
+  console_print_formatted (&console_structure, "Absolute path is %s'.\n",
+			   directory_entry.path_name);
+
   if (file_get_info (&vfs_structure, &directory_entry) != FILE_RETURN_SUCCESS)
   {
     console_print_formatted (&console_structure, 
@@ -1699,7 +1772,15 @@ void command_show_file (int number_of_arguments,
     return;
   }
 
-  file_open (&vfs_structure, argument[1], FILE_MODE_READ, &handle);
+  if (file_open (&vfs_structure, argument[1], FILE_MODE_READ, &handle) 
+      != FILE_RETURN_SUCCESS)
+  {
+    console_print_formatted (&console_structure, 
+                             "Could not open file %s.\n",
+                             argument[1]);
+    memory_deallocate ((void **) &buffer);
+    return;
+  }
 
   /* Read the file, in blocks of 4 Kbytes. */
 

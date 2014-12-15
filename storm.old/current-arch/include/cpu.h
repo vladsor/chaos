@@ -178,6 +178,56 @@ static inline void cpu_reset (void)
   while (TRUE);
 }
 
+/*
+static inline void cpuid (u32 command, u32 *eax, u32 *ebx, u32 *ecx, u32 *edx)
+{
+  asm volatile ("cpuid"
+       : "=a" (*eax), "=b" (*ebx), "=c" (*ecx), "=d" (*edx)
+       : "a" (command)
+       : "cc");
+}
+*/
+
+#define cpuid(command,val1,val2,val3,val4) \
+       __asm__ __volatile__("cpuid" \
+			    : "=a" (val1), "=b" (val2),\
+			      "=c" (val3),  "=d" (val4) \
+			    : "a" (command)\
+			    : "cc");
+
+/*
+ * Access to machine-specific registers (available on 586 and better only)
+ * Note: the rd* operations modify the parameters directly (without using
+ * pointer indirection), this allows gcc to optimize better
+ */
+
+#define rdmsr(msr,val1,val2) \
+       __asm__ __volatile__("rdmsr" \
+			    : "=a" (val1), "=d" (val2) \
+			    : "c" (msr))
+
+#define wrmsr(msr,val1,val2) \
+     __asm__ __volatile__("wrmsr" \
+			  : /* no outputs */ \
+			  : "c" (msr), "a" (val1), "d" (val2))
+
+#define rdtsc(low,high) \
+     __asm__ __volatile__("rdtsc" : "=a" (low), "=d" (high))
+
+#define rdtscl(low) \
+     __asm__ __volatile__ ("rdtsc" : "=a" (low) : : "edx")
+
+#define rdtscll(val) \
+     __asm__ __volatile__ ("rdtsc" : "=A" (val))
+
+#define write_tsc(val1,val2) wrmsr(0x10, val1, val2)
+
+#define rdpmc(counter,low,high) \
+     __asm__ __volatile__("rdpmc" \
+			  : "=a" (low), "=d" (high) \
+			  : "c" (counter))
+
+
 /* CR0 bits. */
 /* Paging enabled. */
 

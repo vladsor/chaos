@@ -33,6 +33,7 @@
 #include <storm/generic/types.h>
 #include <storm/generic/return_values.h>
 #include <storm/state.h>
+#include <storm/ia32/cpu.h>
 #include <storm/ia32/timer.h>
 #include <storm/ia32/tss.h>
 
@@ -43,16 +44,6 @@
 u32 hz = 1000;
 timer_event_type *timer_event_list = NULL;
 volatile time_type uptime = 0;
-
-/* Read the timer chip. */
-
-static inline void rdtsc (u32 *low, u32 *high)
-{
-  asm volatile 
-  (\
-   "rdtsc" 
-   : "=a" (*low), "=d" (*high));
-}
 
 /* Initialise PIT channels 0 and 2. */
 

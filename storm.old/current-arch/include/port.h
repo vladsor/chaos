@@ -25,6 +25,11 @@
 
 #include <storm/generic/types.h>
 
+#define MAX_PORTS MAX_U16
+
+extern void register_internal_ports (void);
+extern void port_fix (unsigned int start, unsigned int ports);
+
 /* Inlines. */
 
 /* I/O functions. */

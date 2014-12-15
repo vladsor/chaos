@@ -1,0 +1,9 @@
+
+  Compiling server: console...
+
+Compiling console_output.c...
+Linking...
+mkdir -p /mnt/chaos/system/servers
+cp console /mnt/chaos/system/servers
+strip -R .note -R .comment -R .eh_frame /mnt/chaos/system/servers/console
+gzip -f /mnt/chaos/system/servers/console # > /mnt/chaos/system/servers/console.gz

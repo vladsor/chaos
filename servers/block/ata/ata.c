@@ -308,6 +308,9 @@ static void handle_service (service_type *service)
 {
   ipc_structure_type ipc_structure;
 
+  log_print (&log_structure, LOG_URGENCY_DEBUG,
+               "Creating block service.");
+
   if (ipc_service_create ("block", &ipc_structure, 
                           &empty_tag) != IPC_RETURN_SUCCESS)
   {
@@ -672,7 +675,7 @@ int main (void)
   unsigned int interface_index;
   bool found_device = FALSE;
 
-  interface_type interface[2] =
+  interface_type interface[] =
   {
     {
       14,

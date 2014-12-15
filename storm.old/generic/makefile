@@ -65,6 +65,7 @@ generic/log.o \
 generic/mailbox.o \
 generic/event_queue.o \
 generic/memory.o \
+generic/port.o \
 generic/service.o \
 generic/slab.o \
 generic/tag.o \
@@ -92,6 +93,7 @@ log.o \
 mailbox.o \
 event_queue.o \
 memory.o \
+port.o \
 service.o \
 slab.o \
 tag.o \
@@ -113,6 +115,7 @@ log.c \
 mailbox.c \
 event_queue.c \
 memory.c \
+port.c \
 service.c \
 slab.c \
 tag.c \
@@ -187,6 +190,7 @@ package: package-check
 -include mailbox.dep
 -include event_queue.dep
 -include memory.dep
+-include port.dep
 -include service.dep
 -include slab.dep
 -include tag.dep

@@ -182,7 +182,7 @@ void memory_virtual_init (void)
     /* This will boost performance a little, since this memory won't
        have to be cache invalidated on task switches. */
 
-    if (cpu_feature_get(CPU,FEATURE_PGE))
+    if (cpu_feature_get(CPU,CPU_FEATURE_PGE))
     {
       kernel_page_directory[index].global = 1;
     }
@@ -262,7 +262,7 @@ void memory_virtual_enable (void)
 
   /* If PGE is available, set the PGE bit in CR4. */
 
-  if (cpu_feature_get(CPU, FEATURE_PGE) == 1)
+  if (cpu_feature_get(CPU, CPU_FEATURE_PGE) == 1)
   {
     cpu_set_cr4 (CPU_CR4_PGE);
   }

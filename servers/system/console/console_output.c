@@ -829,6 +829,34 @@ void console_output (console_type *console, const char *string)
   }
 }
 
+void console_print_char_set (console_type *console)
+{
+  unsigned char ch;
+  unsigned int buffer_index;
+  
+  for (ch=176;ch<215;ch++)
+  {
+    buffer_index = (console->cursor_y * console->width + 
+                    console->cursor_x);
+
+    console->output[buffer_index].character = ch;
+
+    console->cursor_x++;  
+
+    if (console->cursor_x == console->width)
+    {
+      console->cursor_x = 0;
+      console->cursor_y++;
+              
+      if (console->cursor_y == console->height)
+      {
+        console_scroll (console, 1);
+        console->cursor_y--;
+      }
+    }
+  }
+}
+
 #if FALSE
 void console_output_at (console_type *console, int x, int y,
   const char *string)
@@ -1132,58 +1160,57 @@ void keyboard_cursor_set(console_type *console, bool visibility)
   return;
 }
 
-void mouse_cursor_set(console_type *console, bool visibility)
+void mouse_cursor_draw (int width, int height, bool visibility)
 {
   unsigned int buffer_index;  
   
   int mouse_x, mouse_y;
 
-  mouse_x = ( console->width * old_mouse_cursor.x) / 1000000;
-  mouse_y = (console->height * old_mouse_cursor.y) / 1000000;
+  mouse_x = ( width * mouse_cursor_position.x) / 1000000;
+  mouse_y = (height * mouse_cursor_position.y) / 1000000;
 
-  console->mouse_cursor_visibility = visibility;
+//  console->mouse_cursor_visibility = visibility;
 
-  buffer_index = (mouse_y * console->width + mouse_x);
+  buffer_index = (mouse_y * width + mouse_x);
 
-  if(!visibility)
+  if (!visibility)
   {
-//  screen[buffer_index].attribute = !screen[buffer_index].attribute - 2;
-    screen[buffer_index].character = character_under_mouse;
+    screen[buffer_index] = character_under_mouse;
   }
   else
   {
-//  screen[buffer_index].attribute = screen[buffer_index].attribute + 2;
-    character_under_mouse = screen[buffer_index].character;
-    screen[buffer_index].character = '#';
+    character_under_mouse = screen[buffer_index];
+    screen[buffer_index] = mouse_cursor;
   }
 }
 
-void mouse_cursor_update(int width, int height, bool visibility, 
+void mouse_cursor_update (int width, int height, bool visibility, 
  ipc_mouse_event_type *ipc_mouse_event)
 {
   unsigned int buffer_index;  
   int old_mouse_x, old_mouse_y;
   int new_mouse_x, new_mouse_y;
-  
-  mouse_cursor.x = ipc_mouse_event->x;
-  mouse_cursor.y = ipc_mouse_event->y;
-  
-  old_mouse_x = ( width * old_mouse_cursor.x) / 1000000;
-  old_mouse_y = (height * old_mouse_cursor.y) / 1000000;
 
-  new_mouse_x = ( width * mouse_cursor.x) / 1000000;
-  new_mouse_y = (height * mouse_cursor.y) / 1000000;
+  if (!visibility)
+  {
+    mouse_cursor_position.x = ipc_mouse_event->x;
+    mouse_cursor_position.y = ipc_mouse_event->y;
+    return;
+  }
+
+  old_mouse_x = ( width * mouse_cursor_position.x) / 1000000;
+  old_mouse_y = (height * mouse_cursor_position.y) / 1000000;
+  
+  mouse_cursor_position.x = ipc_mouse_event->x;
+  mouse_cursor_position.y = ipc_mouse_event->y;
+  
+  new_mouse_x = ( width * mouse_cursor_position.x) / 1000000;
+  new_mouse_y = (height * mouse_cursor_position.y) / 1000000;
 
   buffer_index = (old_mouse_y * width + old_mouse_x);
-//  screen[buffer_index].attribute = !screen[buffer_index].attribute - 2;
-  screen[buffer_index].character = character_under_mouse;
+  screen[buffer_index] = character_under_mouse;
 
-  if(visibility)
-  {
-    buffer_index = new_mouse_y * width + new_mouse_x;
-//  screen[buffer_index].attribute = screen[buffer_index].attribute + 2;
-    character_under_mouse = screen[buffer_index].character;
-    screen[buffer_index].character = '#';
-  }
-  old_mouse_cursor = mouse_cursor;
+  buffer_index = new_mouse_y * width + new_mouse_x;
+  character_under_mouse = screen[buffer_index];
+  screen[buffer_index] = mouse_cursor;
 }

@@ -63,6 +63,7 @@
       <source>event_queue.c</source>
 
       <source>memory.c</source>
+      <source>port.c</source>
       <source>service.c</source>
       <source>slab.c</source>
       <source>tag.c</source>

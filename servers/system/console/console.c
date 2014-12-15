@@ -25,9 +25,9 @@
 #include "console.h"
 #include "console_output.h"
 
-volatile position_type mouse_cursor = { 1 , 1 };
-volatile position_type old_mouse_cursor = { 1 , 1 };
-volatile char character_under_mouse;
+volatile position_type mouse_cursor_position = { 0 , 0 };
+volatile character_type character_under_mouse;
+volatile character_type mouse_cursor = { '*', 2 };
 
 volatile unsigned int number_of_consoles = 0;
 character_type *screen = (character_type *) CONSOLE_VIDEO_MEMORY;
@@ -90,6 +90,11 @@ void console_flip (console_type *console)
   message_parameter_type message_parameter;
   video_mode_type video_mode;
 
+  if (current_console->mouse_cursor_visibility)
+  {
+    mouse_cursor_draw (current_console->width, current_console->height, FALSE);    
+  }
+
   console->output = screen;
   current_console->output = current_console->buffer;
 
@@ -142,16 +147,16 @@ void console_flip (console_type *console)
     ipc_send (video_structure.output_mailbox_id, &message_parameter);
   }
 
-  if(current_console->mouse_cursor_visibility!=console->mouse_cursor_visibility)
-  {
-    mouse_cursor_set(console, console->mouse_cursor_visibility);    
-  }
-
   if (console->type == VIDEO_MODE_TYPE_TEXT)
   {
     memory_copy (console->output, console->buffer,
                  console->width * console->height *
                  sizeof (character_type));
+  }
+
+  if (console->mouse_cursor_visibility)
+  {
+    mouse_cursor_draw (console->width, console->height, TRUE);    
   }
 
   current_console = console;

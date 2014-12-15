@@ -549,6 +549,7 @@ STOP
 'mailbox.c',
 'event_queue.c',
 'memory.c',
+'port.c',
 'service.c',
 'slab.c',
 'tag.c',
@@ -568,6 +569,7 @@ STOP
 'mailbox.o',
 'event_queue.o',
 'memory.o',
+'port.o',
 'service.o',
 'slab.o',
 'tag.o',
@@ -587,6 +589,7 @@ STOP
 'mailbox.dep',
 'event_queue.dep',
 'memory.dep',
+'port.dep',
 'service.dep',
 'slab.dep',
 'tag.dep',
@@ -717,6 +720,8 @@ generic/mailbox.o";
 generic/event_queue.o";
       print MAKEFILE " \\\
 generic/memory.o";
+      print MAKEFILE " \\\
+generic/port.o";
       print MAKEFILE " \\\
 generic/service.o";
       print MAKEFILE " \\\
@@ -1066,6 +1071,8 @@ generic/mailbox.o";
 generic/event_queue.o";
       print MAKEFILE " \\\
 generic/memory.o";
+      print MAKEFILE " \\\
+generic/port.o";
       print MAKEFILE " \\\
 generic/service.o";
       print MAKEFILE " \\\
@@ -1442,6 +1449,8 @@ generic/event_queue.o";
       print MAKEFILE " \\\
 generic/memory.o";
       print MAKEFILE " \\\
+generic/port.o";
+      print MAKEFILE " \\\
 generic/service.o";
       print MAKEFILE " \\\
 generic/slab.o";
@@ -1781,6 +1790,8 @@ generic/mailbox.o";
 generic/event_queue.o";
       print MAKEFILE " \\\
 generic/memory.o";
+      print MAKEFILE " \\\
+generic/port.o";
       print MAKEFILE " \\\
 generic/service.o";
       print MAKEFILE " \\\
@@ -2158,6 +2169,8 @@ generic/event_queue.o";
       print MAKEFILE " \\\
 generic/memory.o";
       print MAKEFILE " \\\
+generic/port.o";
+      print MAKEFILE " \\\
 generic/service.o";
       print MAKEFILE " \\\
 generic/slab.o";
@@ -2521,6 +2534,8 @@ generic/mailbox.o";
 generic/event_queue.o";
       print MAKEFILE " \\\
 generic/memory.o";
+      print MAKEFILE " \\\
+generic/port.o";
       print MAKEFILE " \\\
 generic/service.o";
       print MAKEFILE " \\\

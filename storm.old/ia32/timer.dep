@@ -25,4 +25,5 @@ timer.o: timer.c ../include/storm/generic/bit.h \
  ../include/storm/current-arch/thread.h ../include/storm/ia32/flags.h \
  ../include/storm/generic/return_values.h \
  ../include/storm/return_values.h ../include/storm/state.h \
- ../include/storm/ia32/timer.h ../include/storm/ia32/tss.h
+ ../include/storm/ia32/cpu.h ../include/storm/ia32/timer.h \
+ ../include/storm/ia32/tss.h

@@ -131,7 +131,16 @@ return_type file_open (ipc_structure_type *vfs_structure,
 
   system_call_mailbox_receive (vfs_structure->input_mailbox_id,
                                &message_parameter);
-  return FILE_RETURN_SUCCESS;
+
+  if (message_parameter.data == NULL)
+  {
+    handle = NULL;
+    return FILE_RETURN_FILE_ABSENT;
+  }
+  else
+  {
+    return FILE_RETURN_SUCCESS;
+  }
 }
 
 /* Seek in the given file. */

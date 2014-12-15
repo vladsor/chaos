@@ -13,7 +13,7 @@
 #define FLAG_ID 0x200000
 
 /* Generic CPUID function */
-
+/*
 static inline void cpuid (u32 command, u32 *eax, u32 *ebx, u32 *ecx, u32 *edx)
 {
   asm volatile ("cpuid"
@@ -21,14 +21,7 @@ static inline void cpuid (u32 command, u32 *eax, u32 *ebx, u32 *ecx, u32 *edx)
        : "a" (command)
        : "cc");
 }
-
-static inline void rdtsc (u32 *low, u32 *high)
-{
-  asm volatile 
-  (\
-   "rdtsc" 
-   : "=a" (*low), "=d" (*high));
-}
+*/
 
 static u16 INIT_CODE is_8086 (void) 
 {
@@ -310,71 +303,6 @@ endid:
   return return_value;
 }
 
-#if FALSE
-// ! Not Tested
-/*
- This procedure determines the type of FPU in a system
- and sets the _fpu_type variable with the appropriate value.
- All registers are used by this procedure, none are preserved.
- Coprocessor check
- The algorithm is to determine whether the floating-point
- status and control words are present. If not, no
- coprocessor exists. If the status and control words can
- be saved, the correct coprocessor is then determined
- depending on the processor type. The Intel386 processor can
- work with either an Intel287 NDP or an Intel387 NDP.
- The infinity of the coprocessor must be checked to determine
- the correct coprocessor type.
-*/
-static int get_FPU_type(u8 cpu_type)
-{
-  u16 fp_status;
-  u16 return_value;
-  asm volatile ("\
-	push %%bx
-
-        fninit			/* reset FP status word			*/
-        movw $0x5a5a, %1	/* initialize temp word to non-zero	*/
-        fnstsw %1		/* save FP status word			*/
-        movw %1, %%bx		/* check FP status word			*/
-        cmp $0, %%bl		/* was correct status written		*/
-        mov $0, %%ax		/* no FPU present			*/
-        jne end_fpu_type
-check_control_word:
-        fnstcw %1		/* save FP control word			*/
-        mov %1, %%bx		/* check FP control word		*/
-        and $0x103f, %%bx	/* selected parts to examine		*/
-        cmp $0x3f, %%bx		/* was control word correct		*/
-        mov $0, %%ax
-        jne end_fpu_type        /* incorrect control word, no FPU	*/
-        mov $1, %%ax
-/* 80287/80387 check for the Intel386 processor */
-check_infinity:
-        cmp $3, %2
-        jne end_fpu_type
-        fld1                    /* must use default control from FNINIT	*/
-        fldz                    /* form infinity			*/
-        fdiv                    /* 8087/Intel287 NDP say +inf = -inf	*/
-        fld %%st		/* form negative infinity		*/
-        fchs                    /* Intel387 NDP says +inf <> -inf	*/
-        fcompp                  /* see if they are the same		*/
-        fstsw %1		/* look at status from FCOMPP		*/
-        mov %1, %%bx
-        mov $2, %%ax		/* store Intel287 NDP for FPU type	*/
-        sahf                    /* see if infinities matched		*/
-        jz end_fpu_type         /* jump if 8087 or Intel287 is present	*/
-        mov $3, %%ax		/* store Intel387 NDP for FPU type	*/
-end_fpu_type:
-	pop %%bx
-    "
-    : "=&a" (return_value)
-    : "m" (fp_status),"m" (cpu_type)
-    );
-
-    return return_value;
-}
-#endif
-
 /* FIXME: This code should be much cleaner... */
 
 /* Calibrate the TSC. */
@@ -421,7 +349,7 @@ static u32 INIT_CODE calibrate_tsc (void)
 
   port_out_u8 (0x42, CALIBRATE_LATCH >> 8);
   
-  rdtsc (&startlow, &starthigh);
+  rdtsc (startlow, starthigh);
   count = 0;
   
   do
@@ -429,7 +357,7 @@ static u32 INIT_CODE calibrate_tsc (void)
     count++;
   } while ((port_in_u8 (0x61) & 0x20) == 0);
 
-  rdtsc (&endlow, &endhigh);
+  rdtsc (endlow, endhigh);
   
   /* Error */
   

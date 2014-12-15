@@ -188,9 +188,9 @@ typedef struct
   int y;
 }position_type;
 
-extern volatile position_type mouse_cursor;
-extern volatile position_type old_mouse_cursor;
-extern volatile char character_under_mouse;
+extern volatile character_type mouse_cursor;
+extern volatile position_type mouse_cursor_position;
+extern volatile character_type character_under_mouse;
 /* External functions. */
 
 extern void handle_connection (mailbox_id_type reply_mailbox_id);

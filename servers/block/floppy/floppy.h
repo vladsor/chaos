@@ -53,24 +53,25 @@ typedef struct {
 #define FDC_CCR  (0x3f7)   /* Configuration Control Register (output) */
 
 /* command bytes (these are 765 commands + options such as MFM, etc) */
-#define CMD_SPECIFY (0x03)  /* specify drive timings */
-#define CMD_WRITE   (0xc5)  /* write data (+ MT,MFM) */
-#define CMD_READ    (0xe6)  /* read data (+ MT,MFM,SK) */
-#define CMD_RECAL   (0x07)  /* recalibrate */
-#define CMD_SENSEI  (0x08)  /* sense interrupt status */
-#define CMD_FORMAT  (0x4d)  /* format track (+ MFM) */
-#define CMD_SEEK    (0x0f)  /* seek track */
-#define CMD_VERSION (0x10)  /* FDC version */
+#define COMMAND_SPECIFY 	(0x03)  /* specify drive timings */
+#define COMMAND_WRITE   	(0xc5)  /* write data (+ MT,MFM) */
+#define COMMAND_READ    	(0xe6)  /* read data (+ MT,MFM,SK) */
+#define COMMAND_RECALIBRATE	(0x07)  /* recalibrate */
+#define COMMAND_SENSEI  	(0x08)  /* sense interrupt status */
+#define COMMAND_FORMAT  	(0x4d)  /* format track (+ MFM) */
+#define COMMAND_SEEK    	(0x0f)  /* seek track */
+#define COMMAND_VERSION 	(0x10)  /* FDC version */
 
+#define FLOPPY_DMA_CHANNEL	(0x02)
 
 /* function prototypes */
 
-void init(void);
+bool init(void);
 /*void deinit(void); */
 
 void reset(void);
 
-bool disk_change(void);
+bool disk_change (void);
 void motor_on(void);
 void motor_off(void);
 void recalibrate(void);

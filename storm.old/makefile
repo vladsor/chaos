@@ -69,6 +69,7 @@ generic/log.o \
 generic/mailbox.o \
 generic/event_queue.o \
 generic/memory.o \
+generic/port.o \
 generic/service.o \
 generic/slab.o \
 generic/tag.o \

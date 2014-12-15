@@ -1,14 +1,5 @@
 Look at ftp cs.utk.edu:pub/shuford/terminal
 
-From: fxt@flame.uchicago.edu (oxide owner)
-Message-ID: <1994Feb18.062148.13032@midway.uchicago.edu>
-Date: Fri, 18 Feb 1994 06:21:48 GMT
-
-picked the following off the net awhile ago, apologies to the original author.
-
-fxt
-
-
 
                               ANSI ESCAPE SEQUENCES
 =============================================================================
