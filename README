@@ -1,0 +1,34 @@
+README ($chaos: README,v 1.6 2002/07/28 19:04:09 per Exp $)
+======
+
+This is chaos, a free (licensed under the BSD license without
+advertisment clause) operating system. It implements advanced features
+such as virtual memory, interrupt/exception management, memory
+protection, I/O protection, preemptive multitasking, ELF support, and
+much, much more. It is a work in progress, and thus some parts might
+be unfinished. If you are a programmer and would like to help us,
+please contact us and we can see what you can help us with. Our
+contact information can be found on the web page --
+http://www.chaosdev.org/
+
+The following programs are required to compile:
+
+* gcc (http://gcc.gnu.org, 3.0 or better is *required*)
+* GNU CONS. (http://www.gnu.org/software/cons)
+* GNU binutils.
+
+Please consult README.Linux for some (possibly outdated) help about
+building the system under your specific system. If you're running
+anything else, you're totally on yourself.
+
+chaos is known to run correctly on the following computers (at some
+time):
+
+* No-name Pentium 133 MHz (32 MiB RAM)
+
+If you successfully compile/run it on another platform, with or
+without patches, please tell us! Any experiences are welcome. Check
+out http://www.chaosdev.org/
+
+-- Per Lundberg <per@chaosdev.org>  Sun, 28 Jul 2002 21:03:26 +0200
+

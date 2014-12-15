@@ -1,8 +1,0 @@
-AUTHORS ($Id: AUTHORS,v 1.2 2001/02/10 21:24:59 jojo Exp $)
-=======
-The keyboard server for chaos was written by the following people:
-
-  * Per Lundberg <plundis@chaosdev.org>
-  * Henrik Hallin <hal@chaosdev.org>
-
-Some parts were inspired by the Linux keyboard driver.

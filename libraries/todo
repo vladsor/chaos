@@ -1,7 +1,0 @@
-TODO ($Id: TODO,v 1.2 2001/02/10 21:22:24 jojo Exp $)
-====
-
-* ipc: Support closing connections.  network: Support for binding
-* sockets, and also listening and sending data.  pci: Make it
-* work. Support finding of I/O ranges, etc, and also bus mastering
-  when we have shared memory proper in the kernel.

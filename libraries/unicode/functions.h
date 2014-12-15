@@ -1,55 +1,23 @@
-/* $Id: functions.h,v 1.2 2001/02/10 21:23:21 jojo Exp $ */
+/* $chaos: functions.h,v 1.2 2002/06/23 20:33:58 per Exp $ */
 /* Abstract: Function prototypes for the Unicode library. */
-/* Author: Per Lundberg <plundis@chaosdev.org> */
+/* Author: Per Lundberg <per@chaosdev.org> */
 
-/* Copyright 2000 chaos development. */
-
-/* This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public License
-   as published by the Free Software Foundation; either version 2 of
-   the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful, but
-   WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
-   USA. */
+/* Copyright 2000-2002 chaos development. */
+/* Use freely under the terms listed in the file COPYING. */
 
 #ifndef __LIBRARY_UNICODE_FUNCTIONS_H__
 #define __LIBRARY_UNICODE_FUNCTIONS_H__
 
-extern return_type unicode_ucs2_to_utf8_string
-  (u8 *utf8_string, ucs2_type *ucs2_string, unsigned int max_utf8_bytes);
-
-extern return_type unicode_ucs4_to_utf8_string
-  (u8 *utf8_string, ucs4_type *ucs4_string, unsigned int max_utf8_bytes);
-
-extern return_type unicode_utf8_to_ucs2_string
-  (ucs2_type *ucs2_string, u8 *utf8_string, unsigned int max_ucs2_characters);
-
-extern return_type unicode_utf8_to_ucs4_string
-  (ucs4_type *ucs4_string, u8 *utf8_string, unsigned int max_ucs4_characters);
-
-extern return_type unicode_ucs2_to_utf8 (u8 *utf8, ucs2_type ucs2);
-
-extern return_type unicode_ucs4_to_utf8 (u8 *utf8, ucs4_type ucs4);
-
-extern return_type unicode_utf8_to_ucs2 (ucs2_type *ucs2, u8 *utf8, 
-                                         unsigned int *length);
-
-extern return_type unicode_utf8_to_ucs4 (ucs4_type *ucs4, u8 *utf8,
-                                         unsigned int *length);
-
-extern unsigned int unicode_utf8_previous_character_length 
-  (char *utf8_string, unsigned int string_position);
-
-extern unsigned int unicode_utf8_next_character_length
-  (char *utf8_string, unsigned int string_position);
-
-extern unsigned int unicode_utf8_string_characters (u8 *utf8_string);
+extern return_t unicode_ucs2_to_utf8_string (uint8_t *utf8_string, ucs2_t *ucs2_string, size_t max_utf8_bytes);
+extern return_t unicode_ucs4_to_utf8_string (uint8_t *utf8_string, ucs4_t *ucs4_string, size_t max_utf8_bytes);
+extern return_t unicode_utf8_to_ucs2_string (ucs2_t *ucs2_string, uint8_t *utf8_string, size_t max_ucs2_characters);
+extern return_t unicode_utf8_to_ucs4_string (ucs4_t *ucs4_string, uint8_t *utf8_string, size_t max_ucs4_characters);
+extern return_t unicode_ucs2_to_utf8 (uint8_t *utf8, ucs2_t ucs2);
+extern return_t unicode_ucs4_to_utf8 (uint8_t *utf8, ucs4_t ucs4);
+extern return_t unicode_utf8_to_ucs2 (ucs2_t *ucs2, uint8_t *utf8, size_t *length);
+extern return_t unicode_utf8_to_ucs4 (ucs4_t *ucs4, uint8_t *utf8, size_t *length);
+extern size_t unicode_utf8_previous_character_length (char *utf8_string, unsigned int string_position);
+extern size_t unicode_utf8_next_character_length (char *utf8_string, unsigned int string_position);
+extern size_t unicode_utf8_string_characters (uint8_t *utf8_string);
 
 #endif /* !__LIBRARY_UNICODE_FUNCTIONS_H__ */

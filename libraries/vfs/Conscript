@@ -1,0 +1,17 @@
+# $chaos: Conscript,v 1.2 2002/07/28 19:30:54 per Exp $ -*- Perl -*-
+
+# Abstract: CONS script for the virtual file system library.
+# Author: Per Lundberg <per@chaosdev.org>
+
+# Copyright 2002 chaos development.
+# Use freely under the terms listed in the file COPYING.
+
+$library_binary = 'libvfs.a';
+
+Import qw(cons library_static_directory);
+Library $cons $library_binary, 'vfs.c';
+Command $cons 'install', $library_binary,
+  qq(mkdir -p $library_static_directory
+     install vfs/$library_binary $library_static_directory);
+
+# FIXME: Install headers also. We don't need it yet though.

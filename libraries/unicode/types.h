@@ -1,30 +1,16 @@
-/* $Id: types.h,v 1.2 2001/02/10 21:23:21 jojo Exp $ */
+/* $chaos: types.h,v 1.1 2002/06/22 22:45:39 per Exp $ */
 /* Abstract: Type definitions for the Unicode library. */
-/* Author: Per Lundberg <plundis@chaosdev.org> */
+/* Author: Per Lundberg <per@chaosdev.org> */
 
-/* Copyright 2000 chaos development. */
-
-/* This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public License
-   as published by the Free Software Foundation; either version 2 of
-   the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful, but
-   WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
-   USA. */
+/* Copyright 2000-2002 chaos development. */
+/* Use freely under the terms listed in the file COPYING. */
 
 #ifndef __LIBRARY_UNICODE_TYPES_H__
 #define __LIBRARY_UNICODE_TYPES_H__
 
-#include <system/system.h>
+#include <storm/storm.h>
 
-typedef u32 ucs4_type;
-typedef u16 ucs2_type;
+typedef uint32_t ucs4_t;
+typedef uint16_t ucs2_t;
 
 #endif /* !__LIBRARY_UNICODE_TYPES_H__ */

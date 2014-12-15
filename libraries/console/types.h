@@ -1,38 +1,54 @@
-/* $Id: types.h,v 1.2 2001/02/10 21:22:32 jojo Exp $ */
+/* $chaos: types.h,v 1.3 2002/07/21 12:14:23 per Exp $ */
 /* Abstract: Console library types. */
-/* Author: Per Lundberg <plundis@chaosdev.org> */
+/* Author: Per Lundberg <per<@chaosdev.org> */
 
-/* Copyright 2000 chaos development. */
+/* Copyright 2000-2002 chaos development. */
+/* Use freely under the terms listed in the file COPYING. */
 
-/* This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public License
-   as published by the Free Software Foundation; either version 2 of
-   the License, or (at your option) any later version.
+#ifndef __CONSOLE_TYPES_H__
+#define __CONSOLE_TYPES_H__
 
-   This library is distributed in the hope that it will be useful, but
-   WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
+/* A console ID. */
+typedef int console_id_t;
 
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
-   USA. */
+/* A key event handler. */
+typedef return_t (*console_key_event_t)(keyboard_packet_t *keyboard_packet);
 
-#ifndef __LIBRARY_CONSOLE_TYPES_H__
-#define __LIBRARY_CONSOLE_TYPES_H__
+/* Open a new console. */
+typedef return_t (*console_open_t)(console_id_t *console_id, 
+                                   size_t width, size_t height,
+                                   size_t depth, int mode_type);
 
-#include <ipc/ipc.h>
+/* Close a console. */
+typedef return_t (*console_close_t)(console_id_t console_id);
 
+/* Output something to the console. */
+typedef return_t (*console_output_t)(console_id_t console_id, 
+                                     const char *string);
+
+/* A console service. */
 typedef struct
 {
-  ipc_structure_type ipc_structure;
-  unsigned int width;
-  unsigned int height;
-  unsigned int depth;
-  unsigned int type;
-  bool initialised;
-  bool opened;
-} console_structure_type;
+    /* The console magic cookie. */
+    unsigned int magic_cookie;
 
-#endif /* !__LIBRARY_CONSOLE_TYPES_H__ */
+    /* The key event handler. */
+    console_key_event_t key_event;
+    // mouse_event
+
+    /* A function for opening a new console. */
+    console_open_t open;
+
+    /* A function for closing a previously opened console. */
+    console_close_t close;
+
+    /* A function for outputting to this console. */
+    console_output_t output;
+
+    // TODO: console_input_t input (with and without blocking)
+} console_service_t;
+
+/* Initialization function. */
+typedef return_t (*console_init_t)(console_service_t *);
+
+#endif /* !__CONSOLE_TYPES_H__ */

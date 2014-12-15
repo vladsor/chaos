@@ -1,33 +1,31 @@
-/* $Id: types.h,v 1.2 2001/02/10 21:22:55 jojo Exp $ */
-/* Abstract: Type definitions used by the log library. */
-/* Author: Per Lundberg <plundis@chaosdev.org> */
+/* $chaos: types.h,v 1.1 2002/06/23 20:33:11 per Exp $ */
+/* Abstract: Log library types. */
+/* Author: Per Lundberg <per@chaosdev.org> */
 
-/* Copyright 2000 chaos development. */
-
-/* This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Lesser General Public License
-   as published by the Free Software Foundation; either version 2 of
-   the License, or (at your option) any later version.
-
-   This library is distributed in the hope that it will be useful, but
-   WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Lesser General Public License for more details.
-
-   You should have received a copy of the GNU Lesser General Public
-   License along with this library; if not, write to the Free Software
-   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
-   USA. */
+/* Copyright 2002 chaos development. */
+/* Use freely under the terms listed in the file COPYING. */
 
 #ifndef __LIBRARY_LOG_TYPES_H__
 #define __LIBRARY_LOG_TYPES_H__
 
-#include <ipc/ipc.h>
+/* Functions in the log service provider. */
+typedef return_t (*log_print_t)(unsigned int, char *);
+typedef return_t (*log_print_formatted_t)(unsigned int, char *, ...);
 
+/* A log service. */
 typedef struct
 {
-  ipc_structure_type ipc_structure;
-  char *log_class;
-} log_structure_type;
+    /* The log magic cookie. */
+    unsigned int magic_cookie;
+
+    /* The function log_print. */
+    log_print_t print;
+
+    /* The function log_print_formatted. */
+    log_print_formatted_t print_formatted;
+} log_service_t;
+
+/* Initialization function. */
+typedef return_t (*log_init_t)(log_service_t *);
 
 #endif /* !__LIBRARY_LOG_TYPES_H__ */
