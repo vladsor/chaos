@@ -1,5 +1,10 @@
-typedef uint32_t method_id_t;
-typedef method_id_t * p_method_id_t;
+
+enum
+{
+    METHOD_NONE,
+    METHOD_THIS,
+    METHOD_INVOKER,
+};
 
 enum parameter_attribute_t
 {
@@ -30,7 +35,7 @@ typedef struct
 {
     method_id_t id;
     
-    char name[STRING_MAX_LENGTH];
+    wchar_t name[WSTRING_MAX_LENGTH];
 
     parameter_description_t return_type;
 
@@ -41,7 +46,43 @@ typedef struct
 
 typedef method_description_t * p_method_description_t;
 
-typedef void (method_t) (void);
+typedef void (method_function_t) (void);
+typedef method_function_t * p_method_function_t;
+
+typedef struct
+{
+#if defined (REPOSITORY_EXTERNAL)
+    HASH_ELEMENT_PART;
+
+    method_id_t id;
+#endif
+
+#if defined (TRANSACTION_ENABLED)
+    transaction_reference_t transaction;
+    uint32_t transaction_slot_index;
+#endif    
+
+    uint32_t number_of_references;
+    bool is_static;
+
+    p_method_description_t description;
+
+    p_method_function_t function;
+} method_t;
 
 typedef method_t * p_method_t;
 
+extern method_reference_t method_create_static (p_method_t method);
+extern void method_destroy_static (method_reference_t method_reference);
+
+extern method_reference_t method_create (
+    p_method_description_t method_description, 
+    p_method_function_t method_function);
+extern void method_destroy (method_reference_t method_reference);
+
+extern void method_invoke (method_reference_t method, context_t context,
+    sequence_t return_value, sequence_t parameters);
+
+extern void method_invoke_static (method_reference_t method, 
+    sequence_t return_value, sequence_t parameters);
+    

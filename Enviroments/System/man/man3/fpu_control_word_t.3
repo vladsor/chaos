@@ -1,0 +1,69 @@
+.TH "fpu_control_word_t" 3 "29 Jul 2004" "Systemenviroment" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+fpu_control_word_t \- FPU Control Word.  
+
+.PP
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <fpu.h>\fP
+.PP
+.SS "Data Fields"
+
+.in +1c
+.ti -1c
+.RI "\fBuint32_t\fP \fBIM\fP: 1"
+.br
+.RI "\fIIM (bit 0) Exception mask: Invalid Operation. \fP"
+.ti -1c
+.RI "\fBuint32_t\fP \fBDM\fP: 1"
+.br
+.RI "\fIDM (bit 1) Exception mask: Denormalized Operand. \fP"
+.ti -1c
+.RI "\fBuint32_t\fP \fBZM\fP: 1"
+.br
+.RI "\fIZM (bit 2) Exception mask: Zero Devide. \fP"
+.ti -1c
+.RI "\fBuint32_t\fP \fBOM\fP: 1"
+.br
+.RI "\fIOM (bit 3) Exception mask: Overflow. \fP"
+.ti -1c
+.RI "\fBuint32_t\fP \fBUM\fP: 1"
+.br
+.RI "\fIUM (bit 4) Exception mask: Enderfow. \fP"
+.ti -1c
+.RI "\fBuint32_t\fP \fBPM\fP: 1"
+.br
+.RI "\fIPM (bit 5) Exception mask: Precision. \fP"
+.ti -1c
+.RI "\fBuint32_t\fP \fBprecision_control\fP: 2"
+.br
+.RI "\fIPC (bit 8 and 9) Precision Control field. \fP"
+.ti -1c
+.RI "\fBuint32_t\fP \fBrounding_control\fP: 2"
+.br
+.RI "\fIRC (bit 10 and 11) Rounding Control field. \fP"
+.ti -1c
+.RI "\fBuint32_t\fP \fBinfinity_control\fP: 1"
+.br
+.RI "\fIX (bit 12) Infinity Control Flag. \fP"
+.in -1c
+.SH "Detailed Description"
+.PP 
+FPU Control Word. 
+
+The 16-bit FPU control word (refer to Figure 7-10) controls the precision of the FPU and rounding method used. It also contains the exception-flag mask bits. The control word is cached in the FPU control register. The contents of this register can be loaded with the FLDCW instruction and stored in memory with the FSTCW/FNSTCW instructions.
+.br
+ When the FPU is initialized with either an FINIT/FNINIT or FSAVE/FNSAVE instruction, the FPU control word is set to 037FH, which masks all floating-point exceptions, sets rounding to nearest, and sets the FPU precision to 64 bits. 
+.PP
+.SH "Field Documentation"
+.PP 
+.SS "\fBuint32_t\fP \fBfpu_control_word_t::infinity_control\fP"
+.PP
+X (bit 12) Infinity Control Flag. The infinity control flag (bit 12 of the FPU control word) is provided for compatibility with the Intel 287 Math Coprocessor; it is not meaningful for the Pentium® Pro processor FPU or for the Pentium® processor FPU, the Intel486™ processor FPU, or Intel 387 processor NPX. Refer to Section 7.2.3.3., “Signed Infinities”, for information on how the IA FPUs handle infinity values. 
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Systemenviroment from the source code.

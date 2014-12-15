@@ -1,4 +1,5 @@
 
+#include <Interfaces/pci_device.h>
 
 extern int pcnet32_open (ethernet_device_t *dev);
 extern void pcnet32_restart (ethernet_device_t *dev, unsigned int csr0_bits);
@@ -16,3 +17,6 @@ extern void pcnet32_tx_timeout (ethernet_device_t *dev);
 extern int pcnet32_start_xmit (ethernet_device_t *dev, void *data, size_t length);
 
 extern int pcnet32_rx (ethernet_device_t *dev);
+
+extern void pcnet32_load_multicast (ethernet_device_t *dev);
+extern void pcnet32_set_multicast_list (ethernet_device_t *dev);

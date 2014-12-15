@@ -13,7 +13,7 @@
  */
 
 /**
- *  @brief
+ *  @brief Error code pushed onto the stack for segment exceptions
  */
 typedef struct
 {
@@ -58,7 +58,7 @@ typedef struct
 } segment_error_t PACKED;
 
 /**
- *  @brief
+ *  @brief Error code pushed onto the stack for page exceptions
  */
 typedef struct
 {

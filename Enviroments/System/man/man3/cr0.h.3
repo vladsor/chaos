@@ -1,0 +1,88 @@
+.TH "cr0.h" 3 "29 Jul 2004" "Systemenviroment" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+cr0.h \- Descriptions of CR0 register.  
+
+.SH SYNOPSIS
+.br
+.PP
+.SS "Data Structures"
+
+.in +1c
+.ti -1c
+.RI "struct \fBcpu_register_cr0_t\fP"
+.br
+.RI "\fIStructure of system register CR0. \fP"
+.in -1c
+.SS "Defines"
+
+.in +1c
+.ti -1c
+.RI "#define \fBCPU_CR0_PE\fP   (\fBBIT_VALUE\fP (0))"
+.br
+.RI "\fIPE Protection Enable (bit 0 of CR0). Protected mode flag. \fP"
+.ti -1c
+.RI "#define \fBCPU_CR0_MP\fP   (\fBBIT_VALUE\fP (1))"
+.br
+.RI "\fIMP Monitor Coprocessor (bit 1 of CR0). \fP"
+.ti -1c
+.RI "#define \fBCPU_CR0_EM\fP   (\fBBIT_VALUE\fP (2))"
+.br
+.RI "\fIEM Emulation (bit 2 of CR0). \fP"
+.ti -1c
+.RI "#define \fBCPU_CR0_TS\fP   (\fBBIT_VALUE\fP (3))"
+.br
+.RI "\fITS Task Switched (bit 3 of CR0). \fP"
+.ti -1c
+.RI "#define \fBCPU_CR0_ET\fP   (\fBBIT_VALUE\fP (4))"
+.br
+.RI "\fIET Extension Type (bit 4 of CR0). \fP"
+.ti -1c
+.RI "#define \fBCPU_CR0_NE\fP   (\fBBIT_VALUE\fP (5))"
+.br
+.RI "\fINE Numeric Error (bit 5 of CR0). \fP"
+.ti -1c
+.RI "#define \fBCPU_CR0_WP\fP   (\fBBIT_VALUE\fP (16))"
+.br
+.RI "\fIWP Write Protect (bit 16 of CR0). \fP"
+.ti -1c
+.RI "#define \fBCPU_CR0_AM\fP   (\fBBIT_VALUE\fP (18))"
+.br
+.RI "\fIAM Alignment Mask (bit 18 of CR0). \fP"
+.ti -1c
+.RI "#define \fBCPU_CR0_NW\fP   (\fBBIT_VALUE\fP (29))"
+.br
+.RI "\fINW Not Write-through (bit 29 of CR0). \fP"
+.ti -1c
+.RI "#define \fBCPU_CR0_CD\fP   (\fBBIT_VALUE\fP (30))"
+.br
+.RI "\fICD Cache Disable (bit 30 of CR0). \fP"
+.ti -1c
+.RI "#define \fBCPU_CR0_PG\fP   (\fBBIT_VALUE\fP (31))"
+.br
+.RI "\fIPG Paging (bit 31 of CR0). Paging enabled. \fP"
+.in -1c
+.SH "Detailed Description"
+.PP 
+Descriptions of CR0 register. 
+
+\fBAuthor:\fP
+.RS 4
+Vladimir Sorokin 
+.RE
+.PP
+\fBVersion:\fP
+.RS 4
+1.0 
+.RE
+.PP
+\fBDate:\fP
+.RS 4
+2002-2004
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Systemenviroment from the source code.

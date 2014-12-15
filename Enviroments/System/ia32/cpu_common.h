@@ -1,5 +1,5 @@
 /**
- * @file                cpu_common.h
+ * @file                System/ia32/cpu_common.h
  * @brief               CPU system lowlevel routines.
  * @author              Per Lundberg <per@chaosdev.org>
  * @author              Vladimir Sorokin

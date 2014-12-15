@@ -1,0 +1,53 @@
+.TH "page_error_t" 3 "29 Jul 2004" "Systemenviroment" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+page_error_t \- Error code pushed onto the stack for page exceptions.  
+
+.PP
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <error_codes.h>\fP
+.PP
+.SS "Data Fields"
+
+.in +1c
+.ti -1c
+.RI "int \fBp\fP: 1"
+.br
+.RI "\fIbit(0) P \fP"
+.ti -1c
+.RI "int \fBw_r\fP: 1"
+.br
+.RI "\fIbit(1) W/R \fP"
+.ti -1c
+.RI "int \fBu_s\fP: 1"
+.br
+.RI "\fIbit(2) U/S \fP"
+.ti -1c
+.RI "int \fBrsvd\fP: 1"
+.br
+.RI "\fIbit(3) RSVD \fP"
+.in -1c
+.SH "Detailed Description"
+.PP 
+Error code pushed onto the stack for page exceptions. 
+.SH "Field Documentation"
+.PP 
+.SS "int \fBpage_error_t::p\fP"
+.PP
+bit(0) P 0 The fault was caused by a nonpresent page. 1 The fault was caused by a page-level protection violation. 
+.SS "int \fBpage_error_t::w_r\fP"
+.PP
+bit(1) W/R 0 The access causing the fault was a read. 1 The access causing the fault was a write. 
+.SS "int \fBpage_error_t::u_s\fP"
+.PP
+bit(2) U/S 0 The access causing the fault originated when the processor was executing in supervisor mode. 1 The access causing the fault originated when the processor was executing in user mode. 
+.SS "int \fBpage_error_t::rsvd\fP"
+.PP
+bit(3) RSVD 0 The fault was not caused by a reserved bit violation. 1 The page fault occured because a 1 was detected in one of the reserved bit positions of a page table entry or directory entry that was marked present. 
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Systemenviroment from the source code.

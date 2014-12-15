@@ -1,0 +1,37 @@
+.TH "CR3 register" 3 "29 Jul 2004" "Systemenviroment" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+CR3 register \- CR3 register.  
+More...
+.SS "Data Structures"
+
+.in +1c
+.ti -1c
+.RI "struct \fBcpu_register_cr3_t\fP"
+.br
+.RI "\fIStructure of system register CR3. \fP"
+.in -1c
+.SS "Defines"
+
+.in +1c
+.ti -1c
+.RI "#define \fBCPU_CR3_PWT\fP   (\fBBIT_VALUE\fP (3))"
+.br
+.RI "\fIPWT Page-level Writes Transparent (bit 3 of CR3). \fP"
+.ti -1c
+.RI "#define \fBCPU_CR3_PCD\fP   (\fBBIT_VALUE\fP (4))"
+.br
+.RI "\fIPCD Page-level Cache Disable (bit 4 of CR3). \fP"
+.in -1c
+.SH "Detailed Description"
+.PP 
+CR3 register. 
+.SH "Define Documentation"
+.PP 
+.SS "#define CPU_CR3_PWT   (\fBBIT_VALUE\fP (3))"
+.PP
+PWT Page-level Writes Transparent (bit 3 of CR3). Controls the write-through or writeback caching policy of the current page directory. When the PWT flag is set, writethrough caching is enabled; when the flag is clear, write-back caching is enabled. This flag affects only the internal caches (both L1 and L2, when present). The processor ignores this flag if paging is not used (the PG flag in register CR0 is clear) or the CD (cache disable) flag in CR0 is set. Refer to Section 9.5., 'Cache Control', in Chapter 9, Memory Cache Control, for more information about the use of this flag. Refer to Section 3.6.4., 'Page-Directory and Page-Table Entries' in Chapter 3, Protected-Mode Memory Management for a description of a companion PCD flag in the page-directory and page-table entries. 
+.SS "#define CPU_CR3_PCD   (\fBBIT_VALUE\fP (4))"
+.PP
+PCD Page-level Cache Disable (bit 4 of CR3). Controls caching of the current page directory. When the PCD flag is set, caching of the page-directory is prevented; when the flag is clear, the page-directory can be cached. This flag affects only the processor's internal caches (both L1 and L2, when present). The processor ignores this flag if paging is not used (the PG flag in register CR0 is clear) or the CD (cache disable) flag in CR0 is set. Refer to Chapter 9, Memory Cache Control, for more information about the use of this flag. Refer to Section 3.6.4., 'Page-Directory and Page-Table Entries' in Chapter 3, Protected-Mode Memory Management for a description of a companion PCD flag in the page-directory and page-table entries. 

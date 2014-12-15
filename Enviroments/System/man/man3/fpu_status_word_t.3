@@ -1,0 +1,89 @@
+.TH "fpu_status_word_t" 3 "29 Jul 2004" "Systemenviroment" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+fpu_status_word_t \- FPU Status Register.  
+
+.PP
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <fpu.h>\fP
+.PP
+.SS "Data Fields"
+
+.in +1c
+.ti -1c
+.RI "\fBuint32_t\fP \fBIE\fP: 1"
+.br
+.RI "\fIIE (bit 0) Exception Flag: Invalid Operand. \fP"
+.ti -1c
+.RI "\fBuint32_t\fP \fBDE\fP: 1"
+.br
+.RI "\fIDE (bit 1) Exception Flag: Denormalized Operand. \fP"
+.ti -1c
+.RI "\fBuint32_t\fP \fBZE\fP: 1"
+.br
+.RI "\fIZE (bit 2) Exception Flag: Zero Divide. \fP"
+.ti -1c
+.RI "\fBuint32_t\fP \fBOE\fP: 1"
+.br
+.RI "\fIOE (bit 3) Exception Flag: Overflow. \fP"
+.ti -1c
+.RI "\fBuint32_t\fP \fBUE\fP: 1"
+.br
+.RI "\fIUE (bit 4) Exception Flag: Underflow. \fP"
+.ti -1c
+.RI "\fBuint32_t\fP \fBPE\fP: 1"
+.br
+.RI "\fIPE (bit 5) Exception Flag: Precision. \fP"
+.ti -1c
+.RI "\fBuint32_t\fP \fBstack_fault\fP: 1"
+.br
+.RI "\fISF (bit 6) Stack Fault. \fP"
+.ti -1c
+.RI "\fBuint32_t\fP \fBerror_summary_status\fP: 1"
+.br
+.RI "\fIES (bit 7) Error Summary Status. \fP"
+.ti -1c
+.RI "\fBuint32_t\fP \fBC0\fP: 1"
+.br
+.RI "\fICondition Code (bit 8, 9, 10 and 14). \fP"
+.ti -1c
+.RI "\fBuint32_t\fP \fBC1\fP: 1"
+.br
+.RI "\fICondition Code (bit 8, 9, 10 and 14). \fP"
+.ti -1c
+.RI "\fBuint32_t\fP \fBC2\fP: 1"
+.br
+.RI "\fICondition Code (bit 8, 9, 10 and 14). \fP"
+.ti -1c
+.RI "\fBuint32_t\fP \fBtop_of_stack_pointer\fP: 3"
+.br
+.RI "\fITOP (bit 11, 12 and 13) Top of Stack Pointer. \fP"
+.ti -1c
+.RI "\fBuint32_t\fP \fBC3\fP: 1"
+.br
+.RI "\fICondition Code (bit 8, 9, 10 and 14). \fP"
+.ti -1c
+.RI "\fBuint32_t\fP \fBbusy\fP: 1"
+.br
+.RI "\fIB (bit 15) FPU Busy. \fP"
+.in -1c
+.SH "Detailed Description"
+.PP 
+FPU Status Register. 
+
+The 16-bit FPU status register indicates the current state of the FPU. The flags in the FPU status register include the FPU busy flag, top-of-stack (TOP) pointer, condition code flags, error summary status flag, stack fault flag, and exception flags. The FPU sets the flags in this register to show the results of operations.
+.br
+ The contents of the FPU status register (referred to as the FPU status word) can be stored in memory using the FSTSW/FNSTSW, FSTENV/FNSTENV, and FSAVE/FNSAVE instructions. It can also be stored in the AX register of the integer unit, using the FSTSW/FNSTSW instructions. 
+.PP
+.SH "Field Documentation"
+.PP 
+.SS "\fBuint32_t\fP \fBfpu_status_word_t::stack_fault\fP"
+.PP
+SF (bit 6) Stack Fault. The stack fault flag (bit 6 of the FPU status word) indicates that stack overflow or stack underflow has occurred. The FPU explicitly sets the SF flag when it detects a stack overflow or underflow condition, but it does not explicitly clear the flag when it detects an invalid-arithmetic-operand condition. When this flag is set, the condition code flag C1 indicates the nature of the fault: overflow (C1 = 1) and underflow (C1 = 0). The SF flag is a 'sticky' flag, meaning that after it is set, the processor does not clear it until it is explicitly instructed to do so (for example, by an FINIT/FNINIT, FCLEX/FNCLEX, or FSAVE/FNSAVE instruction). Refer to Section 7.3.6., 'FPU Tag Word' for more information on FPU stack faults. 
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Systemenviroment from the source code.

@@ -95,5 +95,9 @@ extern int _end;
 #    include "Storm/namespace.h"
 #endif
 
+#if defined (SUBSYSTEM_REPOSITORY)
+#    include "repository.h"
+#endif
+
 #endif /* !__STORM_H__ */
 

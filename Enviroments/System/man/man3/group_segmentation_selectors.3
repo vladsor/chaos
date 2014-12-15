@@ -1,0 +1,38 @@
+.TH "Segment selectors" 3 "29 Jul 2004" "Systemenviroment" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+Segment selectors \- Segment selectors in x86 architecture.  
+More...
+.SS "Data Structures"
+
+.in +1c
+.ti -1c
+.RI "struct \fBselector_t\fP"
+.br
+.RI "\fIA segment selector. \fP"
+.in -1c
+.SS "Defines"
+
+.in +1c
+.ti -1c
+.RI "#define \fBSELECTOR\fP(index, ldt, rpl)   (((index) << 3) | ((ldt) << 2) | (rpl))"
+.br
+.RI "\fISegment selector. \fP"
+.ti -1c
+.RI "#define \fBSELECTOR_TSS1\fP   (SELECTOR (DESCRIPTOR_INDEX_TSS1, 0, PRIVILEGE_LEVEL_SYSTEM))"
+.br
+.RI "\fIThe first TSS selector. \fP"
+.ti -1c
+.RI "#define \fBSELECTOR_TSS2\fP   (SELECTOR (DESCRIPTOR_INDEX_TSS2, 0, PRIVILEGE_LEVEL_SYSTEM))"
+.br
+.RI "\fIThe second TSS selector. \fP"
+.in -1c
+.SH "Detailed Description"
+.PP 
+Segment selectors in x86 architecture. 
+.SH "Define Documentation"
+.PP 
+.SS "#define SELECTOR_TSS1   (SELECTOR (DESCRIPTOR_INDEX_TSS1, 0, PRIVILEGE_LEVEL_SYSTEM))"
+.PP
+The first TSS selector. We use two TSS selectors for task switching, which makes the GDT very small which is good. Besides, it does not put a limit on the number of running threads in the system which is *very* good. 

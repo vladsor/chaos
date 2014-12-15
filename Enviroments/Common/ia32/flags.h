@@ -26,7 +26,7 @@ typedef struct
      * an overflow condition for unsigned-integer arithmetic. It is also used in 
      * multiple-precision arithmetic.
      */
-    uint32_t CF : 1;
+    uint32_t            carry : 1;
 
     /* Not used. */
     uint32_t : 1;
@@ -37,57 +37,57 @@ typedef struct
      * Set if the least-significant byte of the result contains an even number of 
      * 1 bits; cleared otherwise.
      */
-    uint32_t PF : 1;
+    uint32_t            parity : 1;
 
     /* Not used. */
     uint32_t : 1;
 
     /**
-     * @brief             AF (bit 4) Adjust flag. 
+     * @brief           AF (bit 4) Adjust flag. 
      *
      * Set if an arithmetic operation generates a carry or a borrow out of bit 3 
      * of the result; cleared otherwise. This flag is used in binary-coded decimal
      * (BCD) arithmetic.
      */
-    uint32_t AF : 1;
+    uint32_t            adjust : 1;
 
     /* Not used. */
     uint32_t : 1;
 
     /**
-     * @brief             ZF (bit 6) Zero flag. 
+     * @brief           ZF (bit 6) Zero flag. 
      *
      * Set if the result is zero; cleared otherwise.
      */
-    uint32_t ZF : 1;
+    uint32_t            zero : 1;
 
     /**
-     * @brief             SF (bit 7) Sign flag.
+     * @brief           SF (bit 7) Sign flag.
      *
      * Set equal to the most-significant bit of the result, which is the sign bit
      * of a signed integer. (0 indicates a positive value and 1 indicates a 
      * negative value.)
      */
-    uint32_t SF : 1;
+    uint32_t            sign : 1;
 
     /**
-     * @brief             TF (bit 8) Trap flag.
+     * @brief           TF (bit 8) Trap flag.
      *
      * Set to enable single-step mode for debugging; clear to disable single-step
      * mode.
      */
-    uint32_t TF : 1;
+    uint32_t            trap : 1;
 
     /**
-     * @brief             IF (bit 9) Interrupt enable flag.
+     * @brief           IF (bit 9) Interrupt enable flag.
      *
      * Controls the response of the processor to maskable interrupt requests. Set
      * to respond to maskable interrupts; cleared to inhibit maskable interrupts.
      */
-    uint32_t IF : 1;
+    uint32_t            interrupt_enable : 1;
 
     /**
-     * @brief             DF (bit 10) Direction flag. 
+     * @brief           DF (bit 10) Direction flag. 
      *
      * Controls the string instructions (MOVS, CMPS, SCAS, LODS, and STOS). 
      * Setting the DF flag causes the string instructions to auto-decrement (that
@@ -95,20 +95,20 @@ typedef struct
      * DF flag causes the string instructions to auto-increment (process strings 
      * from low addresses to high addresses).
      */
-    uint32_t DF : 1;
+    uint32_t            direction : 1;
 
     /**
-     * @brief             OF (bit 11) Overflow flag.
+     * @brief           OF (bit 11) Overflow flag.
      *
      * Set if the integer result is too large a positive number or too small a 
      * negative number (excluding the sign-bit) to fit in the destination operand;
      * cleared otherwise. This flag indicates an overflow condition for signed-
      * integer (two's complement) arithmetic.
      */
-    uint32_t OF : 1;
+    uint32_t            overflow : 1;
 
     /**
-     * @brief             IOPL (bits 12, 13) I/O privilege level field.
+     * @brief           IOPL (bits 12, 13) I/O privilege level field.
      *
      * Indicates the I/O privilege level of the currently running program or task.
      * The current privilege level (CPL) of the currently running program or task
@@ -116,68 +116,68 @@ typedef struct
      * address space. This field can only be modified by the POPF and IRET 
      * instructions when operating at a CPL of 0.
      */
-    uint32_t IOPL : 2;
+    uint32_t            io_privilege_level : 2;
 
     /**
-     * @brief             NT (bit 14) Nested task flag.
+     * @brief           NT (bit 14) Nested task flag.
      *
      * Controls the chaining of interrupted and called tasks. Set when the current
      * task is linked to the previously executed task; cleared when the current 
      * task is not linked to another task.
      */
-    uint32_t NT : 1;
+    uint32_t            nested : 1;
 
     /* Not used. */
     uint32_t : 1;
 
     /**
-     * @brief             RF (bit 16) Resume flag.
+     * @brief           RF (bit 16) Resume flag.
      *
      * Controls the processor's response to debug exceptions.
      */
-    uint32_t RF : 1;
+    uint32_t            resume : 1;
 
     /**
-     * @brief             VM (bit 17) Virtual-8086 mode flag.
+     * @brief           VM (bit 17) Virtual-8086 mode flag.
      *
      * Set to enable virtual-8086 mode; clear to return to protected mode.
      */
-    uint32_t VM : 1;
+    uint32_t            virtual_8086_mode : 1;
 
     /**
-     * @brief             AC (bit 18) Alignment check flag.
+     * @brief           AC (bit 18) Alignment check flag.
      *
      * Set this flag and the AM bit in the CR0 register to enable alignment 
      * checking of memory references; clear the AC flag and/or the AM bit to 
      * disable alignment checking. 
      */
-    uint32_t AC : 1;
+    uint32_t            alignment_check : 1;
 
     /**
-     * @brief             VIF (bit 19) Virtual interrupt flag.
+     * @brief           VIF (bit 19) Virtual interrupt flag.
      *
      * Virtual image of the IF flag. Used in conjunction with the VIP flag. (To 
      * use this flag and the VIP flag the virtual mode extensions are enabled by 
      * setting the VME flag in control register CR4.)
      */
-    uint32_t VIF : 1;
+    uint32_t            virtual_interrupt : 1;
 
     /**
-     * @brief             VIP (bit 20) Virtual interrupt pending flag.
+     * @brief           VIP (bit 20) Virtual interrupt pending flag.
      *
      * Set to indicate pending interrupts; or clear when no interrupts are 
      * pending. (Software sets and clears this flag; the processor only reads it.) 
      * Used in conjunction with the VIF flag.
      */
-    uint32_t VIP : 1;
+    uint32_t            virtual_interrupt_pending : 1;
 
     /**
-     * @brief             ID (bit 21) Identification flag.
+     * @brief           ID (bit 21) Identification flag.
      *
      * The ability of a program to set or clear this flag indicates support for 
      * the CPUID instruction.
      */
-    uint32_t ID : 1;
+    uint32_t            identification : 1;
 
     /* Not used. */
     uint32_t : 10;

@@ -30,8 +30,8 @@ typedef struct
 typedef struct 
 {
     uint32_t base;
-    int16_t buf_length;
-    int16_t status;	   
+    uint16_t buf_length;
+    uint16_t status;	   
     uint32_t msg_length;
     uint32_t reserved;
 } pcnet32_rx_head_t;
@@ -78,17 +78,6 @@ typedef struct
 
 typedef uint32_t dma_addr_t;
 
-typedef struct
-{
-    uint8_t ethernet_address[NETWORK_ETHERNET_ADDRESS_LENGTH];
-    char name[256];
-    unsigned long base_addr;
-    int irq;
-    struct pcnet32_private_t *priv;
-
-    int watchdog_timeo;
-} ethernet_device_t;
-
 /*
  * The first three fields of pcnet32_private are read by the ethernet device 
  * so we allocate the structure should be allocated by pci_alloc_consistent().
@@ -124,7 +113,25 @@ typedef struct
 	full_duplex:1,				/* full duplex possible */
 	mii:1;					/* mii port available */
     
-    ethernet_device_t *next;
 } pcnet32_private_t;
 
+typedef struct
+{
+    uint8_t dmi_addr[12];
+    struct multicast_list_t *next;
+} multicast_list_t;
 
+typedef struct
+{
+    uint8_t ethernet_address[NETWORK_ETHERNET_ADDRESS_LENGTH];
+    char name[256];
+    unsigned long base_addr;
+    int irq;
+    pcnet32_private_t *priv;
+
+    int watchdog_timeo;
+    
+    multicast_list_t *mc_list;
+    int mc_count;
+    uint32_t flags;
+} ethernet_device_t;

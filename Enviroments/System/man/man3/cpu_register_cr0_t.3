@@ -1,0 +1,116 @@
+.TH "cpu_register_cr0_t" 3 "29 Jul 2004" "Systemenviroment" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+cpu_register_cr0_t \- Structure of system register CR0.  
+
+.PP
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <cr0.h>\fP
+.PP
+.SS "Data Fields"
+
+.in +1c
+.ti -1c
+.RI "\fBuint32_t\fP \fBPE\fP: 1"
+.br
+.RI "\fIPE Protection Enable (bit 0 of CR0). Protected mode flag. \fP"
+.ti -1c
+.RI "\fBuint32_t\fP \fBMP\fP: 1"
+.br
+.RI "\fIMP Monitor Coprocessor (bit 1 of CR0). \fP"
+.ti -1c
+.RI "\fBuint32_t\fP \fBEM\fP: 1"
+.br
+.RI "\fIEM Emulation (bit 2 of CR0). \fP"
+.ti -1c
+.RI "\fBuint32_t\fP \fBTS\fP: 1"
+.br
+.RI "\fITS Task Switched (bit 3 of CR0). \fP"
+.ti -1c
+.RI "\fBuint32_t\fP \fBET\fP: 1"
+.br
+.RI "\fIET Extension Type (bit 4 of CR0). \fP"
+.ti -1c
+.RI "\fBuint32_t\fP \fBNE\fP: 1"
+.br
+.RI "\fINE Numeric Error (bit 5 of CR0). \fP"
+.ti -1c
+.RI "\fBuint32_t\fP \fBWP\fP: 1"
+.br
+.RI "\fIWP Write Protect (bit 16 of CR0). \fP"
+.ti -1c
+.RI "\fBuint32_t\fP \fBAM\fP: 1"
+.br
+.RI "\fIAM Alignment Mask (bit 18 of CR0). \fP"
+.ti -1c
+.RI "\fBuint32_t\fP \fBNW\fP: 1"
+.br
+.RI "\fINW Not Write-through (bit 29 of CR0). \fP"
+.ti -1c
+.RI "\fBuint32_t\fP \fBCD\fP: 1"
+.br
+.RI "\fICD Cache Disable (bit 30 of CR0). \fP"
+.ti -1c
+.RI "\fBuint32_t\fP \fBPG\fP: 1"
+.br
+.RI "\fIPG Paging (bit 31 of CR0). \fP"
+.in -1c
+.SH "Detailed Description"
+.PP 
+Structure of system register CR0. 
+
+Contains system control flags that control operating mode and states of the processor. 
+.PP
+.SH "Field Documentation"
+.PP 
+.SS "\fBuint32_t\fP \fBcpu_register_cr0_t::PE\fP"
+.PP
+PE Protection Enable (bit 0 of CR0). Protected mode flag. Enables protected mode when set; enables real-address mode when clear. This flag does not enable paging directly. It only enables segment-level protection. To enable paging, both the \fBPE\fP and \fBPG\fP flags must be set. Refer to Section 8.8., 'Mode Switching' in Chapter 8, Processor Management and Initialization for information using the \fBPE\fP flag to switch between real and protected mode. 
+.SS "\fBuint32_t\fP \fBcpu_register_cr0_t::MP\fP"
+.PP
+MP Monitor Coprocessor (bit 1 of CR0). Controls the interaction of the WAIT (or FWAIT) instruction with the \fBTS flag \fP. If the MP flag is set, a WAIT instruction generates a \fBdevice-not-available exception (#NM) \fP if the \fBTS flag \fP is set. If the \fBMP\fP flag is clear, the WAIT instruction ignores the setting of the \fBTS\fP flag. Table 8-2 in Chapter 8, 'Processor Management and Initialization' shows the recommended setting of this flag, depending on the Intel Architecture processor and FPU or math coprocessor present in the system. Table 2-1 shows the interaction of the \fBMP\fP, \fBEM\fP, and \fBTS\fP flags. 
+.SS "\fBuint32_t\fP \fBcpu_register_cr0_t::EM\fP"
+.PP
+EM Emulation (bit 2 of CR0). Indicates that the processor does not have an internal or external FPU when set; indicates an FPU is present when clear. When the EM flag is set, execution of a floating-point instruction generates a device-not-available exception (#NM). This flag must be set when the processor does not have an internal FPU or is not connected to a math coprocessor. If the processor does have an internal FPU, setting this flag would force all floating-point instructions to be handled by software emulation. Table 8-2 in Chapter 8, Processor Management and Initialization shows the recommended setting of this flag, depending on the Intel Architecture processor and FPU or math coprocessor present in the system. Table 2-1 shows the interaction of the \fBEM\fP, \fBMP\fP, and \fBTS\fP flags. Note that the EM flag also affects the execution of the MMX instructions (refer to Table 2-1). When this flag is set, execution of an MMX instruction causes an invalid opcode exception (#UD) to be generated. Thus, if an Intel Architecture processor incorporates MMX technology, the \fBEM\fP flag must be set to 0 to enable execution of MMX instructions. 
+.SS "\fBuint32_t\fP \fBcpu_register_cr0_t::TS\fP"
+.PP
+TS Task Switched (bit 3 of CR0). Allows the saving of FPU context on a task switch to be delayed until the FPU is actually accessed by the new task. The processor sets this flag on every task switch and tests it when interpreting floating-point arithmetic instructions.
+.PP
+.PD 0
+.IP "\(bu" 2
+If the \fBTS\fP flag is set, a device-not-available exception (#NM) is raised prior to the execution of a floating-point instruction.
+.PP
+
+.IP "\(bu" 2
+If the \fBTS\fP flag and the \fBMP\fP flag (also in the CR0 register) are both set, an #NM exception is raised prior to the execution of floating-point instruction or a WAIT/FWAIT instruction. 
+.PP
+.PP
+Table 2-1 shows the actions taken for floating-point, WAIT/FWAIT, MMXT, and Streaming SIMD Extensions based on the settings of the \fBTS\fP, \fBEM\fP, and \fBMP\fP flags. The processor does not automatically save the context of the FPU on a task switch. Instead it sets the \fBTS\fP flag, which causes the processor to raise an #NM exception whenever it encounters a floating-point instruction in the instruction stream for the new task. The fault handler for the #NM exception can then be used to clear the \fBTS\fP flag (with the CLTS instruction) and save the context of the FPU. If the task never encounters a floating-point instruction, the FPU context is never saved. 
+.SS "\fBuint32_t\fP \fBcpu_register_cr0_t::ET\fP"
+.PP
+ET Extension Type (bit 4 of CR0). Reserved in the P6 family and Pentium R processors. (In the P6 family processors, this flag is hardcoded to 1.) In the Intel386T and Intel486T processors, this flag indicates support of Intel 387 DX math coprocessor instructions when set. 
+.SS "\fBuint32_t\fP \fBcpu_register_cr0_t::NE\fP"
+.PP
+NE Numeric Error (bit 5 of CR0). Enables the native (internal) mechanism for reporting FPU errors when set; enables the PC-style FPU error reporting mechanism when clear. When the \fBNE\fP flag is clear and the IGNNE# input is asserted, FPU errors are ignored. When the \fBNE\fP flag is clear and the IGNNE# input is deasserted, an unmasked FPU error causes the processor to assert the FERR# pin to generate an external interrupt and to stop instruction execution immediately before executing the next waiting floating-point instruction or WAIT/FWAIT instruction. The FERR# pin is intended to drive an input to an external interrupt controller (the FERR# pin emulates the ERROR# pin of the Intel 287 and Intel 387 DX math coprocessors). The NE flag, IGNNE# pin, and FERR# pin are used with external logic to implement PC-style error reporting. (Refer to 'Software Exception Handling' in Chapter 7, and Appendix D in the Intel Architecture Software Developer's Manual, Volume 1, for more information about FPU error reporting and for detailed information on when the FERR# pin is asserted, which is implementation dependent.) 
+.SS "\fBuint32_t\fP \fBcpu_register_cr0_t::WP\fP"
+.PP
+WP Write Protect (bit 16 of CR0). Inhibits supervisor-level procedures from writing into user-level read-only pages when set; allows supervisor-level procedures to write into user-level read-only pages when clear. This flag facilitates implementation of the copy-on-write method of creating a new process (forking) used by operating systems such as UNIX. 
+.SS "\fBuint32_t\fP \fBcpu_register_cr0_t::AM\fP"
+.PP
+AM Alignment Mask (bit 18 of CR0). Enables automatic alignment checking when set; disables alignment checking when clear. Alignment checking is performed only when the \fBAM flag \fP in the \fBEFLAGS register \fP is set, the CPL is 3, and the processor is operating in either protected or virtual-8086 mode. 
+.SS "\fBuint32_t\fP \fBcpu_register_cr0_t::NW\fP"
+.PP
+NW Not Write-through (bit 29 of CR0). When the \fBNW\fP and \fBCD\fP flags are clear, write-back (for Pentium R and P6 family processors) or write-through (for Intel486T processors) is enabled for writes that hit the cache and invalidation cycles are enabled. Refer to Table 9-4, in Chapter 9, Memory Cache Control, for detailed information about the affect of the \fBNW\fP flag on caching for other settings of the \fBCD\fP and \fBNW\fP flags. 
+.SS "\fBuint32_t\fP \fBcpu_register_cr0_t::CD\fP"
+.PP
+CD Cache Disable (bit 30 of CR0). When the \fBCD\fP and \fBNW\fP flags are clear, caching of memory locations for the whole of physical memory in the processor's internal (and external) caches is enabled. When the CD flag is set, caching is restricted as described in Table 9-4, in Chapter 9, Memory Cache Control. To prevent the processor from accessing and updating its caches, the \fBCD\fP flag must be set and the caches must be invalidated so that no cache hits can occur (refer to Section 9.5.2., 'Preventing Caching', in Chapter 9, Memory Cache Control). Refer to Section 9.5., 'Cache Control', Chapter 9, Memory Cache Control, for a detailed description of the additional restrictions that can be placed on the caching of selected pages or regions of memory. 
+.SS "\fBuint32_t\fP \fBcpu_register_cr0_t::PG\fP"
+.PP
+PG Paging (bit 31 of CR0). Enables paging when set; disables paging when clear. When paging is disabled, all linear addresses are treated as physical addresses. The \fBPG\fP flag has no effect if the \fBPE\fP flag (bit 0 of register CR0) is not also set; in fact, setting the PG flag when the PE flag is clear causes a general-protection exception (#GP) to be generated. Refer to Section 3.6., 'Paging (Virtual Memory)' in Chapter 3, Protected-Mode Memory Management for a detailed description of the processor's paging mechanism. 
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Systemenviroment from the source code.

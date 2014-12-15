@@ -1,0 +1,39 @@
+.TH "FPU precision flags" 3 "29 Jul 2004" "Systemenviroment" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+FPU precision flags \- 
+.SS "Defines"
+
+.in +1c
+.ti -1c
+.RI "#define \fBFPU_PRECISION_SINGLE\fP   00B"
+.br
+.RI "\fISingle Precision (24-Bits). \fP"
+.ti -1c
+.RI "#define \fBFPU_PRECISION_DOUBLE\fP   10B"
+.br
+.RI "\fIDouble Precision (53-Bits). \fP"
+.ti -1c
+.RI "#define \fBFPU_PRECISION_EXTENDED\fP   11B"
+.br
+.RI "\fIExtended Precision (64-Bits). \fP"
+.in -1c
+.SH "Define Documentation"
+.PP 
+.SS "#define FPU_PRECISION_SINGLE   00B"
+.PP
+Single Precision (24-Bits). \fBNote:\fP
+.RS 4
+Includes the implied integer bit. 
+.RE
+.PP
+
+.SS "#define FPU_PRECISION_DOUBLE   10B"
+.PP
+Double Precision (53-Bits). \fBNote:\fP
+.RS 4
+Includes the implied integer bit. 
+.RE
+.PP
+

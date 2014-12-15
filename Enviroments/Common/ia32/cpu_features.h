@@ -11,74 +11,32 @@
 #ifndef __ENVIROMENT_IA32_CPU_FEATURES_H_
 #define __ENVIROMENT_IA32_CPU_FEATURES_H_
 
-/**
- * @brief               Hardcoded string of unknown CPU's vendor.
- */
-#define VENDOR_UNKNOWN_STRING		"------------"
-
-/**
- * @brief               Hardcoded string of AMD.
- */
-#define VENDOR_AMD_STRING    		"AuthenticAMD"
-
-/**
- * @brief               Hardcoded string of Intel.
- */
-#define VENDOR_Intel_STRING  		"GenuineIntel"
-
-/**
- * @brief               Hardcoded string of Cyrix.
- */
-#define VENDOR_Cyrix_STRING  		"CyrixInstead"
-
-/**
- * @brief               Hardcoded string of Centaur.
- */
-#define VENDOR_Centaur_STRING		"CentaurHauls"
-
-/**
- * @brief               Hardcoded string of UMC.
- */
-#define VENDOR_UMC_STRING               "UMC UMC UMC " 
-
-/**
- * @brief               Hardcoded string of NexGen.
- */
-#define VENDOR_NexGen_STRING		"NexGenDriven"
-
-/**
- * @brief               Hardcoded string of Rise Technology.
- */
-#define VENDOR_RiseTechnology_STRING	"RiseRiseRise"
-
-/**
- * @brief               Hardcoded string of Transmeta.
- */
-#define VENDOR_Transmeta_STRING         "GenuineTMx86"
-
 //FIXME: move elsewhere
 /**
  * @brief              Type of platform.
  */
 enum platform_t
 {
-  PLATFORM_80x86,
+    PLATFORM_I386,
+    PLATFORM_ARM,
+    PLATFORM_MIPS,
+    PLATFORM_SPARC,
 };
 
 /**
  * @brief               CPU vendor type.
  */
-enum vendor_t
+enum cpu_vendor_t
 {
-  VENDOR_UNKNOWN,
-  VENDOR_AMD,
-  VENDOR_Intel,
-  VENDOR_Cyrix,
-  VENDOR_Centaur,
-  VENDOR_UMC,
-  VENDOR_NexGen,
-  VENDOR_RiseTechnology,
-  VENDOR_Transmeta,
+    VENDOR_UNKNOWN,
+    VENDOR_AMD,
+    VENDOR_INTEL,
+    VENDOR_CYRIX,
+    VENDOR_CENTAUR,
+    VENDOR_UMC,
+    VENDOR_NEXGEN,
+    VENDOR_RISETECHNOLOGY,
+    VENDOR_TRANSMETA,
 };
 
 /**
@@ -485,24 +443,8 @@ enum cpu_feature_t
 };
 
 /**
- * @brief               Bugs founded in CPU.
- */
-enum cpu_bug_t
-{
-  CPU_BUG_POPAD,
-  CPU_BUG_F0_0F,
-
-  CPU_BUG_LAST,
-};
-
-/**
  * @brief               Total number of features.
  */
 #define NUMBER_OF_FEATURES	(CPU_FEATURE_LAST)
-
-/**
- * @brief               Total number of bugs.
- */
-#define NUMBER_OF_BUGS		(CPU_BUG_LAST)
 
 #endif /* __ENVIROMENT_IA32_CPU_FEATURES_H */

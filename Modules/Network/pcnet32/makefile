@@ -29,11 +29,11 @@ LIBS =
 SOURCES = pcnet32_lowlevel.c interrupt_handler.c rings.c probe.c pcnet32.c \
   interface.c
 
-MOBJECTS = pcnet32_lowlevel.o interrupt_handler.o rings.o probe.o pcnet32.o \
-  interface.o interface_module.o
+MOBJECTS = pcnet32_lowlevel.o interrupt_handler.o rings.o multicast.o probe.o \
+  pcnet32.o interface.o interface_module.o
 MLIBS = ../../../Libraries/string/string.a ../../../Libraries/list/list.a
-MSOURCES = pcnet32_lowlevel.c interrupt_handler.c rings.c probe.c pcnet32.c \
-  interface.c interface_module.c
+MSOURCES = pcnet32_lowlevel.c interrupt_handler.c rings.c multicast.c probe.c \
+  pcnet32.c interface.c interface_module.c
 
 HEADER_PATH = $(PREFIX)/data/programming/c/headers/$(PACKAGE)/ia32
 

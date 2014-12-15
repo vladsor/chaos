@@ -1,0 +1,6 @@
+interface flat_namespace
+{
+	add_entry
+	delete_entry
+	list_entries
+};

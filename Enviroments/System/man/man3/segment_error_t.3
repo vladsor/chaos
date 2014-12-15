@@ -1,0 +1,53 @@
+.TH "segment_error_t" 3 "29 Jul 2004" "Systemenviroment" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+segment_error_t \- Error code pushed onto the stack for segment exceptions.  
+
+.PP
+.SH SYNOPSIS
+.br
+.PP
+\fC#include <error_codes.h>\fP
+.PP
+.SS "Data Fields"
+
+.in +1c
+.ti -1c
+.RI "int \fBext\fP: 1"
+.br
+.RI "\fIEXT External event (bit 0). \fP"
+.ti -1c
+.RI "int \fBidt\fP: 1"
+.br
+.RI "\fIIDT Descriptor location (bit 1). \fP"
+.ti -1c
+.RI "int \fBti\fP: 1"
+.br
+.RI "\fITI GDT/LDT (bit 2). \fP"
+.ti -1c
+.RI "int \fBsegment_selector_index\fP: 13"
+.br
+.RI "\fISegment Selector index. \fP"
+.in -1c
+.SH "Detailed Description"
+.PP 
+Error code pushed onto the stack for segment exceptions. 
+.SH "Field Documentation"
+.PP 
+.SS "int \fBsegment_error_t::ext\fP"
+.PP
+EXT External event (bit 0). When set, indicates that an event external to the program caused the exception, such as a hardware interrupt. 
+.SS "int \fBsegment_error_t::idt\fP"
+.PP
+IDT Descriptor location (bit 1). When set, indicates that the index portion of the error code refers to a gate descriptor in the IDT; when clear, indicates that the index refers to a descriptor in the GDT or the current LDT. 
+.SS "int \fBsegment_error_t::ti\fP"
+.PP
+TI GDT/LDT (bit 2). Only used when the IDT flag is clear. When set, the TI flag indicates that the index portion of the error code refers to a segment or gate descriptor in the LDT; when clear, it indicates that the index refers to a descriptor in the current GDT. 
+.SS "int \fBsegment_error_t::segment_selector_index\fP"
+.PP
+Segment Selector index. The segment selector index field provides an index into the IDT, GDT, or current LDT to the segment or gate selector being referenced by the error code. In some cases the error code is null (that is, all bits in the lower word are clear). A null error code indicates that the error was not caused by a reference to a specific segment or that a null segment descriptor was referenced in an operation. 
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Systemenviroment from the source code.

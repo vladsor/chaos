@@ -7,6 +7,7 @@
 #include "pcnet32_lowlevel.h"
 #include "pcnet32.h"
 
+#define DEBUG_MODULE_NAME "PCNet32"
 #define DEBUG_LEVEL DEBUG_LEVEL_INFORMATIVE
 
 #include <debug/macros.h>
@@ -33,14 +34,19 @@ void pcnet32_purge_tx_ring (ethernet_device_t *dev)
     pcnet32_private_t *lp = dev->priv;
     int i;
 
+    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
+        "%s: %s (%p)\n", 
+        DEBUG_MODULE_NAME, __FUNCTION__,
+        dev);
+
     for (i = 0; i < TX_RING_SIZE; i++) 
     {
-        if (lp->tx_skbuff[i]) 
+        if (lp->tx_skbuff[i] != NULL) 
         {
 //            pci_unmap_single(lp->pci_dev, lp->tx_dma_addr[i], 
 //                lp->tx_skbuff[i]->len, PCI_DMA_TODEVICE);
 //            dev_kfree_skb (lp->tx_skbuff[i]); 
-//            memory_deallocate (lp->tx_skbuff[i]);
+            memory_deallocate (lp->tx_skbuff[i]);
             
             lp->tx_skbuff[i] = NULL;
             lp->tx_dma_addr[i] = 0;
@@ -54,6 +60,11 @@ int pcnet32_init_ring (ethernet_device_t *dev)
     pcnet32_private_t *lp = dev->priv;
     int i;
 
+    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
+        "%s: %s (%p)\n", 
+        DEBUG_MODULE_NAME, __FUNCTION__,
+        dev);
+
     lp->tx_full = 0;
     lp->cur_rx = lp->cur_tx = 0;
     lp->dirty_rx = lp->dirty_tx = 0;
@@ -61,8 +72,10 @@ int pcnet32_init_ring (ethernet_device_t *dev)
     for (i = 0; i < RX_RING_SIZE; i++)
     {
 //        struct sk_buff *rx_skbuff = lp->rx_skbuff[i];
-//        if (rx_skbuff == NULL) 
-//        {
+        void *rx_skbuff = lp->rx_skbuff[i];
+
+        if (rx_skbuff == NULL) 
+        {
 //            if (!(rx_skbuff = lp->rx_skbuff[i] = dev_alloc_skb (PKT_BUF_SZ)))
 //            {
 //                /* there is not much, we can do at this point */
@@ -72,23 +85,22 @@ int pcnet32_init_ring (ethernet_device_t *dev)
 //                    
 //                return -1;
 //            }
+            memory_allocate (&rx_skbuff, PKT_BUF_SZ);
+            memory_clear (&rx_skbuff, PKT_BUF_SZ);
+            lp->rx_skbuff[i] = rx_skbuff;
+
 //            skb_reserve (rx_skbuff, 2);
-//        }
+//            rx_skbuff += 2;
+        }
         
 //        lp->rx_dma_addr[i] = pci_map_single (lp->pci_dev, rx_skbuff->tail, 
 //            rx_skbuff->len, PCI_DMA_FROMDEVICE);
-
-        void *addr = lp->rx_skbuff[i];
-        if (addr == NULL)
-        {
-            memory_allocate (&addr, PKT_BUF_SZ);
-            lp->rx_skbuff[i] = addr;
-        }
-        lp->rx_dma_addr[i] = addr;
+        lp->rx_dma_addr[i] = (dma_addr_t) rx_skbuff;
             
         lp->rx_ring[i].base = (uint32_t) little_endian_to_native_uint32 (
             lp->rx_dma_addr[i]);
-        lp->rx_ring[i].buf_length = little_endian_to_native_uint16 (-PKT_BUF_SZ);
+        lp->rx_ring[i].buf_length = little_endian_to_native_uint16 (
+            -PKT_BUF_SZ);
         lp->rx_ring[i].status = little_endian_to_native_uint16 (0x8000);
     }
     
@@ -107,13 +119,16 @@ int pcnet32_init_ring (ethernet_device_t *dev)
     for (i = 0; i < 6; i++)
     {
         lp->init_block.phys_addr[i] = dev->ethernet_address[i];
+
+        DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
+            " %x", lp->init_block.phys_addr[i]);
     }
         
-    lp->init_block.rx_ring = (uint32_t) little_endian_to_native_uint32 (
-        lp->dma_addr + offset_of (pcnet32_private_t, rx_ring));
+    lp->init_block.rx_ring = little_endian_to_native_uint32 (lp->dma_addr + 
+        offset_of (pcnet32_private_t, rx_ring));
         
-    lp->init_block.tx_ring = (uint32_t) little_endian_to_native_uint32 (
-        lp->dma_addr + offset_of (pcnet32_private_t, tx_ring));
+    lp->init_block.tx_ring = little_endian_to_native_uint32 (lp->dma_addr + 
+        offset_of (pcnet32_private_t, tx_ring));
         
     return 0;
 }
@@ -123,6 +138,11 @@ void pcnet32_tx_timeout (ethernet_device_t *dev)
 {
     pcnet32_private_t *lp = dev->priv;
     unsigned int ioaddr = dev->base_addr;
+
+    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
+        "%s: %s (%p)\n", 
+        DEBUG_MODULE_NAME, __FUNCTION__,
+        dev);
 
     /* Transmitter timeout, serious problems. */
 	DEBUG_PRINT (DEBUG_LEVEL_ERROR,
@@ -174,6 +194,11 @@ int pcnet32_start_xmit (ethernet_device_t *dev, void *data, size_t length)
     int entry;
     unsigned long flags;
 
+    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
+        "%s: %s (%p)\n", 
+        DEBUG_MODULE_NAME, __FUNCTION__,
+        dev);
+
     if (pcnet32_debug > 3) 
     {
         DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
@@ -215,7 +240,7 @@ int pcnet32_start_xmit (ethernet_device_t *dev, void *data, size_t length)
 //    lp->tx_skbuff[entry] = skb;
 //    lp->tx_dma_addr[entry] = pci_map_single (lp->pci_dev, skb->data, skb->len, PCI_DMA_TODEVICE);
     lp->tx_skbuff[entry] = data;
-    lp->tx_dma_addr[entry] = data;
+    lp->tx_dma_addr[entry] = (dma_addr_t) data;
 
     lp->tx_ring[entry].base = little_endian_to_native_uint32 (
         lp->tx_dma_addr[entry]);
@@ -249,6 +274,50 @@ int pcnet32_rx (ethernet_device_t *dev)
     pcnet32_private_t *lp = dev->priv;
     int entry = lp->cur_rx & RX_RING_MOD_MASK;
 
+    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
+        "%s: %s (%p)\n", 
+        DEBUG_MODULE_NAME, __FUNCTION__,
+        dev);
+
+    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
+        "%s: %s: Entry=%i, base=%x, buf_len=%x, status=%x, msg_len=%x\n", 
+        DEBUG_MODULE_NAME, __FUNCTION__,
+        entry, lp->rx_ring[entry].base, 
+        (uint32_t) lp->rx_ring[entry].buf_length,
+        (uint32_t) lp->rx_ring[entry].status, 
+        lp->rx_ring[entry].msg_length);
+
+    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
+        "%s: %s: rx=%x.%x.%x.%x.%x\n", 
+        DEBUG_MODULE_NAME, __FUNCTION__,
+        ((uint32_t *) lp->rx_ring[entry].base)[0],
+        ((uint32_t *) lp->rx_ring[entry].base)[1],
+        ((uint32_t *) lp->rx_ring[entry].base)[2],
+        ((uint32_t *) lp->rx_ring[entry].base)[3],
+        ((uint32_t *) lp->rx_ring[entry].base)[4]);
+
+    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
+        "%s: %s: Init rx=%x, tx=%x mode=%x, rx=%x.%x.%x.%x.%x.%x.%x.%x\n", 
+        DEBUG_MODULE_NAME, __FUNCTION__,
+        lp->init_block.rx_ring, lp->init_block.tx_ring, lp->init_block.mode,
+        ((uint32_t *)lp->init_block.rx_ring)[0],
+        ((uint32_t *)lp->init_block.rx_ring)[1],
+        ((uint32_t *)lp->init_block.rx_ring)[2],
+        ((uint32_t *)lp->init_block.rx_ring)[3],
+        ((uint32_t *)lp->init_block.rx_ring)[4],
+        ((uint32_t *)lp->init_block.rx_ring)[5],
+        ((uint32_t *)lp->init_block.rx_ring)[6],
+        ((uint32_t *)lp->init_block.rx_ring)[7]);
+
+    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
+        "%s: %s: Init tx=%x.%x.%x.%x.%x\n", 
+        DEBUG_MODULE_NAME, __FUNCTION__,
+        ((uint32_t *)lp->init_block.tx_ring)[0],
+        ((uint32_t *)lp->init_block.tx_ring)[1],
+        ((uint32_t *)lp->init_block.tx_ring)[2],
+        ((uint32_t *)lp->init_block.tx_ring)[3],
+        ((uint32_t *)lp->init_block.tx_ring)[4]);
+
     /* If we own the next entry, it's a new packet. Send it up. */
     while ((short) little_endian_to_native_uint16 (lp->rx_ring[entry].status) 
         >= 0)
@@ -280,12 +349,17 @@ int pcnet32_rx (ethernet_device_t *dev)
         else 
         {
             /* Malloc up new buffer, compatible with net-2e. */
-            short pkt_len = (little_endian_to_native_uint32 (
+            uint16_t pkt_len = (little_endian_to_native_uint32 (
                 lp->rx_ring[entry].msg_length) & 0xfff) - 4;
 
 //            sk_buff_t *skb;
             void *data = NULL;
             			
+            DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
+                "%s New packet: %u bytes.\n", 
+                __FUNCTION__,
+                pkt_len);
+
             if (pkt_len < 60) 
             {
                 DEBUG_PRINT (DEBUG_LEVEL_ERROR, 
@@ -308,15 +382,20 @@ int pcnet32_rx (ethernet_device_t *dev)
                     if (new_data != NULL)
                     {
 //                        skb_reserve (newskb, 2);
+//                        new_data += 2;
+                        
 //                        skb = lp->rx_skbuff[entry];
+                        data = lp->rx_skbuff[entry];
+                        
 //                        skb_put (skb, pkt_len);
+                        
 //                        lp->rx_skbuff[entry] = newskb;
                         lp->rx_skbuff[entry] = new_data;
 
 //                        newskb->dev = dev;
 //                        lp->rx_dma_addr[entry] = pci_map_single (lp->pci_dev, 
 //                            newskb->tail, newskb->len, PCI_DMA_FROMDEVICE);
-                        lp->rx_dma_addr[entry] = new_data;
+                        lp->rx_dma_addr[entry] = (dma_addr_t) new_data;
                         lp->rx_ring[entry].base = 
                             little_endian_to_native_uint32 (
                                 lp->rx_dma_addr[entry]);
@@ -380,7 +459,7 @@ int pcnet32_rx (ethernet_device_t *dev)
                 lp->stats.rx_packets++;
 
                 DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
-                    "%s Receive packet: %u (%u bytes).\n", 
+                    "%s Receive packet: %lu (%u bytes).\n", 
                     __FUNCTION__,
                     lp->stats.rx_packets, pkt_len);
             }
@@ -395,6 +474,10 @@ int pcnet32_rx (ethernet_device_t *dev)
         lp->rx_ring[entry].status |= little_endian_to_native_uint16 (0x8000);
         entry = (++lp->cur_rx) & RX_RING_MOD_MASK;
     }
+
+    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
+        "%s return.\n", 
+        __FUNCTION__);
 
     return 0;
 }

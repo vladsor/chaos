@@ -1,0 +1,33 @@
+.TH "classes.h" 3 "29 Jul 2004" "Systemenviroment" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+classes.h \- 
+.SH SYNOPSIS
+.br
+.PP
+.SS "Defines"
+
+.in +1c
+.ti -1c
+.RI "#define \fBEXCEPTION_CLASS_NONE\fP   (0)"
+.br
+.ti -1c
+.RI "#define \fBEXCEPTION_CLASS_FAULT\fP   (1)"
+.br
+.RI "\fIA fault is an exception that can generally be corrected and that, once corrected, allows the program to be restarted with no loss of continuity. \fP"
+.ti -1c
+.RI "#define \fBEXCEPTION_CLASS_TRAP\fP   (2)"
+.br
+.RI "\fIA trap is an exception that is reported immediately following the execution of the trapping instruction. \fP"
+.ti -1c
+.RI "#define \fBEXCEPTION_CLASS_ABORT\fP   (3)"
+.br
+.RI "\fIAn abort is an exception that does not always report the precise location of the instruction causing the exception and does not allow restart of the program or task that caused the exception. \fP"
+.ti -1c
+.RI "#define \fBEXCEPTION_CLASS_INTERRUPT\fP   (4)"
+.br
+.in -1c
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Systemenviroment from the source code.

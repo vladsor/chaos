@@ -1,0 +1,127 @@
+.TH "codes.h" 3 "29 Jul 2004" "Systemenviroment" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+codes.h \- 
+.SH SYNOPSIS
+.br
+.PP
+.SS "Defines"
+
+.in +1c
+.ti -1c
+.RI "#define \fBEXCEPTION_DIVIDE_ERROR\fP   (0)"
+.br
+.RI "\fI.SS "Interrupt 0—Divide Error Exception (#DE)"
+\fP"
+.ti -1c
+.RI "#define \fBEXCEPTION_DEBUG\fP   (1)"
+.br
+.RI "\fI.SS "Interrupt 1—Debug Exception (#DB)"
+\fP"
+.ti -1c
+.RI "#define \fBEXCEPTION_NONMASKABLE_INTERRUPT\fP   (2)"
+.br
+.RI "\fI.SS "Interrupt 2—NMI Interrupt"
+\fP"
+.ti -1c
+.RI "#define \fBEXCEPTION_BREAKPOINT\fP   (3)"
+.br
+.RI "\fI.SS "Interrupt 3—Breakpoint Exception (#BP)"
+\fP"
+.ti -1c
+.RI "#define \fBEXCEPTION_OVERFLOW\fP   (4)"
+.br
+.RI "\fI.SS "Interrupt 4—Overflow Exception (#OF)"
+\fP"
+.ti -1c
+.RI "#define \fBEXCEPTION_BOUND_RANGE_EXCEEDED\fP   (5)"
+.br
+.RI "\fI.SS "Interrupt 5—BOUND Range Exceeded Exception (#BR)"
+\fP"
+.ti -1c
+.RI "#define \fBEXCEPTION_INVALID_OPCODE\fP   (6)"
+.br
+.RI "\fI.SS "Interrupt 6—Invalid Opcode Exception (#UD)"
+\fP"
+.ti -1c
+.RI "#define \fBEXCEPTION_DEVICE_NOT_AVAILABLE\fP   (7)"
+.br
+.RI "\fI.SS "Interrupt 7—Device Not Available Exception (#NM)"
+\fP"
+.ti -1c
+.RI "#define \fBEXCEPTION_DOUBLE_FAULT\fP   (8)"
+.br
+.RI "\fI.SS "Interrupt 8—Double Fault Exception (#DF)"
+\fP"
+.ti -1c
+.RI "#define \fBEXCEPTION_COPROCESSOR_SEGMENT_OVERRUN\fP   (9)"
+.br
+.RI "\fI.SS "Interrupt 9—Coprocessor Segment Overrun"
+.PP
+\fBAttention:\fP
+.RS 4
+(Intel reserved; do not use. Recent Intel Architecture processors do not generate this exception.) 
+.RE
+.PP
+\fP"
+.ti -1c
+.RI "#define \fBEXCEPTION_INVALID_TSS\fP   (10)"
+.br
+.RI "\fI.SS "Interrupt 10—Invalid TSS Exception (#TS)"
+\fP"
+.ti -1c
+.RI "#define \fBEXCEPTION_SEGMENT_NOT_PRESENT\fP   (11)"
+.br
+.RI "\fI.SS "Interrupt 11—Segment Not Present (#NP)"
+\fP"
+.ti -1c
+.RI "#define \fBEXCEPTION_STACK_FAULT\fP   (12)"
+.br
+.RI "\fI.SS "Interrupt 12—Stack Fault Exception (#SS)"
+\fP"
+.ti -1c
+.RI "#define \fBEXCEPTION_GENERAL_PROTECTION\fP   (13)"
+.br
+.RI "\fI.SS "Interrupt 13—General Protection Exception (#GP)"
+\fP"
+.ti -1c
+.RI "#define \fBEXCEPTION_PAGE_FAULT\fP   (14)"
+.br
+.RI "\fI.SS "Interrupt 14—Page-Fault Exception (#PF)"
+\fP"
+.ti -1c
+.RI "#define \fBEXCEPTION_DUMMY\fP   (15)"
+.br
+.RI "\fI.SS "Interrupt 15—Dummy"
+.PP
+\fBAttention:\fP
+.RS 4
+(Intel reserved; do not use. Recent Intel Architecture processors do not generate this exception.) 
+.RE
+.PP
+\fP"
+.ti -1c
+.RI "#define \fBEXCEPTION_FLOATING_POINT_ERROR\fP   (16)"
+.br
+.RI "\fI.SS "Interrupt 16—Floating-Point Error Exception (#MF)"
+\fP"
+.ti -1c
+.RI "#define \fBEXCEPTION_ALIGNMENT_CHECK\fP   (17)"
+.br
+.RI "\fI.SS "Interrupt 17—Alignment Check Exception (#AC)"
+\fP"
+.ti -1c
+.RI "#define \fBEXCEPTION_MACHINE_CHECK\fP   (18)"
+.br
+.RI "\fI.SS "Interrupt 18—Machine-Check Exception (#MC)"
+\fP"
+.ti -1c
+.RI "#define \fBEXCEPTION_STREAMING_SIMD_EXTENSIONS\fP   (19)"
+.br
+.RI "\fI.SS "Interrupt 19—SIMD Floating-Point Exception (#XF)"
+\fP"
+.in -1c
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Systemenviroment from the source code.

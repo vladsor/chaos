@@ -16,6 +16,17 @@
                 __FUNCTION__, __LINE__, __temp_buffer__); \
         } \
     } while (0)
+
+#define DEBUG_PRINTW(level, message...) \
+    do { \
+        if (DEBUG_LEVEL >= (level)) \
+        { \
+            wchar_t __temp_buffer__[WSTRING_MAX_LENGTH]; \
+            wstring_print (__temp_buffer__, ## message); \
+            system_debug_printw ((level), DEBUG_MODULE_NAME, \
+                __FUNCTION__, __LINE__, __temp_buffer__); \
+        } \
+    } while (0)
     
 #define DEBUG_PRINT_INFO \
     do { \
@@ -23,7 +34,9 @@
         { \
             DEBUG_PRINT ("file: %s, function: %s, line: %s.\n", \
                 __FILE__, __FUNCTION__, __LINE__); \
-        } \    } while (0) 
+        } \
+    } while (0)
+ 
 
 #define DEBUG_HALT(message) \
     do { \
@@ -44,11 +57,9 @@
 
 #else
 
-#define DEBUG_DATA
-
-#define DEBUG_INIT
-
 #define DEBUG_PRINT(dargs...)
+
+#define DEBUG_PRINTW(level, message...) 
 
 #define DEBUG_HALT(message)
 

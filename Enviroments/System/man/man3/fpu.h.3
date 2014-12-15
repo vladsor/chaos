@@ -1,0 +1,92 @@
+.TH "fpu.h" 3 "29 Jul 2004" "Systemenviroment" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+fpu.h \- FPU data structs and lowlevel routines.  
+
+.SH SYNOPSIS
+.br
+.PP
+.SS "Data Structures"
+
+.in +1c
+.ti -1c
+.RI "struct \fBfpu_status_word_t\fP"
+.br
+.RI "\fIFPU Status Register. \fP"
+.ti -1c
+.RI "struct \fBfpu_control_word_t\fP"
+.br
+.RI "\fIFPU Control Word. \fP"
+.ti -1c
+.RI "struct \fBfpu_tag_word_t\fP"
+.br
+.RI "\fIFPU Tag Word. \fP"
+.ti -1c
+.RI "struct \fBfpu_state_t\fP"
+.br
+.RI "\fIProtected Mode FPU State Image in Memory, 32-Bit Format. \fP"
+.in -1c
+.SS "Defines"
+
+.in +1c
+.ti -1c
+.RI "#define \fBFPU_PRECISION_SINGLE\fP   00B"
+.br
+.RI "\fISingle Precision (24-Bits). \fP"
+.ti -1c
+.RI "#define \fBFPU_PRECISION_DOUBLE\fP   10B"
+.br
+.RI "\fIDouble Precision (53-Bits). \fP"
+.ti -1c
+.RI "#define \fBFPU_PRECISION_EXTENDED\fP   11B"
+.br
+.RI "\fIExtended Precision (64-Bits). \fP"
+.ti -1c
+.RI "#define \fBFPU_ROUND_TO_NEAREST\fP   00B"
+.br
+.RI "\fIRound to nearest (even). \fP"
+.ti -1c
+.RI "#define \fBFPU_ROUND_DOWN\fP   01B"
+.br
+.RI "\fIRound down. \fP"
+.ti -1c
+.RI "#define \fBFPU_ROUND_UP\fP   10B"
+.br
+.RI "\fIRound up. \fP"
+.ti -1c
+.RI "#define \fBFPU_ROUND_TOWARD\fP   11B"
+.br
+.RI "\fIRound toward zero (Truncate). \fP"
+.ti -1c
+.RI "#define \fBfpu_state_save\fP(fpu_state)"
+.br
+.RI "\fISave state of FPU. \fP"
+.ti -1c
+.RI "#define \fBfpu_state_restore\fP(fpu_state)"
+.br
+.RI "\fIRestore state of FPU. \fP"
+.in -1c
+.SH "Detailed Description"
+.PP 
+FPU data structs and lowlevel routines. 
+
+\fBAuthor:\fP
+.RS 4
+Vladimir Sorokin 
+.RE
+.PP
+\fBVersion:\fP
+.RS 4
+1.0 
+.RE
+.PP
+\fBDate:\fP
+.RS 4
+2001-2004
+.RE
+.PP
+
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Systemenviroment from the source code.

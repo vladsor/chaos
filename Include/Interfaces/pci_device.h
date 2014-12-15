@@ -1,3 +1,6 @@
+#ifndef __INTERFACE_PCI_DEVICE_H__
+#define __INTERFACE_PCI_DEVICE_H__
+
 #define IID_PCI_DEVICE 0x00003002
 
 enum
@@ -141,3 +144,5 @@ typedef struct
 #define pci_device$set_master(handle) \
     ((pci_device_interface_t *) ((handle)->functions))->set_master ( \
         &((handle)->context))
+
+#endif /* !__INTERFACE_PCI_DEVICE_H__ */

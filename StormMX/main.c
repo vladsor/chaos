@@ -12,7 +12,7 @@
 //#define DEBUG_LEVEL DEBUG_LEVEL_NONE
 #include <debug/macros.h>
 
-#include "Init/Include/multiboot.h"
+#include "Hardware/Init/Include/multiboot.h"
 
 #include "subsystems.h"
 

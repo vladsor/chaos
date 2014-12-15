@@ -1,0 +1,27 @@
+.TH "locks.h" 3 "29 Jul 2004" "Systemenviroment" \" -*- nroff -*-
+.ad l
+.nh
+.SH NAME
+locks.h \- 
+.SH SYNOPSIS
+.br
+.PP
+.SS "Defines"
+
+.in +1c
+.ti -1c
+.RI "#define \fBspin_lock_irqsave\fP(x, flags)   do { \fBcpu_flags_save\fP (flags); cpu_interrupts_disable (); (*x) = \fBSPIN_LOCKED\fP;} while (0)"
+.br
+.ti -1c
+.RI "#define \fBspin_unlock_irqrestore\fP(x, flags)   do { (*x) = \fBSPIN_UNLOCKED\fP; \fBcpu_flags_load\fP (flags); } while (0)"
+.br
+.in -1c
+.SH "Define Documentation"
+.PP 
+.SS "#define spin_lock_irqsave(x, flags)   do { \fBcpu_flags_save\fP (flags); cpu_interrupts_disable (); (*x) = \fBSPIN_LOCKED\fP;} while (0)"
+.PP
+.SS "#define spin_unlock_irqrestore(x, flags)   do { (*x) = \fBSPIN_UNLOCKED\fP; \fBcpu_flags_load\fP (flags); } while (0)"
+.PP
+.SH "Author"
+.PP 
+Generated automatically by Doxygen for Systemenviroment from the source code.

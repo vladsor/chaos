@@ -11,11 +11,11 @@
 
 #include <debug/macros.h>
 
-static unsigned int pcnet32_portlist[] = {0x300, 0x320, 0x340, 0x360, 0};
+//static unsigned int pcnet32_portlist[] = {0x300, 0x320, 0x340, 0x360, 0};
 
 #define PCI_ANY_ID 0
 
-static int tx_start = 1; /* Mapping -- 0:20, 1:64, 2:128, 3:~220 (depends on chip vers) */
+//static int tx_start = 1; /* Mapping -- 0:20, 1:64, 2:128, 3:~220 (depends on chip vers) */
 
 /*
  *				Theory of Operation
@@ -26,11 +26,6 @@ static int tx_start = 1; /* Mapping -- 0:20, 1:64, 2:128, 3:~220 (depends on chi
  * and PCnetPCI chips. Because these chips are 32bit chips, there is no
  * 16MB limitation and we don't need bounce buffers.
  */
-
-
-#define PCNET32_TOTAL_SIZE 0x20
-
-#define CRC_POLYNOMIAL_LE 0xedb88320UL	/* Ethernet CRC, little endian */
 
 int pcnet32_open (ethernet_device_t *dev)
 {
@@ -141,12 +136,13 @@ int pcnet32_open (ethernet_device_t *dev)
     if (lp->ltint) 
     { /* Enable TxDone-intr inhibitor */
         val = lp->a.read_csr (ioaddr, 5);
-        val |= (1<<14);
+        val |= (1 << 14);
         lp->a.write_csr (ioaddr, 5, val);
     }
    
     lp->init_block.mode = little_endian_to_native_uint16 (
         (lp->options & PORT_PORTSEL) << 7);
+        
     lp->init_block.filter[0] = 0x00000000;
     lp->init_block.filter[1] = 0x00000000;
 
@@ -184,9 +180,10 @@ int pcnet32_open (ethernet_device_t *dev)
     if (pcnet32_debug > 2)
     {
         DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
-            "\"%s\": pcnet32 open after %d ticks, init block %#x csr0 %4.4x.\n",
+            "\"%s\": pcnet32 open after %d ticks, init block %#x mode: %x, csr0 %4.4x.\n",
             dev->name, i, (uint32_t) (lp->dma_addr + offset_of (
-                pcnet32_private_t, init_block)), lp->a.read_csr (ioaddr, 0));
+                pcnet32_private_t, init_block)), lp->init_block.mode,
+            lp->a.read_csr (ioaddr, 0));
     }
     
     return 0;	/* Always succeed */
@@ -253,11 +250,12 @@ int pcnet32_close (ethernet_device_t *dev)
     for (i = 0; i < RX_RING_SIZE; i++)
     {
         lp->rx_ring[i].status = 0;			    
-        if (lp->rx_skbuff[i])
+        if (lp->rx_skbuff[i] != NULL)
         {
 //            pci_unmap_single(lp->pci_dev, lp->rx_dma_addr[i], 
 //                lp->rx_skbuff[i]->len, PCI_DMA_FROMDEVICE);
 //            dev_kfree_skb(lp->rx_skbuff[i]);
+            memory_deallocate (lp->rx_skbuff[i]);
         }
         lp->rx_skbuff[i] = NULL;
         lp->rx_dma_addr[i] = 0;
@@ -265,11 +263,12 @@ int pcnet32_close (ethernet_device_t *dev)
     
     for (i = 0; i < TX_RING_SIZE; i++)
     {
-        if (lp->tx_skbuff[i]) 
+        if (lp->tx_skbuff[i] != NULL) 
         {
 //            pci_unmap_single(lp->pci_dev, lp->tx_dma_addr[i], 
 //                lp->tx_skbuff[i]->len, PCI_DMA_TODEVICE);
 //            dev_kfree_skb(lp->tx_skbuff[i]);
+            memory_deallocate (lp->tx_skbuff[i]);
         }
         lp->tx_skbuff[i] = NULL;
         lp->tx_dma_addr[i] = 0;
@@ -297,90 +296,3 @@ net_device_stats_t * pcnet32_get_stats (ethernet_device_t *dev)
 
     return &lp->stats;
 }
-#if 0
-/* taken from the sunlance driver, which it took from the depca driver */
-void pcnet32_load_multicast (ethernet_device_t *dev)
-{
-    pcnet32_private_t *lp = dev->priv;
-    volatile struct pcnet32_init_block *ib = &lp->init_block;
-    volatile uint16_t *mcast_table = (uint16_t *)&ib->filter;
-    struct dev_mc_list *dmi = dev->mc_list;
-    char *addrs;
-    int i, j, bit, byte;
-    uint32_t crc, poly = CRC_POLYNOMIAL_LE;
-	
-    /* set all multicast bits */
-    if (dev->flags & IFF_ALLMULTI)
-    { 
-        ib->filter [0] = UINT32_MAX;
-        ib->filter [1] = UINT32_MAX;
-        return;
-    }
-    /* clear the multicast filter */
-    ib->filter [0] = 0;
-    ib->filter [1] = 0;
-
-    /* Add addresses */
-    for (i = 0; i < dev->mc_count; i++)
-    {
-        addrs = dmi->dmi_addr;
-        dmi   = dmi->next;
-	
-        /* multicast address? */
-        if (!(*addrs & 1))
-        {
-            continue;
-        }
-	
-        crc = UINT32_MAX;
-        for (byte = 0; byte < 6; byte++)
-        {
-	        for (bit = *addrs++, j = 0; j < 8; j++, bit >>= 1)
-            {
-                int test;
-		
-                test = ((bit ^ crc) & 0x01);
-                crc >>= 1;
-		
-                if (test)
-                {
-                    crc = crc ^ poly;
-                }
-           }
-       }
-	
-        crc = crc >> 26;
-        mcast_table [crc >> 4] |= 1 << (crc & 0xf);
-    }
-    
-    return;
-}
-
-/*
- * Set or clear the multicast filter for this adaptor.
- */
-void pcnet32_set_multicast_list (ethernet_device_t *dev)
-{
-    unsigned long ioaddr = dev->base_addr;
-    pcnet32_private_t *lp = dev->priv;	 
-
-    if (dev->flags & IFF_PROMISC)
-    {
-        /* Log any net taps. */
-        DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
-            "\"%s\": Promiscuous mode enabled.\n", dev->name);
-        lp->init_block.mode = little_endian_to_native_uint16 (
-            0x8000 | (lp->options & PORT_PORTSEL) << 7);
-    }
-    else
-    {
-        lp->init_block.mode = little_endian_to_native_uint16 (
-            (lp->options & PORT_PORTSEL) << 7);
-        pcnet32_load_multicast (dev);
-    }
-    
-    lp->a.write_csr (ioaddr, 0, 0x0004); /* Temporarily stop the lance. */
-
-    pcnet32_restart (dev, 0x0042); /*  Resume normal operation */
-}
-#endif

@@ -2,7 +2,7 @@
 
 #include "types.h"
 #include "pcnet32_lowlevel.h"
-//#include "pcnet32.h"
+#include "pcnet32.h"
 
 #define DEBUG_LEVEL DEBUG_LEVEL_INFORMATIVE
 //#define DEBUG_LEVEL DEBUG_LEVEL_NONE
@@ -21,6 +21,10 @@ void pcnet32_interrupt (p_void_t parameter,
     uint16_t csr0, rap;
     int boguscnt =  max_interrupt_work;
     int must_restart;
+
+    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
+        "%s: (%p)\n",
+        __FUNCTION__, parameter);
 
     if (dev == NULL) 
     {
@@ -134,9 +138,11 @@ void pcnet32_interrupt (p_void_t parameter,
                         lp->tx_skbuff[entry]->len, PCI_DMA_TODEVICE);
                         
                     dev_kfree_skb_irq (lp->tx_skbuff[entry]);
-                    lp->tx_skbuff[entry] = 0;
+*/
+                    memory_deallocate (lp->tx_skbuff[entry]);
+                    lp->tx_skbuff[entry] = 0;
                     lp->tx_dma_addr[entry] = 0;
-*/                    
+
                 }
                 dirty_tx++;
             }

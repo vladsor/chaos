@@ -11,51 +11,7 @@
 /*
 #include "iso646.h"
 */
-#ifndef __cplusplus
-/**
- * @brief              Boolean type with only two values: TRUE and FALSE
- */
-typedef int            bool;
-#endif
 
-#ifndef _SIZE_T_
-#define _SIZE_T_
-/**
- * @brief               A size. 
- */
-typedef unsigned int    size_t;
-#endif
-
-/**
- * @brief               A return value (STORM_RETURN_*) 
- */
-typedef int             return_t;
-
-/**
- * @brief               A function pointer. 
- */
-typedef return_t        (*function_t) (void);   /* Can be used even if
-                                                  the function uses
-                                                  arguments. */
-/**
- * @brief               A linear/physical address. 
- */
-typedef                 uint32_t address_t;
-
-/**
- * @brief               The process ID of the kernel process (idle thread).
- */
-#define PROCESS_ID_KERNEL \
-                        0
-
-/**
- * @brief               A process ID indicating 'no process'.
- *
- * Used in memory_allocate() in the beginning when we allocate memory
- * that's not registered in the process-page list.
- */
-#define PROCESS_ID_NONE \
-                        ((process_id_t) -1)
 
 /**
  * @brief               type of function for compare two keys of AVL-nodes. 
@@ -120,6 +76,7 @@ enum condition_t
 #include "ia32/port.h"
 #include "ia32/page.h"
 #include "ia32/cpu_features.h"
+#include "ia32/cpu_bugs.h"
 #include "ia32/locks.h"
 #include "ia32/memory.h"
 

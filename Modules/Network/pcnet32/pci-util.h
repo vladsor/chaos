@@ -17,7 +17,7 @@
  * only drive the low 24-bits during PCI bus mastering, then
  * you would pass 0x00ffffff as the mask to this function.
  */
-static inline int pci_dma_supported (handle_t *hwdev, uint64_t mask)
+static inline int pci_dma_supported (handle_t *hwdev UNUSED, uint64_t mask)
 {
     /*
      * we fall back to GFP_DMA when the mask isn't all 1s,
