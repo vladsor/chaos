@@ -35,4 +35,5 @@ list.o: list.c /mnt/chaos/data/programming/c/headers/memory/memory.h \
  /mnt/chaos/data/programming/c/headers/memory/return_values.h \
  /mnt/chaos/data/programming/c/headers/memory/set.h \
  /mnt/chaos/data/programming/c/headers/memory/types.h \
- /mnt/chaos/data/programming/c/headers/memory/slab.h list.h
+ /mnt/chaos/data/programming/c/headers/memory/slab.h \
+ /mnt/chaos/data/programming/c/headers/memory/inlines.h list.h

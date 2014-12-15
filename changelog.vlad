@@ -1,0 +1,36 @@
+2000-12-30 Vladimir Sorokin
+ ready changes :
+  memory library:
+  * adding file inlines.h with function memory_compare
+  
+  console server:
+  * enabling/disabling hardware text cursor
+  * customisable hot keys
+    + added Alt+Ctrl+Del hotkey
+  
+  log server
+  * scrollable log
+  * now it show more info(time of messages, number of message)
+  * and now log's view can be dynamicly changed.
+
+  pci server
+  * fixed bug: pci_device_id_type had been defined as device_id,vendor_id,name
+    but table stored as vendor_id,device_id,name
+  * changed log output to "Device: 'device name', Vendor: 'vendor name'"
+
+  storm
+  * fixed bug in port.c, it reserved not (range_begin - range_end), but 
+    (range_begin - (range_end+1))
+  * added advanced cpu identification
+  
+ changes at work (in early stage):
+  * writing cmos server
+  
+  console server:
+  * support mouse cursor in text mode
+  * 'print at position' function
+  
+  storm:
+  * event's system
+  * real time sheduler and support real time for event's system
+  

@@ -240,14 +240,17 @@ else
 
 @sources = (
 'connection.c',
+'provider.c',
 'console.c',
 'console_output.c',
 );
 @objects = ('connection.o',
+'provider.o',
 'console.o',
 'console_output.o',
 );
 @deps = ('connection.dep',
+'provider.dep',
 'console.dep',
 'console_output.dep',
 );
@@ -284,6 +287,8 @@ STOP
 ALL_OBJECTS =";
       print MAKEFILE " \\\
 ./connection.o";
+      print MAKEFILE " \\\
+./provider.o";
       print MAKEFILE " \\\
 ./console.o";
       print MAKEFILE " \\\

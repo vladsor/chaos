@@ -138,22 +138,22 @@ void mouse_handle_event (u8 scancode)
 
     /* Make sure we don't get Type'o Negative. */
 
-    if (mouse.x_divider <= 0)
+    if (mouse.x_divider < 0)
     {
-      mouse.x_divider = 1;
+      mouse.x_divider = 0;
     }
-    else if (mouse.x_divider > 1000000)
+    else if (mouse.x_divider >= 1000000)
     {
-      mouse.x_divider = 1000000;
+      mouse.x_divider = 1000000 - 1;
     }
 
-    if (mouse.y_divider <= 0)
+    if (mouse.y_divider < 0)
     {
-      mouse.y_divider = 1;
+      mouse.y_divider = 0;
     }
-    else if (mouse.y_divider > 1000000)
+    else if (mouse.y_divider >= 1000000)
     {
-      mouse.y_divider = 1000000;
+      mouse.y_divider = 1000000 - 1;
     }
     
     /* Should we pass this event on to someone? */
@@ -287,8 +287,8 @@ bool mouse_init (void)
   
   mouse_write_command (MOUSE_INTERRUPTS_ON);
 
-  mouse.x_scale = 100;
-  mouse.y_scale = 100;
+  mouse.x_scale = 400;
+  mouse.y_scale = 400;
     
   return TRUE;
 }
@@ -370,7 +370,7 @@ bool mouse_main (void)
   }
 
   /* Main loop. */
-  system_thread_name_set ("Handling connection");
+  system_thread_name_set ("Handling connection to mouse");
 
   handle_connection (&console_structure.ipc_structure);
 

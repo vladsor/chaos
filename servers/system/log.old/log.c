@@ -106,7 +106,7 @@ static void fill_structure(internal_log_structure_type* internal_log_structure,
   kernelfs_time.kernelfs_class = KERNELFS_CLASS_TIME_READ;
   system_call_kernelfs_entry_read (&kernelfs_time);
 
-  log_record->number 	= internal_log_structure->log_counter;
+  log_record->count 	= internal_log_structure->log_counter;
   log_record->hours 	= time_to_hours (kernelfs_time.time);
   log_record->minutes 	= time_to_minutes (kernelfs_time.time);
   log_record->seconds 	= time_to_seconds (kernelfs_time.time);
@@ -127,7 +127,7 @@ static void fill_structure(internal_log_structure_type* internal_log_structure,
   }
 
   if((internal_log_structure->log_counter - ((log_record_type *)
-     (internal_log_structure->page_list_element->data))->number) == 
+     (internal_log_structure->page_list_element->data))->count) == 
      (VERTICAL_RESOLUTION - 1) )
   {
     (list_structure_type*)internal_log_structure->page_list_element = 
@@ -172,10 +172,37 @@ static void update_view (internal_log_structure_type* internal_log_structure)
                            urgency_colour[current_log->urgency][0],
                            urgency_colour[current_log->urgency][1],
                            urgency_colour[current_log->urgency][2]);
-       console_print_formatted (console, "-%03u-[%02u:%02u:%02u]:[%s] %s ",
-       current_log->number,current_log->hours,current_log->minutes,
-       current_log->seconds,current_log->sender_name,current_log->message);
 
+       if (current_element == internal_log_structure->current_list_element)
+       {
+         console_print (console, "*");
+       }
+       else
+       {
+         console_print (console, " ");
+       }
+       
+       if (internal_log_structure->print_count)
+       {       
+         console_print_formatted (console, "%03u-", current_log->count);
+       }
+       
+       if (internal_log_structure->print_time)
+       {
+         console_print_formatted (console, "[%02u:%02u:%02u]:", 
+	   current_log->hours,current_log->minutes, current_log->seconds);
+       }
+       
+       if (internal_log_structure->print_name)
+       {
+         console_print_formatted (console, "[%s] ", current_log->sender_name);
+       }
+       
+       if (internal_log_structure->print_message)
+       {
+         console_print_formatted (console, "%s", current_log->message);
+       }
+       
        /* Go to next line (with correct colour). */
 
        console_attribute_set (console,
@@ -202,7 +229,7 @@ static void log_add (internal_log_structure_type* internal_log_structure,
   {
     update_view(internal_log_structure);
   }
-  else if( ((internal_log_structure->log_counter - ((log_record_type *)(page_list_element->data))->number) 
+  else if( ((internal_log_structure->log_counter - ((log_record_type *)(page_list_element->data))->count) 
          <= VERTICAL_RESOLUTION) && (urgency_accept[ipc_log_print->urgency]))
   {
     update_view(internal_log_structure);
@@ -246,6 +273,46 @@ static void keyboard_handler (internal_log_structure_type*
 	    break;
     }
   }
+  else if (event_type == CONSOLE_EVENT_KEYBOARD && keyboard_packet.key_pressed
+           && keyboard_packet.has_character_code)
+  {
+    switch(keyboard_packet.character_code[0])
+    {
+      case 'c':
+      case 'C':
+      {
+        internal_log_structure->print_count = 
+	  !internal_log_structure->print_count;
+	update_view(internal_log_structure);
+        break;
+      }
+      case 't':
+      case 'T':
+      {
+        internal_log_structure->print_time = 
+	  !internal_log_structure->print_time;
+	update_view(internal_log_structure);
+        break;
+      }
+      case 'n':
+      case 'N':
+      {
+        internal_log_structure->print_name = 
+	  !internal_log_structure->print_name;
+	update_view(internal_log_structure);
+        break;
+      }
+      case 'm':
+      case 'M':
+      {
+        internal_log_structure->print_message = 
+	  !internal_log_structure->print_message;
+	update_view(internal_log_structure);
+        break;
+      }
+    }
+  }
+
 }
 
 /* Handle an IPC connection request. */

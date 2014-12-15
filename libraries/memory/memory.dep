@@ -25,4 +25,4 @@ memory.o: memory.c ../memory/memory.h ../memory/copy.h \
  ../system/endian.h ../system/little_endian.h ../system/functions.h \
  ../system/port.h ../system/return_values.h ../system/system_calls.h \
  ../memory/return_values.h ../memory/set.h ../memory/types.h \
- ../memory/slab.h ../mutex/mutex.h
+ ../memory/slab.h ../memory/inlines.h ../mutex/mutex.h

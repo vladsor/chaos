@@ -427,7 +427,7 @@ static void pci_read_bases (pci_device_type *device, unsigned int amount,
   {
     next = position + 1;
     resource = &device->resource[position];
-    resource->name = device->name;
+    resource->name = device->device_name;
     register_number = PCI_BASE_ADDRESS_0 + (position << 2);
 
     l = pci_read_config_u32 (device, register_number);
@@ -501,7 +501,7 @@ static void pci_read_bases (pci_device_type *device, unsigned int amount,
       resource->end = resource->start + (unsigned long) size;
     }
     
-    resource->name = device->name;
+    resource->name = device->device_name;
   }
 }
 
@@ -510,15 +510,36 @@ static void pci_read_bases (pci_device_type *device, unsigned int amount,
 static bool pci_setup_device (pci_device_type *device)
 {
   u32 class;
+  char *p;
 
   /* Set the name. */
 
   string_print (device->slot_name, "%02x:%02x.%d", device->bus->number, 
                 PCI_SLOT (device->device_function), 
                 PCI_FUNC (device->device_function));
-  string_print (device->name, "PCI device %04x:%04x", 
-                device->vendor_id, device->device_id);
-  
+
+  p = (char *)device_get_name(device->vendor_id, device->device_id);
+
+  if( p != NULL)
+  {
+    string_copy (device->device_name, p);
+  }
+  else
+  {
+    string_copy (device->device_name, "Unknown device");
+  }
+
+  p = (char *)vendor_get_name(device->vendor_id);
+
+  if( p != NULL)
+  {
+    string_copy (device->vendor_name, p);
+  }
+  else
+  {
+    string_copy (device->device_name, "Unknown vendor");
+  }
+
   /* Read the 3-byte class. (?) */
   
   class = pci_read_config_u32 (device, PCI_CLASS_REVISION);
@@ -753,8 +774,8 @@ int main (void)
   while (device != NULL)
   {
     log_print_formatted 
-      (&log_structure, LOG_URGENCY_DEBUG, "%s IRQ %u",
-       device->name, device->irq);
+      (&log_structure, LOG_URGENCY_DEBUG, "Device: %s, Vendor: %s",
+       device->device_name, device->vendor_name);
     device = (pci_device_type *) device->next;
   }
 

@@ -196,5 +196,10 @@ extern void handle_connection (mailbox_id_type reply_mailbox_id);
 extern void console_link (console_type *console);
 extern void console_flip (console_type *console);
 
+extern void connection_provider_keyboard
+  (message_parameter_type *message_parameter);
+extern void connection_provider_mouse
+  (message_parameter_type *message_parameter);
+
 #endif /* !__CONSOLE_H__ */
 

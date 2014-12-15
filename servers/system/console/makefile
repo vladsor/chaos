@@ -8,7 +8,7 @@ PACKAGE = console
 
 # Compiler flags.
 
-CFLAGS = -Wshadow -Wpointer-arith -Waggregate-return \
+CFLAGS = -Wall -W -Wshadow -Wpointer-arith -Waggregate-return \
 -Wstrict-prototypes -Wredundant-decls -Winline -Wmissing-prototypes \
 -Werror -Wcast-align -Wbad-function-cast -Wmissing-noreturns -Wsign-compare \
 -Wmissing-declarations -pipe \
@@ -19,6 +19,7 @@ INCLUDES = \
 
 ALL_OBJECTS = \
 ./connection.o \
+./provider.o \
 ./console.o \
 ./console_output.o
 
@@ -38,12 +39,14 @@ $(STATIC_LIBRARY_PATH)/library_event.a
 
 OBJECTS =  \
 connection.o \
+provider.o \
 console.o \
 console_output.o
 
 
 SOURCES =  \
 connection.c \
+provider.c \
 console.c \
 console_output.c
 
@@ -117,6 +120,7 @@ package: package-check
 	tar cvIf console-0.0.2.tar.bz2 console-0.0.2
 	     
 -include connection.dep
+-include provider.dep
 -include console.dep
 -include console_output.dep
 

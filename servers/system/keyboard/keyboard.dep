@@ -77,6 +77,7 @@ keyboard.o: keyboard.c config.h \
  /mnt/chaos/data/programming/c/headers/memory/set.h \
  /mnt/chaos/data/programming/c/headers/memory/types.h \
  /mnt/chaos/data/programming/c/headers/memory/slab.h \
+ /mnt/chaos/data/programming/c/headers/memory/inlines.h \
  /mnt/chaos/data/programming/c/headers/event/event.h \
  /mnt/chaos/data/programming/c/headers/event/functions.h \
  /mnt/chaos/data/programming/c/headers/event/return_values.h \

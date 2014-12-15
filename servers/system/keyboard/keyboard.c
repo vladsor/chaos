@@ -747,7 +747,7 @@ bool keyboard_main (void)
 
   /* Main loop. */
 
-  system_thread_name_set ("Handling connection");
+  system_thread_name_set ("Handling connection to keyboard");
   handle_connection (&console_structure.ipc_structure);
   return TRUE;
 }

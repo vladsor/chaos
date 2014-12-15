@@ -74,4 +74,5 @@ pci.o: pci.c /mnt/chaos/data/programming/c/headers/ipc/ipc.h \
  /mnt/chaos/data/programming/c/headers/memory/return_values.h \
  /mnt/chaos/data/programming/c/headers/memory/set.h \
  /mnt/chaos/data/programming/c/headers/memory/types.h \
- /mnt/chaos/data/programming/c/headers/memory/slab.h pci.h
+ /mnt/chaos/data/programming/c/headers/memory/slab.h \
+ /mnt/chaos/data/programming/c/headers/memory/inlines.h pci.h

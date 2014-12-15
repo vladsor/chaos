@@ -141,6 +141,7 @@ else
 'copy.h',
 'dynamic.h',
 'functions.h',
+'inlines.h',
 'memory.h',
 'return_values.h',
 'set.h',

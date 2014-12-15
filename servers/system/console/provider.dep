@@ -1,4 +1,4 @@
-connection.o: connection.c config.h \
+provider.o: provider.c config.h \
  /mnt/chaos/data/programming/c/headers/ipc/ipc.h \
  /mnt/chaos/data/programming/c/headers/ipc/defines.h \
  /mnt/chaos/data/programming/c/headers/ipc/types.h \

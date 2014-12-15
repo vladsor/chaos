@@ -930,7 +930,11 @@ typedef struct
 
   /* Device name. */
 
-  char name[80];
+  char device_name[80];
+
+  /* Vendor name. */
+
+  char vendor_name[80];
 
   /* Slot name. */
 
@@ -949,8 +953,8 @@ typedef struct
 
 typedef struct
 {
-  u16 device_id;
   u16 vendor_id;
+  u16 device_id;
   char *name;
 } pci_device_id_type;
 

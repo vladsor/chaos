@@ -76,4 +76,5 @@ log.o: log.c config.h /mnt/chaos/data/programming/c/headers/ipc/ipc.h \
  /mnt/chaos/data/programming/c/headers/memory/set.h \
  /mnt/chaos/data/programming/c/headers/memory/types.h \
  /mnt/chaos/data/programming/c/headers/memory/slab.h \
+ /mnt/chaos/data/programming/c/headers/memory/inlines.h \
  /mnt/chaos/data/programming/c/headers/time/time.h log.h list.h

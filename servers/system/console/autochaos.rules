@@ -16,6 +16,7 @@
     <!-- Sources. -->
     
     <source>connection.c</source>
+    <source>provider.c</source>
     <source>console.c</source>
     <source>console_output.c</source>
   </package>

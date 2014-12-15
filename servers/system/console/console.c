@@ -144,7 +144,7 @@ void console_flip (console_type *console)
 
   if(current_console->mouse_cursor_visibility!=console->mouse_cursor_visibility)
   {
-    mouse_cursor_set(console, console->mouse_cursor_visibility);
+    mouse_cursor_set(console, console->mouse_cursor_visibility);    
   }
 
   if (console->type == VIDEO_MODE_TYPE_TEXT)

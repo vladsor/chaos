@@ -1,0 +1,11 @@
+Probing devices to guess BIOS drives. This may take a long time.
+[1;24r[0;10m[4l[H[J
+    GRUB  version 0.5.95  (640K lower / 3072K upper memory)
+
+ [ Minimal BASH-like line editing is supported.  For the first word, TAB
+   lists possible command completions.  Anywhere else TAB lists the possible
+   completions of a device/filename. ]
+
+grub> 
+
+grub> [24;1H

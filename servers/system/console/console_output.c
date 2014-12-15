@@ -1134,7 +1134,27 @@ void set_keyboard_cursor_visibility(console_type *console, bool visibility)
 
 void mouse_cursor_set(console_type *console, bool visibility)
 {
+  unsigned int buffer_index;  
+  int mouse_x, mouse_y;
+
+  mouse_x = ( console->width * old_mouse_cursor.x_divider) / 1000000;
+  mouse_y = (console->height * old_mouse_cursor.y_divider) / 1000000;
+
   console->mouse_cursor_visibility = visibility;
+
+  buffer_index = (mouse_y * console->width + mouse_x);
+
+  if(!visibility)
+  {
+//  screen[buffer_index].attribute = !screen[buffer_index].attribute - 2;
+    screen[buffer_index].character = character_under_mouse;
+  }
+  else
+  {
+//  screen[buffer_index].attribute = screen[buffer_index].attribute + 2;
+    character_under_mouse = screen[buffer_index].character;
+    screen[buffer_index].character = '#';
+  }
 }
 
 void mouse_cursor_update(int width, int height, bool visibility, 
@@ -1143,7 +1163,6 @@ void mouse_cursor_update(int width, int height, bool visibility,
   unsigned int buffer_index;  
   int old_mouse_x, old_mouse_y, new_mouse_x, new_mouse_y;
   
-  old_mouse_cursor = mouse_cursor;
   mouse_cursor.x_divider = ipc_mouse_event->x_divider;
   mouse_cursor.y_divider = ipc_mouse_event->y_divider;
   
@@ -1157,8 +1176,12 @@ void mouse_cursor_update(int width, int height, bool visibility,
 //  screen[buffer_index].attribute = !screen[buffer_index].attribute - 2;
   screen[buffer_index].character = character_under_mouse;
 
-  buffer_index = new_mouse_y * width + new_mouse_x;
+  if(visibility)
+  {
+    buffer_index = new_mouse_y * width + new_mouse_x;
 //  screen[buffer_index].attribute = screen[buffer_index].attribute + 2;
-  character_under_mouse = screen[buffer_index].character;
-  screen[buffer_index].character = '#';
+    character_under_mouse = screen[buffer_index].character;
+    screen[buffer_index].character = '#';
+  }
+  old_mouse_cursor = mouse_cursor;
 }

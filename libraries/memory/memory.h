@@ -31,4 +31,6 @@
 #include <memory/types.h>
 #include <memory/types.h>
 
+#include <memory/inlines.h>
+
 #endif /* !__LIBRARY_MEMORY_MEMORY_H__ */

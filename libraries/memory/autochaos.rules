@@ -14,6 +14,7 @@
     <header>copy.h</header>
     <header>dynamic.h</header>
     <header>functions.h</header>
+    <header>inlines.h</header>
     <header>memory.h</header>
     <header>return_values.h</header>
     <header>set.h</header>

@@ -302,6 +302,399 @@ static void connection_client
   }
 }
 
+#define HOT_KEYS TRUE
+
+#if HOT_KEYS
+
+static void switch_to_next_console(void *parameter);
+void bind_console_to(void *parameter);
+void switch_console_to(void *parameter);
+static void shutdown(void *parameter);
+
+/* #FIXME rewrite this table as hash table. */
+typedef struct
+{
+  keyboard_packet_type keyboard_packet;
+  void (*hot_key_function)(void *);
+  void *parameter;
+} table_of_hot_keys_type;
+/*
+typedef struct
+{
+  bool has_character_code;
+  bool has_special_key;
+  bool key_pressed;
+  bool left_shift_down;
+  bool right_shift_down;
+  bool left_alt_down;
+  bool right_alt_down;
+  bool left_control_down;
+  bool right_control_down;
+  bool left_windows_down;
+  bool right_windows_down;
+  bool task_list_down;
+  u32 special_key;
+  u8 character_code[6];
+} keyboard_packet_type;
+*/
+table_of_hot_keys_type table_of_hot_keys[] = 
+{
+ /* Left Alt + F1 -> switch to next console */
+ { 
+   { FALSE, TRUE, TRUE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, 
+     FALSE, IPC_KEYBOARD_SPECIAL_KEY_F1, 0, 0, 0, 0, 0, 0 
+   },
+   switch_console_to, (void *)1,
+ },
+ /* Right Alt + F1 -> switch to next console */
+ {
+   { FALSE, TRUE, TRUE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE, FALSE, 
+     FALSE, IPC_KEYBOARD_SPECIAL_KEY_F1, 0, 0, 0, 0, 0, 0 
+   },
+   switch_console_to, (void *)1,
+ },
+
+ /* Left Alt + TAB -> switch to next console */
+ { 
+   { FALSE, TRUE, TRUE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, 
+     FALSE, IPC_KEYBOARD_SPECIAL_KEY_TAB, 0, 0, 0, 0, 0, 0 
+   },
+   switch_to_next_console, NULL,
+ },
+ /* Right Alt + TAB -> switch to next console */
+ {
+   { FALSE, TRUE, TRUE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE, FALSE, 
+     FALSE, IPC_KEYBOARD_SPECIAL_KEY_TAB, 0, 0, 0, 0, 0, 0 
+   },
+   switch_to_next_console, NULL,
+ },
+
+
+ /* Left Alt + Left Control + Delete -> shutdown computer */
+ {
+   { FALSE, TRUE, TRUE, FALSE, FALSE, TRUE, FALSE, TRUE, FALSE, FALSE, FALSE, 
+     FALSE, IPC_KEYBOARD_SPECIAL_KEY_DELETE, 0, 0, 0, 0, 0, 0 
+   },
+   shutdown, NULL,
+ },
+ /* Right Alt + Right Control + Delete -> shutdown computer */
+ {
+   { FALSE, TRUE, TRUE, FALSE, FALSE, FALSE, TRUE, FALSE, TRUE, FALSE, FALSE, 
+     FALSE, IPC_KEYBOARD_SPECIAL_KEY_DELETE, 0, 0, 0, 0, 0, 0 
+   },
+   shutdown, NULL,
+ },
+ 
+ /* Left Alt + Left Control + F1 -> bind console to 1 */
+ {
+   { FALSE, TRUE, TRUE, FALSE, FALSE, TRUE, FALSE, TRUE, FALSE, FALSE, FALSE, 
+     FALSE, IPC_KEYBOARD_SPECIAL_KEY_F1, 0, 0, 0, 0, 0, 0 
+   },
+   bind_console_to, (void *)1,
+ },
+ /* Left Alt + F1 -> switch to 1 console */
+ {
+   { FALSE, TRUE, TRUE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, 
+     FALSE, IPC_KEYBOARD_SPECIAL_KEY_F1, 0, 0, 0, 0, 0, 0 
+   },
+   switch_console_to, (void *)1,
+ },
+  
+ /* Left Alt + Left Control + F2 -> bind console to 2 */
+ {
+   { FALSE, TRUE, TRUE, FALSE, FALSE, TRUE, FALSE, TRUE, FALSE, FALSE, FALSE, 
+     FALSE, IPC_KEYBOARD_SPECIAL_KEY_F2, 0, 0, 0, 0, 0, 0 
+   },
+   bind_console_to, (void *)2,
+ },
+ /* Left Alt + F1 -> switch to 2 console */
+ {
+   { FALSE, TRUE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, 
+     FALSE, IPC_KEYBOARD_SPECIAL_KEY_F2, 0, 0, 0, 0, 0, 0 
+   },
+   switch_console_to, (void *)2,
+ },
+  
+ /* Left Alt + Left Control + F3 -> bind console to 3 */
+ {
+   { FALSE, TRUE, TRUE, FALSE, FALSE, TRUE, FALSE, TRUE, FALSE, FALSE, FALSE, 
+     FALSE, IPC_KEYBOARD_SPECIAL_KEY_F3, 0, 0, 0, 0, 0, 0 
+   },
+   bind_console_to, (void *)3,
+ },
+ /* Left Alt + F3 -> switch to 3 console */
+ {
+   { FALSE, TRUE, TRUE, FALSE, FALSE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, 
+     FALSE, IPC_KEYBOARD_SPECIAL_KEY_F1, 0, 0, 0, 0, 0, 0 
+   },
+   switch_console_to, (void *)3,
+ },
+ 
+ /* #FIXME: add more hotkeys */ 
+ 
+};
+unsigned int number_of_hot_keys = sizeof(table_of_hot_keys) / 
+                                  sizeof(table_of_hot_keys_type);
+
+static bool hot_key_search(keyboard_packet_type *keyboard_packet)
+{
+  unsigned int i;
+  
+  for( i = 0 ; i < number_of_hot_keys ; i++ )
+  {
+    if( !memory_compare((void *)&table_of_hot_keys[i], (void *)keyboard_packet, 
+                        sizeof(keyboard_packet_type)) && 
+         (table_of_hot_keys[i].hot_key_function != NULL) )
+    {
+      system_call_debug_print_simple ("console: found hot key \n");  
+
+      table_of_hot_keys[i].hot_key_function(table_of_hot_keys[i].parameter);
+      return TRUE;
+    }
+  }
+
+//  system_call_debug_print_simple ("console: hot key fails\n");  
+  return FALSE;
+}
+#endif
+
+static void connection_provider_keyboard
+  (message_parameter_type *message_parameter)
+{
+  /* Console switching? For now, ALT + TAB is used. This should be
+     customisable. */
+        
+  switch (message_parameter->message_class)
+  {
+    case IPC_CONSOLE_KEYBOARD_EVENT:
+    {
+      keyboard_packet_type *keyboard_packet = (keyboard_packet_type *)
+        message_parameter->data;
+            
+      if (current_console != NULL)
+      {
+#if FALSE
+        if (keyboard_packet->key_pressed &&
+            keyboard_packet->has_special_key &&
+            keyboard_packet->special_key == IPC_KEYBOARD_SPECIAL_KEY_TAB &&
+            (keyboard_packet->left_alt_down ||
+             keyboard_packet->right_alt_down))
+        {
+          /* Next console. */
+                
+          console_type *new_console = (console_type *) current_console->next;
+          if (new_console == NULL)
+          {
+            new_console = console_list;
+          }
+                
+          if (new_console != current_console)
+          {
+            /* FIXME: This is not purely correct, but what the
+               heck... finish library_semaphore sometime, will
+               you? */
+            
+            while (new_console->lock == TRUE)
+            {
+              system_call_dispatch_next ();
+            }
+            
+            new_console->lock = TRUE;
+            console_flip (new_console);
+            new_console->lock = FALSE;
+          }
+        }
+              
+        /* Bind a console to a function key. */
+              
+        if (keyboard_packet->key_pressed &&
+            keyboard_packet->has_special_key &&
+            keyboard_packet->special_key >= IPC_KEYBOARD_SPECIAL_KEY_F1 &&
+            keyboard_packet->special_key <= IPC_KEYBOARD_SPECIAL_KEY_F10 &&
+            (keyboard_packet->left_alt_down ||
+             keyboard_packet->right_alt_down) &&
+            (keyboard_packet->left_control_down ||
+             keyboard_packet->right_control_down))
+        {
+          console_shortcut[keyboard_packet->special_key -
+                          IPC_KEYBOARD_SPECIAL_KEY_F1] = current_console;
+        }
+              
+        /* Switch to a previously bound console. */
+              
+        if (keyboard_packet->key_pressed &&
+            keyboard_packet->has_special_key &&
+            keyboard_packet->special_key >= IPC_KEYBOARD_SPECIAL_KEY_F1 &&
+            keyboard_packet->special_key <= IPC_KEYBOARD_SPECIAL_KEY_F10 &&
+            (keyboard_packet->left_alt_down ||
+             keyboard_packet->right_alt_down))
+        {
+          /* New console. */
+                
+          console_type *new_console =
+            (console_type *)console_shortcut[keyboard_packet->special_key -
+                                            IPC_KEYBOARD_SPECIAL_KEY_F1];
+          if (new_console != NULL)
+          {
+            /* FIXME: This is not purely correct, but what the
+               heck... finish library_semaphore sometime, will you? */
+                  
+            while (new_console->lock == TRUE)
+            {
+              system_call_dispatch_next ();
+            }
+                  
+            new_console->lock = TRUE;
+            console_flip (new_console);
+            new_console->lock = FALSE;
+          }
+        }
+#endif
+        hot_key_search(keyboard_packet);
+	              
+        /* Send on... If we are allowed to. */
+              
+        if (current_console->active_application != NULL)
+        {
+          if (current_console->active_application->wants_keyboard)
+          {
+
+            message_parameter->block = FALSE;
+            message_parameter->protocol = IPC_PROTOCOL_CONSOLE;
+            message_parameter->message_class = IPC_CONSOLE_KEYBOARD_EVENT;
+            message_parameter->length = sizeof (keyboard_packet_type);
+            ipc_send (current_console->active_application->ipc_structure.output_mailbox_id,
+                      message_parameter);
+
+          }
+        }
+        else if (current_console->active_application == NULL)
+        {
+          system_call_debug_print_simple ("console: Something is broken. A mutex will fix this!\n");
+        }
+      }        
+    }
+                
+    default:
+    {
+      break;
+    }
+  }
+}
+
+#if HOT_KEYS
+
+void switch_to_next_console(void *parameter __attribute__ ((unused)) )
+{
+  console_type *new_console = (console_type *) current_console->next;
+
+  if (new_console == NULL)
+  {
+    new_console = console_list;
+  }
+                
+  if (new_console != current_console)
+  {
+    /* FIXME: This is not purely correct, but what the
+       heck... finish library_semaphore sometime, will
+       you? */
+            
+    while (new_console->lock == TRUE)
+    {
+      system_call_dispatch_next ();
+    }
+            
+    new_console->lock = TRUE;
+    console_flip (new_console);
+    new_console->lock = FALSE;
+  }
+}
+
+void bind_console_to(void *parameter)
+{
+  int console_index = (int)parameter;
+  
+  if( (console_index < 1) || (console_index > 10))
+  {
+    return;
+  }
+  console_shortcut[console_index] = current_console;
+}
+
+void switch_console_to(void *parameter)
+{
+  int console_index = (int)parameter;
+  console_type *new_console;
+  
+  if( (console_index < 1) || (console_index > 10))
+  {
+    return;
+  }
+
+  /* New console. */
+                
+  new_console = (console_type *)console_shortcut[console_index];
+
+  if (new_console != NULL)
+  {
+    /* FIXME: This is not purely correct, but what the
+       heck... finish library_semaphore sometime, will you? */
+                  
+    while (new_console->lock == TRUE)
+    {
+      system_call_dispatch_next ();
+    }
+                  
+    new_console->lock = TRUE;
+    console_flip (new_console);
+    new_console->lock = FALSE;
+  }
+}
+
+void shutdown(void *parameter __attribute__ ((unused)) )
+{
+  system_call_thread_control (THREAD_ID_KERNEL, THREAD_TERMINATE, 0);
+}
+
+#endif
+
+static void connection_provider_mouse
+  (message_parameter_type *message_parameter)
+{
+
+  switch (message_parameter->message_class)
+  {
+    case IPC_MOUSE_EVENT:
+    {
+      if (current_console->mouse_cursor_visibility)
+      {
+//        system_call_debug_print_simple ("console: mouse event\n");
+	mouse_cursor_update ( current_console->width, current_console->height, 
+	  current_console->mouse_cursor_visibility, 
+	  (ipc_mouse_event_type *)message_parameter->data );
+      }
+      
+      if (current_console->active_application != NULL)
+      {
+        if (current_console->active_application->wants_mouse)
+        {
+          message_parameter->block = FALSE;
+          message_parameter->protocol = IPC_PROTOCOL_CONSOLE;
+          message_parameter->message_class = IPC_CONSOLE_MOUSE_EVENT;
+          message_parameter->length = sizeof (ipc_mouse_event_type);
+          ipc_send (current_console->active_application->ipc_structure.output_mailbox_id,
+                    message_parameter);
+        }
+      }
+    }
+    
+    default:
+    {
+      break;
+    }
+  }
+}
+
 /* Handle an IPC connection request. */
 
 void handle_connection (mailbox_id_type reply_mailbox_id)
