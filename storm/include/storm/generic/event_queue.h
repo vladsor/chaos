@@ -32,14 +32,11 @@ typedef struct
 } event_type;
 
 #define FORWARD_EVENT             0x1
-
-#define FIRST_LISTENER            0x0
 #define LAST_LISTENER             0x1
-
 #define PEEK_EVENT                0x1
 #define NOT_BLOCKED               0x2
 
-/* Структура описывающая информацию о зарегистрированном слушателе */
+/* Структура описывающая информацию о зарегестрированном слушателе */
 typedef struct
 {
   /* Указатель на следующего слушателя */
@@ -57,7 +54,7 @@ typedef struct
   /* Указатель на первое ожидаемое событие */
   event_type *waiting_event;
 
-  /* Количество потерянных событий для данного слушателя */
+  /* Количество потерянных событий */
   unsigned int number_of_rejections;
 
   /* Флаг оповещающий ожидает ли слушатель событие */
@@ -79,21 +76,17 @@ typedef struct
   cluster_id_type owner_cluster_id;
   thread_id_type owner_thread_id;
 
-  /* Количество событий, находящихся в настоящее время в очереди */
+  /* Количество событий находящихся в настоящее время в очереди */
   unsigned int number_of_events;
 
-  /* Максимальное количество событий, которое может находится в очереди */
+  /* Максимальное количество событий которое может находится в очереди */
   unsigned int max_number_of_events;
 
   /* Общее количество потерянных событий */
   unsigned int number_of_rejections;  
 
-  /* Количество слушателей, зарегистрированных за данной очередью */
+  /* Количество слушателей зарегистрированных за данной очередью */
   unsigned int number_of_listeners;
-
-  /* Максимальное количество слушателей, которое может быть заристрировано за
-  данной очередью */
-  unsigned int max_number_of_listeners;
 
   /* Указатель на первого слушателя */
   listener_type *first_listener;
@@ -114,9 +107,9 @@ typedef struct
 extern hash_table_type *event_queue_hash_table;
 
 /* Прототипы функций */
-/* Большинство функций описано парами: сама функция, вызываемая при системном
-   вызове, и внутренняя функция, несущая основную функциональную нагрузку,
-   разбиение на пары сделана для отделения части выполяющей проверку параметров
+/* Большинство функций описано парами: сама функция-вызываемая при системном
+   вызове и внутренняя функция несущая основную функциональную нагрузку,
+   разбивка на пары сделана для отделения части выполяющей проверку параметров
    и выполняющей синхронизацию от самой функциональной части. Все функции-
    оболочки возвращают значения типа return_type, см. соответствующий файл
    за возможными значениями. */
@@ -124,14 +117,11 @@ extern hash_table_type *event_queue_hash_table;
 /****************************************************************************/
 /* Пара функций выполняющих создание очереди событий */
 
-/* Функция-оболочка создания очереди событий. event_queue_id д.б. != NULL;
-   max_number_of_listeners - максимально количество слушателей зарегисрированных
-   за очередью; max_number_of_events - максимальное количество событий в 
-   очереди.  На выходе функции по адресу event_queue_id будет находится 
-   идентификатор новой очереди. */
+/* Функция-оболочка создания очереди событий. event_queue_id д.б. != NULL,
+   length любое допустимое безнаковое целое число.  На выходе функции по
+   адресу event_queue_id будет находится идентификатор новой очереди. */
 extern return_type event_queue_create (
        event_queue_id_type *event_queue_id, 
-       unsigned int max_number_of_listeners,
        unsigned int max_number_of_events);
 
 /* Внутренняя функция создания очереди. event_queue_id идентификатор
@@ -143,7 +133,6 @@ extern event_queue_type * event_queue_create_kernel (
        process_id_type user_process_id, 
        cluster_id_type user_cluster_id,
        thread_id_type user_thread_id,
-       unsigned int max_number_of_listeners,
        unsigned int max_number_of_events);
 
 /****************************************************************************/
@@ -154,18 +143,19 @@ extern event_queue_type * event_queue_create_kernel (
 extern return_type event_queue_destroy (
        event_queue_id_type event_queue_id);
 
-/* Внутренняя функция удаления очереди. event_queue указатель на структуру
+/* Внутренняя функция удаления очереди. event_queue указатель на стрктуру
    очереди. */
 extern void event_queue_destroy_kernel (
        event_queue_type *event_queue);
 
 /****************************************************************************/
-/* Внутренняя функция выполяющая поиск слушателя по заданной структуре TSS.
-   event_queue - указатель на структуру очереди; storm_tss - указатель на 
-   структуру TSS. Возвращает указатель на структуру слушателя, если таковой 
-   найден, иначе NULL */
-extern listener_type * search_listener (event_queue_type *event_queue,
-       storm_tss_type *storm_tss);
+/* Внутренняя функция выполяющая поиск слушателя по заданным идентификаторам.
+   event_queue указатель на стрктуру очереди; user_process_id,user_cluster_id,user_thread_id
+   идентификаторы нити владельца. Возвращает указатель на структуру слушателя. */
+extern listener_type * find_listener (event_queue_type *event_queue,
+       process_id_type user_process_id, 
+       cluster_id_type user_cluster_id,
+       thread_id_type user_thread_id);
 
 /****************************************************************************/
 /* Пара выполняющих абсолютную/относительную очистку очереди событий */
@@ -175,14 +165,12 @@ extern listener_type * search_listener (event_queue_type *event_queue,
 extern return_type event_queue_flush (
        event_queue_id_type event_queue_id);
 
-/* Функция полной очистки очереди. event_queue - указатель на структуру 
-   очищаемой очереди. */
+/* Функция очистки очереди. event_queue - указатель на структуру очищаемой
+   очереди. */
 extern void event_queue_absolute_flush_kernel (
        event_queue_type *event_queue);
 
-/* Функция частичной очистки очереди, очищает события ожидаемые указанным 
-   слушателем. event_queue - указатель на структуру очищаемой очереди, listener 
-   - структура слушателя, для которого осуществляется очистка. */
+/**/
 extern void event_queue_relative_flush_kernel (
        event_queue_type *event_queue,
        listener_type *listener);
@@ -224,7 +212,7 @@ extern void event_queue_unregister_listener_kernel (
 
 /* Функция-оболочка получения текущей информации об очереди. event_queue_id -
    идентификатор очереди, event_queue_info - указатель на структуру куда будет
-   помещена информация (д.б. != NULL). */
+   помещена информация. */
 extern return_type event_queue_get_info (
        event_queue_id_type event_queue_id, 
        event_queue_info_type *event_queue_info);
@@ -240,8 +228,8 @@ extern void event_queue_get_info_kernel (
 /* Пара функций для генерации события и отправки его в очередь */
 
 /* Функция-оболочка генерации события. event_queue_id - идентификатор очереди,
-   event_parameter - указатель на структуру описывающую событие, д.б. != NULL и
-   указывать на корректную структуру; options - опции. */
+   event_parameter - указатель на структуру описывающую событие, options -
+   опции. */
 extern return_type event_queue_generate_event (
        event_queue_id_type event_queue_id, 
        event_parameter_type *event_parameter, 
@@ -265,8 +253,7 @@ extern bool free_event (event_queue_type *event_queue, event_type **event);
 
 /* Функция-оболочка ожидания события. event_queue_id - идентификатор очереди,
    event_parameter - указатель на структуру, которая на выходе будет содержать
-   информацию о произошедшем событии, д.б. != NULL и указывать на корректную 
-   структуру; options - опции. */
+   информацию о произошедшем событии, options - опции. */
 extern return_type event_queue_wait_event (
        event_queue_id_type event_queue_id, 
        event_parameter_type *event_parameter,

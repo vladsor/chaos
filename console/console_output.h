@@ -36,7 +36,7 @@ extern void keyboard_cursor_set(console_type *console, bool visibility);
 extern void console_scroll_set(console_type *console, bool enabled);
 extern void console_scroll(console_type *console, int lines);
 #endif
-void console_print_charset (console_type *console);
+void console_print_char_set (console_type *console);
 
 extern void mouse_cursor_draw (int width, int height, bool visibility);
 extern void mouse_cursor_update (int width, int height, bool visibility, 

@@ -31,7 +31,8 @@ typedef struct
 
 
 #define HASH_ELEMENT_PART \
-  hash_element_type *next; \
+  hash_element_type *next;
+ \
   id_type id 
 
 /* create new hash table with given number of entries */

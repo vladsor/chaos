@@ -262,28 +262,6 @@ return_type console_print (console_structure_type *console_structure,
   return CONSOLE_RETURN_SUCCESS;
 }
 
-return_type console_print_charset (console_structure_type *console_structure)
-{
-  message_parameter_type message_parameter;
-
-  if (!console_structure->initialised)
-  {
-    return CONSOLE_RETURN_SERVICE_UNAVAILABLE;
-  }
-
-  message_parameter.protocol = IPC_PROTOCOL_CONSOLE;
-  message_parameter.message_class = IPC_CONSOLE_PRINT_CHARSET;
-  message_parameter.length = 0;
-  message_parameter.data = NULL;
-  message_parameter.block = TRUE;
-
-  system_call_mailbox_send (console_structure->ipc_structure.output_mailbox_id,
-                            &message_parameter);
-
-  return CONSOLE_RETURN_SUCCESS;
-}
-
-
 /* Prints the given data to the console, a la printf and friends. */
 
 return_type console_print_formatted (console_structure_type *console_structure,

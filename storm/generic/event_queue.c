@@ -59,7 +59,6 @@ void event_queue_init (void)
 
   /* Создание системных очередей. */
   IDEBUG_MESSAGE (VERBOSE_DEBUG, "Creating system queues");
-  /* ... */
 }
 
 /*
@@ -96,7 +95,6 @@ event_queue_type * event_queue_create_kernel (
     process_id_type user_process_id, 
     cluster_id_type user_cluster_id,
     thread_id_type user_thread_id,
-    unsigned int max_number_of_listeners,
     unsigned int max_number_of_events)
 {
   event_queue_type *new_event_queue;
@@ -120,7 +118,7 @@ event_queue_type * event_queue_create_kernel (
   /*  */
   new_event_queue->number_of_rejections = 0;
 
-  /* */
+  /**/
   new_event_queue->max_number_of_events = max_number_of_events;
 
   /* Первоначально очередь событий пуста. */
@@ -128,15 +126,12 @@ event_queue_type * event_queue_create_kernel (
   new_event_queue->first_event = NULL;
   new_event_queue->last_event = NULL;
 
-  /**/
-  new_event_queue->max_number_of_listeners = max_number_of_listeners;
-
   /* Нет никаких слушателей. */
   new_event_queue->number_of_listeners = 0;
   new_event_queue->first_listener = NULL;
   new_event_queue->last_listener = NULL;
 
-  /* */
+  /**/
   new_event_queue->id = event_queue_id;
 
   /* Добавляем заполненную структуру в хэш-таблицу. */
@@ -159,27 +154,19 @@ event_queue_type * event_queue_create_kernel (
                 которые могут одновременно находится в очереди.
   RETURN VALUE:
     STORM_RETURN_SUCCESS,
-    STORM_RETURN_INVALID_ARGUMENT,
     STORM_RETURN_OUT_OF_ID_POOL,
     STORM_RETURN_OUT_OF_MEMORY
 */
 return_type event_queue_create (
     event_queue_id_type *event_queue_id, 
-    unsigned int max_number_of_listeners,
     unsigned int max_number_of_events)
 {
-  DEBUG_MESSAGE (VERBOSE_DEBUG, "&event_queue_id = %p, max number of liteners "
-                 "= %u, max number of events = %u", 
-		 event_queue_id, max_number_of_listeners, max_number_of_events);
-
-  if (event_queue_id == NULL)
-  {
-    return STORM_RETURN_INVALID_ARGUMENT;
-  }
+  DEBUG_MESSAGE (VERBOSE_DEBUG, "&event_queue_id = %p, max number of events = "
+                 "%u", event_queue_id, max_number_of_events);
 
   mutex_kernel_wait (&tss_tree_mutex);
 
-  /* */
+  /**/
   if (!id_pool_allocate_id (event_queue_id_pool, event_queue_id))
   {
     mutex_kernel_signal (&tss_tree_mutex);
@@ -187,11 +174,10 @@ return_type event_queue_create (
     return STORM_RETURN_OUT_OF_ID_POOL;
   }
 
-  /* */
+  /**/
   if (event_queue_create_kernel (*event_queue_id, current_process_id,
                                  current_cluster_id, current_thread_id,
-                                 max_number_of_listeners, max_number_of_events) 
-				== NULL)
+                                 max_number_of_events) == NULL)
   {
     mutex_kernel_signal (&tss_tree_mutex);
 
@@ -320,7 +306,7 @@ void event_queue_relative_flush_kernel (event_queue_type *event_queue,
   #undef event
 }
 
-listener_type *search_listener (event_queue_type *event_queue,
+static listener_type *search_listener (event_queue_type *event_queue,
     storm_tss_type *storm_tss)
 {
   listener_type *current_listener;

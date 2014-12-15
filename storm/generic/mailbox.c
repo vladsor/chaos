@@ -446,9 +446,8 @@ return_type mailbox_receive (mailbox_id_type mailbox_id,
 
   if (mailbox == NULL)
   {
-    DEBUG_SDB (DEBUG, "Mailbox was NULL");
     mutex_kernel_signal (&tss_tree_mutex);
-
+    DEBUG_HALT ("Mailbox was NULL");
     return STORM_RETURN_MAILBOX_UNAVAILABLE;
   }
 

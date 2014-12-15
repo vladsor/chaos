@@ -227,7 +227,7 @@ void irq_init (void)
   for (i = 0 ; i < 16 ; i++)
   {
     interrupt_queues[i] = event_queue_create_kernel (
-      SYSTEM_EVENT_QUEUE_INTERRUPTS_0 + i, 0, 0, 0, 0, 0);
+      SYSTEM_EVENT_QUEUE_INTERRUPTS_0 + i, 0, 0, 0, 0);
   }
   
   mutex_kernel_signal (&tss_tree_mutex);

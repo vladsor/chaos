@@ -81,19 +81,11 @@ static void connection_client
       }
       break;
     }
-
-    case IPC_CONSOLE_PRINT_CHARSET:
-    {
-      console_print_charset (*our_console);
-      break;
-    }
-
     case IPC_CONSOLE_ENABLE_SCROLL:
     {
       (*our_console)->scrollable = TRUE;      
       break;
     }
-
     case IPC_CONSOLE_DISABLE_SCROLL:
     {
       (*our_console)->scrollable = FALSE;

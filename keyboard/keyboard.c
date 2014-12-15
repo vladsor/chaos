@@ -41,60 +41,10 @@
 #include "scan_code.h"
 
 /* The keyboard maps convert keys to standard UTF-8 sequences. */
-/*
-static const char **keyboard_map       = russian_keyboard_map;
+
+static const char **keyboard_map = russian_keyboard_map;
 static const char **keyboard_map_shift = russian_keyboard_map_shift;
 static const char **keyboard_map_altgr = russian_keyboard_map_altgr;
-*/
-enum
-{
-  KEYBOARD_MAP_BRITISH,
-  KEYBOARD_MAP_DVORAK,
-  KEYBOARD_MAP_RUSSIAN,
-  KEYBOARD_MAP_SWEDISH,
-  KEYBOARD_MAP_US,
-};
-
-typedef struct {
-  char* description;
-  char **map;
-  char **shift_map;
-  char **altgr_map;
-} keyboard_maps_type;
-
-keyboard_maps_type keyboard_maps[] =
-{
-  [KEYBOARD_MAP_BRITISH] = 
-  { 
-    "British", 
-    british_keyboard_map, 
-    british_keyboard_map_shift,
-    british_keyboard_map_altgr,
-  },
-
-  [KEYBOARD_MAP_RUSSIAN] = 
-  { 
-    "Russian", 
-    russian_keyboard_map, 
-    russian_keyboard_map_shift,
-    russian_keyboard_map_altgr,
-  },
-
-  [KEYBOARD_MAP_US] = 
-  { 
-    "USA", 
-    us_keyboard_map, 
-    us_keyboard_map_shift,
-    us_keyboard_map_altgr,
-  },
-};
-
-#define KEYBOARD_MAP_DEFAULT KEYBOARD_MAP_US
-
-char **keyboard_map;
-char **keyboard_map_shift;
-char **keyboard_map_altgr;
-
 
 /* We need to create an array of 16 bytes, for storing the currently
    pressed keys in. (128 scan codes / 8). */
@@ -269,11 +219,15 @@ static bool send_data (unsigned char data)
       
       if (timeout == 0)
       {
+        //log_print (&log_structure, LOG_URGENCY_ERROR,
+        //                   "Timeout - AT keyboard not present?");
         return FALSE;
       }
     }
   } while (retries-- > 0);
   
+  //log_print (&log_structure, LOG_URGENCY_ERROR,
+  //             "Too many NACKs -- noisy keyboard cable?");
   return FALSE;
 }
 
@@ -596,6 +550,8 @@ void keyboard_irq_handler (void)
   if (system_call_irq_register (KEYBOARD_IRQ, "Keyboard controller")
       != STORM_RETURN_SUCCESS)
   {
+    //log_print (&log_structure, LOG_URGENCY_EMERGENCY,
+    //               "Could not allocate keyboard IRQ.");
     return;
   }
 
@@ -749,13 +705,6 @@ static void handle_connection (ipc_structure_type *ipc_structure)
 
     switch (message_parameter.message_class)
     {
-/*
-  IPC_KEYBOARD_MAP_AMOUNT,
-  IPC_KEYBOARD_MAP_INFO,
-  IPC_KEYBOARD_MAP_SET,
-  IPC_KEYBOARD_MAP_GET,
-*/
-
       /* Unregister a receiver. */
       
       case IPC_KEYBOARD_UNREGISTER_TARGET:
@@ -768,13 +717,6 @@ static void handle_connection (ipc_structure_type *ipc_structure)
       }
     }
   }
-}
-
-static void load_keymaps (void)
-{
-  keyboard_map       = keyboard_maps[KEYBOARD_MAP_DEFAULT].map;
-  keyboard_map_shift = keyboard_maps[KEYBOARD_MAP_DEFAULT].shift_map;
-  keyboard_map_altgr = keyboard_maps[KEYBOARD_MAP_DEFAULT].altgr_map;
 }
 
 /* Main function for the keyboard handling. */
@@ -791,8 +733,6 @@ bool keyboard_main (void)
 
   memory_set_u8 ((u8 * volatile) &keyboard_pressed_keys, 0,
                  sizeof (keyboard_pressed_keys));
-
-  load_keymaps ();
 
   /* Establish a connection to the console service. */
 

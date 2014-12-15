@@ -96,5 +96,4 @@ void time_init (void)
   /* Convert this time to the chaos format. */
 
   time = gregorian_to_chaos (year, month, day, hours, minutes, seconds);
-  uptime = 0;
 }

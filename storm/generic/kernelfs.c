@@ -231,7 +231,7 @@ return_type kernelfs_entry_read (kernelfs_generic_type *kernelfs_generic)
                          tss_node->tss->thread_name);
 
             thread_info->thread_id = tss_node->tss->thread_id;
-            thread_info->uptime = tss_node->tss->timeslices / hz;
+            thread_info->timeslices = tss_node->tss->timeslices;
             thread_info->main_memory = (tss_node->tss->allocated_pages *
                                         SIZE_PAGE);
             thread_info->stack_memory = (tss_node->tss->stack_pages *
@@ -243,7 +243,7 @@ return_type kernelfs_entry_read (kernelfs_generic_type *kernelfs_generic)
                see which threads are currently getting most of the
                time. */
 
-//            tss_node->tss->timeslices = 0;
+            tss_node->tss->timeslices = 0;
             break;
           }
 
@@ -322,10 +322,9 @@ return_type kernelfs_entry_read (kernelfs_generic_type *kernelfs_generic)
 
     case KERNELFS_CLASS_UPTIME_INFO:
     {
-      kernelfs_time_type *kernelfs_uptime =
-        (kernelfs_time_type *) kernelfs_generic;
-      
-      kernelfs_uptime->time = uptime;
+      u32 *uptime_info = (u32 *) kernelfs_generic;
+
+      *uptime_info = uptime;
       break;
     }
 

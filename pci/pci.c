@@ -1059,7 +1059,8 @@ int main (void)
   {
     if (device_has_bist(device))
     {
-    }
+
+    }
     device = (pci_device_type *) device->next;
   }
 

@@ -25,8 +25,7 @@
 #include <storm/storm.h>
 
 static inline return_type system_call_event_queue_create 
-  (event_queue_id_type *event_queue_id, unsigned int max_number_of_listeners, 
-  unsigned int max_number_of_events)
+  (event_queue_id_type *event_queue_id, unsigned int length)
 {
   return_type return_value;
 
@@ -34,13 +33,11 @@ static inline return_type system_call_event_queue_create
   ("\
      pushl %2
      pushl %3
-     pushl %4
-     lcall %5, $0
+     lcall %4, $0
    "
    : "=a" (return_value),
      "=g" (*event_queue_id)
-   : "g" (max_number_of_listeners),
-     "g" (max_number_of_events),
+   : "g" (length),
      "g" (event_queue_id),
      "n" (SYSTEM_CALL_EVENT_QUEUE_CREATE << 3));
 

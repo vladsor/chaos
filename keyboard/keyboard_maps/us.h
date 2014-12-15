@@ -22,7 +22,7 @@
 #ifndef __US_H__
 #define __US_H__
 
-char *us_keyboard_map[] =
+const char *us_keyboard_map[] =
 {
   NULL, NULL, "1",  "2",  "3",  "4",  "5",  "6",
   "7",  "8",  "9",  "0",  "-",  "=",  NULL, NULL,
@@ -39,7 +39,7 @@ char *us_keyboard_map[] =
   NULL
 };
 
-char *us_keyboard_map_shift[] =
+const char *us_keyboard_map_shift[] =
 {
   NULL, NULL, "!",  "@", "#",  "$",  "%",  "^",
   "&",  "*",  "(",  ")",  "_",  "+",  NULL, NULL,
@@ -56,7 +56,7 @@ char *us_keyboard_map_shift[] =
   NULL
 };
 
-char *us_keyboard_map_altgr[] =
+const char *us_keyboard_map_altgr[] =
 {
   NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
   NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,

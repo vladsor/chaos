@@ -117,8 +117,7 @@ extern return_type system_call_irq_unregister (unsigned int irq_number);
 
 
 extern return_type system_call_event_queue_create (
-  event_queue_id_type *event_queue_id, unsigned int max_number_of_listeners,
-  unsigned int max_number_of_events);
+  event_queue_id_type *event_queue_id, unsigned int length);
 
 extern return_type system_call_event_queue_destroy (
   event_queue_id_type event_queue_id);
@@ -127,7 +126,8 @@ extern return_type system_call_event_queue_flush (
   event_queue_id_type event_queue_id);
 
 extern return_type system_call_event_queue_get_info (
-  event_queue_id_type event_queue, event_queue_info_type *event_queue_info);
+  event_queue_id_type event_queue, 
+event_queue_info_type *event_queue_info);
 
 extern return_type system_call_event_queue_register_listener (
   event_queue_id_type event_queue_id, unsigned int options);
@@ -136,11 +136,13 @@ extern return_type system_call_event_queue_unregister_listener (
   event_queue_id_type event_queue_id);
 
 extern return_type system_call_event_queue_generate_event (
-  event_queue_id_type event_queue_id, event_parameter_type *event_parameter,
+  event_queue_id_type event_queue_id, 
+event_parameter_type *event_parameter,
   unsigned int options);
 
 extern return_type system_call_event_queue_wait_event (
-  event_queue_id_type event_queue_id, event_parameter_type *event_parameter,
+  event_queue_id_type event_queue_id, 
+event_parameter_type *event_parameter,
   unsigned int options);
 
 

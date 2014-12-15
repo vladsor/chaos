@@ -22,7 +22,6 @@
 #include "config.h"
 #include "console_output.h"
 #include "console.h"
-#include "charset.h"
 
 /* This header file defines a translation map, so we know how to map
    Unicode characters to valid CP437 (or whatever font we are using)
@@ -316,8 +315,8 @@ void console_output (console_type *console, const char *string)
   unsigned int string_index = 0;
   int old_cursor_x = console->cursor_x;
   int old_cursor_y = console->cursor_y;
-  char character;
-  
+  char character = 0;  
+
   /* Modify the attribute according to the flags. */
   
   if (console->bold == TRUE)
@@ -830,26 +829,31 @@ void console_output (console_type *console, const char *string)
   }
 }
 
-void console_print_charset (console_type *console)
+void console_print_char_set (console_type *console)
 {
-  unsigned char ch_h, ch_l;
+  unsigned char ch;
   unsigned int buffer_index;
-
-  console_output (console, "\n");
   
-  for (ch_h = 0 ; ch_h <= 0xF ; ch_h++)
+  for (ch=176;ch<215;ch++)
   {
-    for (ch_l = 0 ; ch_l <= 0xF ; ch_l++)
+    buffer_index = (console->cursor_y * console->width + 
+                    console->cursor_x);
+
+    console->output[buffer_index].character = ch;
+
+    console->cursor_x++;  
+
+    if (console->cursor_x == console->width)
     {
-      buffer_index = (console->cursor_y * console->width + 
-                      console->cursor_x);
-
-      console->output[buffer_index].character = ch_h << 4 | ch_l;
-
-      console->cursor_x++;  
+      console->cursor_x = 0;
+      console->cursor_y++;
+              
+      if (console->cursor_y == console->height)
+      {
+        console_scroll (console, 1);
+        console->cursor_y--;
+      }
     }
-
-    console_output (console, "\n");
   }
 }
 
@@ -859,6 +863,7 @@ void console_output_at (console_type *console, int x, int y,
   unsigned int string_index = 0;
   int cursor_x = x;
   int cursor_y = y;
+  char character = 0;
     
   while (string[string_index] != '\0')
   {
@@ -885,21 +890,23 @@ void console_output_at (console_type *console, int x, int y,
           break;
         }
 
+
         string_index += length - 1;
+   
+        character = convert_to_printable_char (ucs2, CODEPAGE_KOI8_R);
 
-        buffer_index = (cursor_y * console->width + cursor_x);
-        console->output[buffer_index].attribute = console->modified_attribute;
-
-        /* The ASCII characters are always the same. */
-
-        if (ucs2 >= 0x80)
+        if (character == 0)
         {
-          console->output[buffer_index].character = translation[ucs2];
+          break;
         }
-        else
-        {
-          console->output[buffer_index].character = ucs2;
-        }
+
+        buffer_index = (cursor_y * console->width + 
+                        cursor_x);
+        console->output[buffer_index].attribute =
+            console->modified_attribute;
+
+        console->output[buffer_index].character = character;
+
         cursor_x++;
             
         if (cursor_x == console->width)

@@ -18,7 +18,6 @@
     <source>provider.c</source>
     <source>console.c</source>
     <source>console_output.c</source>
-    <source>charset.c</source>
   </package>
 </autochaos>
 

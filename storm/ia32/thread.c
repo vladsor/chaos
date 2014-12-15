@@ -101,8 +101,6 @@ tss_list_type *thread_link_list (tss_list_type **list,
   tss_list_node->previous = NULL;
   tss_list_node->tss = tss;
 
-  tss_list_node->tss->timeslices = 0;
-
   /* If this is the first entry, presume it is the idle thread. A
      little ugly... but it works. ;) */
 

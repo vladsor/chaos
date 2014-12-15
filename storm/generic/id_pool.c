@@ -203,12 +203,15 @@ bool id_pool_reserve_range (id_pool_type *id_pool, range_type id_range)
                                      (_avl_tree_type *) id_pool,
                                      (void *) &id_range);
 
-  if ((current_id_node == NULL) || 
-      (id_range.end > current_id_node->key.end) ||
+  if ((current_id_node == NULL)
+ || 
+      (id_range.end > current_id_node->key.end)
+ ||
       (id_range.begin < current_id_node->key.begin))
   {
     return FALSE;
-  }    
+  }
+    
 
   if (id_range.begin == current_id_node->key.begin)
   {

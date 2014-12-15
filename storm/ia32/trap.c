@@ -60,28 +60,46 @@ typedef union
   segment_error_type segment_error;
 } ecode_type;
 
-ecode_type ecode;
 
-void trap_divide_error_fault (void);
+ecode_type ecode;
+
+void trap_divide_error_fault (void)
+;
 void trap_debug_trap (void);
-void trap_nmi (void);
+void trap_nmi (void)
+;
 void trap_breakpoint_trap (void);
-void trap_overflow_trap (void);
-void trap_bound_range_exceeded_fault (void);
-void trap_invalid_opcode_fault (void);
-void trap_device_not_available_fault (void);
-void trap_double_fault (void);
-void trap_coprocessor_segment_overrun_abort (void);
-void trap_invalid_tss_fault (void);
-void trap_segment_not_present_fault (void);
-void trap_stack_fault (void);
-void trap_general_protection_fault (void);
+void trap_overflow_trap (void)
+;
+void trap_bound_range_exceeded_fault (void)
+;
+void trap_invalid_opcode_fault (void)
+;
+void trap_device_not_available_fault (void)
+;
+void trap_double_fault (void)
+;
+void trap_coprocessor_segment_overrun_abort (void)
+;
+void trap_invalid_tss_fault (void)
+;
+void trap_segment_not_present_fault (void)
+;
+void trap_stack_fault (void)
+;
+void trap_general_protection_fault (void)
+;
 void trap_page_fault (void);
-void trap_reserved (void);
-void trap_floating_point_error_fault (void);
-void trap_alignment_check_fault (void);
-void trap_machine_check_abort (void);
-void trap_streaming_simd_extensions_fault (void);
+void trap_reserved (void)
+;
+void trap_floating_point_error_fault (void)
+;
+void trap_alignment_check_fault (void)
+;
+void trap_machine_check_abort (void)
+;
+void trap_streaming_simd_extensions_fault (void)
+;
 
 /* Display a exception screen. */
 
@@ -92,14 +110,17 @@ static void exception_screen (const char *class,
                        volatile storm_tss_type *dump_tss/*,
                        u8 handler_type */)
 {
-  debug_print ("Source: ");   
+  debug_print ("Source: ");
+   
   if (dump_tss->eip >= BASE_KERNEL && dump_tss->eip < BASE_KERNEL + SIZE_KERNEL)
   {
-    debug_print ("Kernel\n");   
+    debug_print ("Kernel\n");
+   
   }
   else
   {
-    debug_print ("Unknown\n");   
+    debug_print ("Unknown\n");
+   
   }
 
 
@@ -335,7 +356,8 @@ void trap_general_protection_fault (void)
   current_tss->state = STATE_ZOMBIE;
   dispatch_next ();
 }
-
+
+
 void trap_page_fault (void)
 {
 #ifdef GROWING_STACK
@@ -421,7 +443,8 @@ void trap_page_fault (void)
                     EXCEPTION_CODE_PAGE, current_tss);
   current_tss->state = STATE_ZOMBIE;
   debug_run ();
-  dispatch_next ();  
+  dispatch_next ();
+  
 #endif
 }  
 

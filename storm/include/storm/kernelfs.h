@@ -118,7 +118,7 @@ typedef struct
 
   /* The number of timeslices this thread has been given. */
 
-  time_type uptime;
+  time_type timeslices;
 
   /* The number of memory bytes this process is using. */
 

@@ -55,9 +55,6 @@ extern return_type console_print_at
   (console_structure_type *console_structure, int x, int y,
    const char *string);
 
-extern return_type console_print_charset 
-  (console_structure_type *console_structure);
-
 /*
 extern return_type console_print_formatted_at
   (console_structure_type *console_structure, int x, int y,

@@ -127,7 +127,8 @@ bool hash_table_add_element (hash_table_type *hash_table,
   index = get_hash_value (hash_table, new_hash_element->id);
 
   /* adding new element at the begin of entry */
-  (hash_element_type *) new_hash_element->next = 
+  (hash_element_type *)
+ new_hash_element->next = 
       hash_table->hash_elements[index];
 			       
   hash_table->hash_elements[index] = new_hash_element;

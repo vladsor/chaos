@@ -47,7 +47,7 @@ typedef struct
 #define SYSTEM_EVENT_QUEUE_INTERRUPTS_14    24
 #define SYSTEM_EVENT_QUEUE_INTERRUPTS_15    25
 
-#define KERNEL_LOG_PRINT                    0
-#define IRQ_OCCURED                         0
+#define KERNEL_LOG_PRINT 0
+#define IRQ_OCCURED 0
 
 #endif /* !__STORM_EVENT_QUEUE_H__ */

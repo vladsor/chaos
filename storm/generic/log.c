@@ -34,7 +34,7 @@ event_queue_type *log_event_queue;
 void log_init (void)
 {
   log_event_queue = 
-    event_queue_create_kernel (SYSTEM_EVENT_QUEUE_LOG, 0, 0, 0, 0, 0);
+    event_queue_create_kernel (SYSTEM_EVENT_QUEUE_LOG, 0, 0, 0, 0);
 }
 
 void log_print (char *string)

@@ -1,8 +1,9 @@
-/* $Id: us.h,v 1.2 2001/02/10 21:25:08 jojo Exp $ */
-/* Abstract: A russian keyboard translation map for chaos. */
-/* Author: Vladimir Sorokin */
+/* $Id: british.h,v 2.3 2000/06/17 13:17:20 plundis Exp $ */
+/* Abstract: A british translation table for chaos. This probably
+   needs some fixup before it is usable. */
+/* Author: John Hennessy <john@somewhere> */
 
-/* Copyright 1998-2000 chaos development. */
+/* Copyright 2000 chaos development. */
 
 /* This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License as
@@ -22,16 +23,16 @@
 #ifndef __RUSSIAN_H__
 #define __RUSSIAN_H__
 
-char *russian_keyboard_map[] =
+const char *russian_keyboard_map[] =
 {
   NULL, NULL, "1",  "2",  "3",  "4",  "5",  "6",
-  "7",  "8",  "9",  "0",  "-",  "=",  NULL, NULL,
-  "й",  "ц",  "у",  "к",  "е",  "н",  "г",  "ш",
-  "щ",  "з",  "х",  "ъ",  NULL, NULL, "ф",  "ы",
-  "в",  "а",  "п",  "р",  "о",  "л",  "д",  "ж",
-  "э",  NULL, NULL, "\\",  "я",  "ч",  "с",  "м",
-  "и",  "т",  "ь",  "б",  "ю",  ".",  NULL, "*",
-  NULL, " ",  NULL, NULL, NULL, NULL, NULL, NULL,
+  "7",  "8",  "9",  "0",  "-",  "=", NULL, NULL,
+  "q",  "w",  "e",  "r",  "t",  "y",  "u",  "i",
+  "o",  "p",  "[",  "]",  NULL, NULL, "a",  "s",
+  "d",  "f",  "g",  "h",  "j",  "k",  "l",  ";",
+  "'",  "`",  NULL, "\\", "z",  "x",  "c",  "v",
+  "b",  "n",  "m",  ",",  ".",  "/",  NULL, NULL,
+  NULL, " ", NULL, NULL, NULL, NULL, NULL, NULL,
   NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
   NULL, NULL, "-",  NULL, NULL, NULL, "+",  NULL,
   NULL, NULL, NULL, NULL, NULL, NULL, "<",  NULL,
@@ -39,15 +40,15 @@ char *russian_keyboard_map[] =
   NULL
 };
 
-char *russian_keyboard_map_shift[] =
+const char *russian_keyboard_map_shift[] =
 {
-  NULL, NULL, "!",  "\"", "№",  ";",  "%",  ":",
-  "?",  "*",  "(",  ")",  "_",  "+",  NULL, NULL,
-  "Й",  "Ц",  "У",  "К",  "Е",  "Н",  "Г",  "Ш",
-  "Щ",  "З",  "Х",  "Ъ",  NULL, NULL, "Ф",  "Ы",
-  "В",  "А",  "П",  "Р",  "О",  "Л",  "Д",  "Ж",
-  "Э",  NULL, NULL, "|",  "Я",  "Ч",  "С",  "М",
-  "И",  "Т",  "Ь",  "Б",  "Ю",  ",",  NULL, "*",
+  NULL, NULL, "!",  "@",  "#",  "$",  "%",  "^",
+  "&",  "*",  "(",  ")",  "_",  "+", NULL, NULL,
+  "Q",  "W",  "E",  "R",  "T",  "Y",  "U",  "I",
+  "O",  "P",  "{",  "}",  NULL, NULL, "A",  "S",
+  "D",  "F",  "G",  "H",  "J",  "K",  "L",  ":",
+  "\"", "~", NULL, "|",  "Z",  "X",  "C",  "V",
+  "B",  "N",  "M",  "<",  ">",  "?",  NULL, NULL,
   NULL, " ",  NULL, NULL, NULL, NULL, NULL, NULL,
   NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
   NULL, NULL, "-",  NULL, NULL, NULL, "+",  NULL,
@@ -56,19 +57,19 @@ char *russian_keyboard_map_shift[] =
   NULL
 };
 
-char *russian_keyboard_map_altgr[] =
+const char *russian_keyboard_map_altgr[] =
 {
+  NULL, NULL, NULL, "@",  "�",  "$",  NULL, NULL,
+  "{",  "[",  "]",  "}",  "\\", NULL, NULL, NULL,
+  "�", NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+  NULL, NULL, NULL, "~",  NULL, NULL, NULL, NULL,
   NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
   NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
   NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+  NULL, " ",  NULL, NULL, NULL, NULL, NULL, NULL,
   NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
   NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-  NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-  NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-  NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-  NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-  NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-  NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+  NULL, NULL, NULL, NULL, NULL, NULL, "|",  NULL,
   NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
   NULL
 };
