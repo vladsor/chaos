@@ -17,6 +17,11 @@
 #ifndef __SYSTEM_ENVIROMENT_IA32_SYSTEM_REGISTERS_H__
 #define __SYSTEM_ENVIROMENT_IA32_SYSTEM_REGISTERS_H__
 
+#include "Registers/cr0.h"
+#include "Registers/cr2.h"
+#include "Registers/cr3.h"
+#include "Registers/cr4.h"
+
 static inline void cpu_tr_load (uint16_t load_tr)
 {
     asm volatile ("ltr %0"

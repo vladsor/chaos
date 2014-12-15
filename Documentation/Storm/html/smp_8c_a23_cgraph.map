@@ -1,0 +1,12 @@
+base referer
+rect $smp_8c.html#a20 177,102 297,126
+rect $smp_8c.html#a18 197,150 277,174
+rect $smp_8c.html#a15 346,55 458,79
+rect common.tag$spinlock_8h.html#a6 366,102 438,126
+rect common.tag$spinlock_8h.html#a8 357,150 448,174
+rect $smp_8c.html#a13 512,31 685,55
+rect $smp_8c.html#a14 508,79 689,102
+rect $smp_8c.html#a9 746,7 861,31
+rect $smp_8c.html#a10 742,55 865,79
+rect $apic_8h.html#a13 737,102 870,126
+rect $apic_8h.html#a12 918,102 993,126

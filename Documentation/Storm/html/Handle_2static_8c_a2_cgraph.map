@@ -1,0 +1,9 @@
+base referer
+rect $Repository_2Handle_2Include_2internal_8h.html#a0 210,55 413,79
+rect $transaction__internal_8c.html#a21 238,102 385,126
+rect $Repository_2Object_2Include_2internal_8h.html#a11 462,7 673,31
+rect $Repository_2Reference_2Include_2internal_8h.html#a3 473,55 662,79
+rect $Repository_2Reference_2Include_2internal_8h.html#a1 478,102 657,126
+rect common.tag$uint32_8h.html#a6 724,55 902,79
+rect $reference_8h.html#a2 721,102 905,126
+rect common.tag$spinlock_8h.html#a5 780,150 846,174

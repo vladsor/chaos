@@ -1,0 +1,1597 @@
+Archive member included because of file (symbol)
+
+/root/Chaos/Binaries/Libraries/list.a(list.o)
+                              Repository/Computer/system.o (list_create)
+/root/Chaos/Binaries/Libraries/pool_of_integers.a(pool_of_integers.o)
+                              Hardware/PhysicalMemory/internal.o (pool_of_integers_init)
+/root/Chaos/Binaries/Libraries/pool_of_ranges.a(id_pool.o)
+                              Hardware/PhysicalMemory/allocate.o (pool_allocate)
+/root/Chaos/Binaries/Libraries/avl_tree.a(avl.o)
+                              /root/Chaos/Binaries/Libraries/pool_of_ranges.a(id_pool.o) (avl_tree_delete_node)
+/root/Chaos/Binaries/Libraries/avl_tree.a(avl_util.o)
+                              /root/Chaos/Binaries/Libraries/avl_tree.a(avl.o) (exchange)
+/root/Chaos/Binaries/Libraries/string.a(format.o)
+                              Hardware/SystemDebug/debug.o (string_print)
+/root/Chaos/Binaries/Libraries/string.a(general-inlines.o)
+                              /root/Chaos/Binaries/Libraries/string.a(format.o) (string_scn)
+/root/Chaos/Binaries/Libraries/string.a(wformat.o)
+                              Kernel/Interfaces/init_init.o (wstring_print)
+/root/Chaos/Binaries/Libraries/string.a(wstring-inlines.o)
+                              /root/Chaos/Binaries/Libraries/string.a(wformat.o) (wstring_scn)
+/root/Chaos/Binaries/Libraries/string.a(character.o)
+                              /root/Chaos/Binaries/Libraries/string.a(general-inlines.o) (char_to_lower_case)
+/root/Chaos/Binaries/Libraries/string.a(conversions.o)
+                              /root/Chaos/Binaries/Libraries/string.a(format.o) (string_to_double)
+/root/Chaos/Binaries/Libraries/string.a(wconversions.o)
+                              /root/Chaos/Binaries/Libraries/string.a(wformat.o) (wstring_to_double)
+/root/Chaos/Binaries/Libraries/hash_table.a(hash_table.o)
+                              Kernel/Interfaces/flat_namespace_object_factory.o (hash_table_create)
+
+Allocating common symbols
+Common symbol       size              file
+
+___strtok           0x4               /root/Chaos/Binaries/Libraries/string.a(general-inlines.o)
+cpu_kernel          0x30              Repository/Cpu/system.o
+multiboot_info      0x34              Hardware/Boot/multiboot.o
+node_allocator_global
+                    0x3e8             Hardware/PhysicalMemory/internal.o
+computers           0x1c              Repository/Computer/internal.o
+node_pool_global    0x6d60            Hardware/PhysicalMemory/internal.o
+pit_divisor         0x6               Hardware/Timer/pit.o
+storm_module_objects
+                    0x4               Kernel/Interfaces/init_init.o
+pit_mode            0x3               Hardware/Timer/pit.o
+dma_channels        0x54              Hardware/Dma/dma.o
+exception_handlers_data
+                    0x50              Hardware/Exception/init.o
+debug_event_class   0x4               Kernel/Events/debug_supplier_init.o
+cpu_info_global     0x105             Hardware/Cpu/init.o
+kernel_class        0x4               Kernel/./init.o
+kernel_object       0x4               Kernel/./init.o
+exception_handlers  0x50              Hardware/Exception/init.o
+kernel_stack        0x10000           Hardware/Boot/init.o
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+LOAD ./init.o
+LOAD Hardware/Boot/init.o
+LOAD Hardware/Boot/multiboot.o
+LOAD Hardware/Boot/parse.o
+LOAD Hardware/SystemDebug/debug.o
+LOAD Hardware/SystemDebug/gdb.o
+LOAD Hardware/Cpu/bugs.o
+LOAD Hardware/Cpu/halt.o
+LOAD Hardware/Cpu/identification.o
+LOAD Hardware/Cpu/init.o
+LOAD Hardware/Cpu/lock.o
+LOAD Hardware/Cpu/speed.o
+LOAD Hardware/Irq/irq.o
+LOAD Hardware/Irq/pic.o
+LOAD Hardware/Exception/handlers.o
+LOAD Hardware/Exception/init.o
+LOAD Hardware/Clock/time.o
+LOAD Hardware/Dma/controller.o
+LOAD Hardware/Dma/dma.o
+LOAD Hardware/Timer/pit.o
+LOAD Hardware/Timer/timer.o
+LOAD Hardware/PhysicalMemory/allocate.o
+LOAD Hardware/PhysicalMemory/check.o
+LOAD Hardware/PhysicalMemory/deallocate.o
+LOAD Hardware/PhysicalMemory/init.o
+LOAD Hardware/PhysicalMemory/internal.o
+LOAD Hardware/PhysicalMemory/reallocate.o
+LOAD Hardware/PhysicalMemory/reserve.o
+LOAD Hardware/VirtualMemory/allocate.o
+LOAD Hardware/VirtualMemory/create.o
+LOAD Hardware/VirtualMemory/deallocate.o
+LOAD Hardware/VirtualMemory/destroy.o
+LOAD Hardware/VirtualMemory/init.o
+LOAD Hardware/VirtualMemory/internal.o
+LOAD Hardware/VirtualMemory/page.o
+LOAD Hardware/VirtualMemory/reserve.o
+LOAD Hardware/TaskState/task_state.o
+LOAD Hardware/TaskState/tss.o
+LOAD Hardware/IoPort/port.o
+LOAD Hardware/Elf/elf.o
+LOAD Hardware/SystemCall/system_call.o
+LOAD Repository/./repository.o
+LOAD Repository/Reference/system.o
+LOAD Repository/Descriptions/Method/system.o
+LOAD Repository/Descriptions/Interface/system.o
+LOAD Repository/Descriptions/Class/system.o
+LOAD Repository/Descriptions/Event/system.o
+LOAD Repository/Method/init.o
+LOAD Repository/Method/internal.o
+LOAD Repository/Method/parameters_check.o
+LOAD Repository/Method/security_check.o
+LOAD Repository/Method/static.o
+LOAD Repository/Method/system.o
+LOAD Repository/Method/transaction.o
+LOAD Repository/Interface/init.o
+LOAD Repository/Interface/internal.o
+LOAD Repository/Interface/parameters_check.o
+LOAD Repository/Interface/security_check.o
+LOAD Repository/Interface/static.o
+LOAD Repository/Interface/system.o
+LOAD Repository/Interface/transaction.o
+LOAD Repository/EventSupplierInterface/init.o
+LOAD Repository/EventSupplierInterface/internal.o
+LOAD Repository/EventSupplierInterface/parameters_check.o
+LOAD Repository/EventSupplierInterface/security_check.o
+LOAD Repository/EventSupplierInterface/static.o
+LOAD Repository/EventSupplierInterface/system.o
+LOAD Repository/EventSupplierInterface/transaction.o
+LOAD Repository/EventSupplier/system.o
+LOAD Repository/EventConsumerInterface/init.o
+LOAD Repository/EventConsumerInterface/internal.o
+LOAD Repository/EventConsumerInterface/parameters_check.o
+LOAD Repository/EventConsumerInterface/security_check.o
+LOAD Repository/EventConsumerInterface/static.o
+LOAD Repository/EventConsumerInterface/system.o
+LOAD Repository/EventConsumerInterface/transaction.o
+LOAD Repository/Class/init.o
+LOAD Repository/Class/internal.o
+LOAD Repository/Class/parameters_check.o
+LOAD Repository/Class/security_check.o
+LOAD Repository/Class/static.o
+LOAD Repository/Class/system.o
+LOAD Repository/Class/transaction.o
+LOAD Repository/Security/internal.o
+LOAD Repository/Security/parameters_check.o
+LOAD Repository/Security/security_check.o
+LOAD Repository/Security/static.o
+LOAD Repository/Security/system.o
+LOAD Repository/Cpu/init.o
+LOAD Repository/Cpu/internal.o
+LOAD Repository/Cpu/system.o
+LOAD Repository/Memory/memory.o
+LOAD Repository/Memory/slab.o
+LOAD Repository/Memory/system.o
+LOAD Repository/Computer/internal.o
+LOAD Repository/Computer/scheduler.o
+LOAD Repository/Computer/system.o
+LOAD Repository/Object/init.o
+LOAD Repository/Object/internal.o
+LOAD Repository/Object/parameters_check.o
+LOAD Repository/Object/security_check.o
+LOAD Repository/Object/static.o
+LOAD Repository/Object/system.o
+LOAD Repository/Object/transaction.o
+LOAD Repository/Handle/init.o
+LOAD Repository/Handle/internal.o
+LOAD Repository/Handle/parameters_check.o
+LOAD Repository/Handle/security_check.o
+LOAD Repository/Handle/static.o
+LOAD Repository/Handle/system.o
+LOAD Repository/EventQueue/system.o
+LOAD Repository/Quality/system.o
+LOAD Kernel/./init.o
+LOAD Kernel/Interfaces/flat_namespace_object_factory.o
+LOAD Kernel/Interfaces/flat_namespace_object_factory_interface.o
+LOAD Kernel/Interfaces/init_init.o
+LOAD Kernel/Interfaces/init_interface.o
+LOAD Kernel/Interfaces/irq_supplier_factory_init.o
+LOAD Kernel/Interfaces/irq_supplier_factory_interface.o
+LOAD Kernel/Interfaces/namespace_init.o
+LOAD Kernel/Interfaces/namespace_interface.o
+LOAD Kernel/Interfaces/storm_module_factory.o
+LOAD Kernel/Interfaces/storm_module_factory_interface.o
+LOAD Kernel/Interfaces/storm_program_factory.o
+LOAD Kernel/Interfaces/storm_program_factory_interface.o
+LOAD Kernel/Interfaces/timer_interface.o
+LOAD Kernel/Interfaces/timer_interface_init.o
+LOAD Kernel/Events/debug_consumer_init.o
+LOAD Kernel/Events/debug_event_class.o
+LOAD Kernel/Events/debug_supplier_init.o
+LOAD Kernel/Events/irq_event_class.o
+LOAD Kernel/Events/irq_supplier_init.o
+LOAD Kernel/Classes/flat_namespace_init.o
+LOAD Kernel/Classes/flat_namespace_interface.o
+LOAD Kernel/Classes/flat_namespace_object.o
+LOAD Kernel/Classes/storm_module.o
+LOAD Kernel/Classes/storm_module_control_init.o
+LOAD Kernel/Classes/storm_module_control_interface.o
+LOAD Kernel/Classes/storm_program.o
+LOAD Kernel/Classes/storm_program_control_init.o
+LOAD Kernel/Classes/storm_program_control_interface.o
+LOAD Hardware/Irq/handlers_lowlevel.o
+LOAD Hardware/Exception/handlers_lowlevel.o
+LOAD Hardware/TaskState/task_state_lowlevel.o
+LOAD Hardware/SystemCall/handlers_lowlevel.o
+LOAD Repository/Computer/jump_lowlevel.o
+LOAD /root/Chaos/Binaries/Release/Modules/Static/keyboard.a
+LOAD /root/Chaos/Binaries/Release/Modules/Static/vga.a
+LOAD /root/Chaos/Binaries/Release/Modules/Static/console.a
+LOAD /root/Chaos/Binaries/Libraries/list.a
+LOAD /root/Chaos/Binaries/Libraries/pool_of_integers.a
+LOAD /root/Chaos/Binaries/Libraries/pool_of_ranges.a
+LOAD /root/Chaos/Binaries/Libraries/avl_tree.a
+LOAD /root/Chaos/Binaries/Libraries/string.a
+LOAD /root/Chaos/Binaries/Libraries/hash_table.a
+                0x00100074                . = (0x100000 + SIZEOF_HEADERS)
+
+.interp
+ *(.interp)
+
+.hash
+ *(.hash)
+
+.dynsym
+ *(.dynsym)
+
+.dynstr
+ *(.dynstr)
+
+.gnu.version
+ *(.gnu.version)
+
+.gnu.version_d
+ *(.gnu.version_d)
+
+.gnu.version_r
+ *(.gnu.version_r)
+
+.rel.init
+ *(.rel.init)
+
+.rela.init
+ *(.rela.init)
+
+.rel.text
+ *(.rel.text)
+ *(.rel.text.*)
+ *(.rel.gnu.linkonce.t.*)
+
+.rela.text
+ *(.rela.text)
+ *(.rela.text.*)
+ *(.rela.gnu.linkonce.t.*)
+
+.rel.fini
+ *(.rel.fini)
+
+.rela.fini
+ *(.rela.fini)
+
+.rel.rodata
+ *(.rel.rodata)
+ *(.rel.rodata.*)
+ *(.rel.gnu.linkonce.r.*)
+
+.rela.rodata
+ *(.rela.rodata)
+ *(.rela.rodata.*)
+ *(.rela.gnu.linkonce.r.*)
+
+.rel.data
+ *(.rel.data)
+ *(.rel.data.*)
+ *(.rel.gnu.linkonce.d.*)
+
+.rela.data
+ *(.rela.data)
+ *(.rela.data.*)
+ *(.rela.gnu.linkonce.d.*)
+
+.rel.ctors
+ *(.rel.ctors)
+
+.rela.ctors
+ *(.rela.ctors)
+
+.rel.dtors
+ *(.rel.dtors)
+
+.rela.dtors
+ *(.rela.dtors)
+
+.rel.got
+ *(.rel.got)
+
+.rela.got
+ *(.rela.got)
+
+.rel.sdata
+ *(.rel.sdata)
+ *(.rel.sdata.*)
+ *(.rel.gnu.linkonce.s.*)
+
+.rela.sdata
+ *(.rela.sdata)
+ *(.rela.sdata.*)
+ *(.rela.gnu.linkonce.s.*)
+
+.rel.sbss
+ *(.rel.sbss)
+ *(.rel.sbss.*)
+ *(.rel.gnu.linkonce.sb.*)
+
+.rela.sbss
+ *(.rela.sbss)
+ *(.rela.sbss.*)
+ *(.rel.gnu.linkonce.sb.*)
+
+.rel.sdata2
+ *(.rel.sdata2)
+ *(.rel.sdata2.*)
+ *(.rel.gnu.linkonce.s2.*)
+
+.rela.sdata2
+ *(.rela.sdata2)
+ *(.rela.sdata2.*)
+ *(.rela.gnu.linkonce.s2.*)
+
+.rel.sbss2
+ *(.rel.sbss2)
+ *(.rel.sbss2.*)
+ *(.rel.gnu.linkonce.sb2.*)
+
+.rela.sbss2
+ *(.rela.sbss2)
+ *(.rela.sbss2.*)
+ *(.rela.gnu.linkonce.sb2.*)
+
+.rel.bss
+ *(.rel.bss)
+ *(.rel.bss.*)
+ *(.rel.gnu.linkonce.b.*)
+
+.rela.bss
+ *(.rela.bss)
+ *(.rela.bss.*)
+ *(.rela.gnu.linkonce.b.*)
+
+.rel.plt
+ *(.rel.plt)
+
+.rela.plt
+ *(.rela.plt)
+
+.init.pre       0x00100074        0xc
+ *(.init.pre)
+ .init.pre      0x00100074        0xc Hardware/Boot/multiboot.o
+                0x00100074                multiboot_header
+
+.init
+ *(.text.init)
+ *(.data.init)
+                0x00101000                . = ALIGN (0x1000)
+
+.special        0x00101000     0x1000
+ *(.gdt)
+ .gdt           0x00101000      0x800 Hardware/Boot/init.o
+                0x00101000                gdt
+ *(.idt)
+ .idt           0x00101800      0x800 Hardware/Boot/init.o
+                0x00101800                idt
+                0x00102000                . = ALIGN (0x1000)
+                0x00102000                _init_end = .
+
+.text           0x00102000    0x132be
+ *(.text)
+ .text          0x00102000      0x604 ./init.o
+                0x00102310                main_bootup
+ *fill*         0x00102604        0xc 9090
+ .text          0x00102610       0xb3 Hardware/Boot/init.o
+                0x00102610                _start
+ *fill*         0x001026c3        0xd 9090
+ .text          0x001026d0      0x13c Hardware/Boot/multiboot.o
+                0x001026d0                multiboot_init
+ *fill*         0x0010280c        0x4 9090
+ .text          0x00102810       0x9e Hardware/Boot/parse.o
+                0x00102810                arguments_parse
+ *fill*         0x001028ae        0x2 9090
+ .text          0x001028b0      0x4e5 Hardware/SystemDebug/debug.o
+                0x00102c20                system_debug_printw
+                0x00102ab0                system_debug_print
+                0x001028b0                system_debug_init
+ *fill*         0x00102d95        0x3 9090
+ *fill*         0x00102d98        0x8 9090
+ .text          0x00102da0       0x53 Hardware/Cpu/bugs.o
+                0x00102da0                cpu_bugs_search
+ *fill*         0x00102df3        0xd 9090
+ .text          0x00102e00       0x53 Hardware/Cpu/halt.o
+                0x00102e00                cpu_halt
+ *fill*         0x00102e53        0xd 9090
+ .text          0x00102e60      0x84c Hardware/Cpu/identification.o
+                0x00103570                cpu_id_detect
+ *fill*         0x001036ac        0x4 9090
+ .text          0x001036b0       0x88 Hardware/Cpu/init.o
+                0x001036b0                cpu_init
+                0x00103710                cpu_get_info
+ *fill*         0x00103738        0x8 9090
+ .text          0x00103740       0x14 Hardware/Cpu/lock.o
+                0x00103740                cpu_lock
+                0x00103750                cpu_unlock
+ *fill*         0x00103754        0xc 9090
+ .text          0x00103760       0xb6 Hardware/Cpu/speed.o
+                0x001037f0                cpu_speed_get
+ *fill*         0x00103816        0xa 9090
+ .text          0x00103820      0x452 Hardware/Irq/irq.o
+                0x00103bf0                irq_register
+                0x00103c40                irq_unregister
+                0x00103820                irq_init
+                0x00103c60                irq_set_post_handler
+ *fill*         0x00103c72        0xe 9090
+ .text          0x00103c80      0x130 Hardware/Irq/pic.o
+                0x00103d70                pic_enable_all_irq
+                0x00103cc0                pic_enable_irq
+                0x00103da0                pic_acknowledge
+                0x00103c80                pic_remap_irq
+                0x00103d90                pic_init
+                0x00103d20                pic_disable_irq
+                0x00103d80                pic_disable_all_irq
+ .text          0x00103db0      0xb57 Hardware/Exception/init.o
+                0x00104430                exception_register
+                0x00104850                exception_unregister
+                0x001042a0                exception_print_screen
+                0x00104530                exception_init
+ *fill*         0x00104907        0x9 9090
+ .text          0x00104910      0x2d2 Hardware/Clock/time.o
+                0x00104a00                clock_init
+ *fill*         0x00104be2        0xe 9090
+ .text          0x00104bf0      0x242 Hardware/Dma/controller.o
+                0x00104df0                dma_contoller_disable_channel
+                0x00104dd0                dma_contoller_enable_channel
+                0x00104e10                dma_controller_transfer_cancel
+                0x00104d90                dma_controller_init
+                0x00104bf0                dma_controller_transfer_start
+ *fill*         0x00104e32        0xe 9090
+ .text          0x00104e40      0x1a5 Hardware/Dma/dma.o
+                0x00104f40                dma_unregister
+                0x00104f60                dma_transfer
+                0x00104f10                dma_register
+                0x00104e40                dma_init
+ *fill*         0x00104fe5        0xb 9090
+ .text          0x00104ff0       0x8f Hardware/Timer/pit.o
+                0x00104ff0                pit_init
+                0x00105050                pit_frequency_set
+                0x00105020                pit_counter_read
+                0x00105000                pit_mode_set
+ *fill*         0x0010507f        0x1 9090
+ .text          0x00105080      0x1e4 Hardware/Timer/timer.o
+                0x001051a0                timer_write
+                0x00105200                timer_unregister_handler
+                0x00105110                timer_set_period
+                0x00105080                timer_init
+                0x001051d0                timer_register_handler
+                0x001050a0                timer_start
+                0x00105180                timer_read
+                0x001050e0                timer_stop
+                0x00105150                timer_set_mode
+ *fill*         0x00105264        0xc 9090
+ .text          0x00105270       0xa6 Hardware/PhysicalMemory/allocate.o
+                0x00105270                physical_memory_allocate
+ *fill*         0x00105316        0xa 9090
+ .text          0x00105320        0x3 Hardware/PhysicalMemory/check.o
+                0x00105320                physical_memory_check
+ *fill*         0x00105323        0xd 9090
+ .text          0x00105330       0x2c Hardware/PhysicalMemory/deallocate.o
+                0x00105330                physical_memory_deallocate
+ *fill*         0x0010535c        0x4 9090
+ .text          0x00105360      0x2b8 Hardware/PhysicalMemory/init.o
+                0x00105470                physical_memory_init
+                0x00105610                physical_memory_get_free_pages
+                0x00105600                physical_memory_get_total_pages
+ *fill*         0x00105618        0x8 9090
+ .text          0x00105620       0xaa Hardware/PhysicalMemory/internal.o
+                0x00105690                internal_memory_deallocate
+                0x00105620                internal_memory_init
+                0x00105640                internal_memory_deinit
+                0x00105650                internal_memory_allocate
+ *fill*         0x001056ca        0x6 9090
+ .text          0x001056d0        0x3 Hardware/PhysicalMemory/reallocate.o
+                0x001056d0                physical_memory_reallocate
+ *fill*         0x001056d3        0xd 9090
+ .text          0x001056e0       0x2c Hardware/PhysicalMemory/reserve.o
+                0x001056e0                physical_memory_reserve
+ *fill*         0x0010570c        0x4 9090
+ .text          0x00105710      0x292 Hardware/VirtualMemory/allocate.o
+                0x00105710                virtual_memory_allocate
+ *fill*         0x001059a2        0xe 9090
+ .text          0x001059b0      0x1bb Hardware/VirtualMemory/create.o
+                0x001059b0                virtual_memory_create
+ *fill*         0x00105b6b        0x5 9090
+ .text          0x00105b70       0x2d Hardware/VirtualMemory/deallocate.o
+                0x00105b70                virtual_memory_deallocate
+ *fill*         0x00105b9d        0x3 9090
+ .text          0x00105ba0       0x29 Hardware/VirtualMemory/destroy.o
+                0x00105ba0                virtual_memory_destroy
+ *fill*         0x00105bc9        0x7 9090
+ .text          0x00105bd0      0x11d Hardware/VirtualMemory/init.o
+                0x00105c60                virtual_memory_map
+                0x00105be0                virtual_memory_lookup
+                0x00105bd0                virtual_memory_init
+ *fill*         0x00105ced        0x3 9090
+ .text          0x00105cf0       0xaa Hardware/VirtualMemory/internal.o
+                0x00105d60                internal_memory_deallocate2
+                0x00105cf0                internal_memory_init2
+                0x00105d10                internal_memory_deinit2
+                0x00105d20                internal_memory_allocate2
+ *fill*         0x00105d9a        0x6 9090
+ .text          0x00105da0      0x626 Hardware/VirtualMemory/page.o
+                0x00105da0                page_lookup
+                0x00105ee0                page_map
+                0x00106260                page_map_4mb
+                0x00106070                page_init
+ *fill*         0x001063c6        0xa 9090
+ .text          0x001063d0      0x23b Hardware/VirtualMemory/reserve.o
+                0x001063d0                virtual_memory_reserve
+ *fill*         0x0010660b        0x5 9090
+ .text          0x00106610       0xd9 Hardware/TaskState/task_state.o
+                0x00106690                task_state_init
+                0x00106680                task_state_switch_finish_internal
+                0x00106670                task_state_switch_prepare
+                0x00106660                task_state_destroy
+                0x00106610                task_state_create
+ *fill*         0x001066e9        0x7 9090
+ .text          0x001066f0      0x14b Hardware/TaskState/tss.o
+                0x001067a0                tss_create
+                0x001066f0                tss_switch_prepare
+ *fill*         0x0010683b        0x5 9090
+ .text          0x00106840       0x23 Hardware/IoPort/port.o
+                0x00106850                io_port_register
+                0x00106840                io_port_init
+                0x00106860                io_port_unregister
+ *fill*         0x00106863        0xd 9090
+ .text          0x00106870      0x9e2 Hardware/Elf/elf.o
+                0x00106f20                elf_load_program
+                0x00107160                elf_symbol_find_by_name
+                0x00107240                elf_get_entry_point
+                0x00106a60                elf_resolve
+                0x00106870                elf_identify
+                0x00107200                elf_parse_program
+                0x00107110                elf_symbol_find_by_index
+                0x00106bb0                elf_relocate
+                0x00106950                elf_parse
+                0x00106d80                elf_load_module
+ *fill*         0x00107252        0xe 9090
+ .text          0x00107260      0x169 Hardware/SystemCall/system_call.o
+                0x00107260                system_call_init
+                0x001072f0                system_call
+ *fill*         0x001073c9        0x7 9090
+ .text          0x001073d0       0x4b Repository/./repository.o
+                0x001073d0                repository_init
+ *fill*         0x0010741b        0x5 9090
+ .text          0x00107420       0x7f Repository/Reference/system.o
+                0x00107460                reference_get_number_of_references
+                0x00107490                reference_equals
+                0x00107450                reference_get_owner
+                0x00107420                reference_acquire
+                0x00107480                reference_is_exists
+                0x00107470                reference_is_nill
+                0x00107430                reference_release
+                0x00107440                reference_get_type
+ *fill*         0x0010749f        0x1 9090
+ .text          0x001074a0       0x41 Repository/Descriptions/Method/system.o
+                0x001074e0                method_description_unregister
+                0x001074a0                method_description_register
+ *fill*         0x001074e1        0xf 9090
+ .text          0x001074f0       0x41 Repository/Descriptions/Interface/system.o
+                0x00107530                interface_description_unregister
+                0x001074f0                interface_description_register
+ *fill*         0x00107531        0xf 9090
+ .text          0x00107540       0x61 Repository/Descriptions/Class/system.o
+                0x00107540                class_description_register
+                0x001075a0                class_description_unregister
+ *fill*         0x001075a1        0xf 9090
+ .text          0x001075b0       0x41 Repository/Descriptions/Event/system.o
+                0x001075b0                event_description_register
+                0x001075f0                event_description_unregister
+ *fill*         0x001075f1        0xf 9090
+ .text          0x00107600        0xd Repository/Method/init.o
+                0x00107600                repository_method_init
+ *fill*         0x0010760d        0x3 9090
+ .text          0x00107610       0xe1 Repository/Method/static.o
+                0x00107610                method_create_static
+                0x001076c0                method_destroy_static
+ *fill*         0x001076f1        0xf 9090
+ .text          0x00107700      0x249 Repository/Method/system.o
+                0x00107830                method_invoke
+                0x00107700                method_create
+                0x001077d0                method_destroy
+ *fill*         0x00107949        0x3 9090
+ *fill*         0x0010794c        0x4 9090
+ .text          0x00107950        0xd Repository/Interface/init.o
+                0x00107950                repository_interface_init
+ *fill*         0x0010795d        0x3 9090
+ .text          0x00107960      0x14e Repository/Interface/static.o
+                0x00107a50                interface_destroy_static
+                0x00107960                interface_create_static
+ *fill*         0x00107aae        0x2 9090
+ .text          0x00107ab0      0x1d2 Repository/Interface/system.o
+                0x00107ab0                interface_create
+                0x00107bf0                interface_destroy
+ *fill*         0x00107c82        0x2 9090
+ *fill*         0x00107c84        0xc 9090
+ .text          0x00107c90        0xd Repository/EventSupplierInterface/init.o
+                0x00107c90                repository_event_supplier_interface_init
+ *fill*         0x00107c9d        0x3 9090
+ .text          0x00107ca0       0xf8 Repository/EventSupplierInterface/static.o
+                0x00107ca0                event_supplier_interface_create_static
+                0x00107d60                event_supplier_interface_destroy_static
+ *fill*         0x00107d98        0x8 9090
+ .text          0x00107da0      0x11c Repository/EventSupplierInterface/system.o
+                0x00107e60                event_supplier_interface_destroy
+                0x00107eb0                event_supplier_interface_set_factory
+                0x00107da0                event_supplier_interface_create
+ *fill*         0x00107ebc        0x4 9090
+ .text          0x00107ec0      0x771 Repository/EventSupplier/system.o
+                0x00108580                event_consumer_destroy
+                0x00108550                event_supplier_set_queue
+                0x00108220                event_supplier_fire_event
+                0x001085f0                event_consumer_set_queue
+                0x00108330                event_consumer_create
+                0x00108630                repository_event_consumer_init
+                0x00108520                event_supplier_set_data
+                0x00108620                repository_event_supplier_init
+                0x00108500                event_supplier_get_data
+                0x001085a0                event_consumer_wait_event
+                0x00107ec0                event_supplier_create
+                0x001084b0                event_supplier_destroy
+ *fill*         0x00108631        0xf 9090
+ .text          0x00108640        0xd Repository/EventConsumerInterface/init.o
+                0x00108640                repository_event_consumer_interface_init
+ *fill*         0x0010864d        0x3 9090
+ .text          0x00108650       0xf8 Repository/EventConsumerInterface/static.o
+                0x00108710                event_consumer_interface_destroy_static
+                0x00108650                event_consumer_interface_create_static
+ *fill*         0x00108748        0x8 9090
+ .text          0x00108750      0x11c Repository/EventConsumerInterface/system.o
+                0x00108750                event_consumer_interface_create
+                0x00108810                event_consumer_interface_destroy
+                0x00108860                event_consumer_interface_set_factory
+ *fill*         0x0010886c        0x4 9090
+ .text          0x00108870        0xd Repository/Class/init.o
+                0x00108870                repository_class_init
+ *fill*         0x0010887d        0x3 9090
+ .text          0x00108880      0x1fb Repository/Class/static.o
+                0x001089e0                class_destroy_static
+                0x00108880                class_create_static
+ *fill*         0x00108a7b        0x5 9090
+ .text          0x00108a80      0x43e Repository/Class/system.o
+                0x00108df0                class_get_interface_by_id
+                0x00108cf0                class_destroy
+                0x00108a80                class_create
+                0x00108de0                class_set_interfaces
+ *fill*         0x00108ebe        0x2 9090
+ .text          0x00108ec0      0x20f Repository/Security/internal.o
+                0x00108fa0                security_create_internal
+                0x00109090                security_destroy_internal
+                0x00108f70                security_destroy_static_internal
+                0x00108ec0                security_create_static_internal
+ *fill*         0x001090cf        0x1 9090
+ .text          0x001090d0       0x2b Repository/Security/static.o
+                0x001090f0                security_destroy_static
+                0x001090d0                security_create_static
+ *fill*         0x001090fb        0x5 9090
+ .text          0x00109100       0x59 Repository/Security/system.o
+                0x00109150                security_get_current
+                0x00109120                security_destroy
+                0x00109100                security_create
+ *fill*         0x00109159        0x7 9090
+ .text          0x00109160        0x1 Repository/Cpu/init.o
+                0x00109160                repository_cpu_init
+ *fill*         0x00109161        0xf 9090
+ .text          0x00109170       0xcb Repository/Cpu/internal.o
+                0x001091f0                cpu_create_internal
+                0x00109170                cpu_get_current
+                0x00109180                cpu_sleep_milli
+                0x00109230                cpu_destroy_internal
+ *fill*         0x0010923b        0x5 9090
+ .text          0x00109240        0xb Repository/Cpu/system.o
+                0x00109240                cpu_create
+ *fill*         0x0010924b        0x5 9090
+ .text          0x00109250       0x43 Repository/Memory/memory.o
+                0x00109290                memory_deallocate
+                0x00109250                memory_allocate
+ *fill*         0x00109293        0xd 9090
+ .text          0x001092a0      0x21c Repository/Memory/slab.o
+                0x001092a0                slab_superblock_init
+                0x00109440                slab_heap_index
+                0x001093a0                slab_heap_init
+ *fill*         0x001094bc        0x4 9090
+ .text          0x001094c0       0xa1 Repository/Memory/system.o
+                0x001094c0                memory_create
+                0x00109560                repository_memory_init
+ *fill*         0x00109561        0xf 9090
+ .text          0x00109570     0x1152 Repository/Computer/internal.o
+                0x0010a280                computer_call_function
+                0x0010a5c0                computer_stop
+                0x0010a630                computer_schedule_prepare
+                0x00109570                computer_invoke_internal
+                0x00109be0                computer_begin
+                0x00109940                computer_invoke_async_internal
+                0x0010a020                computer_return
+                0x0010a530                computer_start
+ *fill*         0x0010a6c2        0xe 9090
+ .text          0x0010a6d0       0x7b Repository/Computer/scheduler.o
+                0x0010a6d0                scheduler_get_next_computer
+                0x0010a710                scheduler_add_computer
+                0x0010a730                scheduler_remove_computer
+ *fill*         0x0010a74b        0x5 9090
+ .text          0x0010a750      0x6c2 Repository/Computer/system.o
+                0x0010a750                computer_create
+                0x0010ab00                computer_reset
+                0x0010aaf0                computer_destroy
+                0x0010ac50                computer_remove_exception_context
+                0x0010acd0                repository_computer_init
+                0x0010acc0                computer_get_current
+                0x0010ab80                computer_add_exception_context
+                0x0010a890                computer_fire_exception
+ *fill*         0x0010ae12        0xe 9090
+ .text          0x0010ae20        0xd Repository/Object/init.o
+                0x0010ae20                repository_object_init
+ *fill*         0x0010ae2d        0x3 9090
+ .text          0x0010ae30      0x36b Repository/Object/static.o
+                0x0010ae30                object_create_static
+                0x0010b160                object_destroy_static
+ *fill*         0x0010b19b        0x5 9090
+ .text          0x0010b1a0      0x51d Repository/Object/system.o
+                0x0010b510                object_set_data
+                0x0010b4e0                object_get_data
+                0x0010b4b0                object_get_current
+                0x0010b450                object_destroy
+                0x0010b570                object_get_interface_by_id
+                0x0010b540                object_get_class
+                0x0010b4d0                object_get_kernel
+                0x0010b670                object_set_security
+                0x0010b1a0                object_create
+                0x0010b640                object_get_security
+ *fill*         0x0010b6bd        0x3 9090
+ .text          0x0010b6c0        0xd Repository/Handle/init.o
+                0x0010b6c0                repository_handle_init
+ *fill*         0x0010b6cd        0x3 9090
+ .text          0x0010b6d0      0x127 Repository/Handle/static.o
+                0x0010b6d0                handle_create_static
+                0x0010b790                handle_destroy_static
+                0x0010b7d0                handle_clone_static
+ *fill*         0x0010b7f7        0x9 9090
+ .text          0x0010b800      0x3c6 Repository/Handle/system.o
+                0x0010b990                handle_destroy
+                0x0010b9f0                handle_clone
+                0x0010b800                handle_create
+                0x0010ba50                handle_invoke_method
+ *fill*         0x0010bbc6        0xa 9090
+ .text          0x0010bbd0       0xd4 Repository/EventQueue/system.o
+                0x0010bc70                event_queue_destroy
+                0x0010bbd0                event_queue_create
+ *fill*         0x0010bca4        0xc 9090
+ .text          0x0010bcb0       0x11 Repository/Quality/system.o
+                0x0010bcc0                quality_reset
+                0x0010bcb0                quality_set
+ *fill*         0x0010bcc1        0xf 9090
+ .text          0x0010bcd0      0x1fa Kernel/./init.o
+                0x0010bcd0                kernel_init
+ *fill*         0x0010beca        0x6 9090
+ .text          0x0010bed0      0x12d Kernel/Interfaces/flat_namespace_object_factory.o
+                0x0010bf40                flat_namespace_object_factory_init
+ *fill*         0x0010bffd        0x3 9090
+ .text          0x0010c000      0x152 Kernel/Interfaces/flat_namespace_object_factory_interface.o
+                0x0010c000                flat_namespace_object_factory_interface_register
+ *fill*         0x0010c152        0xe 9090
+ .text          0x0010c160      0x4e1 Kernel/Interfaces/init_init.o
+                0x0010c620                kernel_control_init
+ *fill*         0x0010c641        0xf 9090
+ .text          0x0010c650      0x17f Kernel/Interfaces/init_interface.o
+                0x0010c650                kernel_control_interface_register
+ *fill*         0x0010c7cf        0x1 9090
+ .text          0x0010c7d0       0xa7 Kernel/Interfaces/irq_supplier_factory_init.o
+                0x0010c7d0                irq_supplier_factory_init
+ *fill*         0x0010c877        0x9 9090
+ .text          0x0010c880      0x124 Kernel/Interfaces/irq_supplier_factory_interface.o
+                0x0010c880                irq_supplier_factory_interface_register
+ *fill*         0x0010c9a4        0xc 9090
+ .text          0x0010c9b0      0xc72 Kernel/Interfaces/namespace_init.o
+                0x0010d5b0                namespace_init
+ *fill*         0x0010d622        0xe 9090
+ .text          0x0010d630      0x236 Kernel/Interfaces/namespace_interface.o
+                0x0010d630                namespace_interface_register
+ *fill*         0x0010d866        0xa 9090
+ .text          0x0010d870      0x4af Kernel/Interfaces/storm_module_factory.o
+                0x0010dc90                storm_module_factory_interface_init
+ *fill*         0x0010dd1f        0x1 9090
+ .text          0x0010dd20      0x152 Kernel/Interfaces/storm_module_factory_interface.o
+                0x0010dd20                storm_module_factory_interface_register
+ *fill*         0x0010de72        0xe 9090
+ .text          0x0010de80      0x3cc Kernel/Interfaces/storm_program_factory.o
+                0x0010e1d0                storm_program_factory_interface_init
+ *fill*         0x0010e24c        0x4 9090
+ .text          0x0010e250      0x152 Kernel/Interfaces/storm_program_factory_interface.o
+                0x0010e250                storm_program_factory_interface_register
+ *fill*         0x0010e3a2        0xe 9090
+ .text          0x0010e3b0       0xbb Kernel/Interfaces/timer_interface.o
+                0x0010e3b0                timer_interface_register
+ *fill*         0x0010e46b        0x5 9090
+ .text          0x0010e470       0x51 Kernel/Interfaces/timer_interface_init.o
+                0x0010e470                timer_interface_init
+ *fill*         0x0010e4c1        0xf 9090
+ .text          0x0010e4d0       0x56 Kernel/Events/debug_consumer_init.o
+                0x0010e4d0                debug_consumer_init
+ *fill*         0x0010e526        0xa 9090
+ .text          0x0010e530      0x236 Kernel/Events/debug_event_class.o
+                0x0010e550                debug_supplier_interface_register
+                0x0010e530                debug_description_register
+                0x0010e610                debug_consumer_interface_register
+ *fill*         0x0010e766        0xa 9090
+ .text          0x0010e770       0x1f Kernel/Events/debug_supplier_init.o
+                0x0010e770                debug_supplier_init
+ *fill*         0x0010e78f        0x1 9090
+ .text          0x0010e790      0x1df Kernel/Events/irq_event_class.o
+                0x0010e790                irq_description_register
+                0x0010e870                irq_consumer_interface_register
+                0x0010e7b0                irq_supplier_interface_register
+ *fill*         0x0010e96f        0x1 9090
+ .text          0x0010e970       0x26 Kernel/Events/irq_supplier_init.o
+                0x0010e970                irq_supplier_init
+ *fill*         0x0010e996        0xa 9090
+ .text          0x0010e9a0      0x231 Kernel/Classes/flat_namespace_init.o
+                0x0010eaf0                flat_namespace_init
+ *fill*         0x0010ebd1        0xf 9090
+ .text          0x0010ebe0      0x254 Kernel/Classes/flat_namespace_interface.o
+                0x0010ebe0                flat_namespace_interface_register
+ *fill*         0x0010ee34        0xc 9090
+ .text          0x0010ee40       0x5b Kernel/Classes/flat_namespace_object.o
+                0x0010ee40                flat_namespace_class_init
+ *fill*         0x0010ee9b        0x5 9090
+ .text          0x0010eea0       0x5b Kernel/Classes/storm_module.o
+                0x0010eea0                storm_module_class_init
+ *fill*         0x0010eefb        0x5 9090
+ .text          0x0010ef00       0xef Kernel/Classes/storm_module_control_init.o
+                0x0010ef00                storm_module_control_init
+ *fill*         0x0010efef        0x1 9090
+ .text          0x0010eff0      0x14b Kernel/Classes/storm_module_control_interface.o
+                0x0010eff0                storm_module_control_interface_register
+ *fill*         0x0010f13b        0x5 9090
+ .text          0x0010f140       0x5b Kernel/Classes/storm_program.o
+                0x0010f140                storm_program_class_init
+ *fill*         0x0010f19b        0x5 9090
+ .text          0x0010f1a0       0xdc Kernel/Classes/storm_program_control_init.o
+                0x0010f1a0                storm_program_control_init
+ *fill*         0x0010f27c        0x4 9090
+ .text          0x0010f280       0xd2 Kernel/Classes/storm_program_control_interface.o
+                0x0010f280                storm_program_control_interface_register
+ *fill*         0x0010f352        0x2 9090
+ .text          0x0010f354      0x429 Hardware/Irq/handlers_lowlevel.o
+                0x0010f429                irq4_handler
+                0x0010f4fe                irq7_handler
+                0x0010f61a                irq11_handler
+                0x0010f736                irq15_handler
+                0x0010f6a8                irq13_handler
+                0x0010f6ef                irq14_handler
+                0x0010f661                irq12_handler
+                0x0010f3e2                irq3_handler
+                0x0010f39b                irq1_handler
+                0x0010f4b7                irq6_handler
+                0x0010f5d3                irq10_handler
+                0x0010f354                irq0_handler
+                0x0010f58c                irq9_handler
+                0x0010f545                irq8_handler
+                0x0010f470                irq5_handler
+ *fill*         0x0010f77d        0x3 9090
+ .text          0x0010f780      0x47c Hardware/Exception/handlers_lowlevel.o
+                0x0010f9f3                EXCEPTION_HANDLER_SEGMENT_NOT_PRESENT_LOWLEVEL
+                0x0010f8d6                EXCEPTION_HANDLER_INVALID_OPCODE_LOWLEVEL
+                0x0010fb8a                EXCEPTION_HANDLER_MACHINE_CHECK_LOWLEVEL
+                0x0010fa2c                EXCEPTION_HANDLER_STACK_FAULT_LOWLEVEL
+                0x0010fb18                EXCEPTION_HANDLER_FLOATING_POINT_ERROR_LOWLEVEL
+                0x0010f9ba                EXCEPTION_HANDLER_INVALID_TSS_LOWLEVEL
+                0x0010f90f                EXCEPTION_HANDLER_DEVICE_NOT_AVAILABLE_LOWLEVEL
+                0x0010fadf                EXCEPTION_HANDLER_DUMMY_LOWLEVEL
+                0x0010fbc3                EXCEPTION_HANDLER_STREAMING_SIMD_EXTENSIONS_LOWLEVEL
+                0x0010f780                EXCEPTION_HANDLER_DIVIDE_ERROR_LOWLEVEL
+                0x0010f89d                EXCEPTION_HANDLER_BOUND_RANGE_EXCEEDED_LOWLEVEL
+                0x0010f981                EXCEPTION_HANDLER_COPROCESSOR_SEGMENT_OVERRUN_LOWLEVEL
+                0x0010f7f2                EXCEPTION_HANDLER_NONMASKABLE_INTERRUPT_LOWLEVEL
+                0x0010f864                EXCEPTION_HANDLER_OVERFLOW_LOWLEVEL
+                0x0010f7b9                EXCEPTION_HANDLER_DEBUG_LOWLEVEL
+                0x0010fa65                EXCEPTION_HANDLER_GENERAL_PROTECTION_LOWLEVEL
+                0x0010fb51                EXCEPTION_HANDLER_ALIGNMENT_CHECK_LOWLEVEL
+                0x0010f948                EXCEPTION_HANDLER_DOUBLE_FAULT_LOWLEVEL
+                0x0010f82b                EXCEPTION_HANDLER_BREAKPOINT_LOWLEVEL
+                0x0010fa9e                EXCEPTION_HANDLER_PAGE_FAULT_LOWLEVEL
+ .text          0x0010fbfc        0xe Hardware/TaskState/task_state_lowlevel.o
+                0x0010fc02                task_state_switch_finish2
+                0x0010fbfc                task_state_switch_finish
+ *fill*         0x0010fc0a        0x2 9090
+ .text          0x0010fc0c       0x1e Hardware/SystemCall/handlers_lowlevel.o
+                0x0010fc0c                system_call_lowlevel
+ *fill*         0x0010fc2a        0x2 9090
+ .text          0x0010fc2c       0x54 Repository/Computer/jump_lowlevel.o
+                0x0010fc59                iret_to_func
+                0x0010fc2c                jump_lowlevel
+ .text          0x0010fc80      0x1b4 /root/Chaos/Binaries/Libraries/list.a(list.o)
+                0x0010fcd0                list_node_insert
+                0x0010fd80                list_node_remove_last
+                0x0010fd40                list_node_remove
+                0x0010fc80                list_create
+                0x0010fdc0                list_get_iterator
+                0x0010fde0                list_get_reverse_iterator
+ *fill*         0x0010fe34        0xc 9090
+ .text          0x0010fe40      0x52a /root/Chaos/Binaries/Libraries/pool_of_integers.a(pool_of_integers.o)
+                0x0010fe40                pool_of_integers_init
+                0x001100b0                pool_of_integers_allocate
+                0x00110220                pool_of_integers_deallocate
+                0x0010ffc0                pool_of_integers_reserve
+ *fill*         0x0011036a        0x6 9090
+ .text          0x00110370      0x6d4 /root/Chaos/Binaries/Libraries/pool_of_ranges.a(id_pool.o)
+                0x001109e0                pool_is_empty
+                0x001108c0                pool_init
+                0x00110370                pool_allocate
+                0x001109b0                pool_is_full
+                0x001109a0                pool_get_iterator
+                0x001106a0                pool_deallocate
+                0x00110460                pool_reserve
+ *fill*         0x00110a44        0xc 9090
+ .text          0x00110a50      0x4bf /root/Chaos/Binaries/Libraries/avl_tree.a(avl.o)
+                0x00110bc0                avl_tree_destroy
+                0x00110ce0                avl_tree_search_node
+                0x00110e00                avl_tree_get_smallest_node
+                0x00110e60                avl_tree_get_reverse_iterator
+                0x00110e20                avl_tree_get_largest_node
+                0x00110b80                avl_tree_create
+                0x00110bd0                avl_tree_add_node
+                0x00110d80                avl_tree_search_nearest_node
+                0x00110e40                avl_tree_get_iterator
+                0x00110a50                avl_tree_delete_node
+                0x00110c50                avl_tree_update_node
+ *fill*         0x00110f0f        0x1 9090
+ .text          0x00110f10      0x8b2 /root/Chaos/Binaries/Libraries/avl_tree.a(avl_util.o)
+                0x00111790                get_most_left_node
+                0x00111770                get_right_level
+                0x001117b0                get_most_right_node
+                0x00111750                get_left_level
+                0x00110f10                exchange
+                0x00111560                update
+                0x00111720                get_pointer_from_parent
+                0x00111620                update2
+ *fill*         0x001117c2        0xe 9090
+ .text          0x001117d0      0xa43 /root/Chaos/Binaries/Libraries/string.a(format.o)
+                0x001117d0                string_print
+                0x00111e30                string_scan_va
+                0x001117f0                string_print_va
+                0x00111e10                string_scan
+ *fill*         0x00112213        0xd 9090
+ .text          0x00112220      0x3cb /root/Chaos/Binaries/Libraries/string.a(general-inlines.o)
+                0x00112360                string_sep
+                0x00112470                string_scn
+                0x00112270                string_tok
+                0x001124c0                string_i_compare_max
+                0x00112220                string_pbrk
+                0x00112430                string_spn
+ *fill*         0x001125eb        0x5 9090
+ .text          0x001125f0      0xc4f /root/Chaos/Binaries/Libraries/string.a(wformat.o)
+                0x001125f0                wstring_print
+                0x00112d90                wstring_scan
+                0x00112db0                wstring_scan_va
+                0x00112610                wstring_print_va
+ *fill*         0x0011323f        0x1 9090
+ .text          0x00113240      0x606 /root/Chaos/Binaries/Libraries/string.a(wstring-inlines.o)
+                0x001133a0                wstring_compare
+                0x00113240                wstring_scn
+                0x00113690                wstring_find_substring
+                0x00113490                wstring_length
+                0x001134f0                wstring_compare_template
+                0x001133d0                wstring_compare_max
+                0x00113280                wstring_copy
+                0x001132b0                wstring_copy_max
+                0x001134b0                wstring_length_max
+                0x001135e0                wstring_find_last_char
+                0x00113310                wstring_append
+                0x00113350                wstring_append_max
+                0x001135b0                wstring_find_first_char
+ *fill*         0x00113846        0xa 9090
+ .text          0x00113850      0x1f4 /root/Chaos/Binaries/Libraries/string.a(character.o)
+                0x001139d0                char_is_upper
+                0x00113970                char_is_digit
+                0x00113990                char_is_lower
+                0x001139f0                char_is_heximal_digit
+                0x00113870                char_to_lower_case
+                0x001138d0                int_to_char
+                0x00113890                char_to_int
+                0x001139b0                char_is_space
+                0x00113960                char_is_control
+                0x00113a20                char_is_number
+                0x00113940                char_is_alpha
+                0x00113850                char_to_upper_case
+                0x00113900                char_is_alpha_or_number
+ *fill*         0x00113a44        0xc 9090
+ .text          0x00113a50      0xa0e /root/Chaos/Binaries/Libraries/string.a(conversions.o)
+                0x00114380                string_to_uint32
+                0x00113ca0                string_to_int32_with_base_autodetect
+                0x00114290                string_to_int32
+                0x00113a50                string_to_double
+                0x00113e60                uint32_to_string
+ *fill*         0x0011445e        0x2 9090
+ .text          0x00114460      0xab0 /root/Chaos/Binaries/Libraries/string.a(wconversions.o)
+                0x00114460                wstring_to_double
+                0x001146d0                wstring_to_int32_with_base_autodetect
+                0x00114850                uint32_to_wstring
+                0x00114d20                wstring_to_int32
+                0x00114e20                wstring_to_uint32
+ .text          0x00114f10      0x3ae /root/Chaos/Binaries/Libraries/hash_table.a(hash_table.o)
+                0x00115010                hash_table_add_element
+                0x00114f10                hash_table_create
+                0x00114fc0                hash_table_search_element
+                0x001150d0                hash_table_get_iterator
+                0x00115050                hash_table_delete_element
+                0x00115180                string_to_hash
+                0x00114f60                hash_table_destroy
+ *(.text.*)
+ *(.stub)
+ *(.gnu.warning)
+ *(.gnu.linkonce.t.*)
+
+.fini
+ *(.fini)
+                0x001152be                PROVIDE (__etext, .)
+                0x001152be                PROVIDE (_etext, .)
+                0x001152be                PROVIDE (etext, .)
+
+.rodata         0x001152c0     0x3bf4
+ *(.rodata)
+ .rodata        0x001152c0       0x39 ./init.o
+ *fill*         0x001152f9        0x7 00
+ .rodata        0x00115300       0x70 Hardware/SystemDebug/debug.o
+ .rodata        0x00115370       0xf8 Hardware/Cpu/identification.o
+ *fill*         0x00115468       0x18 00
+ .rodata        0x00115480      0x522 Hardware/Exception/handlers.o
+ *fill*         0x001159a2       0x1e 00
+ .rodata        0x001159c0      0x3e9 Hardware/Exception/init.o
+ *fill*         0x00115da9       0x17 00
+ .rodata        0x00115dc0       0x54 Hardware/Clock/time.o
+ *fill*         0x00115e14        0xc 00
+ .rodata        0x00115e20       0xc0 Hardware/Dma/controller.o
+ .rodata        0x00115ee0       0x62 Hardware/PhysicalMemory/allocate.o
+ *fill*         0x00115f42       0x1e 00
+ .rodata        0x00115f60      0x116 Hardware/PhysicalMemory/init.o
+ .rodata        0x00116076       0x89 Hardware/VirtualMemory/allocate.o
+ *fill*         0x001160ff        0x1 00
+ .rodata        0x00116100       0x9a Hardware/VirtualMemory/create.o
+ *fill*         0x0011619a        0x6 00
+ .rodata        0x001161a0       0x83 Hardware/VirtualMemory/init.o
+ *fill*         0x00116223       0x1d 00
+ .rodata        0x00116240       0xfb Hardware/VirtualMemory/page.o
+ .rodata        0x0011633b       0x6e Hardware/VirtualMemory/reserve.o
+ *fill*         0x001163a9       0x17 00
+ .rodata        0x001163c0      0x143 Hardware/Elf/elf.o
+ *fill*         0x00116503       0x1d 00
+ .rodata        0x00116520       0x87 Hardware/SystemCall/system_call.o
+ .rodata        0x001165a7       0x36 Repository/Method/static.o
+ .rodata        0x001165dd       0x2c Repository/Interface/static.o
+ .rodata        0x00116609       0x2c Repository/EventSupplierInterface/static.o
+ .rodata        0x00116635       0x2c Repository/EventConsumerInterface/static.o
+ .rodata        0x00116661       0x56 Repository/Class/static.o
+ .rodata        0x001166b7       0x36 Repository/Security/internal.o
+ *fill*         0x001166ed       0x13 00
+ .rodata        0x00116700       0x20 Repository/Memory/slab.o
+                0x00116700                slab_block_size
+ .rodata        0x00116720      0x2d2 Repository/Computer/internal.o
+ *fill*         0x001169f2        0xe 00
+ .rodata        0x00116a00      0x1e5 Repository/Computer/system.o
+ .rodata        0x00116be5       0x93 Repository/Object/static.o
+ .rodata        0x00116c78       0x36 Repository/Handle/static.o
+ *fill*         0x00116cae       0x12 00
+ .rodata        0x00116cc0      0x254 Kernel/./init.o
+ *fill*         0x00116f14        0xc 00
+ .rodata        0x00116f20       0xb8 Kernel/Interfaces/flat_namespace_object_factory_interface.o
+ *fill*         0x00116fd8        0x8 00
+ .rodata        0x00116fe0      0x43c Kernel/Interfaces/init_init.o
+ *fill*         0x0011741c        0x4 00
+ .rodata        0x00117420       0x7c Kernel/Interfaces/init_interface.o
+ *fill*         0x0011749c        0x4 00
+ .rodata        0x001174a0       0x94 Kernel/Interfaces/irq_supplier_factory_interface.o
+ *fill*         0x00117534        0xc 00
+ .rodata        0x00117540      0x174 Kernel/Interfaces/namespace_init.o
+ *fill*         0x001176b4        0xc 00
+ .rodata        0x001176c0       0xa8 Kernel/Interfaces/namespace_interface.o
+ *fill*         0x00117768       0x18 00
+ .rodata        0x00117780      0x472 Kernel/Interfaces/storm_module_factory.o
+ *fill*         0x00117bf2        0xe 00
+ .rodata        0x00117c00       0x94 Kernel/Interfaces/storm_module_factory_interface.o
+ *fill*         0x00117c94        0xc 00
+ .rodata        0x00117ca0      0x10d Kernel/Interfaces/storm_program_factory.o
+ *fill*         0x00117dad       0x13 00
+ .rodata        0x00117dc0       0x98 Kernel/Interfaces/storm_program_factory_interface.o
+ *fill*         0x00117e58        0x8 00
+ .rodata        0x00117e60       0x44 Kernel/Interfaces/timer_interface.o
+ *fill*         0x00117ea4       0x1c 00
+ .rodata        0x00117ec0       0xdc Kernel/Events/debug_event_class.o
+ *fill*         0x00117f9c        0x4 00
+ .rodata        0x00117fa0       0xd4 Kernel/Events/irq_event_class.o
+ *fill*         0x00118074        0xc 00
+ .rodata        0x00118080       0xec Kernel/Classes/flat_namespace_init.o
+ *fill*         0x0011816c       0x14 00
+ .rodata        0x00118180      0x13c Kernel/Classes/flat_namespace_interface.o
+ *fill*         0x001182bc        0x4 00
+ .rodata        0x001182c0       0x38 Kernel/Classes/flat_namespace_object.o
+ *fill*         0x001182f8        0x8 00
+ .rodata        0x00118300       0x34 Kernel/Classes/storm_module.o
+ .rodata        0x00118334       0x44 Kernel/Classes/storm_module_control_init.o
+ *fill*         0x00118378        0x8 00
+ .rodata        0x00118380       0x94 Kernel/Classes/storm_module_control_interface.o
+ *fill*         0x00118414        0xc 00
+ .rodata        0x00118420       0x38 Kernel/Classes/storm_program.o
+ .rodata        0x00118458       0x38 Kernel/Classes/storm_program_control_init.o
+ *fill*         0x00118490       0x10 00
+ .rodata        0x001184a0       0x78 Kernel/Classes/storm_program_control_interface.o
+ *fill*         0x00118518        0x8 00
+ .rodata        0x00118520      0x32c /root/Chaos/Binaries/Libraries/string.a(format.o)
+ *fill*         0x0011884c       0x14 00
+ .rodata        0x00118860      0x43c /root/Chaos/Binaries/Libraries/string.a(wformat.o)
+ .rodata        0x00118c9c       0x11 /root/Chaos/Binaries/Libraries/string.a(character.o)
+ *fill*         0x00118cad       0x13 00
+ .rodata        0x00118cc0       0x85 /root/Chaos/Binaries/Libraries/string.a(conversions.o)
+ *fill*         0x00118d45       0x1b 00
+ .rodata        0x00118d60      0x154 /root/Chaos/Binaries/Libraries/string.a(wconversions.o)
+ *(.rodata.*)
+ *(.gnu.linkonce.r.*)
+
+.rodata1
+ *(.rodata1)
+
+.sdata2
+ *(.sdata2)
+ *(.sdata2.*)
+ *(.gnu.linkonce.s2.*)
+
+.sbss2
+ *(.sbss2)
+ *(.sbss2.*)
+ *(.gnu.linkonce.sb2.*)
+                0x00119eb4                . = (ALIGN (0x1000) + (. & 0xfff))
+
+.data           0x0011a000     0xb648
+ *(.data)
+ .data          0x0011a000     0x872c ./init.o
+                0x00122715                parse_parameters
+                0x0011a000                storm_info
+                0x0012270a                parse_disable
+                0x00122700                parse_enable
+                0x00120ea0                subsystem_built_in
+ *fill*         0x0012272c       0x14 00
+ .data          0x00122740       0x34 Hardware/Boot/init.o
+ .data          0x00122774       0x19 Hardware/SystemDebug/debug.o
+ *fill*         0x0012278d        0x3 00
+ *fill*         0x00122790       0x10 00
+ .data          0x001227a0      0x284 Hardware/Cpu/identification.o
+                0x00122940                cpu_sub_records
+ .data          0x00122a24        0x4 Hardware/Cpu/speed.o
+ *fill*         0x00122a28       0x18 00
+ .data          0x00122a40       0xc4 Hardware/Irq/irq.o
+                0x00122b00                irq_tmp_post_handler
+                0x00122a40                irq_handlers
+                0x00122a80                irq_handlers_data
+                0x00122ac0                irq_post_handlers
+ *fill*         0x00122b04       0x1c 00
+ .data          0x00122b20      0x190 Hardware/Exception/handlers.o
+                0x00122b20                exception_hardware_descriptions
+ .data          0x00122cb0        0x4 Hardware/Exception/init.o
+ .data          0x00122cb4       0x30 Hardware/Clock/time.o
+ .data          0x00122ce4       0x1c Hardware/Timer/timer.o
+ .data          0x00122d00       0x5c Hardware/PhysicalMemory/init.o
+                0x00122d00                physical_memory_global
+ *fill*         0x00122d5c        0x4 00
+ .data          0x00122d60       0x2e Hardware/VirtualMemory/init.o
+                0x00122d60                virtual_memory_global
+ *fill*         0x00122d8e        0x2 00
+ *fill*         0x00122d90      0x270 00
+ .data          0x00123000     0x1000 Hardware/VirtualMemory/page.o
+                0x00123000                page_directory_global
+ .data          0x00124000       0x6c Hardware/TaskState/task_state.o
+                0x00124000                task_state_kernel
+ .data          0x0012406c        0xc Hardware/TaskState/tss.o
+                0x00124070                jump_data
+ *fill*         0x00124078        0x8 00
+ .data          0x00124080       0x2c Repository/Reference/system.o
+                0x00124080                magic_number_table
+ *fill*         0x001240ac       0x14 00
+ .data          0x001240c0       0x60 Repository/Security/internal.o
+                0x001240c0                security_absolute
+ .data          0x00124120       0x30 Repository/Cpu/init.o
+                0x00124120                global_cpu
+ *fill*         0x00124150       0x10 00
+ .data          0x00124160       0x28 Repository/Memory/system.o
+                0x00124160                memory_global
+ *fill*         0x00124188       0x18 00
+ .data          0x001241a0     0x11b4 Repository/Computer/system.o
+                0x001241c0                computer_kernel
+                0x00125350                computer_current
+ *fill*         0x00125354        0xc 00
+ .data          0x00125360       0xac Kernel/./init.o
+                0x00125360                kernel_interfaces_info
+                0x001253f8                kernel_event_consumer_interfaces_info
+                0x001253d8                kernel_event_supplier_interfaces_info
+ .data          0x0012540c        0x8 Kernel/Interfaces/flat_namespace_object_factory.o
+ .data          0x00125414        0x8 Kernel/Interfaces/flat_namespace_object_factory_interface.o
+ *fill*         0x0012541c        0x4 00
+ .data          0x00125420       0x58 Kernel/Interfaces/init_init.o
+                0x0012546c                static_modules_info
+                0x00125450                kernel_object_root_flat_namespace
+                0x00125460                kernel_debug_queue
+                0x00125454                kernel_handle_root_flat_namespace
+                0x00125458                kernel_handle_namespace
+                0x00125468                kernel_consumer_debug
+                0x00125420                kernel_classes_info
+                0x0012545c                kernel_handle_timer
+                0x00125464                kernel_supplier_debug
+ .data          0x00125478        0x8 Kernel/Interfaces/init_interface.o
+ .data          0x00125480        0x8 Kernel/Interfaces/irq_supplier_factory_init.o
+ .data          0x00125488        0x8 Kernel/Interfaces/irq_supplier_factory_interface.o
+ .data          0x00125490       0x14 Kernel/Interfaces/namespace_init.o
+                0x00125490                char_illegals
+ .data          0x001254a4        0x8 Kernel/Interfaces/namespace_interface.o
+ *fill*         0x001254ac       0x14 00
+ .data          0x001254c0      0x120 Kernel/Interfaces/storm_module_factory.o
+                0x001254c0                functions_table
+ .data          0x001255e0        0x8 Kernel/Interfaces/storm_module_factory_interface.o
+ .data          0x001255e8        0xc Kernel/Interfaces/storm_program_factory.o
+ .data          0x001255f4        0x8 Kernel/Interfaces/storm_program_factory_interface.o
+ .data          0x001255fc        0x8 Kernel/Interfaces/timer_interface.o
+ .data          0x00125604        0x4 Kernel/Interfaces/timer_interface_init.o
+ .data          0x00125608        0x4 Kernel/Events/debug_event_class.o
+ .data          0x0012560c        0x4 Kernel/Events/irq_event_class.o
+ .data          0x00125610       0x10 Kernel/Classes/flat_namespace_init.o
+ .data          0x00125620        0x8 Kernel/Classes/flat_namespace_interface.o
+ .data          0x00125628        0x8 Kernel/Classes/storm_module_control_init.o
+ .data          0x00125630        0x8 Kernel/Classes/storm_module_control_interface.o
+ .data          0x00125638        0x4 Kernel/Classes/storm_program_control_init.o
+ .data          0x0012563c        0x8 Kernel/Classes/storm_program_control_interface.o
+ .data          0x00125644        0x4 /root/Chaos/Binaries/Libraries/string.a(character.o)
+ *(.data.*)
+ *(.gnu.linkonce.d.*)
+
+.data1
+ *(.data1)
+
+.eh_frame
+ *(.eh_frame)
+
+.gcc_except_table
+ *(.gcc_except_table)
+
+.ctors
+ *crtbegin.o(.ctors)
+ *(EXCLUDE_FILE(*crtend.o) .ctors)
+ *(SORT(.ctors.*))
+ *(.ctors)
+
+.dtors
+ *crtbegin.o(.dtors)
+ *(EXCLUDE_FILE(*crtend.o) .dtors)
+ *(SORT(.dtors.*))
+ *(.dtors)
+
+.got
+ *(.got.plt)
+ *(.got)
+
+.dynamic
+ *(.dynamic)
+
+.sdata
+ *(.sdata)
+ *(.sdata.*)
+ *(.gnu.linkonce.s.*)
+                0x00125648                _edata = .
+                0x00125648                PROVIDE (edata, .)
+                0x00125648                __bss_start = .
+
+.sbss           0x00125648        0x0
+                0x00125648                PROVIDE (__sbss_start, .)
+                0x00125648                PROVIDE (___sbss_start, .)
+ *(.dynsbss)
+ *(.sbss)
+ *(.sbss.*)
+ *(.gnu.linkonce.sb.*)
+ *(.scommon)
+                0x00125648                PROVIDE (__sbss_end, .)
+                0x00125648                PROVIDE (___sbss_end, .)
+
+.bss            0x00125660    0x179a0
+ *(.dynbss)
+ *(.bss)
+ .bss           0x00125660      0x404 Hardware/Boot/init.o
+ *fill*         0x00125a64        0x4 00
+ .bss           0x00125a68        0x8 Hardware/Clock/time.o
+ .bss           0x00125a70       0x58 Kernel/./init.o
+ .bss           0x00125ac8       0x18 Kernel/Interfaces/flat_namespace_object_factory_interface.o
+ .bss           0x00125ae0       0x1c Kernel/Interfaces/init_interface.o
+ .bss           0x00125afc       0x14 Kernel/Interfaces/irq_supplier_factory_interface.o
+ .bss           0x00125b10       0x24 Kernel/Interfaces/namespace_interface.o
+ .bss           0x00125b34       0x18 Kernel/Interfaces/storm_module_factory_interface.o
+ .bss           0x00125b4c       0x18 Kernel/Interfaces/storm_program_factory_interface.o
+ .bss           0x00125b64        0xc Kernel/Interfaces/timer_interface.o
+ .bss           0x00125b70       0x24 Kernel/Classes/flat_namespace_interface.o
+ .bss           0x00125b94        0x4 Kernel/Classes/flat_namespace_object.o
+ .bss           0x00125b98        0x4 Kernel/Classes/storm_module.o
+ .bss           0x00125b9c       0x14 Kernel/Classes/storm_module_control_interface.o
+ .bss           0x00125bb0        0x4 Kernel/Classes/storm_program.o
+ .bss           0x00125bb4        0xc Kernel/Classes/storm_program_control_interface.o
+ *(.bss.*)
+ *(.gnu.linkonce.b.*)
+ *(COMMON)
+ COMMON         0x00125bc0    0x10000 Hardware/Boot/init.o
+                                  0x0 (size before relaxing)
+                0x00125bc0                kernel_stack
+ COMMON         0x00135bc0       0x34 Hardware/Boot/multiboot.o
+                                  0x0 (size before relaxing)
+                0x00135bc0                multiboot_info
+ *fill*         0x00135bf4        0xc 00
+ COMMON         0x00135c00      0x105 Hardware/Cpu/init.o
+                                  0x0 (size before relaxing)
+                0x00135c00                cpu_info_global
+ *fill*         0x00135d05       0x1b 00
+ COMMON         0x00135d20       0xb0 Hardware/Exception/init.o
+                                  0x0 (size before relaxing)
+                0x00135d20                exception_handlers_data
+                0x00135d80                exception_handlers
+ *fill*         0x00135dd0       0x10 00
+ COMMON         0x00135de0       0x54 Hardware/Dma/dma.o
+                                  0x0 (size before relaxing)
+                0x00135de0                dma_channels
+ COMMON         0x00135e34        0x9 Hardware/Timer/pit.o
+                                  0x0 (size before relaxing)
+                0x00135e34                pit_divisor
+                0x00135e3a                pit_mode
+ *fill*         0x00135e3d        0x3 00
+ COMMON         0x00135e40     0x7160 Hardware/PhysicalMemory/internal.o
+                                  0x0 (size before relaxing)
+                0x00135e40                node_allocator_global
+                0x00136240                node_pool_global
+ COMMON         0x0013cfa0       0x30 Repository/Cpu/system.o
+                                  0x0 (size before relaxing)
+                0x0013cfa0                cpu_kernel
+ COMMON         0x0013cfd0       0x1c Repository/Computer/internal.o
+                                  0x0 (size before relaxing)
+                0x0013cfd0                computers
+ COMMON         0x0013cfec        0x8 Kernel/./init.o
+                                  0x0 (size before relaxing)
+                0x0013cfec                kernel_class
+                0x0013cff0                kernel_object
+ COMMON         0x0013cff4        0x4 Kernel/Interfaces/init_init.o
+                                  0x0 (size before relaxing)
+                0x0013cff4                storm_module_objects
+ COMMON         0x0013cff8        0x4 Kernel/Events/debug_supplier_init.o
+                                  0x0 (size before relaxing)
+                0x0013cff8                debug_event_class
+ COMMON         0x0013cffc        0x4 /root/Chaos/Binaries/Libraries/string.a(general-inlines.o)
+                                  0x0 (size before relaxing)
+                0x0013cffc                ___strtok
+                0x0013d000                . = ALIGN (0x4)
+                0x0013d000                . = ALIGN (0x4)
+                0x0013d000                _end = .
+                0x0013d000                PROVIDE (end, .)
+
+.stab
+ *(.stab)
+
+.stabstr
+ *(.stabstr)
+
+.stab.excl
+ *(.stab.excl)
+
+.stab.exclstr
+ *(.stab.exclstr)
+
+.stab.index
+ *(.stab.index)
+
+.stab.indexstr
+ *(.stab.indexstr)
+
+.comment        0x00000000      0xad4
+ *(.comment)
+ .comment       0x00000000       0x12 ./init.o
+ .comment       0x00000012       0x12 Hardware/Boot/init.o
+ .comment       0x00000024       0x12 Hardware/Boot/multiboot.o
+ .comment       0x00000036       0x12 Hardware/Boot/parse.o
+ .comment       0x00000048       0x12 Hardware/SystemDebug/debug.o
+ .comment       0x0000005a       0x12 Hardware/SystemDebug/gdb.o
+ .comment       0x0000006c       0x12 Hardware/Cpu/bugs.o
+ .comment       0x0000007e       0x12 Hardware/Cpu/halt.o
+ .comment       0x00000090       0x12 Hardware/Cpu/identification.o
+ .comment       0x000000a2       0x12 Hardware/Cpu/init.o
+ .comment       0x000000b4       0x12 Hardware/Cpu/lock.o
+ .comment       0x000000c6       0x12 Hardware/Cpu/speed.o
+ .comment       0x000000d8       0x12 Hardware/Irq/irq.o
+ .comment       0x000000ea       0x12 Hardware/Irq/pic.o
+ .comment       0x000000fc       0x12 Hardware/Exception/handlers.o
+ .comment       0x0000010e       0x12 Hardware/Exception/init.o
+ .comment       0x00000120       0x12 Hardware/Clock/time.o
+ .comment       0x00000132       0x12 Hardware/Dma/controller.o
+ .comment       0x00000144       0x12 Hardware/Dma/dma.o
+ .comment       0x00000156       0x12 Hardware/Timer/pit.o
+ .comment       0x00000168       0x12 Hardware/Timer/timer.o
+ .comment       0x0000017a       0x12 Hardware/PhysicalMemory/allocate.o
+ .comment       0x0000018c       0x12 Hardware/PhysicalMemory/check.o
+ .comment       0x0000019e       0x12 Hardware/PhysicalMemory/deallocate.o
+ .comment       0x000001b0       0x12 Hardware/PhysicalMemory/init.o
+ .comment       0x000001c2       0x12 Hardware/PhysicalMemory/internal.o
+ .comment       0x000001d4       0x12 Hardware/PhysicalMemory/reallocate.o
+ .comment       0x000001e6       0x12 Hardware/PhysicalMemory/reserve.o
+ .comment       0x000001f8       0x12 Hardware/VirtualMemory/allocate.o
+ .comment       0x0000020a       0x12 Hardware/VirtualMemory/create.o
+ .comment       0x0000021c       0x12 Hardware/VirtualMemory/deallocate.o
+ .comment       0x0000022e       0x12 Hardware/VirtualMemory/destroy.o
+ .comment       0x00000240       0x12 Hardware/VirtualMemory/init.o
+ .comment       0x00000252       0x12 Hardware/VirtualMemory/internal.o
+ .comment       0x00000264       0x12 Hardware/VirtualMemory/page.o
+ .comment       0x00000276       0x12 Hardware/VirtualMemory/reserve.o
+ .comment       0x00000288       0x12 Hardware/TaskState/task_state.o
+ .comment       0x0000029a       0x12 Hardware/TaskState/tss.o
+ .comment       0x000002ac       0x12 Hardware/IoPort/port.o
+ .comment       0x000002be       0x12 Hardware/Elf/elf.o
+ .comment       0x000002d0       0x12 Hardware/SystemCall/system_call.o
+ .comment       0x000002e2       0x12 Repository/./repository.o
+ .comment       0x000002f4       0x12 Repository/Reference/system.o
+ .comment       0x00000306       0x12 Repository/Descriptions/Method/system.o
+ .comment       0x00000318       0x12 Repository/Descriptions/Interface/system.o
+ .comment       0x0000032a       0x12 Repository/Descriptions/Class/system.o
+ .comment       0x0000033c       0x12 Repository/Descriptions/Event/system.o
+ .comment       0x0000034e       0x12 Repository/Method/init.o
+ .comment       0x00000360       0x12 Repository/Method/internal.o
+ .comment       0x00000372       0x12 Repository/Method/parameters_check.o
+ .comment       0x00000384       0x12 Repository/Method/security_check.o
+ .comment       0x00000396       0x12 Repository/Method/static.o
+ .comment       0x000003a8       0x12 Repository/Method/system.o
+ .comment       0x000003ba       0x12 Repository/Method/transaction.o
+ .comment       0x000003cc       0x12 Repository/Interface/init.o
+ .comment       0x000003de       0x12 Repository/Interface/internal.o
+ .comment       0x000003f0       0x12 Repository/Interface/parameters_check.o
+ .comment       0x00000402       0x12 Repository/Interface/security_check.o
+ .comment       0x00000414       0x12 Repository/Interface/static.o
+ .comment       0x00000426       0x12 Repository/Interface/system.o
+ .comment       0x00000438       0x12 Repository/Interface/transaction.o
+ .comment       0x0000044a       0x12 Repository/EventSupplierInterface/init.o
+ .comment       0x0000045c       0x12 Repository/EventSupplierInterface/internal.o
+ .comment       0x0000046e       0x12 Repository/EventSupplierInterface/parameters_check.o
+ .comment       0x00000480       0x12 Repository/EventSupplierInterface/security_check.o
+ .comment       0x00000492       0x12 Repository/EventSupplierInterface/static.o
+ .comment       0x000004a4       0x12 Repository/EventSupplierInterface/system.o
+ .comment       0x000004b6       0x12 Repository/EventSupplierInterface/transaction.o
+ .comment       0x000004c8       0x12 Repository/EventSupplier/system.o
+ .comment       0x000004da       0x12 Repository/EventConsumerInterface/init.o
+ .comment       0x000004ec       0x12 Repository/EventConsumerInterface/internal.o
+ .comment       0x000004fe       0x12 Repository/EventConsumerInterface/parameters_check.o
+ .comment       0x00000510       0x12 Repository/EventConsumerInterface/security_check.o
+ .comment       0x00000522       0x12 Repository/EventConsumerInterface/static.o
+ .comment       0x00000534       0x12 Repository/EventConsumerInterface/system.o
+ .comment       0x00000546       0x12 Repository/EventConsumerInterface/transaction.o
+ .comment       0x00000558       0x12 Repository/Class/init.o
+ .comment       0x0000056a       0x12 Repository/Class/internal.o
+ .comment       0x0000057c       0x12 Repository/Class/parameters_check.o
+ .comment       0x0000058e       0x12 Repository/Class/security_check.o
+ .comment       0x000005a0       0x12 Repository/Class/static.o
+ .comment       0x000005b2       0x12 Repository/Class/system.o
+ .comment       0x000005c4       0x12 Repository/Class/transaction.o
+ .comment       0x000005d6       0x12 Repository/Security/internal.o
+ .comment       0x000005e8       0x12 Repository/Security/parameters_check.o
+ .comment       0x000005fa       0x12 Repository/Security/security_check.o
+ .comment       0x0000060c       0x12 Repository/Security/static.o
+ .comment       0x0000061e       0x12 Repository/Security/system.o
+ .comment       0x00000630       0x12 Repository/Cpu/init.o
+ .comment       0x00000642       0x12 Repository/Cpu/internal.o
+ .comment       0x00000654       0x12 Repository/Cpu/system.o
+ .comment       0x00000666       0x12 Repository/Memory/memory.o
+ .comment       0x00000678       0x12 Repository/Memory/slab.o
+ .comment       0x0000068a       0x12 Repository/Memory/system.o
+ .comment       0x0000069c       0x12 Repository/Computer/internal.o
+ .comment       0x000006ae       0x12 Repository/Computer/scheduler.o
+ .comment       0x000006c0       0x12 Repository/Computer/system.o
+ .comment       0x000006d2       0x12 Repository/Object/init.o
+ .comment       0x000006e4       0x12 Repository/Object/internal.o
+ .comment       0x000006f6       0x12 Repository/Object/parameters_check.o
+ .comment       0x00000708       0x12 Repository/Object/security_check.o
+ .comment       0x0000071a       0x12 Repository/Object/static.o
+ .comment       0x0000072c       0x12 Repository/Object/system.o
+ .comment       0x0000073e       0x12 Repository/Object/transaction.o
+ .comment       0x00000750       0x12 Repository/Handle/init.o
+ .comment       0x00000762       0x12 Repository/Handle/internal.o
+ .comment       0x00000774       0x12 Repository/Handle/parameters_check.o
+ .comment       0x00000786       0x12 Repository/Handle/security_check.o
+ .comment       0x00000798       0x12 Repository/Handle/static.o
+ .comment       0x000007aa       0x12 Repository/Handle/system.o
+ .comment       0x000007bc       0x12 Repository/EventQueue/system.o
+ .comment       0x000007ce       0x12 Repository/Quality/system.o
+ .comment       0x000007e0       0x12 Kernel/./init.o
+ .comment       0x000007f2       0x12 Kernel/Interfaces/flat_namespace_object_factory.o
+ .comment       0x00000804       0x12 Kernel/Interfaces/flat_namespace_object_factory_interface.o
+ .comment       0x00000816       0x12 Kernel/Interfaces/init_init.o
+ .comment       0x00000828       0x12 Kernel/Interfaces/init_interface.o
+ .comment       0x0000083a       0x12 Kernel/Interfaces/irq_supplier_factory_init.o
+ .comment       0x0000084c       0x12 Kernel/Interfaces/irq_supplier_factory_interface.o
+ .comment       0x0000085e       0x12 Kernel/Interfaces/namespace_init.o
+ .comment       0x00000870       0x12 Kernel/Interfaces/namespace_interface.o
+ .comment       0x00000882       0x12 Kernel/Interfaces/storm_module_factory.o
+ .comment       0x00000894       0x12 Kernel/Interfaces/storm_module_factory_interface.o
+ .comment       0x000008a6       0x12 Kernel/Interfaces/storm_program_factory.o
+ .comment       0x000008b8       0x12 Kernel/Interfaces/storm_program_factory_interface.o
+ .comment       0x000008ca       0x12 Kernel/Interfaces/timer_interface.o
+ .comment       0x000008dc       0x12 Kernel/Interfaces/timer_interface_init.o
+ .comment       0x000008ee       0x12 Kernel/Events/debug_consumer_init.o
+ .comment       0x00000900       0x12 Kernel/Events/debug_event_class.o
+ .comment       0x00000912       0x12 Kernel/Events/debug_supplier_init.o
+ .comment       0x00000924       0x12 Kernel/Events/irq_event_class.o
+ .comment       0x00000936       0x12 Kernel/Events/irq_supplier_init.o
+ .comment       0x00000948       0x12 Kernel/Classes/flat_namespace_init.o
+ .comment       0x0000095a       0x12 Kernel/Classes/flat_namespace_interface.o
+ .comment       0x0000096c       0x12 Kernel/Classes/flat_namespace_object.o
+ .comment       0x0000097e       0x12 Kernel/Classes/storm_module.o
+ .comment       0x00000990       0x12 Kernel/Classes/storm_module_control_init.o
+ .comment       0x000009a2       0x12 Kernel/Classes/storm_module_control_interface.o
+ .comment       0x000009b4       0x12 Kernel/Classes/storm_program.o
+ .comment       0x000009c6       0x12 Kernel/Classes/storm_program_control_init.o
+ .comment       0x000009d8       0x12 Kernel/Classes/storm_program_control_interface.o
+ .comment       0x000009ea       0x12 /root/Chaos/Binaries/Libraries/list.a(list.o)
+ .comment       0x000009fc       0x12 /root/Chaos/Binaries/Libraries/pool_of_integers.a(pool_of_integers.o)
+ .comment       0x00000a0e       0x12 /root/Chaos/Binaries/Libraries/pool_of_ranges.a(id_pool.o)
+ .comment       0x00000a20       0x12 /root/Chaos/Binaries/Libraries/avl_tree.a(avl.o)
+ .comment       0x00000a32       0x12 /root/Chaos/Binaries/Libraries/avl_tree.a(avl_util.o)
+ .comment       0x00000a44       0x12 /root/Chaos/Binaries/Libraries/string.a(format.o)
+ .comment       0x00000a56       0x12 /root/Chaos/Binaries/Libraries/string.a(general-inlines.o)
+ .comment       0x00000a68       0x12 /root/Chaos/Binaries/Libraries/string.a(wformat.o)
+ .comment       0x00000a7a       0x12 /root/Chaos/Binaries/Libraries/string.a(wstring-inlines.o)
+ .comment       0x00000a8c       0x12 /root/Chaos/Binaries/Libraries/string.a(character.o)
+ .comment       0x00000a9e       0x12 /root/Chaos/Binaries/Libraries/string.a(conversions.o)
+ .comment       0x00000ab0       0x12 /root/Chaos/Binaries/Libraries/string.a(wconversions.o)
+ .comment       0x00000ac2       0x12 /root/Chaos/Binaries/Libraries/hash_table.a(hash_table.o)
+
+.debug
+ *(.debug)
+
+.line
+ *(.line)
+
+.debug_srcinfo
+ *(.debug_srcinfo)
+
+.debug_sfnames
+ *(.debug_sfnames)
+
+.debug_aranges
+ *(.debug_aranges)
+
+.debug_pubnames
+ *(.debug_pubnames)
+
+.debug_info
+ *(.debug_info)
+ *(.gnu.linkonce.wi.*)
+
+.debug_abbrev
+ *(.debug_abbrev)
+
+.debug_line
+ *(.debug_line)
+
+.debug_frame
+ *(.debug_frame)
+
+.debug_str
+ *(.debug_str)
+
+.debug_loc
+ *(.debug_loc)
+
+.debug_macinfo
+ *(.debug_macinfo)
+
+.debug_weaknames
+ *(.debug_weaknames)
+
+.debug_funcnames
+ *(.debug_funcnames)
+
+.debug_typenames
+ *(.debug_typenames)
+
+.debug_varnames
+ *(.debug_varnames)
+OUTPUT(/root/Chaos/Binaries/Release/Kernel/storm elf32-i386)

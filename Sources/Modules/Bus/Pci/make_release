@@ -1,0 +1,19 @@
+mkdir -p Release
+
+make deps \
+    preprocessor_flags="" \
+    include_directories="$CHAOS_INCLUDES $CHAOS_ENVIROMENTS"\
+    destination_directory="$CHAOS_BINARIES/Release" \
+    --directory=Release \
+    --makefile=../Makefile 
+
+
+make \
+    compile_flags="-O3 -funroll-loops -fomit-frame-pointer" \
+    preprocessor_flags="" \
+    include_directories="$CHAOS_INCLUDES $CHAOS_ENVIROMENTS"\
+    library_directories="$CHAOS_LIBRARIES" \
+    destination_directory="$CHAOS_BINARIES/Release" \
+    --directory=Release \
+    --makefile=../Makefile 
+

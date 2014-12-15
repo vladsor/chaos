@@ -187,18 +187,6 @@ typedef struct
      */
     uint16_t            iomap_base;
 
-#ifdef FPU_ENABLED
-    /**
-     *
-     */
-    bool                fpu_initialised;
-
-    /**
-     *
-     */
-    fpu_state_t         fpu_state;
-#endif
-
     /**
      * @brief           Size of I/O map.
      */
@@ -210,6 +198,8 @@ typedef struct
     uint8_t             iomap[0];
 
 } tss_t PACKED;
+
+typedef tss_t * p_tss_t;
 
 /**
  * @brief               The CPU flags to use when setting up a new TSS.

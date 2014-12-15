@@ -4,7 +4,7 @@
  * @author              Per Lundberg <per@chaosdev.org>
  * @author              Henrik Hallin <hal@chaosdev.org>
  * @author              Vladimir Sorokin          
- * @version             1.0
+ * @version             1.1
  * @date                2002-2004
  */
 
@@ -25,7 +25,12 @@
 /**
  * @brief               A page number.
  */
-typedef                 uint32_t page_number_t;
+typedef uint32_t page_number_t;
+
+/**
+ * @brief               Pointer to page number.
+ */
+typedef page_number_t * p_page_number_t;
 
 /**
  * @brief               The size of a physical page. 
@@ -96,6 +101,8 @@ typedef                 uint32_t page_number_t;
  */
 #define PAGE_CACHE_DISABLE \
                         BIT_VALUE (4)
+
+#define PAGE_SIZE_4MB   BIT_VALUE (7)
 
 /**
  * @brief               Is this a global page, shared between all page

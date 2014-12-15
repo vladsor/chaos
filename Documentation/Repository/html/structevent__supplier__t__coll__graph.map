@@ -1,0 +1,5 @@
+base referer
+rect $structreference__struct__t.html 173,18 349,181
+rect $structevent__supplier__interface__t.html 80,246 269,396
+rect $structobject__t.html 399,421 474,554
+rect $structevent__queue__t.html 205,580 402,817

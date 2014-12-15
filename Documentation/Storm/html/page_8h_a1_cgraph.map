@@ -1,0 +1,5 @@
+base referer
+rect common.tag$clear_8h.html#a1 449,33 596,57
+rect $page_8c.html#a3 218,57 298,81
+rect $PhysicalMemory_2allocate_8c.html#a2 429,81 616,105
+rect $Hardware_2PhysicalMemory_2init_8c.html#a4 137,156 380,180

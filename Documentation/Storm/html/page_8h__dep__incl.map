@@ -1,0 +1,8 @@
+base referer
+rect $VirtualMemory_2allocate_8c.html 7,18 73,42
+rect $create_8c.html 97,18 153,42
+rect $VirtualMemory_2deallocate_8c.html 177,18 260,42
+rect $destroy_8c.html 284,18 350,42
+rect $Hardware_2VirtualMemory_2init_8c.html 374,18 414,42
+rect $page_8c.html 438,18 486,42
+rect $VirtualMemory_2reserve_8c.html 510,18 574,42

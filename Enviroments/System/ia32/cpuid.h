@@ -10,7 +10,7 @@
  * @{
  */
 
-#define VENDOR_STRING_LENGTH (12)
+#define CPU_VENDOR_STRING_LENGTH (12)
 
 /**
  * @brief               Hardcoded string of unknown CPU's vendor.
@@ -61,7 +61,8 @@
  * @} // end of group_cpuid_vendor_strings
  */
 
-enum cpu_id_command_t{
+enum cpu_id_command_t
+{
     GET_CPU_VENDOR                              = 0,
     GET_CPU_INFO                                = 1,
     CHECK_AMD_FEATURES                          = 0x80000000,

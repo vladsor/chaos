@@ -1,4 +1,0 @@
-
-#define    EXCEPTION_TYPE_HARDWARE (0)
-#define    EXCEPTION_TYPE_SYSTEM (1)
-#define    EXCEPTION_TYPE_USER (2)

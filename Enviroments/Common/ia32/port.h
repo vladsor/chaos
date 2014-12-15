@@ -182,7 +182,7 @@ static inline void port_uint8_out_string (uint16_t port, uint8_t *data,
  * @param data          Pointer to word string
  * @param length        Length of string in words
  */
-static inline void port_uint16_out_string (uint16_t port, uint8_t *data,
+static inline void port_uint16_out_string (uint16_t port, uint16_t *data,
     size_t length)
 {
     asm volatile ("cld\n"

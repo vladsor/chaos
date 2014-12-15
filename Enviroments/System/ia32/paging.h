@@ -24,9 +24,9 @@
  * @{
  */
 
+#include "Paging/page.h"
 #include "Paging/page_directory.h"
 #include "Paging/page_table.h"
-#include "Paging/page.h"
 
 /**
  * }@ // end of group group_paging

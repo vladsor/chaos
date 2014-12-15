@@ -62,7 +62,7 @@
  * A program-state change does not accompany the divide error, because the
  * exception occurs before the faulting instruction is executed.
  */
-#define EXCEPTION_DIVIDE_ERROR                  (0)
+#define EXCEPTION_DIVIDE_ERROR 0
 
 /**
  * @brief               <H3>Interrupt 1—Debug Exception (#DB)</H3>
@@ -134,7 +134,7 @@
  * exception is generated. However, the new state of the program is not
  * corrupted and execution of the program can continue reliably.
  */
-#define EXCEPTION_DEBUG                         (1)
+#define EXCEPTION_DEBUG 1
 
 /**
  * @brief               <H3>Interrupt 2—NMI Interrupt</H3>
@@ -165,7 +165,7 @@
  * interrupt handler saves the state of the processor before handling the
  * interrupt and restores the processor’s state prior to a return.
  */
-#define EXCEPTION_NONMASKABLE_INTERRUPT         (2)
+#define EXCEPTION_NONMASKABLE_INTERRUPT 2
 
 /**
  * @brief               <H3>Interrupt 3—Breakpoint Exception (#BP)</H3>
@@ -210,7 +210,7 @@
  * decrementing the saved contents of the EIP register. Upon returning from the
  * debugger, program execution resumes with the replaced instruction.
  */
-#define EXCEPTION_BREAKPOINT                    (3)
+#define EXCEPTION_BREAKPOINT 3
 
 /**
  * @brief               <H3>Interrupt 4—Overflow Exception (#OF)</H3>
@@ -245,7 +245,7 @@
  * program can thus resume normal execution upon returning from the overflow
  * exception handler.
  */
-#define EXCEPTION_OVERFLOW                      (4)
+#define EXCEPTION_OVERFLOW  4
 
 /**
  * @brief               <H3>Interrupt 5—BOUND Range Exceeded Exception (#BR)</H3>
@@ -273,7 +273,7 @@
  * BOUND-range-exceeded exception handler causes the BOUND instruction to be
  * restarted.
  */
-#define EXCEPTION_BOUND_RANGE_EXCEEDED          (5)
+#define EXCEPTION_BOUND_RANGE_EXCEEDED 5
 
 /**
  * @brief               <H3>Interrupt 6—Invalid Opcode Exception (#UD)</H3>
@@ -357,7 +357,7 @@
  * A program-state change does not accompany an invalid-opcode fault, because
  * the invalid instruction is not executed.
  */
-#define EXCEPTION_INVALID_OPCODE                (6)
+#define EXCEPTION_INVALID_OPCODE 6
 
 /**
  * @brief               <H3>Interrupt 7—Device Not Available Exception (#NM)</H3>
@@ -425,7 +425,7 @@
  * handler can save the context of the FPU, clear the TS flag, and continue
  * execution at the interrupted floating-point or WAIT/FWAIT instruction.
  */
-#define EXCEPTION_DEVICE_NOT_AVAILABLE          (7)
+#define EXCEPTION_DEVICE_NOT_AVAILABLE 7
 
 /**
  * @brief               <H3>Interrupt 8—Double Fault Exception (#DF)</H3>
@@ -589,7 +589,7 @@
  * information for use in diagnostics and then close the application and/or
  * shut down or reset the processor.
  */
-#define EXCEPTION_DOUBLE_FAULT                  (8)
+#define EXCEPTION_DOUBLE_FAULT 8
 
 /**
  * @brief               <H3>Interrupt 9—Coprocessor Segment Overrun</H3>
@@ -620,7 +620,7 @@
  * available action of the exception handler is to save the instruction pointer
  * and reinitialize the FPU using the FNINIT instruction.
  */
-#define EXCEPTION_COPROCESSOR_SEGMENT_OVERRUN   (9)
+#define EXCEPTION_COPROCESSOR_SEGMENT_OVERRUN 9
 
 /**
  * @brief               <H3>Interrupt 10—Invalid TSS Exception (#TS)</H3>
@@ -748,7 +748,7 @@
  * task will then cause the processor to check the registers as it loads them
  * from the TSS.
  */
-#define EXCEPTION_INVALID_TSS                   (10)
+#define EXCEPTION_INVALID_TSS 10
 
 /**
  * @brief               <H3>Interrupt 11—Segment Not Present (#NP)</H3>
@@ -829,7 +829,7 @@
  * Exception (#TS)” in this chapter for additional information on how to handle
  * this situation.)
  */
-#define EXCEPTION_SEGMENT_NOT_PRESENT           (11)
+#define EXCEPTION_SEGMENT_NOT_PRESENT 11
 
 /**
  * @brief               <H3>Interrupt 12—Stack Fault Exception (#SS)</H3>
@@ -896,7 +896,7 @@
  * Change description for “Interrupt 10—Invalid TSS Exception (#TS)” for 
  * additional information on how to handle this situation.)
  */
-#define EXCEPTION_STACK_FAULT                   (12)
+#define EXCEPTION_STACK_FAULT 12
 
 /**
  * @brief               <H3>Interrupt 13—General Protection Exception (#GP)</H3>
@@ -1075,7 +1075,7 @@
  * Exception (#TS)” in this chapter for additional information on how to handle
  * this situation.)
  */
-#define EXCEPTION_GENERAL_PROTECTION            (13)
+#define EXCEPTION_GENERAL_PROTECTION 13
 
 /**
  * @brief               <H3>Interrupt 14—Page-Fault Exception (#PF)</H3>
@@ -1215,14 +1215,14 @@
  * limited to procedures or tasks that run at privilege level 0, typically the
  * kernel of the operating system.
  */
-#define EXCEPTION_PAGE_FAULT                    (14)
+#define EXCEPTION_PAGE_FAULT 14
 
 /**
  * @brief               <H3>Interrupt 15—Dummy</H3>
  * @attention           (Intel reserved; do not use. Recent Intel Architecture
  *                      processors do not generate this exception.)
  */
-#define EXCEPTION_DUMMY                         (15)
+#define EXCEPTION_DUMMY 15
 
 /**
  * @brief               <H3>Interrupt 16—Floating-Point Error Exception (#MF)</H3>
@@ -1315,7 +1315,7 @@
  * Architecture Software Developer’s Manual, Volume 1, for more information
  * about synchronization of floating-point-error exceptions.
  */
-#define EXCEPTION_FLOATING_POINT_ERROR          (16)
+#define EXCEPTION_FLOATING_POINT_ERROR 16
 
 /**
  * @brief               <H3>Interrupt 17—Alignment Check Exception (#AC)</H3>
@@ -1443,7 +1443,7 @@
  * A program-state change does not accompany an alignment-check fault, because
  * the instruction is not executed.
  */
-#define EXCEPTION_ALIGNMENT_CHECK               (17)
+#define EXCEPTION_ALIGNMENT_CHECK 17
 
 /**
  * @brief               <H3>Interrupt 18—Machine-Check Exception (#MC)</H3>
@@ -1489,7 +1489,7 @@
  * program cannot be restarted. If the machine-check mechanism is not enabled,
  * a machine-check exception causes the processor to enter the shutdown state.
  */
-#define EXCEPTION_MACHINE_CHECK                 (18)
+#define EXCEPTION_MACHINE_CHECK 18
 
 /**
  * @brief               <H3>Interrupt 19—SIMD Floating-Point Exception (#XF)</H3>
@@ -1563,7 +1563,7 @@
  * then unmasked, and a Streaming SIMD Extensions instruction was executed,
  * then no exception is raised.
  */
-#define EXCEPTION_STREAMING_SIMD_EXTENSIONS     (19)
+#define EXCEPTION_STREAMING_SIMD_EXTENSIONS 19
 
 /**
  * @} // end of group_exception_codes

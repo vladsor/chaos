@@ -183,7 +183,9 @@ typedef struct
      * physical address, which forces pages to be aligned on 4-KByte boundaries.
      */
     uint32_t            page_base            : 20;
-} page_table_t;
+} page_table_t PACKED;
+
+typedef page_table_t * p_page_table_t;
 
 #define PAGE_TABLE_ENTRY(physical_page,flags) (                                \
   (flags) |                                                                    \

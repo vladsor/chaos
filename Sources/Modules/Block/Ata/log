@@ -1,0 +1,774 @@
+In file included from /root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:3:
+/root/Chaos/Sources/Modules/Block/Ata/Include/ata.h:87: parse error before "
+   event_consumer_reference_t"
+cc1: warnings being treated as errors
+/root/Chaos/Sources/Modules/Block/Ata/Include/ata.h:87: warning: no semicolon 
+   at end of struct or union
+/root/Chaos/Sources/Modules/Block/Ata/Include/ata.h:88: warning: type defaults 
+   to `int' in declaration of `drive_t'
+/root/Chaos/Sources/Modules/Block/Ata/Include/ata.h:88: warning: data 
+   definition has no type or storage class
+/root/Chaos/Sources/Modules/Block/Ata/Include/ata.h:90: parse error before '*' 
+   token
+/root/Chaos/Sources/Modules/Block/Ata/Include/ata.h:90: warning: type defaults 
+   to `int' in declaration of `p_drive_t'
+/root/Chaos/Sources/Modules/Block/Ata/Include/ata.h:90: warning: data 
+   definition has no type or storage class
+/root/Chaos/Sources/Modules/Block/Ata/Include/ata.h:161: parse error before "
+   drive"
+/root/Chaos/Sources/Modules/Block/Ata/Include/ata.h:162: parse error before "
+   drive"
+/root/Chaos/Sources/Modules/Block/Ata/Include/ata.h:165: parse error before "
+   drive"
+/root/Chaos/Sources/Modules/Block/Ata/Include/ata.h:170: parse error before "
+   drive"
+/root/Chaos/Sources/Modules/Block/Ata/Include/ata.h:172: parse error before "
+   drive"
+/root/Chaos/Sources/Modules/Block/Ata/Include/ata.h:173: parse error before "
+   drive"
+/root/Chaos/Sources/Modules/Block/Ata/Include/ata.h:174: parse error before "
+   drive"
+/root/Chaos/Sources/Modules/Block/Ata/Include/ata.h:175: parse error before "
+   drive"
+/root/Chaos/Sources/Modules/Block/Ata/Include/ata.h:176: parse error before "
+   drive"
+In file included from /root/Chaos/Include/Classes/kernel.h:6,
+                 from /root/Chaos/Sources/Modules/Block/Ata/Include/interface.h:2,
+                 from /root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:4:
+/root/Chaos/Include/Interfaces/init.h:13: parse error before "context"
+/root/Chaos/Include/Interfaces/init.h:16: parse error before "context"
+/root/Chaos/Include/Interfaces/init.h:19: parse error before "context"
+/root/Chaos/Include/Interfaces/init.h:32: parse error before "
+   kernel_control$handle$create"
+/root/Chaos/Include/Interfaces/init.h:33: parse error before "object"
+/root/Chaos/Include/Interfaces/init.h:34: warning: return type defaults to 
+   `int'
+/root/Chaos/Include/Interfaces/init.h:34: warning: no previous prototype for `
+   kernel_control$handle$create'
+/root/Chaos/Include/Interfaces/init.h: In function 
+   `kernel_control$handle$create':
+/root/Chaos/Include/Interfaces/init.h:37: warning: implicit declaration of 
+   function `handle_create'
+/root/Chaos/Include/Interfaces/init.h:37: `object' undeclared (first use in 
+   this function)
+/root/Chaos/Include/Interfaces/init.h:37: (Each undeclared identifier is 
+   reported only once
+/root/Chaos/Include/Interfaces/init.h:37: for each function it appears in.)
+/root/Chaos/Include/Interfaces/init.h: At top level:
+/root/Chaos/Include/Interfaces/init.h:40: parse error before "handle"
+/root/Chaos/Include/Interfaces/init.h: In function `kernel_control$init':
+/root/Chaos/Include/Interfaces/init.h:44: warning: implicit declaration of 
+   function `handle_invoke_method'
+/root/Chaos/Include/Interfaces/init.h:44: `handle' undeclared (first use in 
+   this function)
+/root/Chaos/Include/Interfaces/init.h:44: `REFERENCE_NULL' undeclared (first 
+   use in this function)
+/root/Chaos/Include/Interfaces/init.h: At top level:
+/root/Chaos/Include/Interfaces/init.h:48: parse error before "handle"
+/root/Chaos/Include/Interfaces/init.h: In function `kernel_control$start':
+/root/Chaos/Include/Interfaces/init.h:52: `handle' undeclared (first use in 
+   this function)
+/root/Chaos/Include/Interfaces/init.h:52: `REFERENCE_NULL' undeclared (first 
+   use in this function)
+/root/Chaos/Include/Interfaces/init.h: At top level:
+/root/Chaos/Include/Interfaces/init.h:56: parse error before "handle"
+/root/Chaos/Include/Interfaces/init.h: In function `kernel_control$stop':
+/root/Chaos/Include/Interfaces/init.h:60: `handle' undeclared (first use in 
+   this function)
+/root/Chaos/Include/Interfaces/init.h:60: `REFERENCE_NULL' undeclared (first 
+   use in this function)
+In file included from /root/Chaos/Include/Classes/kernel.h:7,
+                 from /root/Chaos/Sources/Modules/Block/Ata/Include/interface.h:2,
+                 from /root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:4:
+/root/Chaos/Include/Interfaces/namespace.h: At top level:
+/root/Chaos/Include/Interfaces/namespace.h:16: parse error before "context"
+/root/Chaos/Include/Interfaces/namespace.h:20: parse error before "context"
+/root/Chaos/Include/Interfaces/namespace.h:24: parse error before "context"
+/root/Chaos/Include/Interfaces/namespace.h:24: warning: type defaults to `int' 
+   in declaration of `reference_t'
+/root/Chaos/Include/Interfaces/namespace.h:24: `reference_t' declared as 
+   function returning a function
+/root/Chaos/Include/Interfaces/namespace.h:24: warning: parameter names 
+   (without types) in function declaration
+/root/Chaos/Include/Interfaces/namespace.h:25: parse error before '*' token
+/root/Chaos/Include/Interfaces/namespace.h:25: warning: type defaults to `int' 
+   in declaration of `p_namespace_resolve_t'
+/root/Chaos/Include/Interfaces/namespace.h:25: warning: data definition has no 
+   type or storage class
+/root/Chaos/Include/Interfaces/namespace.h:27: parse error before "context"
+/root/Chaos/Include/Interfaces/namespace.h:34: parse error before "
+   p_namespace_resolve_t"
+/root/Chaos/Include/Interfaces/namespace.h:34: warning: no semicolon at end of 
+   struct or union
+/root/Chaos/Include/Interfaces/namespace.h:37: parse error before '}' token
+/root/Chaos/Include/Interfaces/namespace.h:37: warning: type defaults to `int' 
+   in declaration of `namespace_interface_table_t'
+/root/Chaos/Include/Interfaces/namespace.h:37: warning: data definition has no 
+   type or storage class
+/root/Chaos/Include/Interfaces/namespace.h:39: parse error before '*' token
+/root/Chaos/Include/Interfaces/namespace.h:39: warning: type defaults to `int' 
+   in declaration of `p_namespace_interface_table_t'
+/root/Chaos/Include/Interfaces/namespace.h:39: warning: data definition has no 
+   type or storage class
+/root/Chaos/Include/Interfaces/namespace.h:41: parse error before "
+   namespace$handle$create"
+/root/Chaos/Include/Interfaces/namespace.h:42: parse error before "object"
+/root/Chaos/Include/Interfaces/namespace.h:43: warning: return type defaults to 
+   `int'
+/root/Chaos/Include/Interfaces/namespace.h:43: warning: no previous prototype 
+   for `namespace$handle$create'
+/root/Chaos/Include/Interfaces/namespace.h: In function 
+   `namespace$handle$create':
+/root/Chaos/Include/Interfaces/namespace.h:46: `object' undeclared (first use 
+   in this function)
+/root/Chaos/Include/Interfaces/namespace.h: At top level:
+/root/Chaos/Include/Interfaces/namespace.h:50: parse error before "handle"
+/root/Chaos/Include/Interfaces/namespace.h: In function 
+   `namespace$handle$destroy':
+/root/Chaos/Include/Interfaces/namespace.h:52: warning: implicit declaration of 
+   function `handle_destroy'
+/root/Chaos/Include/Interfaces/namespace.h:52: `handle' undeclared (first use 
+   in this function)
+/root/Chaos/Include/Interfaces/namespace.h: At top level:
+/root/Chaos/Include/Interfaces/namespace.h:55: parse error before "handle"
+/root/Chaos/Include/Interfaces/namespace.h: In function `namespace$bind':
+/root/Chaos/Include/Interfaces/namespace.h:58: `name' undeclared (first use in 
+   this function)
+/root/Chaos/Include/Interfaces/namespace.h:58: `reference' undeclared (first 
+   use in this function)
+/root/Chaos/Include/Interfaces/namespace.h:63: `handle' undeclared (first use 
+   in this function)
+/root/Chaos/Include/Interfaces/namespace.h:63: `REFERENCE_NULL' undeclared 
+   (first use in this function)
+/root/Chaos/Include/Interfaces/namespace.h: At top level:
+/root/Chaos/Include/Interfaces/namespace.h:67: parse error before "handle"
+/root/Chaos/Include/Interfaces/namespace.h:69: `namespace$resolve' declared as 
+   function returning a function
+/root/Chaos/Include/Interfaces/namespace.h: In function `namespace$resolve':
+/root/Chaos/Include/Interfaces/namespace.h:70: `name' undeclared (first use in 
+   this function)
+/root/Chaos/Include/Interfaces/namespace.h:75: `REFERENCE_NULL' undeclared 
+   (first use in this function)
+/root/Chaos/Include/Interfaces/namespace.h:78: `handle' undeclared (first use 
+   in this function)
+/root/Chaos/Include/Interfaces/namespace.h:81: cast specifies function type
+/root/Chaos/Include/Interfaces/namespace.h: At top level:
+/root/Chaos/Include/Interfaces/namespace.h:84: parse error before "handle"
+/root/Chaos/Include/Interfaces/namespace.h: In function `namespace$unbind':
+/root/Chaos/Include/Interfaces/namespace.h:87: `name' undeclared (first use in 
+   this function)
+/root/Chaos/Include/Interfaces/namespace.h:92: `handle' undeclared (first use 
+   in this function)
+/root/Chaos/Include/Interfaces/namespace.h:92: `REFERENCE_NULL' undeclared 
+   (first use in this function)
+In file included from /root/Chaos/Include/Classes/kernel.h:8,
+                 from /root/Chaos/Sources/Modules/Block/Ata/Include/interface.h:2,
+                 from /root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:4:
+/root/Chaos/Include/Interfaces/timer.h: At top level:
+/root/Chaos/Include/Interfaces/timer.h:11: parse error before "context"
+/root/Chaos/Include/Interfaces/timer.h:21: parse error before "
+   timer$handle$create"
+/root/Chaos/Include/Interfaces/timer.h:21: parse error before "object"
+/root/Chaos/Include/Interfaces/timer.h:22: warning: return type defaults to 
+   `int'
+/root/Chaos/Include/Interfaces/timer.h:22: warning: no previous prototype for `
+   timer$handle$create'
+/root/Chaos/Include/Interfaces/timer.h: In function `timer$handle$create':
+/root/Chaos/Include/Interfaces/timer.h:25: `object' undeclared (first use in 
+   this function)
+/root/Chaos/Include/Interfaces/timer.h: At top level:
+/root/Chaos/Include/Interfaces/timer.h:28: parse error before "handle"
+/root/Chaos/Include/Interfaces/timer.h: In function `timer$read_milli':
+/root/Chaos/Include/Interfaces/timer.h:34: `handle' undeclared (first use in 
+   this function)
+/root/Chaos/Include/Interfaces/timer.h:34: `REFERENCE_NULL' undeclared (first 
+   use in this function)
+In file included from /root/Chaos/Include/Classes/kernel.h:10,
+                 from /root/Chaos/Sources/Modules/Block/Ata/Include/interface.h:2,
+                 from /root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:4:
+/root/Chaos/Include/EventClasses/irq.h: At top level:
+/root/Chaos/Include/EventClasses/irq.h:7: parse error before "context"
+/root/Chaos/Include/EventClasses/irq.h:10: parse error before "context"
+/root/Chaos/Include/EventClasses/irq.h:13: parse error before "
+   irq$supplier$create"
+/root/Chaos/Include/EventClasses/irq.h:14: parse error before "irq_object"
+/root/Chaos/Include/EventClasses/irq.h:15: warning: return type defaults to 
+   `int'
+/root/Chaos/Include/EventClasses/irq.h:15: warning: no previous prototype for `
+   irq$supplier$create'
+/root/Chaos/Include/EventClasses/irq.h: In function `irq$supplier$create':
+/root/Chaos/Include/EventClasses/irq.h:16: `irq_number' undeclared (first use 
+   in this function)
+/root/Chaos/Include/EventClasses/irq.h:19: warning: implicit declaration of 
+   function `event_supplier_create'
+/root/Chaos/Include/EventClasses/irq.h:19: `irq_object' undeclared (first use 
+   in this function)
+/root/Chaos/Include/EventClasses/irq.h: At top level:
+/root/Chaos/Include/EventClasses/irq.h:23: parse error before "
+   irq$consumer$create"
+/root/Chaos/Include/EventClasses/irq.h:24: parse error before "irq_object"
+/root/Chaos/Include/EventClasses/irq.h:25: warning: return type defaults to 
+   `int'
+/root/Chaos/Include/EventClasses/irq.h:25: warning: no previous prototype for `
+   irq$consumer$create'
+/root/Chaos/Include/EventClasses/irq.h: In function `irq$consumer$create':
+/root/Chaos/Include/EventClasses/irq.h:28: warning: implicit declaration of 
+   function `event_consumer_create'
+/root/Chaos/Include/EventClasses/irq.h:28: `irq_object' undeclared (first use 
+   in this function)
+/root/Chaos/Include/EventClasses/irq.h: At top level:
+/root/Chaos/Include/EventClasses/irq.h:32: parse error before "irq_supplier"
+/root/Chaos/Include/EventClasses/irq.h: In function `irq$fire':
+/root/Chaos/Include/EventClasses/irq.h:36: warning: implicit declaration of 
+   function `event_supplier_fire_event'
+/root/Chaos/Include/EventClasses/irq.h:36: `irq_supplier' undeclared (first use 
+   in this function)
+/root/Chaos/Include/EventClasses/irq.h: At top level:
+/root/Chaos/Include/EventClasses/irq.h:39: parse error before "irq_consumer"
+/root/Chaos/Include/EventClasses/irq.h: In function `irq$wait':
+/root/Chaos/Include/EventClasses/irq.h:43: warning: implicit declaration of 
+   function `event_consumer_wait_event'
+/root/Chaos/Include/EventClasses/irq.h:43: `irq_consumer' undeclared (first use 
+   in this function)
+In file included from /root/Chaos/Include/Classes/kernel.h:11,
+                 from /root/Chaos/Sources/Modules/Block/Ata/Include/interface.h:2,
+                 from /root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:4:
+/root/Chaos/Include/EventClasses/debug.h: At top level:
+/root/Chaos/Include/EventClasses/debug.h:18: parse error before "context"
+/root/Chaos/Include/EventClasses/debug.h:23: parse error before "context"
+/root/Chaos/Include/EventClasses/debug.h:28: parse error before "
+   debug$supplier$create"
+/root/Chaos/Include/EventClasses/debug.h:29: parse error before "debug_object"
+/root/Chaos/Include/EventClasses/debug.h:30: warning: return type defaults to 
+   `int'
+/root/Chaos/Include/EventClasses/debug.h:30: warning: no previous prototype for 
+   `debug$supplier$create'
+/root/Chaos/Include/EventClasses/debug.h: In function `debug$supplier$create':
+/root/Chaos/Include/EventClasses/debug.h:33: `debug_object' undeclared (first 
+   use in this function)
+/root/Chaos/Include/EventClasses/debug.h: At top level:
+/root/Chaos/Include/EventClasses/debug.h:37: parse error before "
+   debug$consumer$create"
+/root/Chaos/Include/EventClasses/debug.h:38: parse error before "debug_object"
+/root/Chaos/Include/EventClasses/debug.h:39: warning: return type defaults to 
+   `int'
+/root/Chaos/Include/EventClasses/debug.h:39: warning: no previous prototype for 
+   `debug$consumer$create'
+/root/Chaos/Include/EventClasses/debug.h: In function `debug$consumer$create':
+/root/Chaos/Include/EventClasses/debug.h:42: `debug_object' undeclared (first 
+   use in this function)
+/root/Chaos/Include/EventClasses/debug.h: At top level:
+/root/Chaos/Include/EventClasses/debug.h:46: parse error before "debug_supplier
+   "
+/root/Chaos/Include/EventClasses/debug.h: In function `debug$fire':
+/root/Chaos/Include/EventClasses/debug.h:50: `level' undeclared (first use in 
+   this function)
+/root/Chaos/Include/EventClasses/debug.h:50: `module_name' undeclared (first 
+   use in this function)
+/root/Chaos/Include/EventClasses/debug.h:50: `function_name' undeclared (first 
+   use in this function)
+/root/Chaos/Include/EventClasses/debug.h:51: `line' undeclared (first use in 
+   this function)
+/root/Chaos/Include/EventClasses/debug.h:51: `message' undeclared (first use in 
+   this function)
+/root/Chaos/Include/EventClasses/debug.h:54: `debug_supplier' undeclared (first 
+   use in this function)
+/root/Chaos/Include/EventClasses/debug.h: At top level:
+/root/Chaos/Include/EventClasses/debug.h:57: parse error before "debug_consumer
+   "
+/root/Chaos/Include/EventClasses/debug.h: In function `debug$wait':
+/root/Chaos/Include/EventClasses/debug.h:61: `level' undeclared (first use in 
+   this function)
+/root/Chaos/Include/EventClasses/debug.h:61: `module_name' undeclared (first 
+   use in this function)
+/root/Chaos/Include/EventClasses/debug.h:62: `function_name' undeclared (first 
+   use in this function)
+/root/Chaos/Include/EventClasses/debug.h:62: `line' undeclared (first use in 
+   this function)
+/root/Chaos/Include/EventClasses/debug.h:62: `message' undeclared (first use in 
+   this function)
+/root/Chaos/Include/EventClasses/debug.h:65: `debug_consumer' undeclared (first 
+   use in this function)
+In file included from /root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:4:
+/root/Chaos/Sources/Modules/Block/Ata/Include/interface.h: At top level:
+/root/Chaos/Sources/Modules/Block/Ata/Include/interface.h:4: parse error before 
+   "ata_drive_class"
+/root/Chaos/Sources/Modules/Block/Ata/Include/interface.h:4: warning: type 
+   defaults to `int' in declaration of `ata_drive_class'
+/root/Chaos/Sources/Modules/Block/Ata/Include/interface.h:4: warning: data 
+   definition has no type or storage class
+/root/Chaos/Sources/Modules/Block/Ata/Include/interface.h:5: parse error before 
+   "irq14_consumer"
+/root/Chaos/Sources/Modules/Block/Ata/Include/interface.h:5: warning: type 
+   defaults to `int' in declaration of `irq14_consumer'
+/root/Chaos/Sources/Modules/Block/Ata/Include/interface.h:5: warning: data 
+   definition has no type or storage class
+/root/Chaos/Sources/Modules/Block/Ata/Include/interface.h:6: parse error before 
+   "irq15_consumer"
+/root/Chaos/Sources/Modules/Block/Ata/Include/interface.h:6: warning: type 
+   defaults to `int' in declaration of `irq15_consumer'
+/root/Chaos/Sources/Modules/Block/Ata/Include/interface.h:6: warning: data 
+   definition has no type or storage class
+/root/Chaos/Sources/Modules/Block/Ata/Include/interface.h:7: parse error before 
+   "debug_supplier"
+/root/Chaos/Sources/Modules/Block/Ata/Include/interface.h:7: warning: type 
+   defaults to `int' in declaration of `debug_supplier'
+/root/Chaos/Sources/Modules/Block/Ata/Include/interface.h:7: `debug_supplier' 
+   used prior to declaration
+/root/Chaos/Sources/Modules/Block/Ata/Include/interface.h:7: warning: data 
+   definition has no type or storage class
+/root/Chaos/Sources/Modules/Block/Ata/Include/interface.h:11: parse error 
+   before "kernel_handle_namespace"
+/root/Chaos/Sources/Modules/Block/Ata/Include/interface.h:11: warning: type 
+   defaults to `int' in declaration of `kernel_handle_namespace'
+/root/Chaos/Sources/Modules/Block/Ata/Include/interface.h:11: warning: data 
+   definition has no type or storage class
+/root/Chaos/Sources/Modules/Block/Ata/Include/interface.h:12: parse error 
+   before "kernel_irq_event_class"
+/root/Chaos/Sources/Modules/Block/Ata/Include/interface.h:12: warning: type 
+   defaults to `int' in declaration of `kernel_irq_event_class'
+/root/Chaos/Sources/Modules/Block/Ata/Include/interface.h:12: warning: data 
+   definition has no type or storage class
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:16: parse error before "
+   drive"
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:17: warning: no previous 
+   prototype for `ata_internal_probe'
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c: In function 
+   `ata_internal_probe':
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:28: `drive' undeclared 
+   (first use in this function)
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:81: warning: implicit 
+   declaration of function `cpu_sleep_milli'
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:81: `CPU_CURRENT' 
+   undeclared (first use in this function)
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:84: warning: implicit 
+   declaration of function `quality_set'
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:84: `QUALITY_CURRENT' 
+   undeclared (first use in this function)
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:86: syntax error before "
+   __context__"
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:86: warning: implicit 
+   declaration of function `computer_add_exception_context'
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:86: `COMPUTER_CURRENT' 
+   undeclared (first use in this function)
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:86: `p_exception_context_t
+   ' undeclared (first use in this function)
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:86: `__context__' 
+   undeclared (first use in this function)
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:89: warning: implicit 
+   declaration of function `quality_reset'
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:91: `exception_info_t' 
+   undeclared (first use in this function)
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:91: parse error before "e"
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:100: warning: implicit 
+   declaration of function `computer_remove_exception_context'
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c: At top level:
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:221: parse error before "
+   drive"
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:223: warning: no previous 
+   prototype for `ata_internal_command'
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c: In function 
+   `ata_internal_command':
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:235: `drive' undeclared 
+   (first use in this function)
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:239: `command' undeclared 
+   (first use in this function)
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:272: `count' undeclared 
+   (first use in this function)
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:278: `command_byte' 
+   undeclared (first use in this function)
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:281: `CPU_CURRENT' 
+   undeclared (first use in this function)
+make: *** [ata-internal.o] Error 1
+In file included from /root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:3:
+/root/Chaos/Sources/Modules/Block/Ata/Include/ata.h:87: parse error before "
+   event_consumer_reference_t"
+cc1: warnings being treated as errors
+/root/Chaos/Sources/Modules/Block/Ata/Include/ata.h:87: warning: no semicolon 
+   at end of struct or union
+/root/Chaos/Sources/Modules/Block/Ata/Include/ata.h:88: warning: type defaults 
+   to `int' in declaration of `drive_t'
+/root/Chaos/Sources/Modules/Block/Ata/Include/ata.h:88: warning: data 
+   definition has no type or storage class
+/root/Chaos/Sources/Modules/Block/Ata/Include/ata.h:90: parse error before '*' 
+   token
+/root/Chaos/Sources/Modules/Block/Ata/Include/ata.h:90: warning: type defaults 
+   to `int' in declaration of `p_drive_t'
+/root/Chaos/Sources/Modules/Block/Ata/Include/ata.h:90: warning: data 
+   definition has no type or storage class
+/root/Chaos/Sources/Modules/Block/Ata/Include/ata.h:161: parse error before "
+   drive"
+/root/Chaos/Sources/Modules/Block/Ata/Include/ata.h:162: parse error before "
+   drive"
+/root/Chaos/Sources/Modules/Block/Ata/Include/ata.h:165: parse error before "
+   drive"
+/root/Chaos/Sources/Modules/Block/Ata/Include/ata.h:170: parse error before "
+   drive"
+/root/Chaos/Sources/Modules/Block/Ata/Include/ata.h:172: parse error before "
+   drive"
+/root/Chaos/Sources/Modules/Block/Ata/Include/ata.h:173: parse error before "
+   drive"
+/root/Chaos/Sources/Modules/Block/Ata/Include/ata.h:174: parse error before "
+   drive"
+/root/Chaos/Sources/Modules/Block/Ata/Include/ata.h:175: parse error before "
+   drive"
+/root/Chaos/Sources/Modules/Block/Ata/Include/ata.h:176: parse error before "
+   drive"
+In file included from /root/Chaos/Include/Classes/kernel.h:6,
+                 from /root/Chaos/Sources/Modules/Block/Ata/Include/interface.h:2,
+                 from /root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:4:
+/root/Chaos/Include/Interfaces/init.h:13: parse error before "context"
+/root/Chaos/Include/Interfaces/init.h:16: parse error before "context"
+/root/Chaos/Include/Interfaces/init.h:19: parse error before "context"
+/root/Chaos/Include/Interfaces/init.h:32: parse error before "
+   kernel_control$handle$create"
+/root/Chaos/Include/Interfaces/init.h:33: parse error before "object"
+/root/Chaos/Include/Interfaces/init.h:34: warning: return type defaults to 
+   `int'
+/root/Chaos/Include/Interfaces/init.h:34: warning: no previous prototype for `
+   kernel_control$handle$create'
+/root/Chaos/Include/Interfaces/init.h: In function 
+   `kernel_control$handle$create':
+/root/Chaos/Include/Interfaces/init.h:37: warning: implicit declaration of 
+   function `handle_create'
+/root/Chaos/Include/Interfaces/init.h:37: `object' undeclared (first use in 
+   this function)
+/root/Chaos/Include/Interfaces/init.h:37: (Each undeclared identifier is 
+   reported only once
+/root/Chaos/Include/Interfaces/init.h:37: for each function it appears in.)
+/root/Chaos/Include/Interfaces/init.h: At top level:
+/root/Chaos/Include/Interfaces/init.h:40: parse error before "handle"
+/root/Chaos/Include/Interfaces/init.h: In function `kernel_control$init':
+/root/Chaos/Include/Interfaces/init.h:44: warning: implicit declaration of 
+   function `handle_invoke_method'
+/root/Chaos/Include/Interfaces/init.h:44: `handle' undeclared (first use in 
+   this function)
+/root/Chaos/Include/Interfaces/init.h:44: `REFERENCE_NULL' undeclared (first 
+   use in this function)
+/root/Chaos/Include/Interfaces/init.h: At top level:
+/root/Chaos/Include/Interfaces/init.h:48: parse error before "handle"
+/root/Chaos/Include/Interfaces/init.h: In function `kernel_control$start':
+/root/Chaos/Include/Interfaces/init.h:52: `handle' undeclared (first use in 
+   this function)
+/root/Chaos/Include/Interfaces/init.h:52: `REFERENCE_NULL' undeclared (first 
+   use in this function)
+/root/Chaos/Include/Interfaces/init.h: At top level:
+/root/Chaos/Include/Interfaces/init.h:56: parse error before "handle"
+/root/Chaos/Include/Interfaces/init.h: In function `kernel_control$stop':
+/root/Chaos/Include/Interfaces/init.h:60: `handle' undeclared (first use in 
+   this function)
+/root/Chaos/Include/Interfaces/init.h:60: `REFERENCE_NULL' undeclared (first 
+   use in this function)
+In file included from /root/Chaos/Include/Classes/kernel.h:7,
+                 from /root/Chaos/Sources/Modules/Block/Ata/Include/interface.h:2,
+                 from /root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:4:
+/root/Chaos/Include/Interfaces/namespace.h: At top level:
+/root/Chaos/Include/Interfaces/namespace.h:16: parse error before "context"
+/root/Chaos/Include/Interfaces/namespace.h:20: parse error before "context"
+/root/Chaos/Include/Interfaces/namespace.h:24: parse error before "context"
+/root/Chaos/Include/Interfaces/namespace.h:24: warning: type defaults to `int' 
+   in declaration of `reference_t'
+/root/Chaos/Include/Interfaces/namespace.h:24: `reference_t' declared as 
+   function returning a function
+/root/Chaos/Include/Interfaces/namespace.h:24: warning: parameter names 
+   (without types) in function declaration
+/root/Chaos/Include/Interfaces/namespace.h:25: parse error before '*' token
+/root/Chaos/Include/Interfaces/namespace.h:25: warning: type defaults to `int' 
+   in declaration of `p_namespace_resolve_t'
+/root/Chaos/Include/Interfaces/namespace.h:25: warning: data definition has no 
+   type or storage class
+/root/Chaos/Include/Interfaces/namespace.h:27: parse error before "context"
+/root/Chaos/Include/Interfaces/namespace.h:34: parse error before "
+   p_namespace_resolve_t"
+/root/Chaos/Include/Interfaces/namespace.h:34: warning: no semicolon at end of 
+   struct or union
+/root/Chaos/Include/Interfaces/namespace.h:37: parse error before '}' token
+/root/Chaos/Include/Interfaces/namespace.h:37: warning: type defaults to `int' 
+   in declaration of `namespace_interface_table_t'
+/root/Chaos/Include/Interfaces/namespace.h:37: warning: data definition has no 
+   type or storage class
+/root/Chaos/Include/Interfaces/namespace.h:39: parse error before '*' token
+/root/Chaos/Include/Interfaces/namespace.h:39: warning: type defaults to `int' 
+   in declaration of `p_namespace_interface_table_t'
+/root/Chaos/Include/Interfaces/namespace.h:39: warning: data definition has no 
+   type or storage class
+/root/Chaos/Include/Interfaces/namespace.h:41: parse error before "
+   namespace$handle$create"
+/root/Chaos/Include/Interfaces/namespace.h:42: parse error before "object"
+/root/Chaos/Include/Interfaces/namespace.h:43: warning: return type defaults to 
+   `int'
+/root/Chaos/Include/Interfaces/namespace.h:43: warning: no previous prototype 
+   for `namespace$handle$create'
+/root/Chaos/Include/Interfaces/namespace.h: In function 
+   `namespace$handle$create':
+/root/Chaos/Include/Interfaces/namespace.h:46: `object' undeclared (first use 
+   in this function)
+/root/Chaos/Include/Interfaces/namespace.h: At top level:
+/root/Chaos/Include/Interfaces/namespace.h:50: parse error before "handle"
+/root/Chaos/Include/Interfaces/namespace.h: In function 
+   `namespace$handle$destroy':
+/root/Chaos/Include/Interfaces/namespace.h:52: warning: implicit declaration of 
+   function `handle_destroy'
+/root/Chaos/Include/Interfaces/namespace.h:52: `handle' undeclared (first use 
+   in this function)
+/root/Chaos/Include/Interfaces/namespace.h: At top level:
+/root/Chaos/Include/Interfaces/namespace.h:55: parse error before "handle"
+/root/Chaos/Include/Interfaces/namespace.h: In function `namespace$bind':
+/root/Chaos/Include/Interfaces/namespace.h:58: `name' undeclared (first use in 
+   this function)
+/root/Chaos/Include/Interfaces/namespace.h:58: `reference' undeclared (first 
+   use in this function)
+/root/Chaos/Include/Interfaces/namespace.h:63: `handle' undeclared (first use 
+   in this function)
+/root/Chaos/Include/Interfaces/namespace.h:63: `REFERENCE_NULL' undeclared 
+   (first use in this function)
+/root/Chaos/Include/Interfaces/namespace.h: At top level:
+/root/Chaos/Include/Interfaces/namespace.h:67: parse error before "handle"
+/root/Chaos/Include/Interfaces/namespace.h:69: `namespace$resolve' declared as 
+   function returning a function
+/root/Chaos/Include/Interfaces/namespace.h: In function `namespace$resolve':
+/root/Chaos/Include/Interfaces/namespace.h:70: `name' undeclared (first use in 
+   this function)
+/root/Chaos/Include/Interfaces/namespace.h:75: `REFERENCE_NULL' undeclared 
+   (first use in this function)
+/root/Chaos/Include/Interfaces/namespace.h:78: `handle' undeclared (first use 
+   in this function)
+/root/Chaos/Include/Interfaces/namespace.h:81: cast specifies function type
+/root/Chaos/Include/Interfaces/namespace.h: At top level:
+/root/Chaos/Include/Interfaces/namespace.h:84: parse error before "handle"
+/root/Chaos/Include/Interfaces/namespace.h: In function `namespace$unbind':
+/root/Chaos/Include/Interfaces/namespace.h:87: `name' undeclared (first use in 
+   this function)
+/root/Chaos/Include/Interfaces/namespace.h:92: `handle' undeclared (first use 
+   in this function)
+/root/Chaos/Include/Interfaces/namespace.h:92: `REFERENCE_NULL' undeclared 
+   (first use in this function)
+In file included from /root/Chaos/Include/Classes/kernel.h:8,
+                 from /root/Chaos/Sources/Modules/Block/Ata/Include/interface.h:2,
+                 from /root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:4:
+/root/Chaos/Include/Interfaces/timer.h: At top level:
+/root/Chaos/Include/Interfaces/timer.h:11: parse error before "context"
+/root/Chaos/Include/Interfaces/timer.h:21: parse error before "
+   timer$handle$create"
+/root/Chaos/Include/Interfaces/timer.h:21: parse error before "object"
+/root/Chaos/Include/Interfaces/timer.h:22: warning: return type defaults to 
+   `int'
+/root/Chaos/Include/Interfaces/timer.h:22: warning: no previous prototype for `
+   timer$handle$create'
+/root/Chaos/Include/Interfaces/timer.h: In function `timer$handle$create':
+/root/Chaos/Include/Interfaces/timer.h:25: `object' undeclared (first use in 
+   this function)
+/root/Chaos/Include/Interfaces/timer.h: At top level:
+/root/Chaos/Include/Interfaces/timer.h:28: parse error before "handle"
+/root/Chaos/Include/Interfaces/timer.h: In function `timer$read_milli':
+/root/Chaos/Include/Interfaces/timer.h:34: `handle' undeclared (first use in 
+   this function)
+/root/Chaos/Include/Interfaces/timer.h:34: `REFERENCE_NULL' undeclared (first 
+   use in this function)
+In file included from /root/Chaos/Include/Classes/kernel.h:10,
+                 from /root/Chaos/Sources/Modules/Block/Ata/Include/interface.h:2,
+                 from /root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:4:
+/root/Chaos/Include/EventClasses/irq.h: At top level:
+/root/Chaos/Include/EventClasses/irq.h:7: parse error before "context"
+/root/Chaos/Include/EventClasses/irq.h:10: parse error before "context"
+/root/Chaos/Include/EventClasses/irq.h:13: parse error before "
+   irq$supplier$create"
+/root/Chaos/Include/EventClasses/irq.h:14: parse error before "irq_object"
+/root/Chaos/Include/EventClasses/irq.h:15: warning: return type defaults to 
+   `int'
+/root/Chaos/Include/EventClasses/irq.h:15: warning: no previous prototype for `
+   irq$supplier$create'
+/root/Chaos/Include/EventClasses/irq.h: In function `irq$supplier$create':
+/root/Chaos/Include/EventClasses/irq.h:16: `irq_number' undeclared (first use 
+   in this function)
+/root/Chaos/Include/EventClasses/irq.h:19: warning: implicit declaration of 
+   function `event_supplier_create'
+/root/Chaos/Include/EventClasses/irq.h:19: `irq_object' undeclared (first use 
+   in this function)
+/root/Chaos/Include/EventClasses/irq.h: At top level:
+/root/Chaos/Include/EventClasses/irq.h:23: parse error before "
+   irq$consumer$create"
+/root/Chaos/Include/EventClasses/irq.h:24: parse error before "irq_object"
+/root/Chaos/Include/EventClasses/irq.h:25: warning: return type defaults to 
+   `int'
+/root/Chaos/Include/EventClasses/irq.h:25: warning: no previous prototype for `
+   irq$consumer$create'
+/root/Chaos/Include/EventClasses/irq.h: In function `irq$consumer$create':
+/root/Chaos/Include/EventClasses/irq.h:28: warning: implicit declaration of 
+   function `event_consumer_create'
+/root/Chaos/Include/EventClasses/irq.h:28: `irq_object' undeclared (first use 
+   in this function)
+/root/Chaos/Include/EventClasses/irq.h: At top level:
+/root/Chaos/Include/EventClasses/irq.h:32: parse error before "irq_supplier"
+/root/Chaos/Include/EventClasses/irq.h: In function `irq$fire':
+/root/Chaos/Include/EventClasses/irq.h:36: warning: implicit declaration of 
+   function `event_supplier_fire_event'
+/root/Chaos/Include/EventClasses/irq.h:36: `irq_supplier' undeclared (first use 
+   in this function)
+/root/Chaos/Include/EventClasses/irq.h: At top level:
+/root/Chaos/Include/EventClasses/irq.h:39: parse error before "irq_consumer"
+/root/Chaos/Include/EventClasses/irq.h: In function `irq$wait':
+/root/Chaos/Include/EventClasses/irq.h:43: warning: implicit declaration of 
+   function `event_consumer_wait_event'
+/root/Chaos/Include/EventClasses/irq.h:43: `irq_consumer' undeclared (first use 
+   in this function)
+In file included from /root/Chaos/Include/Classes/kernel.h:11,
+                 from /root/Chaos/Sources/Modules/Block/Ata/Include/interface.h:2,
+                 from /root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:4:
+/root/Chaos/Include/EventClasses/debug.h: At top level:
+/root/Chaos/Include/EventClasses/debug.h:18: parse error before "context"
+/root/Chaos/Include/EventClasses/debug.h:23: parse error before "context"
+/root/Chaos/Include/EventClasses/debug.h:28: parse error before "
+   debug$supplier$create"
+/root/Chaos/Include/EventClasses/debug.h:29: parse error before "debug_object"
+/root/Chaos/Include/EventClasses/debug.h:30: warning: return type defaults to 
+   `int'
+/root/Chaos/Include/EventClasses/debug.h:30: warning: no previous prototype for 
+   `debug$supplier$create'
+/root/Chaos/Include/EventClasses/debug.h: In function `debug$supplier$create':
+/root/Chaos/Include/EventClasses/debug.h:33: `debug_object' undeclared (first 
+   use in this function)
+/root/Chaos/Include/EventClasses/debug.h: At top level:
+/root/Chaos/Include/EventClasses/debug.h:37: parse error before "
+   debug$consumer$create"
+/root/Chaos/Include/EventClasses/debug.h:38: parse error before "debug_object"
+/root/Chaos/Include/EventClasses/debug.h:39: warning: return type defaults to 
+   `int'
+/root/Chaos/Include/EventClasses/debug.h:39: warning: no previous prototype for 
+   `debug$consumer$create'
+/root/Chaos/Include/EventClasses/debug.h: In function `debug$consumer$create':
+/root/Chaos/Include/EventClasses/debug.h:42: `debug_object' undeclared (first 
+   use in this function)
+/root/Chaos/Include/EventClasses/debug.h: At top level:
+/root/Chaos/Include/EventClasses/debug.h:46: parse error before "debug_supplier
+   "
+/root/Chaos/Include/EventClasses/debug.h: In function `debug$fire':
+/root/Chaos/Include/EventClasses/debug.h:50: `level' undeclared (first use in 
+   this function)
+/root/Chaos/Include/EventClasses/debug.h:50: `module_name' undeclared (first 
+   use in this function)
+/root/Chaos/Include/EventClasses/debug.h:50: `function_name' undeclared (first 
+   use in this function)
+/root/Chaos/Include/EventClasses/debug.h:51: `line' undeclared (first use in 
+   this function)
+/root/Chaos/Include/EventClasses/debug.h:51: `message' undeclared (first use in 
+   this function)
+/root/Chaos/Include/EventClasses/debug.h:54: `debug_supplier' undeclared (first 
+   use in this function)
+/root/Chaos/Include/EventClasses/debug.h: At top level:
+/root/Chaos/Include/EventClasses/debug.h:57: parse error before "debug_consumer
+   "
+/root/Chaos/Include/EventClasses/debug.h: In function `debug$wait':
+/root/Chaos/Include/EventClasses/debug.h:61: `level' undeclared (first use in 
+   this function)
+/root/Chaos/Include/EventClasses/debug.h:61: `module_name' undeclared (first 
+   use in this function)
+/root/Chaos/Include/EventClasses/debug.h:62: `function_name' undeclared (first 
+   use in this function)
+/root/Chaos/Include/EventClasses/debug.h:62: `line' undeclared (first use in 
+   this function)
+/root/Chaos/Include/EventClasses/debug.h:62: `message' undeclared (first use in 
+   this function)
+/root/Chaos/Include/EventClasses/debug.h:65: `debug_consumer' undeclared (first 
+   use in this function)
+In file included from /root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:4:
+/root/Chaos/Sources/Modules/Block/Ata/Include/interface.h: At top level:
+/root/Chaos/Sources/Modules/Block/Ata/Include/interface.h:4: parse error before 
+   "ata_drive_class"
+/root/Chaos/Sources/Modules/Block/Ata/Include/interface.h:4: warning: type 
+   defaults to `int' in declaration of `ata_drive_class'
+/root/Chaos/Sources/Modules/Block/Ata/Include/interface.h:4: warning: data 
+   definition has no type or storage class
+/root/Chaos/Sources/Modules/Block/Ata/Include/interface.h:5: parse error before 
+   "irq14_consumer"
+/root/Chaos/Sources/Modules/Block/Ata/Include/interface.h:5: warning: type 
+   defaults to `int' in declaration of `irq14_consumer'
+/root/Chaos/Sources/Modules/Block/Ata/Include/interface.h:5: warning: data 
+   definition has no type or storage class
+/root/Chaos/Sources/Modules/Block/Ata/Include/interface.h:6: parse error before 
+   "irq15_consumer"
+/root/Chaos/Sources/Modules/Block/Ata/Include/interface.h:6: warning: type 
+   defaults to `int' in declaration of `irq15_consumer'
+/root/Chaos/Sources/Modules/Block/Ata/Include/interface.h:6: warning: data 
+   definition has no type or storage class
+/root/Chaos/Sources/Modules/Block/Ata/Include/interface.h:7: parse error before 
+   "debug_supplier"
+/root/Chaos/Sources/Modules/Block/Ata/Include/interface.h:7: warning: type 
+   defaults to `int' in declaration of `debug_supplier'
+/root/Chaos/Sources/Modules/Block/Ata/Include/interface.h:7: `debug_supplier' 
+   used prior to declaration
+/root/Chaos/Sources/Modules/Block/Ata/Include/interface.h:7: warning: data 
+   definition has no type or storage class
+/root/Chaos/Sources/Modules/Block/Ata/Include/interface.h:11: parse error 
+   before "kernel_handle_namespace"
+/root/Chaos/Sources/Modules/Block/Ata/Include/interface.h:11: warning: type 
+   defaults to `int' in declaration of `kernel_handle_namespace'
+/root/Chaos/Sources/Modules/Block/Ata/Include/interface.h:11: warning: data 
+   definition has no type or storage class
+/root/Chaos/Sources/Modules/Block/Ata/Include/interface.h:12: parse error 
+   before "kernel_irq_event_class"
+/root/Chaos/Sources/Modules/Block/Ata/Include/interface.h:12: warning: type 
+   defaults to `int' in declaration of `kernel_irq_event_class'
+/root/Chaos/Sources/Modules/Block/Ata/Include/interface.h:12: warning: data 
+   definition has no type or storage class
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:16: parse error before "
+   drive"
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:17: warning: no previous 
+   prototype for `ata_internal_probe'
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c: In function 
+   `ata_internal_probe':
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:28: `drive' undeclared 
+   (first use in this function)
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:81: warning: implicit 
+   declaration of function `cpu_sleep_milli'
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:81: `CPU_CURRENT' 
+   undeclared (first use in this function)
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:84: warning: implicit 
+   declaration of function `quality_set'
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:84: `QUALITY_CURRENT' 
+   undeclared (first use in this function)
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:86: syntax error before "
+   __context__"
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:86: warning: implicit 
+   declaration of function `computer_add_exception_context'
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:86: `COMPUTER_CURRENT' 
+   undeclared (first use in this function)
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:86: `p_exception_context_t
+   ' undeclared (first use in this function)
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:86: `__context__' 
+   undeclared (first use in this function)
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:89: warning: implicit 
+   declaration of function `quality_reset'
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:91: `exception_info_t' 
+   undeclared (first use in this function)
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:91: parse error before "e"
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:100: warning: implicit 
+   declaration of function `computer_remove_exception_context'
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:19: warning: `io_address' 
+   might be used uninitialized in this function
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c: At top level:
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:221: parse error before "
+   drive"
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:223: warning: no previous 
+   prototype for `ata_internal_command'
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c: In function 
+   `ata_internal_command':
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:235: `drive' undeclared 
+   (first use in this function)
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:239: `command' undeclared 
+   (first use in this function)
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:272: `count' undeclared 
+   (first use in this function)
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:278: `command_byte' 
+   undeclared (first use in this function)
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:281: `CPU_CURRENT' 
+   undeclared (first use in this function)
+/root/Chaos/Enviroments/Common/ia32/port.h:22: warning: inlining failed in call 
+   to `port_uint8_out'
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:272: warning: called from 
+   here
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:227: warning: `io_base' 
+   might be used uninitialized in this function
+/root/Chaos/Sources/Modules/Block/Ata/ata-internal.c:228: warning: `Temp' might 
+   be used uninitialized in this function
+make: *** [ata-internal.o] Error 1

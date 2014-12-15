@@ -37,7 +37,7 @@ typedef struct
      */
     uint32_t page_fault_linear_address;
 
-} cpu_register_cr2_t PACKED;
+} cpu_register_cr2_t;
 
 #define cpu_cr2_save(save_cr2)           \
     asm volatile ("movl %%cr2, %0"       \

@@ -1,0 +1,12 @@
+base referer
+rect $Repository_2tmp_2Group_2internal_8c.html#a2 224,55 421,79
+rect $Memory_2memory_8c.html#a2 260,126 385,150
+rect common.tag$copy_8h.html#a0 269,174 376,198
+rect $Repository_2Reference_2Include_2internal_8h.html#a3 470,7 660,31
+rect $Repository_2Reference_2Include_2internal_8h.html#a1 476,55 654,79
+rect common.tag$uint32_8h.html#a6 710,7 889,31
+rect $reference_8h.html#a2 708,55 892,79
+rect common.tag$spinlock_8h.html#a5 766,103 833,126
+rect $PhysicalMemory_2allocate_8c.html#a2 472,103 658,126
+rect $slab_8h.html#a4 504,150 626,174
+rect $slab_8h.html#a3 492,198 638,222

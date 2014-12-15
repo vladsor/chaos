@@ -1,0 +1,15 @@
+base referer
+rect $Repository_2Computer_2Include_2internal_8h.html#a7 180,199 297,223
+rect $task__state_8c.html#a2 177,390 300,414
+rect $Repository_2Computer_2internal_8c.html#a4 401,7 510,31
+rect $Repository_2Method_2Include_2internal_8h.html#a6 362,55 549,79
+rect $Repository_2Method_2Include_2internal_8h.html#a4 349,103 562,127
+rect $Repository_2Method_2Include_2internal_8h.html#a5 362,151 549,175
+rect $Repository_2Object_2Include_2internal_8h.html#a4 368,199 543,223
+rect $scheduler_8h.html#a0 350,246 561,270
+rect kernel.tag$task__state_8h.html#a8 369,294 542,318
+rect $task__state_8c.html#a4 364,342 547,366
+rect $tss_8c.html#a4 613,342 749,366
+rect kernel.tag$task__state_8h.html#a9 365,390 546,414
+rect $tss_8c.html#a3 419,438 491,462
+rect common.tag$clear_8h.html#a0 627,438 734,462

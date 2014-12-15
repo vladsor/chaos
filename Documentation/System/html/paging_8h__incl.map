@@ -1,0 +1,4 @@
+base referer
+rect $page_8h.html 6,18 108,42
+rect $page__directory_8h.html 132,18 302,42
+rect $page__table_8h.html 326,18 468,42

@@ -25,9 +25,10 @@
 
 #include "Segmentation/descriptor.h"
 #include "Segmentation/selector.h"
-#include "Segmentation/gdt.h"
-#include "Segmentation/idt"
 #include "Segmentation/tss.h"
+
+#include "Segmentation/gdt.h"
+#include "Segmentation/idt.h"
 
 /**
  * }@ // end of group group_segmentation

@@ -1,0 +1,24 @@
+interface class
+{
+	Object create (
+		in sequence<Object> interfaces);
+
+	destroy (
+		in Object ClassRef);
+
+	get_interfaces (
+		in Object ClassRef,
+		out sequence<Object> interfaces);
+
+	set_interfaces (
+		in Object ClassRef,
+		in sequence<Object> interfaces);
+
+	void invoke_method (
+		in Object ClassRef,
+		in Object InterfaceRef,
+		in contex_t context_data,
+		in unsigned long method_id,
+		in sequence<any> parameters,
+		out any return_value);
+};

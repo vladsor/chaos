@@ -1,0 +1,8 @@
+base referer
+rect $smp_8c.html#a16 201,33 340,57
+rect $smp_8c.html#a11 566,8 716,32
+rect $smp_8c.html#a15 389,57 501,81
+rect $smp_8c.html#a9 789,32 904,56
+rect $apic_8h.html#a13 780,80 913,104
+rect $smp_8c.html#a13 554,104 728,128
+rect $smp_8c.html#a14 550,56 732,80

@@ -71,14 +71,14 @@ enum condition_t
 #include "byte_order.h"
 #include "endian.h"
 
-#include "ia32/cpu_common.h"
-#include "ia32/flags.h"
 #include "ia32/port.h"
 #include "ia32/page.h"
-#include "ia32/cpu_features.h"
-#include "ia32/cpu_bugs.h"
+
+#include "ia32/cpu.h"
 #include "ia32/locks.h"
 #include "ia32/memory.h"
+#include "ia32/atomic.h"
+#include "ia32/bit.h"
 
 #endif /* __ENVIROMENT_ENVIROMENT_H__ */
 

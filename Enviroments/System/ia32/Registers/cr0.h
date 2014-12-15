@@ -319,16 +319,18 @@ typedef struct
                   "g" (enable_cr0));     \
 }
 
-#define cpu_cr0_disable(mask_cr0)        \
-{                                        \
-    register uint32_t temp_cr0;          \
-    asm volatile ("movl %%cr0, %0\n"     \
-                  "andl %1, %0\n"        \
-                  "movl %0, %%cr0"       \
-                  :                      \
-                  "=&r" (temp_cr0)       \
-                  :                      \
-                  "g" (~mask_cr0))       \
+static inline void cpu_cr0_disable (uint32_t mask_cr0)
+{
+    register uint32_t temp_cr0;
+    
+    asm volatile (
+        "movl %%cr0, %0\n"
+        "andl %1, %0\n"      
+        "movl %0, %%cr0" 
+        :
+            "=&r" (temp_cr0)
+        :
+            "g" (~mask_cr0));
 }
 
 #endif /* !__SYSTEM_ENVIROMENT_IA32_REGISTERS_CR0_H__ */

@@ -1,0 +1,9 @@
+base referer
+rect $Repository_2Computer_2Include_2internal_8h.html#a6 244,103 441,126
+rect $timer_8c.html#a9 262,174 422,198
+rect $Hardware_2Irq_2irq_8c.html#a8 521,7 670,31
+rect $scheduler_8h.html#a0 490,55 701,79
+rect kernel.tag$task__state_8h.html#a8 509,103 682,126
+rect $task__state_8c.html#a4 504,150 688,174
+rect $tss_8c.html#a4 752,150 888,174
+rect $timer_8c.html#a2 544,198 648,222

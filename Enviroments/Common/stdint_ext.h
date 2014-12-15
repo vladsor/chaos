@@ -1,10 +1,10 @@
 typedef void * p_void_t;
+typedef p_void_t * p_p_void_t;
 
 typedef struct
 {
     p_void_t data;
     uint32_t count;
-    uint32_t block_size;
    
 } sequence_t;
 
@@ -44,5 +44,16 @@ typedef function_t * p_function_t;
  */
 typedef                 uint32_t address_t;
 
-//typedef wchar_t * p_wchar_t;
+#ifndef __WCHAR_TYPE__
+#define __WCHAR_TYPE__ int
+#endif
 
+#ifndef _WCHAR_T
+#define _WCHAR_T
+
+typedef __WCHAR_TYPE__ wchar_t;
+#endif /* !_WCHAR_T */
+
+typedef wchar_t * p_wchar_t;
+
+#define WSTRING_MAX_LENGTH (256)

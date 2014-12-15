@@ -1,8 +1,8 @@
 /**
- * @file                ia32/Segmentation/selectors.h
- * @brief               Segment selectors description.
+ * @file                ia32/Segmentation/selector.h
+ * @brief               Segment selector description.
  * @author              Vladimir Sorokin
- * @version             0.1
+ * @version             0.2
  * @date                2002-2004
  */
 
@@ -20,8 +20,8 @@
  * @{
  */
 
-#ifndef __SYSTEM_ENVIROMENT_IA32_SELECTORS_H__
-#define __SYSTEM_ENVIROMENT_IA32_SELECTORS_H__
+#ifndef __SYSTEM_ENVIROMENT_IA32_SELECTOR_H__
+#define __SYSTEM_ENVIROMENT_IA32_SELECTOR_H__
 
 /**
  * @brief               A segment selector.
@@ -60,17 +60,21 @@ typedef struct
      * descriptor) and adds the result to the base address of the GDT or LDT 
      * (from the GDTR or LDTR register, respectively).
      */
-    uint16_t index : 12;
+    uint16_t index : 13;
 } selector_t PACKED;
 
 /**
  * @brief               Segment selector.
+ * @param index         Index in global table
+ * @param ldt           Flag if using local table
+ * @param rpl           Privilege level
  */
-#define SELECTOR(index,ldt,rpl)           (((index) << 3) | ((ldt) << 2) | (rpl))
+#define SELECTOR(index,ldt,rpl) \
+                        (((index) << 3) | ((ldt) << 2) | (rpl))
 
 #define SELECTOR_GET_DESCRIPTOR_INDEX(selector) ((selector) >> 3)
 
-#endif /* !__SYSTEM_ENVIROMENT_IA32_SELECTORS_H__ */
+#endif /* !__SYSTEM_ENVIROMENT_IA32_SELECTOR_H__ */
 
 /**
  * }@ // end of group group_segmentation_selectors

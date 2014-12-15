@@ -1,3 +1,3 @@
 
-#include "Atomic/integer_operations.h"
-#include "Atomic/bit_operations.h"
+#include "Atomic/uint32.h"
+#include "Atomic/bit.h"

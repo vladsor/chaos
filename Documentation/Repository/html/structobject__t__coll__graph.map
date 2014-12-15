@@ -1,0 +1,8 @@
+base referer
+rect $structreference__struct__t.html 6,210 182,373
+rect $structclass__t.html 162,578 368,800
+rect $structsecurity__t.html 516,585 633,793
+rect common.tag$structatomic__uint32__t.html 36,18 153,93
+rect $structclass__description__t.html 206,217 430,366
+rect common.tag$structsequence__t.html 562,254 645,329
+rect $structgeneric__acl__t.html 773,158 912,425

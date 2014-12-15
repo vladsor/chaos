@@ -1,0 +1,14 @@
+interface class_handle_factory
+{
+	unsigned long long create (
+		in unsigned long long object_data,
+		in interface_ref interface);
+
+	void destroy (
+		in unsigned long long object_data,
+		in unsigned long long handle_data);
+
+	unsigned long long clone (
+		in unsigned long long object_data,
+		in unsigned long long handle_data);
+};

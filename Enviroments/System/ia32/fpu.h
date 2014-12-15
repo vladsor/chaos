@@ -305,27 +305,27 @@ typedef struct
 typedef struct
 {
 
-  fpu_control_word_t control_word;
-  uint16_t reserved0;
+    fpu_control_word_t control_word;
+    uint16_t reserved0;
 
-  fpu_status_word_t status_word;
-  uint16_t reserved1;
+    fpu_status_word_t status_word;
+    uint16_t reserved1;
 
-  fpu_tag_word_t tag_word;
-  uint16_t reserved2;
+    fpu_tag_word_t tag_word;
+    uint16_t reserved2;
 
-  uint32_t fpu_instruction_pointer_offset;
+    uint32_t fpu_instruction_pointer_offset;
 
-  uint16_t fpu_instruction_pointer_selector;
-  uint16_t opcode : 11;
-  uint16_t zero   : 5;
+    uint16_t fpu_instruction_pointer_selector;
+    uint16_t opcode : 11;
+    uint16_t zero   : 5;
 
-  uint32_t fpu_operand_pointer_offset;
+    uint32_t fpu_operand_pointer_offset;
 
-  uint16_t fpu_operand_pointer_selector;
-  uint16_t reserved3;
+    uint16_t fpu_operand_pointer_selector;
+    uint16_t reserved3;
 
-  long double st[8];  
+    long double st[8];  
 } fpu_state_t PACKED;
 
 

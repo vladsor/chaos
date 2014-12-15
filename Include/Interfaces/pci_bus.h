@@ -1,114 +1,72 @@
-#define IID_PCI_BUS 0x00003001
+
+#define INTERFACE_PCI_BUS_ID 0x0007
 
 enum
 {
-    MID_PCI_BUS_GET_AMOUNT,
-    MID_PCI_BUS_GET_DEVICES,
-    MID_PCI_BUS_FIND_DEVICES,
+    METHOD_PCI_BUS_GET_AMOUNT_ID,
+    METHOD_PCI_BUS_GET_DEVICES_ID,
+    METHOD_PCI_BUS_FIND_DEVICES_ID,
+
+    METHOD_PCI_BUS_NUMBER
 };
 
-typedef return_t (pci_bus_get_amount_function_t) (context_t *context, 
-    uint32_t *devices);
-typedef return_t (pci_bus_get_devices_function_t) (context_t *context, 
-    uint32_t start, uint32_t count, handle_t *devices);
-typedef return_t (pci_bus_find_devices_function_t) (context_t *context, 
+typedef uint32_t (pci_bus_get_amount_t) (context_t context);
+typedef pci_bus_get_amount_t * p_pci_bus_get_amount_t;
+    
+typedef uint32_t (pci_bus_get_devices_t) (context_t context, 
+    sequence_t devices, uint32_t start);
+typedef pci_bus_get_devices_t * p_pci_bus_get_devices_t;
+    
+typedef uint32_t (pci_bus_find_devices_t) (context_t context, 
     uint16_t vendor_id, uint16_t device_id, uint8_t class_id, 
-    uint8_t subclass_id, uint8_t interface_id, uint32_t start, 
-    uint32_t *count, handle_t *devices);
+    uint8_t subclass_id, uint8_t interface_id, 
+    sequence_t devices, uint32_t start);
+typedef pci_bus_find_devices_t * p_pci_bus_find_devices_t;
 
 typedef struct
 {
-    pci_bus_get_amount_function_t *get_amount;
-    pci_bus_get_devices_function_t *get_devices;
-    pci_bus_find_devices_function_t *find_devices;
-} pci_bus_interface_t;
+    p_pci_bus_get_amount_t get_amount;
+    p_pci_bus_get_devices_t get_devices;
+    p_pci_bus_find_devices_t find_devices;
+} pci_bus_interface_table_t;
 
-typedef struct
+typedef pci_bus_interface_table_t * p_pci_bus_interface_table_t;
+
+static inline handle_reference_t pci_bus$open (object_reference_t object)
 {
-    pci_bus_get_amount_function_t *function;
-    method_id_t method_id;
-    uint32_t parameters_size;
+    sequence_t seq_empty = {NULL, 0, 0};
 
-    uint32_t number_of_parameters;
+    return handle_create (object, INTERFACE_PCI_BUS_ID, seq_empty, 0);
+}    
 
-    parameter_t parameters[1];
-
-} pci_bus_get_amount_method_t;
-
-#define PCI_BUS_GET_AMOUNT_METHOD(function) \
-    (&(function)), \
-    (MID_PCI_BUS_GET_AMOUNT), \
-    (sizeof (uint32_t *)), \
-    (1), \
-    { \
-        {sizeof (uint32_t *)}, \
-    }    
-
-typedef struct
+static inline uint32_t pci_bus$get_amount (handle_reference_t handle)
 {
-    pci_bus_get_devices_function_t *function;
-    method_id_t method_id;
-    uint32_t parameters_size;
+    sequence_t pars_seq = {data: NULL, count: 0, block_size: 0};
+    uint32_t ret = 0;
+    sequence_t ret_seq = {data: &ret, count: 1, block_size: 4};
+    
+    handle_invoke_method (handle, METHOD_PCI_BUS_GET_AMOUNT_ID, ret_seq, 
+        pars_seq);
+    
+    return ret;
+}
 
-    uint32_t number_of_parameters;
-
-    parameter_t parameters[3];
-
-} pci_bus_get_devices_method_t;
-
-#define PCI_BUS_GET_DEVICES_METHOD(function) \
-    (&(function)), \
-    (MID_PCI_BUS_GET_DEVICES), \
-    (sizeof (uint32_t *)), \
-    (3), \
-    { \
-        {sizeof (uint32_t)}, \
-        {sizeof (uint32_t)}, \
-        {sizeof (handle_t *)}, \
-    }    
-
-typedef struct
+static inline uint32_t pci_bus$find_devices (handle_reference_t handle, 
+    uint16_t vendor_id, uint16_t device_id, uint8_t class_id, 
+    uint8_t subclass_id, uint8_t interface_id, 
+    sequence_t devices, uint32_t start)
 {
-    pci_bus_find_devices_function_t *function;
-    method_id_t method_id;
-    uint32_t parameters_size;
+    uint32_t ret = 0;
+    sequence_t ret_seq = {data: &ret, count: 1, block_size: 4};
+    uint32_t pars[9] = {vendor_id, device_id, class_id, subclass_id, 
+        interface_id, 
+        (uint32_t) devices.data, devices.count, devices.block_size, start};
+    sequence_t pars_seq = {data: pars, count: 9, block_size: 9 * 4};
+    
+    handle_invoke_method (handle, METHOD_PCI_BUS_FIND_DEVICES_ID, ret_seq, 
+        pars_seq);
+    
+    return ret;
+}    
 
-    uint32_t number_of_parameters;
-
-    parameter_t parameters[8];
-
-} pci_bus_find_devices_method_t;
-
-#define PCI_BUS_FIND_DEVICES_METHOD(function) \
-    (&(function)), \
-    (MID_PCI_BUS_GET_DEVICES), \
-    (sizeof (uint32_t *)), \
-    (8), \
-    { \
-        {sizeof (uint16_t)}, \
-        {sizeof (uint16_t)}, \
-        {sizeof (uint16_t)}, \
-        {sizeof (uint16_t)}, \
-        {sizeof (uint16_t)}, \
-        {sizeof (uint32_t)}, \
-        {sizeof (uint32_t *)}, \
-        {sizeof (handle_t *)}, \
-    }    
-
-#define pci_bus$get_amount(handle,devices) \
-    ((pci_bus_interface_t *) ((handle)->functions))->get_amount ( \
-        &((handle)->context), \
-        (device))
-
-#define pci_bus$get_devices(handle,start,count,devices) \
-    ((pci_bus_interface_t *) ((handle)->functions))->get_devices ( \
-        &((handle)->context), \
-        (start), (count), (devices))
-
-#define pci_bus$find_devices(handle,vendor_id,device_id,class_id,subclass_id,\
-        interface_id,start,count,devices) \
-    ((pci_bus_interface_t *) ((handle)->functions))->find_devices ( \
-        &((handle)->context), \
-        (vendor_id), (device_id), (class_id), (subclass_id), (interface_id), \
-        (start), (count), (devices))
 

@@ -1,0 +1,4 @@
+base referer
+rect $Hardware_2PhysicalMemory_2internal_8c.html#a4 232,6 389,30
+rect $PhysicalMemory_2reserve_8c.html#a2 445,81 629,105
+rect $Hardware_2PhysicalMemory_2init_8c.html#a3 226,105 394,129

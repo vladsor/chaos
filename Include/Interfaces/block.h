@@ -1,92 +1,72 @@
 
-#define IID_BLOCK 0x00000A01
+#define INTERFACE_BLOCK_ID 0x000B
 
 enum
 {
-    MID_BLOCK_READ,
-    MID_BLOCK_WRITE,
+    METHOD_BLOCK_READ_ID,
+    METHOD_BLOCK_WRITE_ID,
+
+    METHOD_BLOCK_NUMBER
 };
 
-typedef return_t (block_read_function_t) (context_t *context, uint8_t *block,
-    uint64_t offset, uint64_t length);
-typedef return_t (block_write_function_t) (context_t *context, uint8_t *block,
-    uint64_t offset, uint64_t length);
+typedef uint32_t (block_read_t) (context_t context, 
+    sequence_t blocks, uint32_t start);
+typedef block_read_t * p_block_read_t;
     
-typedef struct
-{
-    block_read_function_t *read;
-    block_write_function_t *write;
-} block_interface_t;
+typedef uint32_t (block_write_t) (context_t context, 
+    sequence_t blocks, uint32_t start);
+typedef block_write_t * p_block_write_t;
+    
 
 typedef struct
 {
-    block_read_function_t *function;
-    method_id_t method_id;
-    uint32_t parameters_size;
+    p_block_read_t read;
+    p_block_write_t write;
+    
+} block_interface_table_t;
 
-    uint32_t number_of_parameters;
+typedef block_interface_table_t * p_block_interface_table_t;
 
-    parameter_t parameters[3];
 
-} block_read_method_t;
-
-typedef struct
+static inline handle_reference_t block$handle$create (object_reference_t object)
 {
-    uint8_t *block;
-    uint64_t start_block;
-    uint64_t number_of_blocks;
-} block_read_parameters_t;
+    sequence_t seq_empty = {NULL, 0, 0};
 
-#define BLOCK_READ_METHOD(function) \
-    (&(function)), \
-    (MID_BLOCK_READ), \
-    (sizeof (block_read_parameters_t)), \
-    (3), \
-    { \
-        {sizeof (uint8_t *)}, \
-        {sizeof (uint64_t)}, \
-        {sizeof (uint64_t)} \
-    }    
+    return handle_create (object, INTERFACE_BLOCK_ID, seq_empty, 0);
+}    
 
-typedef struct
+
+static inline uint32_t block$read (handle_reference_t handle, 
+    sequence_t block, uint32_t start)
 {
-    block_write_function_t *function;
-    method_id_t method_id;
-    uint32_t parameters_size;
+    uint32_t pars_in[] = {start};
+    sequence_t pars_in_seq = {data: pars_in, count: 1};
 
-    uint32_t number_of_parameters;
+    sequence_t empty_seq = {data: NULL, count: 0, block_size: 0};
 
-    parameter_t parameters[3];
+    uint32_t pars_out[] = {0, (uint32_t) block.data, block.count};
+    sequence_t pars_out_seq = {data: pars_out, count: 2};
 
-} block_write_method_t;
+    handle_invoke_method (handle, METHOD_BLOCK_READ_ID, REFERENCE_NULL, 
+        pars_in_seq, empty_seq, pars_out_seq, 0);
 
-typedef struct
+    return pars_out[0];
+}    
+
+static inline uint32_t block$write (handle_reference_t handle, 
+    sequence_t block, uint32_t start)
 {
-    uint8_t *block;
-    uint64_t start_block;
-    uint64_t number_of_blocks;
-} block_write_parameters_t;
+    uint32_t pars_in[] = {(uint32_t) block.data, block.count, start};
+    sequence_t pars_in_seq = {data: pars_in, count: 2};
 
-#define BLOCK_WRITE_METHOD(function) \
-    (&(function)), \
-    (MID_BLOCK_WRITE), \
-    (sizeof (block_write_parameters_t)), \
-    (3), \
-    { \
-        {sizeof (uint8_t *)}, \
-        {sizeof (uint64_t)}, \
-        {sizeof (uint64_t)} \
-    }    
+    sequence_t empty_seq = {data: NULL, count: 0, block_size: 0};
 
-#define block$read(handle,block,offset,length) \
-    ((block_interface_t *) ((handle)->functions))->read ( \
-        &((handle)->context), \
-        (block), (offset), (length))
+    uint32_t pars_out[] = {0};
+    sequence_t pars_out_seq = {data: pars_out, count: 1};
+    
+    handle_invoke_method (handle, METHOD_BLOCK_WRITE_ID, REFERENCE_NULL,
+        pars_in_seq, empty_seq, pars_out_seq, 0);
 
-#define block$write(handle,block,offset,length) \
-    ((block_interface_t *) ((handle)->functions))->write ( \
-        &((handle)->context), \
-        (block), (offset), (length))
-
-
+    return pars_out[0];
+}    
 

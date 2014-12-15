@@ -1,5 +1,6 @@
-#define CID_STORM_MODULE 0x000104FF
 
-#include <Interfaces/storm_module_repository.h>
-#include <Interfaces/storm_module.h>
+#define CLASS_STORM_MODULE_ID 0x0010
+
+#include <Interfaces/storm_module_factory.h>
+#include <Interfaces/storm_module_control.h>
 

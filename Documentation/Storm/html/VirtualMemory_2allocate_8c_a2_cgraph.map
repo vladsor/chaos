@@ -1,0 +1,4 @@
+base referer
+rect $page_8c.html#a3 244,6 324,30
+rect $PhysicalMemory_2allocate_8c.html#a2 373,54 560,78
+rect common.tag$clear_8h.html#a1 393,6 540,30

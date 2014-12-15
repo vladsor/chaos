@@ -193,7 +193,7 @@ typedef struct
      * pages to be aligned on 4-MByte boundaries.   
      */
     uint32_t            page_base            : 10;
-} page_directory_4mb_t;
+} page_directory_4mb_t PACKED;
 
 /**
  * @brief               A page directory entry (PDE).
@@ -350,7 +350,9 @@ typedef struct
      * boundaries.
      */
     uint32_t            page_table_base      : 20;
-} page_directory_t;
+} page_directory_t PACKED;
+
+typedef page_directory_t * p_page_directory_t;
 
 #define PAGE_DIRECTORY_INDEX(x) ((x) >> 10)
 

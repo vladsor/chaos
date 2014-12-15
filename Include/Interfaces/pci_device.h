@@ -1,20 +1,22 @@
 #ifndef __INTERFACE_PCI_DEVICE_H__
 #define __INTERFACE_PCI_DEVICE_H__
 
-#define IID_PCI_DEVICE 0x00003002
+#define INTERFACE_PCI_DEVICE_ID 0x0009
 
 enum
 {
-    MID_PCI_DEVICE_GET_INFO,
-    MID_PCI_DEVICE_ENABLE,
-    MID_PCI_DEVICE_DISABLE,
-    MID_PCI_DEVICE_SET_MASTER,
+    METHOD_PCI_DEVICE_GET_INFO_ID,
+    METHOD_PCI_DEVICE_ENABLE_ID,
+    METHOD_PCI_DEVICE_DISABLE_ID,
+    METHOD_PCI_DEVICE_SET_MASTER_ID,
+    
+    METHOD_PCI_DEVICE_NUMBER
 };
-
-#define PCI_NUMBER_OF_RESOURCES         12
 
 #ifndef PCI_RESOURCE_DEFINED
 #define PCI_RESOURCE_DEFINED
+
+#define PCI_NUMBER_OF_RESOURCES         (12)
 typedef struct 
 {
     const char *name;
@@ -37,112 +39,62 @@ typedef struct
 
 } pci_device_info_t;
 
-typedef return_t (pci_device_get_info_function_t) (context_t *context, 
-    pci_device_info_t *info);
-typedef return_t (pci_device_enable_function_t) (context_t *context);
-typedef return_t (pci_device_disable_function_t) (context_t *context);
-typedef return_t (pci_device_set_master_function_t) (context_t *context);
-
-typedef struct
-{
-    pci_device_get_info_function_t *get_info;
-
-    pci_device_enable_function_t *enable;
-    pci_device_disable_function_t *disable;
-    pci_device_set_master_function_t *set_master;
+typedef void (pci_device_get_info_t) (context_t context, 
+    pci_device_info_t *info);
+typedef pci_device_get_info_t * p_pci_device_get_info_t;
     
-} pci_device_interface_t;
+typedef void (pci_device_enable_t) (context_t context);
+typedef pci_device_enable_t * p_pci_device_enable_t;
+
+typedef void (pci_device_disable_t) (context_t context);
+typedef pci_device_disable_t * p_pci_device_disable_t;
+
+typedef void (pci_device_set_master_t) (context_t context);
+typedef pci_device_set_master_t * p_pci_device_set_master_t;
 
 typedef struct
 {
-    pci_device_get_info_function_t *function;
-    method_id_t method_id;
-    uint32_t parameters_size;
+    p_pci_device_get_info_t get_info;
+    p_pci_device_enable_t enable;
+    p_pci_device_disable_t disable;
+    p_pci_device_set_master_t set_master;
+    
+} pci_device_interface_table_t;
 
-    uint32_t number_of_parameters;
+typedef pci_device_interface_table_t * p_pci_device_interface_table_t;
 
-    parameter_t parameters[1];
-
-} pci_device_get_info_method_t;
-
-#define PCI_DEVICE_GET_INFO_METHOD(function) \
-    (&(function)), \
-    (MID_PCI_DEVICE_GET_INFO), \
-    (sizeof (uint32_t *)), \
-    (1), \
-    { \
-        {sizeof (uint32_t *)}, \
-    }    
-
-typedef struct
+static inline handle_reference_t pci_device$open (object_reference_t object)
 {
-    pci_device_enable_function_t *function;
-    method_id_t method_id;
-    uint32_t parameters_size;
+    sequence_t seq_empty = {NULL, 0, 0};
 
-    uint32_t number_of_parameters;
+    return handle_create (object, INTERFACE_PCI_DEVICE_ID, seq_empty, 0);
+}    
 
-    parameter_t parameters[0];
-
-} pci_device_enable_method_t;
-
-#define PCI_DEVICE_ENABLE_METHOD(function) \
-    (&(function)), \
-    (MID_PCI_DEVICE_ENABLE), \
-    (0), \
-    (0)  
-
-typedef struct
+static inline void pci_device$get_info (handle_reference_t handle,
+    pci_device_info_t *info)
 {
-    pci_device_disable_function_t *function;
-    method_id_t method_id;
-    uint32_t parameters_size;
+    sequence_t ret_seq = {data: NULL, count: 0, block_size: 0};
+    uint32_t pars[1] = {(uint32_t) info};
+    sequence_t pars_seq = {data: pars, count: 1, block_size: 4};
+    
+    handle_invoke_method (handle, METHOD_PCI_DEVICE_GET_INFO_ID, ret_seq, 
+        pars_seq);
+}
 
-    uint32_t number_of_parameters;
-
-    parameter_t parameters[0];
-
-} pci_device_disable_method_t;
-
-#define PCI_DEVICE_DISABLE_METHOD(function) \
-    (&(function)), \
-    (MID_PCI_DEVICE_DISABLE), \
-    (0), \
-    (0)  
-
-typedef struct
+static inline void pci_device$enable (handle_reference_t handle)
 {
-    pci_device_set_master_function_t *function;
-    method_id_t method_id;
-    uint32_t parameters_size;
+    sequence_t seq = {data: NULL, count: 0, block_size: 0};
+    
+    handle_invoke_method (handle, METHOD_PCI_DEVICE_ENABLE_ID, seq, seq);
+}
 
-    uint32_t number_of_parameters;
+static inline void pci_device$set_master (handle_reference_t handle)
+{
+    sequence_t seq = {data: NULL, count: 0, block_size: 0};
+    
+    handle_invoke_method (handle, METHOD_PCI_DEVICE_SET_MASTER_ID, seq, seq);
+}
 
-    parameter_t parameters[0];
 
-} pci_device_set_master_method_t;
+#endif /* !__INTERFACE_PCI_DEVICE_H__ */
 
-#define PCI_DEVICE_SET_MASTER_METHOD(function) \
-    (&(function)), \
-    (MID_PCI_DEVICE_SET_MASTER), \
-    (0), \
-    (0)  
-
-#define pci_device$get_info(handle,info) \
-    ((pci_device_interface_t *) ((handle)->functions))->get_info ( \
-        &((handle)->context), \
-        (info))
-
-#define pci_device$enable(handle) \
-    ((pci_device_interface_t *) ((handle)->functions))->enable ( \
-        &((handle)->context))
-
-#define pci_device$disable(handle) \
-    ((pci_device_interface_t *) ((handle)->functions))->disable ( \
-        &((handle)->context))
-
-#define pci_device$set_master(handle) \
-    ((pci_device_interface_t *) ((handle)->functions))->set_master ( \
-        &((handle)->context))
-
-#endif /* !__INTERFACE_PCI_DEVICE_H__ */

@@ -1,44 +1,39 @@
-#ifndef __INTERFACE_TIMER_H__
-#define __INTERFACE_TIMER_H__
 
-#define IID_TIMER 0x00000701
+#define INTERFACE_TIMER_ID 0x000A
 
 enum
 {
-    MID_TIMER_SLEEP_MILLI,
-    MID_TIMER_SLEEP_MICRO,
-    MID_TIMER_READ,
-    MID_TIMER_WRITE,
+    METHOD_TIMER_READ_MILLI_ID,
+
+    METHOD_TIMER_NUMBER
 };
 
-typedef return_t (timer_sleep_milli_function_t) (unsigned int time);
-typedef return_t (timer_sleep_micro_function_t) (unsigned int time);
-typedef return_t (timer_read_function_t) (uint64_t *value);
-typedef return_t (timer_write_function_t) (uint64_t value);
-
+typedef uint32_t (timer_read_milli_t) (context_t context);
+typedef timer_read_milli_t * p_timer_read_milli_t;
+    
 typedef struct
 {
-    timer_sleep_milli_function_t *sleep_milli;
-    timer_sleep_micro_function_t *sleep_micro;
-    timer_read_function_t *read;
-    timer_write_function_t *write;
-} timer_interface_t;
+    p_timer_read_milli_t read_milli;
+} timer_interface_table_t;
 
-#define timer$sleep_milli(handle,time) \
-    ((timer_interface_t *) ((handle)->functions))->sleep_milli ( \
-        (time))
+typedef timer_interface_table_t * p_timer_interface_table_t;
 
-#define timer$sleep_micro(handle,time) \
-    ((timer_interface_t *) ((handle)->functions))->sleep_micro ( \
-        (time))
+static inline handle_reference_t timer$handle$create (object_reference_t object)
+{
+    sequence_t seq_empty = {data: NULL, count: 0};
 
-#define timer$read(handle,value) \
-    ((timer_interface_t *) ((handle)->functions))->read ( \
-        (value))
+    return handle_create (object, INTERFACE_TIMER_ID, seq_empty, 0);
+}    
 
-#define timer$write(handle,value) \
-    ((timer_interface_t *) ((handle)->functions))->write ( \
-        (value))
-
-#endif /* !__INTERFACE_TIMER_H__ */
+static inline uint32_t timer$read_milli (handle_reference_t handle)
+{
+    sequence_t empty_seq = {data: NULL, count: 0};
+    uint32_t ret = 0;
+    sequence_t pars_out_seq = {data: &ret, count: 1};
+    
+    handle_invoke_method (handle, METHOD_TIMER_READ_MILLI_ID, REFERENCE_NULL,
+        empty_seq, empty_seq, pars_out_seq, 0);
+    
+    return ret;
+}
 

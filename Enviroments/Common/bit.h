@@ -1,10 +1,10 @@
 /** 
- * @file                bit.h
+ * @file                Common/bit.h
  * @brief               Bit manipulation macros. 
- * @author              Per Lundberg <per@chaosdev.org>,
- *                      Henrik Hallin <hal@chaosdev.org>,
- *                      Vladimir Sorokin
- * @version             1.4
+ * @author              Per Lundberg <per@chaosdev.org>
+ * @author              Henrik Hallin <hal@chaosdev.org>
+ * @author              Vladimir Sorokin
+ * @version             1.5
  * @date                1998-2004
  *
  * This file is endian-specific and needs to be rewritten for
@@ -22,32 +22,32 @@
 /** 
  * @brief               Get the low 32 bits of a 64-bit integer variable. 
  */
-#define LOW_32(x)       ((x) & 0xFFFFFFFFUL)
+#define UINT64_LOW_UINT32(x)       (((uint64_t) (x)) & UINT32_MAX)
 
 /** 
  * @brief               Get the high 32 bits of a 64-bit integer variable. 
  */
-#define HIGH_32(x)      ((x) >> 32)
+#define UINT64_HIGH_UINT32(x)      (((uint64_t) (x)) >> 32)
 
 /** 
  * @brief               Get the low 16 bits of a 32-bit integer variable. 
  */
-#define LOW_16(x)       ((x) & 0xFFFF)
+#define UINT32_LOW_UINT16(x)       ((x) & UINT16_MAX)
 
 /** 
  * @brief               Get the high 16 bits of a 32-bit integer variable. 
  */
-#define HIGH_16(x)      (((x) >> 16) & 0xFFFF)
+#define UINT32_HIGH_UINT16(x)      (((uint32_t) (x)) >> 16)
 
 /**
  * @brief               Get the low 8 bits of a 16-bit integer variable. 
  */
-#define LOW_8(x)        ((x) & 0xFF)
+#define UINT16_LOW_UINT8(x)        ((x) & UINT8_MAX)
 
 /**
  * @brief               Get the high 8 bits of a 16-bit integer variable. 
  */
-#define HIGH_8(x)       (((x) >> 8) & 0xFF)
+#define UINT16_HIGH_UINT8(x)       (((uint16_t) (x)) >> 8)
 
 /**
  * @brief               Set bit b in a.
@@ -60,9 +60,9 @@
 #define BIT_CLEAR(a,b)  ((a) &= ~(1ULL << (b)))
 
 /**
- * @brief               Switch bit b in a.
+ * @brief               Toggle bit b in a.
  */
-#define BIT_SWITCH(a,b) ((a) ^= (1ULL << (b)))
+#define BIT_TOGGLE(a,b) ((a) ^= (1ULL << (b)))
 
 /**
  * @brief               Get bit b in a.
@@ -154,21 +154,21 @@
 			((1ULL << ((high) + 1)) - 1)))
 
 /**
- * @brief               Switch bits 31..low in x
+ * @brief               Toggle bits 31..low in x
  */
-#define BITS_SWITCH_HIGH(x,low) \
+#define BITS_TOGGLE_HIGH(x,low) \
 			((x) ^= ~((1ULL << (low)) - 1))
 
 /**
- * @brief               Switch bits high..0 in x
+ * @brief               Toggle bits high..0 in x
  */
-#define BITS_SWITCH_LOW(h,high) \
+#define BITS_TOGGLE_LOW(h,high) \
 			((x) ^= ((1ULL << ((high) + 1)) - 1))
 
 /**
- * @brief               Switch bits high..low in x
+ * @brief               Toggle bits high..low in x
  */
-#define BITS_SWITCH(x,high,low) \
+#define BITS_TOGGLE(x,high,low) \
 			((x) |= ((~((1ULL << (low)) - 1)) & \
 			((1ULL << ((high) + 1)) - 1)))
 
@@ -199,11 +199,12 @@
 			BIT_CLEAR ((name)[(index) >> 5], (index) & 0x1F)
 
 /**
- * @brief               Switch bit in map
+ * @brief               Toggle bit in map
  * @param name          Name of map
  * @param index         Bit number
  */
-#define BIT_MAP_SWITCH(name,index) \
-			BIT_SWITCH ((name)[(index) >> 5], (index) & 0x1F)
+#define BIT_MAP_TOGGLE(name,index) \
+			BIT_TOGGLE ((name)[(index) >> 5], (index) & 0x1F)
 
 #endif /* !__ENVIROMENT_IA32_BIT_H__ */
+

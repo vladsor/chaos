@@ -43,8 +43,22 @@ extern descriptor_t gdt[];
 static inline void gdt_setup_tss_descriptor (uint16_t entry, tss_t *address,
 	int tss_size, int dpl)
 {
-  ((uint64_t *) gdt)[entry] = DESCRIPTOR_TSS ((uint32_t) address, tss_size, 
-      SEGMENT_GRANULARITY_BYTE, dpl, SEGMENT_PRESENT, SEGMENT_DIGIT_32);
+    descriptor_t *tmpdesc;
+    
+    tmpdesc = &gdt[entry];
+    
+    tmpdesc->limit_hi = 0;
+    tmpdesc->limit_lo = tss_size;
+    tmpdesc->granularity = 0;
+    tmpdesc->base_lo = (uint32_t) address & 0xFFFF;
+    tmpdesc->base_hi = ((uint32_t) address >> 16) & 0xFF;
+    tmpdesc->base_hi2 = ((uint32_t) address >> 24) & 0xFF;
+    tmpdesc->type = DESCRIPTOR_TYPE_TSS;
+    tmpdesc->descriptor_type = 0;
+    tmpdesc->dpl = dpl;
+    tmpdesc->segment_present = 1;
+    tmpdesc->zero = 0;
+    tmpdesc->default_operation_size = 0;
 }
 
 /**
