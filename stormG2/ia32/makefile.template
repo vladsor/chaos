@@ -1,0 +1,4 @@
+# $Id: makefile.template,v 1.1 2001/02/10 22:58:48 jojo Exp $
+# Local rules
+
+DEFINES="-DCREATOR=\"`whoami`@`hostname`\""

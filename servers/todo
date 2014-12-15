@@ -1,0 +1,5 @@
+TODO ($Id: TODO,v 1.2 2001/02/10 21:23:35 jojo Exp $)
+====
+
+* Fix the PCI code.
+* Make all servers support closing of connections properly.

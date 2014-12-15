@@ -1,0 +1,9 @@
+COPYING ($Id: COPYING,v 1.2 2001/02/10 21:22:07 jojo Exp $)
+=======
+
+chaos is licensed under the GPL and LGPL licences. You can find the
+licence for a specific subdirectory in that directory, in the file
+named COPYING.
+
+-- Per Lundberg <plundis@chaosdev.org>  Thu, 31 Aug 2000 22:17:54 +0200
+
