@@ -37,4 +37,4 @@ console.o: console.c \
  ../string/functions.h ../string/inlines.h ../string/return_values.h \
  config.h ../memory/memory.h ../memory/copy.h ../memory/functions.h \
  ../memory/return_values.h ../memory/set.h ../memory/types.h \
- ../memory/slab.h
+ ../memory/slab.h ../memory/inlines.h

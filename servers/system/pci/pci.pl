@@ -57,7 +57,6 @@ while (<INFILE>)
     $device_name = escape ($device_name);
 
     print (OUTFILE "  { 0x$manufacturer_id, 0x$device_id, \"$device_name\" },\n");
-
   }
   elsif ($line =~ /^\t\t[^\t]/)
   {
@@ -80,21 +79,90 @@ while (<INFILE>)
 
 # Iterate through the hash with manufacturers.
 
-print OUTFILE "  { 0x0000, 0x0000, NULL }
-};
+print OUTFILE "};
+unsigned int number_of_devices = sizeof(pci_device_id) / 
+                                 sizeof(pci_device_id_type);
 
 pci_vendor_id_type pci_vendor_id[] =
 {
 ";
 
-foreach my $key (keys %manufacturer)
+close (INFILE);
+open (INFILE, '<' . $infile_name) or die "Couldn't open $infile_name for reading.\n";
+
+while (<INFILE>)
 {
-  print (OUTFILE "  { 0x$key, \"$manufacturer{$key}\" },\n");
+  my $line = $_;
+
+  chop ($line);
+
+  # Ignore comments and white lines.
+
+  next if (substr ($line, 0, 1) eq '#');
+  next if ($line =~ /^\s*$/);
+
+  if ($line =~ /^\t[^\t]+$/)
+  {
+  }
+  elsif ($line =~ /^\t\t[^\t]/)
+  {
+  }
+  elsif ($line =~ /C \d+.*/)
+  {
+    last;
+  }
+  else
+  {
+    ($manufacturer_id, $manufacturer) = ($line =~ /^([\da-fA-F]{4})\s+(.+)$/);
+    $manufacturer = escape ($manufacturer);
+
+    print (OUTFILE "  { 0x$manufacturer_id, \"$manufacturer\" },\n");
+  }
 }
 
-print OUTFILE '  { 0x0000, NULL }
-};
-';
+print OUTFILE "};
+unsigned int number_of_vendors = sizeof(pci_vendor_id) / 
+                                 sizeof(pci_vendor_id_type);
 
-close (OUTFILE);
+pci_class_id_type pci_class_id[] =
+{
+";
+
 close (INFILE);
+open (INFILE, '<' . $infile_name) or die "Couldn't open $infile_name for reading.\n";
+
+while (<INFILE>)
+{
+  my $line = $_;
+
+  chop ($line);
+
+  # Ignore comments and white lines.
+
+  next if (substr ($line, 0, 1) eq '#');
+  next if ($line =~ /^\s*$/);
+
+  if ($line =~ /^\t[^\t]+$/)
+  {
+  }
+  elsif ($line =~ /^\t\t[^\t]/)
+  {
+  }
+  elsif ($line =~ /C \d+.*/)
+  {
+    (my $class_id, my $class_name) = ($line =~ /C ([\da-fA-F]{2})\s+(.+)$/);
+    $class_name = escape ($class_name);
+    print (OUTFILE "  { 0x$class_id, \"$class_name\" },\n");
+  }
+  else
+  {
+  }
+}
+
+print OUTFILE "};
+unsigned int number_of_classes = sizeof(pci_class_id) / 
+                                 sizeof(pci_class_id_type);
+";
+
+close (INFILE);
+close (OUTFILE);

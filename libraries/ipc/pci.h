@@ -70,6 +70,17 @@ enum
 #define PCI_NUMBER_OF_RESOURCES         12
 #define PCI_NUMBER_OF_REGULAR_RESOURCES 6
 
+#define PCI_ROM_RESOURCE 6
+#define PCI_BRIDGE_RESOURCES 7
+
+#define PCI_BASE_ADDRESS_0	0x10	/* 32 bits */
+#define PCI_BASE_ADDRESS_1	0x14	/* 32 bits [htype 0,1 only] */
+#define PCI_BASE_ADDRESS_2	0x18	/* 32 bits [htype 0 only] */
+#define PCI_BASE_ADDRESS_3	0x1c	/* 32 bits */
+#define PCI_BASE_ADDRESS_4	0x20	/* 32 bits */
+#define PCI_BASE_ADDRESS_5	0x24	/* 32 bits */
+
+
 /* IO resources have these defined flags. */
 /* Bus-specific bits. */
 
@@ -116,7 +127,14 @@ typedef struct
 
 typedef struct
 {
+  u16 vendor_id;
+  char vendor_name[80];
+
+  u16 device_id;
+  char device_name[80];
+
   unsigned int irq;
+  
   pci_resource_type resource[PCI_NUMBER_OF_RESOURCES];
 } pci_device_info_type;
 

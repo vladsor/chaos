@@ -40,7 +40,7 @@
 
 #define DEBUG FALSE
 
-u32 hz = 32;
+u32 hz = 1000;
 timer_event_type *timer_event_list = NULL;
 volatile time_type uptime = 0;
 

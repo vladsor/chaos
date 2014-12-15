@@ -5,8 +5,10 @@ int response_cpu_sub_type(void);
 int get_cpu_name(void);
 int get_cpu_sub_name(void);
 int get_fpu_name(void);
-void add_feature(CPU_Capability cap,u32 value);
-u32 get_feature(CPU_Capability cap);
+
+void feature_set(CPU_Capability cap,bool value);
+//bool feature_get(CPU_Capability cap);
+
 void process_features(u32 features);
 void process_amd_features(u32 features);
 void detect_cpu(void);
@@ -30,7 +32,8 @@ vendor_record Vendor_records[] = {
   { VENDOR_Centaur	,"Centaur"	 ,VENDOR_Centaur_STRING },
   { VENDOR_UMC		,"UMC"		 ,VENDOR_UMC_STRING },
   { VENDOR_NexGen	,"NexGen"	 ,VENDOR_NexGen_STRING },
-  { VENDOR_RiseTechnology,"RiseTechnology",VENDOR_RiseTechnology_STRING }
+  { VENDOR_RiseTechnology,"RiseTechnology",VENDOR_RiseTechnology_STRING },
+  { VENDOR_Transmeta	,"Transmeta"	,VENDOR_Transmeta_STRING }
 };
 
 typedef struct

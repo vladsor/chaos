@@ -39,6 +39,13 @@ typedef struct
   unsigned int number_of_blocks;
 } ipc_block_read_type;
 
+typedef struct
+{
+  unsigned int start_block_number;
+  unsigned int number_of_blocks;
+  unsigned char data[0];
+} ipc_block_write_type;
+
 /* IPC_BLOCK_GET_INFO returns this structure. */
 
 typedef struct

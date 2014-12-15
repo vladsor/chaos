@@ -33,7 +33,7 @@ ipc.o: ipc.c ../console/console.h ../console/defines.h \
  ../ipc/sound.h ../ipc/video.h ../ipc/virtual_file_system.h \
  ../ipc/return_values.h ../console/functions.h ../memory/memory.h \
  ../memory/copy.h ../memory/functions.h ../memory/return_values.h \
- ../memory/set.h ../memory/types.h ../memory/slab.h ../string/string.h \
- ../string/functions.h \
+ ../memory/set.h ../memory/types.h ../memory/slab.h \
+ ../memory/inlines.h ../string/string.h ../string/functions.h \
  /usr/lib/gcc-lib/i386-redhat-linux/2.95.1/include/stdarg.h \
  ../string/inlines.h ../string/return_values.h config.h

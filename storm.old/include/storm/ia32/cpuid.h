@@ -41,7 +41,7 @@ extern void cpuid_init (void) INIT_CODE;
 #define VENDOR_UMC_STRING		"UMC UMC UMC "
 #define VENDOR_NexGen_STRING		"NexGenDriven"
 #define VENDOR_RiseTechnology_STRING	"RiseRiseRise"
-
+#define VENDOR_Transmeta_STRING         "GenuineTMx86"
 
 typedef enum
 {
@@ -52,7 +52,8 @@ typedef enum
     VENDOR_Centaur,
     VENDOR_UMC,
     VENDOR_NexGen,
-    VENDOR_RiseTechnology
+    VENDOR_RiseTechnology,
+    VENDOR_Transmeta,
 } CPU_vendor;
 
 typedef enum
@@ -116,7 +117,7 @@ typedef enum
     CPU_TYPE_INTEL_Pentium_Pro,
     CPU_TYPE_INTEL_Pentium_II,
     CPU_TYPE_INTEL_Pentium_III,
-    CPU_TYPE_INTEL_Pentium_4
+    CPU_TYPE_INTEL_Pentium_IV,
     
 } CPU_type;
 
@@ -197,6 +198,10 @@ typedef enum
     FEATURE_VIDC,	/* Voltage ID Control Suport			*/
     FEATURE_BMC,	/* Bus Multiplier Control			*/
 
+    FEATURE_CACHE_L1_INFO,
+    FEATURE_CACHE_L2_INFO,
+    FEATURE_HARD_NAME,
+    
 } CPU_Capability;
 
 #define NAME_LENGTH 49
@@ -219,13 +224,17 @@ typedef struct
   char family;
   char model;
   char stepping;
-  u32 features[FEATURES_NUMBER];
+  char generation;
+  u32 data_cache_l1_size;
+  u32 instructions_cache_l1_size;  
+  u32 cache_l2_size;
+  bool features[FEATURES_NUMBER];
 } full_cpu_info;
 
 extern unsigned int cpus;
 extern full_cpu_info CPU;
 										
-static inline u32 get_cpu_feature(full_cpu_info cpu,CPU_Capability cap)
+static inline bool cpu_feature_get(full_cpu_info cpu,CPU_Capability cap)
 {
   return ((cpu.features[cap]));
 }

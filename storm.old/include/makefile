@@ -51,6 +51,7 @@ ia32/thread.o \
 ia32/time.o \
 ia32/timer.o \
 ia32/trap.o \
+ia32/trap_handlers.o \
 ia32/wrapper.o \
 generic/arguments.o \
 generic/avl.o \

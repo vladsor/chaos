@@ -1,4 +1,34 @@
-2000-12-30 Vladimir Sorokin
+Vladimir Sorokin
+2001-01-06
+  ready changes :
+  storm
+  * more informative messages for exceptions and interrupts.
+  
+2001-01-05
+  ready changes :
+  pci server
+  * added type of device and agp device detection.
+  
+2001-01-03
+  ready changes :
+   pci server
+   * now it uses binary search for searching vendor's and device's names
+   
+2001-01-01 
+  ready changes :
+   pci server
+   * added messages handling for get info about all pci devices
+   
+   cluido
+   * now command 'pci' work
+   
+   log server
+   * enabling/disabling output for different urgency
+   
+   storm
+   * add detecting L1 and L2 caches sizes
+   
+2000-12-30 
  ready changes :
   memory library:
   * adding file inlines.h with function memory_compare

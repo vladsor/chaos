@@ -62,10 +62,11 @@ return_type pci_get_number_of_devices (ipc_structure_type *pci_structure,
 
   message_parameter.protocol = IPC_PROTOCOL_PCI;
   message_parameter.message_class = IPC_PCI_DEVICE_GET_AMOUNT;
-  message_parameter.data = number_of_devices;
+  message_parameter.data = NULL;
   message_parameter.length = 0;
 
   ipc_send (pci_structure->output_mailbox_id, &message_parameter);
+  message_parameter.data = number_of_devices;
   message_parameter.length = sizeof (unsigned int);
   ipc_receive (pci_structure->input_mailbox_id, &message_parameter, NULL);
 

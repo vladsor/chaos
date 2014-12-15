@@ -29,6 +29,11 @@
 #include "config.h"
 #include "pci.h"
 
+/* Define as TRUE if you are debugging this server. */
+
+#define DEBUG TRUE
+
+
 static log_structure_type log_structure;
 
 /* Linked list of all PCI devices. */
@@ -178,7 +183,11 @@ static pci_operation_type pci_type2_operation =
 };
 
 extern pci_device_id_type pci_device_id[];
+extern unsigned int number_of_devices;
 extern pci_vendor_id_type pci_vendor_id[];
+extern unsigned int number_of_vendors;
+extern pci_class_id_type pci_class_id[];
+extern unsigned int number_of_classes;
 
 /* The operations we should use to access the PCI host. */
 
@@ -226,36 +235,146 @@ static void pci_write_config_u8 (pci_device_type *device, int where, u32 data)
 
 static const char *vendor_get_name (u16 vendor_id)
 {
-  int counter;
+  unsigned int range_begin = 0;
+  unsigned int range_end = number_of_vendors - 1;
+  unsigned int range_median = (range_end - range_begin) >> 1;
 
-  for (counter = 0; pci_device_id[counter].name != NULL; counter++)
+  while (pci_vendor_id[range_median].vendor_id != vendor_id)
   {
-    if (pci_vendor_id[counter].vendor_id == vendor_id)
+    if (range_begin == range_end)
     {
-      break;
+      return NULL;
+    }
+    
+    if (pci_vendor_id[range_median].vendor_id > vendor_id)
+    {
+      range_end = range_median - 1;
+      range_median = (range_begin + range_end) >> 1;
+      
+      if (range_end < range_begin)
+      {
+        return NULL;
+      }
+    }
+    else
+    {
+      range_begin = range_median + 1;
+      range_median = (range_begin + range_end) >> 1;
+
+      if (range_end < range_begin)
+      {
+        return NULL;
+      }
     }
   }
-
-  return pci_vendor_id[counter].name;
+  
+  return pci_vendor_id[range_median].name;
 }
 
 /* Get the device name for the given ID. */
 
 static const char *device_get_name (u16 vendor_id, u16 device_id)
 {
-  int counter;
+  unsigned int range_begin = 0;
+  unsigned int range_end = number_of_devices - 1;
+  unsigned int range_median = (range_end - range_begin) >> 1;
 
-  for (counter = 0; pci_device_id[counter].name != NULL; counter++)
+  while (pci_device_id[range_median].vendor_id != vendor_id ||
+         pci_device_id[range_median].device_id != device_id)
   {
-    if (pci_device_id[counter].vendor_id == vendor_id &&
-        pci_device_id[counter].device_id == device_id)
+    if (range_begin == range_end)
     {
-      break;
+      return NULL;
+    }
+    
+    if (pci_device_id[range_median].vendor_id > vendor_id)
+    {
+      range_end = range_median - 1;
+      range_median = (range_begin + range_end) >> 1;
+
+      if (range_end < range_begin)
+      {
+        return NULL;
+      }
+    }
+    else if (pci_device_id[range_median].vendor_id < vendor_id)
+    {
+      range_begin = range_median + 1;
+      range_median = (range_begin + range_end) >> 1;
+
+      if (range_end < range_begin)
+      {
+        return NULL;
+      }
+    }
+    else
+    {
+      if (pci_device_id[range_median].device_id > device_id)
+      {
+        range_end = range_median - 1;
+        range_median = (range_begin + range_end) >> 1;
+  
+        if (range_end < range_begin)
+        {
+          return NULL;
+        }
+      }
+      else
+      {
+        range_begin = range_median + 1;
+        range_median = (range_begin + range_end) >> 1;
+
+        if (range_end < range_begin)
+        {
+          return NULL;
+        }
+      }
     }
   }
 
-  return pci_device_id[counter].name;
+  return pci_device_id[range_median].name;
 }
+
+/* Get the class name for the given ID. */
+
+static const char *class_get_name (u8 class_id)
+{
+  unsigned int range_begin = 0;
+  unsigned int range_end = number_of_classes - 1;
+  unsigned int range_median = (range_end - range_begin) >> 1;
+
+  while (pci_class_id[range_median].class_id != class_id)
+  {
+    if (range_begin == range_end)
+    {
+      return NULL;
+    }
+    
+    if (pci_class_id[range_median].class_id > class_id)
+    {
+      range_end = range_median - 1;
+      range_median = (range_begin + range_end) >> 1;
+      
+      if (range_end < range_begin)
+      {
+        return NULL;
+      }
+    }
+    else
+    {
+      range_begin = range_median + 1;
+      range_median = (range_begin + range_end) >> 1;
+
+      if (range_end < range_begin)
+      {
+        return NULL;
+      }
+    }
+  }
+  
+  return pci_class_id[range_median].class_name;
+}
+
 
 /* Handle an IPC connection request. */
 
@@ -291,6 +410,81 @@ static void handle_connection (mailbox_id_type reply_mailbox_id)
     
     switch (message_parameter.message_class)
     {
+
+      /* Get the amount of PCI devices in this system. */
+ 
+      case IPC_PCI_DEVICE_GET_AMOUNT:
+      {
+        static unsigned int devices;
+	pci_device_type *device = pci_device_list;
+	devices = 0;
+	
+	while(device != NULL)
+	{
+	  devices++;
+	  device = (pci_device_type *) device->next;
+	}
+
+        message_parameter.data = &devices;
+        message_parameter.length = sizeof (unsigned int);
+        message_parameter.block = FALSE;
+        ipc_send (ipc_structure.output_mailbox_id, &message_parameter);
+        message_parameter.block = TRUE;
+
+        break;
+      }
+
+      /* Get brief information about all devices in the system. */
+
+      case IPC_PCI_DEVICE_GET_INFO:
+      {
+	pci_device_type *device = pci_device_list;
+        static pci_device_info_type *device_info = NULL;
+        unsigned int counter = 0;
+        unsigned int devices = 0;
+	
+	while(device != NULL)
+	{
+	  devices++;
+	  device = (pci_device_type *) device->next;
+	}
+
+        /* Allocate memory to hold this many devices. */
+        
+        memory_allocate ((void **) &device_info,
+                         devices * sizeof (pci_device_info_type));
+
+        device = pci_device_list;
+
+        while (device != NULL && counter < devices)
+        {
+          string_copy(device_info[counter].vendor_name, device->vendor_name);
+          string_copy(device_info[counter].device_name, device->device_name);
+	  device_info[counter].irq = device->irq;
+
+          memory_copy (&device_info[counter].resource, device->resource,
+                       sizeof (pci_resource_type) * PCI_NUMBER_OF_RESOURCES);
+#if DEBUG
+          log_print_formatted 
+          (&log_structure, LOG_URGENCY_DEBUG, "Device: %s, Vendor: %s, IRQ %u",
+           device_info[counter].device_name, device_info[counter].vendor_name,
+	   device_info[counter].irq);
+#endif
+          counter++;
+
+          device = (pci_device_type *) device->next;
+        }
+
+        message_parameter.data = device_info;
+        message_parameter.length = devices * sizeof (pci_device_info_type);
+        message_parameter.block = FALSE;
+        ipc_send (ipc_structure.output_mailbox_id, &message_parameter);
+        memory_deallocate ((void **) &device_info);
+        message_parameter.block = TRUE;
+
+        break;
+      }
+
       /* Get the resource information for the device matching the
          input vendor and device ID. */
 
@@ -325,6 +519,9 @@ static void handle_connection (mailbox_id_type reply_mailbox_id)
           if (probe->vendor_id == device->vendor_id &&
               probe->device_id == device->device_id)
           {
+            string_copy(device_info[counter].vendor_name, device->vendor_name);
+            string_copy(device_info[counter].device_name, device->device_name);
+
             memory_copy (&device_info[counter].resource, device->resource,
                          sizeof (pci_resource_type) * PCI_NUMBER_OF_RESOURCES);
             counter++;
@@ -361,6 +558,8 @@ static pci_operation_type *pci_detect (void)
       (system_port_in_u8 (PCI_BASE + 2) == 0))
   {
     operation = &pci_type2_operation;
+    log_print_formatted 
+      (&log_structure, LOG_URGENCY_DEBUG, "Detected PCI 2");
   }
   else
   {
@@ -370,6 +569,8 @@ static pci_operation_type *pci_detect (void)
     if (system_port_in_u32 (PCI_BASE) == 0x80000000)
     {
       operation = &pci_type1_operation;
+      log_print_formatted 
+        (&log_structure, LOG_URGENCY_DEBUG, "Detected PCI 1");
     }
 
     system_port_out_u32 (PCI_BASE, tmp);
@@ -420,9 +621,15 @@ static void pci_read_bases (pci_device_type *device, unsigned int amount,
 
   /* FIXME: Find a better name for the 'l' variable. */
 
-  u32 l, size;
+  u32 l, size, temp;
+  u16 command;
   pci_resource_type *resource;
   
+  /* Disable IO and memory while we fiddle */
+  command = pci_read_config_u16(device, PCI_COMMAND);
+  temp = command & ~(PCI_COMMAND_IO | PCI_COMMAND_MEMORY);
+  pci_write_config_u16(device, PCI_COMMAND, temp);
+
   for (position = 0; position < amount; position = next) 
   {
     next = position + 1;
@@ -434,6 +641,11 @@ static void pci_read_bases (pci_device_type *device, unsigned int amount,
     pci_write_config_u32 (device, register_number, MAX_U32);
     size = pci_read_config_u32 (device, register_number);
     pci_write_config_u32 (device, register_number, l);
+
+#if DEBUG
+  log_print_formatted 
+      (&log_structure, LOG_URGENCY_DEBUG, "size: %u", size);
+#endif
 
     if (size == 0 || size == 0xFFFFFFFF)
     {
@@ -458,6 +670,12 @@ static void pci_read_bases (pci_device_type *device, unsigned int amount,
 
     resource->end = resource->start + (unsigned long) size;
     resource->flags |= (l & 0xF) | pci_get_resource_type (l);
+
+#if DEBUG
+  log_print_formatted 
+      (&log_structure, LOG_URGENCY_DEBUG, "resource: %x.%x.%x", resource->start,
+      resource->end,resource->flags);
+#endif
 
     if ((l & (PCI_BASE_ADDRESS_SPACE | PCI_BASE_ADDRESS_MEM_TYPE_MASK)) ==
         (PCI_BASE_ADDRESS_SPACE_MEMORY | PCI_BASE_ADDRESS_MEM_TYPE_64)) 
@@ -499,10 +717,16 @@ static void pci_read_bases (pci_device_type *device, unsigned int amount,
       resource->start = l & PCI_ROM_ADDRESS_MASK;
       size = ~(size & PCI_ROM_ADDRESS_MASK);
       resource->end = resource->start + (unsigned long) size;
+#if DEBUG
+  log_print_formatted 
+      (&log_structure, LOG_URGENCY_DEBUG, "resource: %x.%x.%x", resource->start,
+      resource->end,resource->flags);
+#endif
     }
     
     resource->name = device->device_name;
   }
+  pci_write_config_u16(device, PCI_COMMAND, command);
 }
 
 /* Fill in class and map information of a device. */
@@ -526,7 +750,7 @@ static bool pci_setup_device (pci_device_type *device)
   }
   else
   {
-    string_copy (device->device_name, "Unknown device");
+    string_copy (device->device_name, "unknown");
   }
 
   p = (char *)vendor_get_name(device->vendor_id);
@@ -537,14 +761,26 @@ static bool pci_setup_device (pci_device_type *device)
   }
   else
   {
-    string_copy (device->device_name, "Unknown vendor");
+    string_copy (device->device_name, "unknown");
   }
 
   /* Read the 3-byte class. (?) */
   
   class = pci_read_config_u32 (device, PCI_CLASS_REVISION);
+
+  device->revision_id = class & 0xFF;
   class >>= 8;
   device->class = class;
+
+  device->class_id = (class >> 16) & 0xFF;
+  device->subclass_id = (class >> 8) & 0xFF;
+  device->interface_id = class & 0xFF;
+
+#if DEBUG
+  log_print_formatted 
+      (&log_structure, LOG_URGENCY_DEBUG, "class: %x", class);
+#endif
+
   class >>= 8;
 
   /* Handle erroneous cases first. (In Linux, they use evil gotos for
@@ -569,6 +805,10 @@ static bool pci_setup_device (pci_device_type *device)
 
     case PCI_HEADER_TYPE_NORMAL:
     {
+#if DEBUG
+  log_print_formatted 
+      (&log_structure, LOG_URGENCY_DEBUG, "normal device");
+#endif
       pci_read_irq (device);
       pci_read_bases (device, 6, PCI_ROM_ADDRESS);
       device->subsystem_vendor_id = pci_read_config_u16 
@@ -582,6 +822,10 @@ static bool pci_setup_device (pci_device_type *device)
 
     case PCI_HEADER_TYPE_BRIDGE:
     {
+#if DEBUG
+  log_print_formatted 
+      (&log_structure, LOG_URGENCY_DEBUG, "bridge");
+#endif
       pci_read_bases (device, 2, PCI_ROM_ADDRESS1);
       break;
     }
@@ -590,6 +834,10 @@ static bool pci_setup_device (pci_device_type *device)
 
     case PCI_HEADER_TYPE_CARDBUS:
     {
+#if DEBUG
+  log_print_formatted 
+      (&log_structure, LOG_URGENCY_DEBUG, "cardbus");
+#endif
       pci_read_irq (device);
       pci_read_bases (device, 1, 0);
       device->subsystem_vendor_id = pci_read_config_u16
@@ -608,6 +856,18 @@ static bool pci_setup_device (pci_device_type *device)
                            device->slot_name, device->header_type);
       return FALSE;
     }
+  }
+
+  device->class_id = (device->class >> 16) & 0xFF;
+  p = (char *)class_get_name(device->class_id);
+  
+  if( p != NULL)
+  {
+    string_copy (device->class_name, p);
+  }
+  else
+  {
+    string_copy (device->class_name, "unknown");
   }
 
   /* We found a fine healthy device, go go go... */
@@ -749,7 +1009,11 @@ static bool init (void)
   /* Scan this bus. */
 
   root_bus = pci_scan_bus (0, pci_operation);
-
+  
+  if (root_bus != NULL)
+  {
+    (pci_bus_type *)root_bus->next = pci_scan_bus (1, pci_operation);
+  }
   return TRUE;
 }
 
@@ -774,8 +1038,8 @@ int main (void)
   while (device != NULL)
   {
     log_print_formatted 
-      (&log_structure, LOG_URGENCY_DEBUG, "Device: %s, Vendor: %s",
-       device->device_name, device->vendor_name);
+      (&log_structure, LOG_URGENCY_DEBUG, "found: %s, name: %s, class: %x",
+       device->class_name, device->device_name, device->class);
     device = (pci_device_type *) device->next;
   }
 

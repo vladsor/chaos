@@ -28,7 +28,7 @@
    fancy stuff in the corners of the screen. */
 
 #undef DEBUG_IDLE
-//#define DEBUG_IDLE
+#define DEBUG_IDLE
 
 #include <storm/state.h>
 #include <storm/generic/cpu.h>

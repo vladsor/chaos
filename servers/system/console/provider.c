@@ -145,7 +145,22 @@ table_of_hot_keys_type table_of_hot_keys[] =
    },
    bind_console_to, (void *)3,
  },
-
+#if SCROLL
+ /* Left Shift + Arrow Up -> scroll screen up */
+ { 
+   { FALSE, TRUE, TRUE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, 
+     FALSE, IPC_KEYBOARD_SPECIAL_KEY_ARROW_UP, { 0, 0, 0, 0, 0, 0 },
+   },
+   scroll_screen, (void*)1,
+ },
+ /* Left Shift + Arrow Down -> scroll screen down */
+ { 
+   { FALSE, TRUE, TRUE, TRUE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, 
+     FALSE, IPC_KEYBOARD_SPECIAL_KEY_ARROW_DOWN, { 0, 0, 0, 0, 0, 0 },
+   },
+   scroll_screen, (void*)-1,
+ },
+#endif
  /* #FIXME: add more hotkeys */ 
  
 };
@@ -162,14 +177,10 @@ static bool hot_key_search(keyboard_packet_type *keyboard_packet)
                         sizeof(keyboard_packet_type)) && 
          (table_of_hot_keys[i].hot_key_function != NULL) )
     {
-//      system_call_debug_print_simple ("console: found hot key \n");  
-
       table_of_hot_keys[i].hot_key_function(table_of_hot_keys[i].parameter);
       return TRUE;
     }
   }
-
-//  system_call_debug_print_simple ("console: hot key fails\n");  
   return FALSE;
 }
 
@@ -253,7 +264,7 @@ static void bind_console_to(void *parameter)
   {
     return;
   }
-  console_shortcut[console_index] = current_console;
+  console_shortcut[console_index - 1] = current_console;
 }
 
 static void switch_console_to(void *parameter)
@@ -268,7 +279,7 @@ static void switch_console_to(void *parameter)
 
   /* New console. */
                 
-  new_console = (console_type *)console_shortcut[console_index];
+  new_console = (console_type *)console_shortcut[console_index - 1];
 
   if (new_console != NULL)
   {
@@ -290,6 +301,17 @@ static void shutdown(void *parameter __attribute__ ((unused)) )
 {
   system_call_thread_control (THREAD_ID_KERNEL, THREAD_TERMINATE, 0);
 }
+
+#if SCROLL
+static void scroll_screen(void *parameter)
+{
+  int lines = (int)parameter;
+  if (current_console->scrollable)
+  {
+    console_scroll (current_console, lines);
+  }
+}
+#endif
 
 void connection_provider_mouse
   (message_parameter_type *message_parameter)

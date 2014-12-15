@@ -52,7 +52,8 @@ enum
   IPC_PROTOCOL_SERIAL,
   IPC_PROTOCOL_SOUND,
 
-  IPC_PROTOCOL_RTC,
+  IPC_PROTOCOL_CMOS,
+  IPC_PROTOCOL_ACPI,
 };
 
 /* Ugly, but those rely on the previous defines... so we can't do in a

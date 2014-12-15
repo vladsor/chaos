@@ -451,38 +451,6 @@ return_type ipc_receive
   }
 }
 
-/*
-return_type ipc_generate_event(
-  event_queue_id_type event_queue_id,
-  event_parameter_type *event_parameter)
-{
-  return_type return_value = system_call_event_queue_send (event_queue_id,
-                                                           event_parameter);
-  if(return_value == STORM_RETURN_SUCCESS)
-    return IPC_RETURN_SUCCESS;
-  return IPC_RETURN_EVENT_BREAK;
-}
-
-return_type ipc_wait_event(
-  event_queue_id_type event_queue_id,
-  event_parameter_type *event_parameter,
-  unsigned int *buffer_size)
-{
-  return_type return_value = system_call_event_queue_receive (event_queue_id,
-                                                              event_parameter);
-  *buffer_size = 0;
-  if(return_value == STORM_RETURN_SUCCESS)
-    return IPC_RETURN_SUCCESS;
-  return IPC_RETURN_EVENT_BREAK;
-}
-*/
-#if 0
-ipc_protocol_get (ipc_structure_type *ipc_structure)
-{
-}
-
-#endif
-
 /* Close a connection. */
 
 return_type ipc_connection_close (ipc_structure_type *ipc_structure,

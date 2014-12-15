@@ -33,17 +33,6 @@ extern return_type ipc_receive
   message_parameter_type *message_parameter,
   unsigned int *buffer_size);
 
-/*
-extern return_type ipc_generate_event
-  (event_queue_id_type event_queue_id,
-  event_parameter_type *event_parameter);
-
-extern return_type ipc_wait_event
-  (event_queue_id_type event_queue_id,
-  event_parameter_type *event_parameter,
-  unsigned int *buffer_size);
-*/
-
 extern return_type ipc_service_create
   (const char *service_name,
   ipc_structure_type *ipc_structure, tag_type *tag);

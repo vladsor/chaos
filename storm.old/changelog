@@ -1,3 +1,25 @@
+2000-10-22  Per Lundberg  <plundis@chaosdev.org>
+
+	* README: Updated the information a little.
+	* autochaos.rules: Bumped the version to 0.5.0.
+
+2000-10-21  Per Lundberg  <plundis@chaosdev.org>
+
+	* generic/memory.c (memory_reserve): New system call.
+
+	* Made thread_delete () perform a process_parent_unblock () if the
+	last thread of a process is deleted. Also bumped the version
+	number to 0.4.9.
+
+2000-10-20  Per Lundberg  <plundis@chaosdev.org>
+
+	* generic/debug.c: New command: 'reboot'.
+
+2000-10-19  Per Lundberg  <plundis@chaosdev.org>
+
+	* generic/memory.c (memory_allocate): Implemented support for
+	non-cacheable allocates.
+
 2000-10-16  Per Lundberg  <plundis@chaosdev.org>
 
 	* ia32/irq.c (irq_acknowledge): New system call.

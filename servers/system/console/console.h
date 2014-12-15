@@ -67,10 +67,10 @@ typedef struct
   /* And/Or mouse? */
 
   bool wants_mouse;
-
+/*
   bool keyboard_cursor_enabled;
   bool mouse_cursor_enabled;
-
+*/
   /* So we know where to send our stuff. */
 
   ipc_structure_type ipc_structure;
@@ -107,7 +107,8 @@ typedef struct
   bool keyboard_cursor_visibility;
   bool mouse_cursor_visibility;
   
-
+  bool scrollable;
+  
   /* The current state of the console. Used for ANSI escape
      sequences. */
 
@@ -183,8 +184,8 @@ extern volatile console_type *console_shortcut[];
 
 typedef struct
 {
-  int x_divider;
-  int y_divider;
+  int x;
+  int y;
 }position_type;
 
 extern volatile position_type mouse_cursor;

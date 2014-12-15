@@ -8,7 +8,7 @@ PACKAGE = pci
 
 # Compiler flags.
 
-CFLAGS = -Wall -W -Wshadow -Wpointer-arith -Waggregate-return \
+CFLAGS = -Wshadow -Wpointer-arith -Waggregate-return \
 -Wstrict-prototypes -Wredundant-decls -Winline -Wmissing-prototypes \
 -Werror -Wcast-align -Wbad-function-cast -Wmissing-noreturns -Wsign-compare \
 -Wmissing-declarations -pipe \

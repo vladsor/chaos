@@ -358,6 +358,22 @@ return_type console_attribute_set (console_structure_type *console_structure,
                                   background + 40);
 }
 
+return_type console_scroll_set 
+  (console_structure_type *console_structure, bool which)
+{
+  message_parameter_type message_parameter;
+
+  message_parameter.block = TRUE;
+  message_parameter.protocol = IPC_PROTOCOL_CONSOLE;
+  message_parameter.message_class = which ? IPC_CONSOLE_ENABLE_SCROLL :
+    IPC_CONSOLE_DISABLE_SCROLL ;
+  message_parameter.length = 0;
+  message_parameter.data = NULL;
+  system_call_mailbox_send (console_structure->ipc_structure.output_mailbox_id,
+                            &message_parameter);
+  return CONSOLE_RETURN_SUCCESS;
+}
+
 /* Customisize keyboard cursor. */
 
 return_type console_keyboard_cursor_set

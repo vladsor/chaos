@@ -71,8 +71,12 @@ extern return_type console_attribute_set
 
 extern return_type console_keyboard_cursor_set
   (console_structure_type *console_structure, bool visibility);
+
 extern return_type console_mouse_cursor_set
   (console_structure_type *console_structure, bool visibility);
+
+extern return_type console_scroll_set
+  (console_structure_type *console_structure, bool which);
 
 extern return_type console_use_keyboard
   (console_structure_type *console_structure, bool which, int type);

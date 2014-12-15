@@ -78,17 +78,26 @@ static void connection_client
       
       break;
     }
+    case IPC_CONSOLE_ENABLE_SCROLL:
+    {
+      (*our_console)->scrollable = TRUE;      
+      break;
+    }
+    case IPC_CONSOLE_DISABLE_SCROLL:
+    {
+      (*our_console)->scrollable = FALSE;
+      break;
+    }
 #endif
     case IPC_CONSOLE_KEYBOARD_CURSOR_SET:
     {
-      set_keyboard_cursor_visibility(*our_console, 
-        *((bool *)message_parameter->data));
+      keyboard_cursor_set (*our_console, *((bool *)message_parameter->data));
       break;
     }
 
     case IPC_CONSOLE_MOUSE_CURSOR_SET:
     {
-      mouse_cursor_set(*our_console, *((bool *)message_parameter->data));
+      mouse_cursor_set (*our_console, *((bool *)message_parameter->data));
       break;
     }
     
@@ -157,6 +166,8 @@ static void connection_client
 
         (*our_console)->keyboard_cursor_visibility = TRUE;
         (*our_console)->mouse_cursor_visibility = FALSE;
+
+        (*our_console)->scrollable = FALSE;
         
         (*our_console)->state = CONSOLE_STATE_CHARACTER;
         (*our_console)->numeric_argument_index = 0;
@@ -373,6 +384,7 @@ void handle_connection (mailbox_id_type reply_mailbox_id)
       
       case IPC_CONSOLE_CONNECTION_CLASS_PROVIDER_KEYBOARD:
       {
+        system_thread_name_set ("Handling keyboard");        
         connection_provider_keyboard (&message_parameter);
         break;
       }

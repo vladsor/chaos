@@ -79,6 +79,14 @@ return_type log_init
   return LOG_RETURN_SUCCESS;
 }
 
+/* Close connection to log server. */
+
+return_type log_close (log_structure_type *log_structure)
+{
+  ipc_connection_close ( (ipc_structure_type *)log_structure, TRUE );
+  return LOG_RETURN_SUCCESS;
+}
+
 /* Print a formatted string to the log. */
 
 return_type log_print_formatted (log_structure_type *log_structure,

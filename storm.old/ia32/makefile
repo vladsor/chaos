@@ -49,6 +49,7 @@ ia32/thread.o \
 ia32/time.o \
 ia32/timer.o \
 ia32/trap.o \
+ia32/trap_handlers.o \
 ia32/wrapper.o
 
 STATIC_LIBRARY_PATH = $(PREFIX)/data/programming/libraries/static
@@ -88,6 +89,7 @@ thread.o \
 time.o \
 timer.o \
 trap.o \
+trap_handlers.o \
 wrapper.o
 
 
@@ -121,6 +123,7 @@ thread.c \
 time.c \
 timer.c \
 trap.c \
+trap_handlers.S \
 wrapper.c
 
 HEADER_PATH = $(PREFIX)/data/programming/c/headers/$(PACKAGE)/ia32
@@ -207,6 +210,7 @@ package: package-check
 -include time.dep
 -include timer.dep
 -include trap.dep
+-include trap_handlers.dep
 -include wrapper.dep
 
 # $Id: makefile.template,v 1.1.1.1 2000/09/26 19:08:16 plundis Exp $

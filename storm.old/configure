@@ -171,6 +171,7 @@ else
 'time.c',
 'timer.c',
 'trap.c',
+'trap_handlers.S',
 'wrapper.c',
 );
 @objects = ('cluster.o',
@@ -202,6 +203,7 @@ else
 'time.o',
 'timer.o',
 'trap.o',
+'trap_handlers.o',
 'wrapper.o',
 );
 @deps = ('cluster.dep',
@@ -233,6 +235,7 @@ else
 'time.dep',
 'timer.dep',
 'trap.dep',
+'trap_handlers.dep',
 'wrapper.dep',
 );
   print "Writing ia32/makefile...
@@ -328,6 +331,8 @@ ia32/time.o";
 ia32/timer.o";
       print MAKEFILE " \\\
 ia32/trap.o";
+      print MAKEFILE " \\\
+ia32/trap_handlers.o";
       print MAKEFILE " \\\
 ia32/wrapper.o";
     print MAKEFILE "
@@ -681,6 +686,8 @@ ia32/timer.o";
       print MAKEFILE " \\\
 ia32/trap.o";
       print MAKEFILE " \\\
+ia32/trap_handlers.o";
+      print MAKEFILE " \\\
 ia32/wrapper.o";
       print MAKEFILE " \\\
 generic/arguments.o";
@@ -1027,6 +1034,8 @@ ia32/time.o";
 ia32/timer.o";
       print MAKEFILE " \\\
 ia32/trap.o";
+      print MAKEFILE " \\\
+ia32/trap_handlers.o";
       print MAKEFILE " \\\
 ia32/wrapper.o";
       print MAKEFILE " \\\
@@ -1401,6 +1410,8 @@ ia32/timer.o";
       print MAKEFILE " \\\
 ia32/trap.o";
       print MAKEFILE " \\\
+ia32/trap_handlers.o";
+      print MAKEFILE " \\\
 ia32/wrapper.o";
       print MAKEFILE " \\\
 generic/arguments.o";
@@ -1738,6 +1749,8 @@ ia32/time.o";
 ia32/timer.o";
       print MAKEFILE " \\\
 ia32/trap.o";
+      print MAKEFILE " \\\
+ia32/trap_handlers.o";
       print MAKEFILE " \\\
 ia32/wrapper.o";
       print MAKEFILE " \\\
@@ -2113,6 +2126,8 @@ ia32/timer.o";
       print MAKEFILE " \\\
 ia32/trap.o";
       print MAKEFILE " \\\
+ia32/trap_handlers.o";
+      print MAKEFILE " \\\
 ia32/wrapper.o";
       print MAKEFILE " \\\
 generic/arguments.o";
@@ -2474,6 +2489,8 @@ ia32/time.o";
 ia32/timer.o";
       print MAKEFILE " \\\
 ia32/trap.o";
+      print MAKEFILE " \\\
+ia32/trap_handlers.o";
       print MAKEFILE " \\\
 ia32/wrapper.o";
       print MAKEFILE " \\\

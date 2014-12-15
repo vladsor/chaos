@@ -8,7 +8,7 @@ PACKAGE = storm
 
 # Compiler flags.
 
-CFLAGS = -Wshadow -Wpointer-arith -Waggregate-return \
+CFLAGS = -Wall -W -Wshadow -Wpointer-arith -Waggregate-return \
 -Wstrict-prototypes -Wredundant-decls -Winline -Wmissing-prototypes \
 -Werror -Wcast-align -Wbad-function-cast -Wmissing-noreturns -Wsign-compare \
 -Wmissing-declarations -pipe \
@@ -49,6 +49,7 @@ ia32/thread.o \
 ia32/time.o \
 ia32/timer.o \
 ia32/trap.o \
+ia32/trap_handlers.o \
 ia32/wrapper.o \
 generic/arguments.o \
 generic/avl.o \

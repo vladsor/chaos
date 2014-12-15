@@ -36,4 +36,6 @@ extern return_type log_print
 extern return_type log_init 
   (log_structure_type *log_structure, char *class, tag_type *tag);
 
+extern return_type log_close (log_structure_type *log_structure);
+
 #endif /* !__LIBRARY_LOG_FUNCTIONS_H__ */

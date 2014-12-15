@@ -40,8 +40,8 @@ enum
 
 typedef struct
 {
-  int x_divider;
-  int y_divider;
+  int x;
+  int y;
   unsigned int button;
 } ipc_mouse_event_type;
 

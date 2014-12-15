@@ -133,27 +133,27 @@ void mouse_handle_event (u8 scancode)
         mouse_buffer[2];
     }
 
-    mouse.x_divider +=  mouse.x_scale * mouse.delta_x;
-    mouse.y_divider -=  mouse.y_scale * mouse.delta_y;
+    mouse.x +=  mouse.x_scale * mouse.delta_x;
+    mouse.y -=  mouse.y_scale * mouse.delta_y;
 
-    /* Make sure we don't get Type'o Negative. */
+    /* Mouse can move in virtual screen 1000000x1000000. */
 
-    if (mouse.x_divider < 0)
+    if (mouse.x < 0)
     {
-      mouse.x_divider = 0;
+      mouse.x = 0;
     }
-    else if (mouse.x_divider >= 1000000)
+    else if (mouse.x >= 1000000)
     {
-      mouse.x_divider = 1000000 - 1;
+      mouse.x = 1000000 - 1;
     }
 
-    if (mouse.y_divider < 0)
+    if (mouse.y < 0)
     {
-      mouse.y_divider = 0;
+      mouse.y = 0;
     }
-    else if (mouse.y_divider >= 1000000)
+    else if (mouse.y >= 1000000)
     {
-      mouse.y_divider = 1000000 - 1;
+      mouse.y = 1000000 - 1;
     }
     
     /* Should we pass this event on to someone? */
@@ -163,8 +163,8 @@ void mouse_handle_event (u8 scancode)
       message_parameter_type message_parameter;
       ipc_mouse_event_type ipc_mouse_event;
       
-      ipc_mouse_event.x_divider = mouse.x_divider;
-      ipc_mouse_event.y_divider = mouse.y_divider; 
+      ipc_mouse_event.x = mouse.x;
+      ipc_mouse_event.y = mouse.y; 
       ipc_mouse_event.button = mouse.button_state;
 
       /* Send the key to the receiver. */
@@ -299,12 +299,12 @@ bool mouse_init (void)
 static void handle_connection (ipc_structure_type *ipc_structure)
 {
   bool done = FALSE;
-//  message_parameter_type message_parameter;
-//  u8 *data;
+  message_parameter_type message_parameter;
+  u8 *data;
 //  ipc_structure_type ipc_structure;
-//  unsigned int data_size = 100;
+  unsigned int data_size = 100;
 
-//  memory_allocate ((void **) &data, data_size);
+  memory_allocate ((void **) &data, data_size);
 
   mouse_target_mailbox_id = ipc_structure->output_mailbox_id;
 
@@ -318,14 +318,13 @@ static void handle_connection (ipc_structure_type *ipc_structure)
 
   while (!done)
   {
-#if 0
     message_parameter.protocol = IPC_PROTOCOL_MOUSE;
     message_parameter.message_class = IPC_CLASS_NONE;
     message_parameter.length = data_size;
     message_parameter.data = data;
     message_parameter.block = TRUE;
 
-    if (ipc_receive (ipc_structure.input_mailbox_id, &message_parameter,
+    if (ipc_receive (ipc_structure->input_mailbox_id, &message_parameter,
                      &data_size) != IPC_RETURN_SUCCESS)
     {
       continue;
@@ -333,14 +332,6 @@ static void handle_connection (ipc_structure_type *ipc_structure)
 
     switch (message_parameter.message_class)
     {
-      /* Someone wants to register as a receiver. */
-
-      case IPC_MOUSE_REGISTER_TARGET:
-      {
-        mouse_target_mailbox_id = ipc_structure.output_mailbox_id;
-        break;
-      }
-      
       /* Unregister a receiver. */
       
       case IPC_MOUSE_UNREGISTER_TARGET:
@@ -349,7 +340,6 @@ static void handle_connection (ipc_structure_type *ipc_structure)
         break;
       }
     }
-#endif
   }
 }
 

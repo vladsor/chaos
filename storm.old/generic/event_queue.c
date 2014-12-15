@@ -303,12 +303,28 @@ return_type event_queue_flush (event_queue_id_type event_queue_id)
   return STORM_RETURN_SUCCESS;
 }
 
+#if 0
+return_type event_queue_reader_register_kernel
+  (event_queue_id_type event_queue_id,
+   process_id_type user_process_id, cluster_id_type user_cluster_id,
+   thread_id_type user_thread_id)
+{
+  return STORM_RETURN_SUCCESS;
+}
+
+return_type event_queue_reader_register
+  (event_queue_id_type event_queue_id)
+{
+  return STORM_RETURN_SUCCESS;
+}
+#endif
+
 /* Post a event in a queue. */
 
 return_type event_queue_send (event_queue_id_type event_queue_id, 
   event_parameter_type *event_parameter)
 {
-  event_type *event;
+//  event_type *event;
   event_queue_type *event_queue;
 
   /* Perform some sanity checking on the input parameters. */
@@ -348,9 +364,9 @@ return_type event_queue_send (event_queue_id_type event_queue_id,
   DEBUG_MESSAGE (VERBOSE_DEBUG, "Delivering...");
   
 #if 0
+  
   if( event_queue->number_of_readers > 0 )
   {
-    /* direct copy to readers. */
     current_reader = event_queue->first_reader;
     while(current_reader != NULL)
     {
@@ -428,7 +444,7 @@ return_type event_queue_receive (event_queue_id_type event_queue_id,
                              event_parameter_type *event_parameter)
 {
   event_queue_type *event_queue;
-  event_type *temporary;
+//  event_type *temporary;
 
   DEBUG_MESSAGE (VERBOSE_DEBUG, "Called (id %u).", event_queue_id);
 
@@ -462,15 +478,11 @@ return_type event_queue_receive (event_queue_id_type event_queue_id,
 
   if (event_queue->number_of_events == 0)
   {
-      /* Block ourselves until the mailbox gets populated. */
-
-      event_queue->reader_blocked = TRUE;
-      event_queue->number_of_readers++;
-
       DEBUG_MESSAGE (VERBOSE_DEBUG, "Blocking ourselves.");
       /* 
+      event_queue->number_of_waiting_readers--;
       
-      add_event_reader(current_tss, timeslice + event_parameter->time_out, 
+      event_reader_set(current_tss, timeslice + event_parameter->time_out, 
       event_parameter);
       
       */
@@ -485,7 +497,6 @@ return_type event_queue_receive (event_queue_id_type event_queue_id,
       dispatch_next ();
 
       mutex_kernel_wait (&tss_tree_mutex);
-      event_queue->reader_blocked = FALSE;
 
       /* A event has arrived. We open the mailbox again, so that we
          can read out the event. */
@@ -494,6 +505,7 @@ return_type event_queue_receive (event_queue_id_type event_queue_id,
                      "event_queue_id = %u, event_queue->number_of_events = %u, event_queue->first_event = %x", 
                      event_queue_id, event_queue->number_of_events,
                      event_queue->first_event);
+//    event_queue->number_of_waiting_readers--;
   }
 
   /* Receive the event. */

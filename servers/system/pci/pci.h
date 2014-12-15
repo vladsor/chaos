@@ -186,23 +186,23 @@
 
 /* 32 bits [htype 0,1 only]. */
 
-#define PCI_BASE_ADDRESS_1              0x14
+//#define PCI_BASE_ADDRESS_1              0x14
 
 /* 32 bits [htype 0 only]. */
 
-#define PCI_BASE_ADDRESS_2              0x18
+//#define PCI_BASE_ADDRESS_2              0x18
 
 /* 32 bits. */
 
-#define PCI_BASE_ADDRESS_3              0x1C
+//#define PCI_BASE_ADDRESS_3              0x1C
 
 /* 32 bits. */
 
-#define PCI_BASE_ADDRESS_4              0x20
+//#define PCI_BASE_ADDRESS_4              0x20
 
 /* 32 bits. */
 
-#define PCI_BASE_ADDRESS_5              0x24
+//#define PCI_BASE_ADDRESS_5              0x24
 
 /* 0 = memory, 1 = I/O. */
 
@@ -907,6 +907,16 @@ typedef struct
 
   u32 class;
 
+  u8 class_id;
+  u8 subclass_id;
+  u8 interface_id;
+  
+  char class_name[80];
+
+  /* Revision ID */
+  
+  u8 revision_id;
+
   /* PCI header type (`multi' flag masked out). */
 
   u8 header_type;
@@ -963,5 +973,15 @@ typedef struct
   u16 vendor_id;
   char *name;
 } pci_vendor_id_type;
+
+typedef struct
+{
+  u8 class_id;
+  char *class_name;
+//  u8 sub_class_id;
+//  char *sub_class_name;
+//  u8 programming_interface;
+//  char *programming_interface_name;
+} pci_class_id_type;
 
 #endif /* !__PCI_H__ */

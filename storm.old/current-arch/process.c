@@ -533,7 +533,7 @@ return_type process_create (process_create_type *process_data)
     /* This will boost performance a little, since this memory won't
        have to be cache invalidated on task switches. */
       
-    if (get_cpu_feature(CPU,FEATURE_PGE))
+    if (cpu_feature_get(CPU,FEATURE_PGE))
     {
       page_directory[index].global = 1;
     }

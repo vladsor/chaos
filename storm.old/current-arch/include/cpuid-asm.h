@@ -391,6 +391,8 @@ end_fpu_type:
 #define CALIBRATE_LATCH	(5 * LATCH)
 #define CALIBRATE_TIME	(5 * 1000020 / hz)
 
+//#define CALIBRATE_LATCH COUNTER_DIVISOR(hz)
+
 static u32 INIT_CODE calibrate_tsc (void)
 {
   u32 startlow, starthigh;

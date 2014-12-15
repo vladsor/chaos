@@ -99,7 +99,7 @@ static void fill_structure(internal_log_structure_type* internal_log_structure,
   ipc_log_print_type *ipc_log_print)
 {
   kernelfs_time_type kernelfs_time;
-  log_record_type* log_record;
+  log_record_type *log_record;
 
   memory_allocate((void**)&log_record,sizeof(log_record_type));
 
@@ -141,7 +141,7 @@ static void update_view (internal_log_structure_type* internal_log_structure)
   char* title = internal_log_structure->title;
   unsigned int current_line = 0;
 
-  log_record_type* current_log;
+  log_record_type* current_log = NULL;
 
   list_structure_type* current_element = 
     internal_log_structure->page_list_element; 
@@ -161,58 +161,71 @@ static void update_view (internal_log_structure_type* internal_log_structure)
                           CONSOLE_COLOUR_BLACK,
                           CONSOLE_ATTRIBUTE_RESET);
     
-    while( (current_element != NULL) && (current_line < VERTICAL_RESOLUTION) )
+  while( (current_element != NULL) && (current_line < VERTICAL_RESOLUTION) )
+  {
+    console_print (console, "\n");
+    
+    if (urgency_accept[((log_record_type *)current_element->data)->urgency])
     {
-       console_print (console, "\n");
-
-       current_log = (log_record_type*)current_element->data;
+      current_log = (log_record_type*)current_element->data;
+/*
+      if (current_line + (19 + string_length(current_log->sender_name) + 
+           string_length(current_log->message) ) / HORIZONTAL_RESOLUTION + 1
+  	  >= VERTICAL_RESOLUTION)
+      {
+        break;
+      }
+*/
       /* Print the log message with correct attributes. */
 
-       console_attribute_set (console,
-                           urgency_colour[current_log->urgency][0],
-                           urgency_colour[current_log->urgency][1],
-                           urgency_colour[current_log->urgency][2]);
+      console_attribute_set (console,
+                             urgency_colour[current_log->urgency][0],
+                             urgency_colour[current_log->urgency][1],
+                             urgency_colour[current_log->urgency][2]);
 
-       if (current_element == internal_log_structure->current_list_element)
-       {
-         console_print (console, "*");
-       }
-       else
-       {
-         console_print (console, " ");
-       }
+      if (current_element == internal_log_structure->current_list_element)
+      {
+        console_print (console, "*");
+      }
+      else
+      {
+        console_print (console, " "); 
+      }
        
-       if (internal_log_structure->print_count)
-       {       
-         console_print_formatted (console, "%03u-", current_log->count);
-       }
+      if (internal_log_structure->print_count)
+      {       
+        console_print_formatted (console, "%03u-", current_log->count);
+      }
        
-       if (internal_log_structure->print_time)
-       {
-         console_print_formatted (console, "[%02u:%02u:%02u]:", 
-	   current_log->hours,current_log->minutes, current_log->seconds);
-       }
+      if (internal_log_structure->print_time)
+      {
+        console_print_formatted (console, "[%02u:%02u:%02u]:", 
+          current_log->hours,current_log->minutes, current_log->seconds);
+      }
        
-       if (internal_log_structure->print_name)
-       {
-         console_print_formatted (console, "[%s] ", current_log->sender_name);
-       }
+      if (internal_log_structure->print_name)
+      {
+        console_print_formatted (console, "[%s] ", current_log->sender_name);
+      }
        
-       if (internal_log_structure->print_message)
-       {
-         console_print_formatted (console, "%s", current_log->message);
-       }
+      if (internal_log_structure->print_message)
+      {
+        console_print_formatted (console, "%s", current_log->message);
+      }
        
-       /* Go to next line (with correct colour). */
+      /* Go to next line (with correct colour). */
 
-       console_attribute_set (console,
-                           CONSOLE_COLOUR_GRAY,
-                           CONSOLE_COLOUR_BLACK,
-                           CONSOLE_ATTRIBUTE_RESET);
-       current_element = (list_structure_type*)current_element->next;
-       current_line += (19 + string_length(current_log->sender_name) + 
-         string_length(current_log->message) ) / HORIZONTAL_RESOLUTION + 1;
+      console_attribute_set (console,
+                             CONSOLE_COLOUR_GRAY,
+                             CONSOLE_COLOUR_BLACK,
+                             CONSOLE_ATTRIBUTE_RESET);
     }
+
+    current_line += (19 + string_length(current_log->sender_name) + 
+        string_length(current_log->message) ) / HORIZONTAL_RESOLUTION + 1;
+
+    current_element = (list_structure_type*)current_element->next;
+  }
 }
 
 static void log_add (internal_log_structure_type* internal_log_structure,
@@ -230,7 +243,7 @@ static void log_add (internal_log_structure_type* internal_log_structure,
     update_view(internal_log_structure);
   }
   else if( ((internal_log_structure->log_counter - ((log_record_type *)(page_list_element->data))->count) 
-         <= VERTICAL_RESOLUTION) && (urgency_accept[ipc_log_print->urgency]))
+         <= VERTICAL_RESOLUTION) && (urgency_accept[ipc_log_print->urgency]) )
   {
     update_view(internal_log_structure);
   }
@@ -310,6 +323,46 @@ static void keyboard_handler (internal_log_structure_type*
 	update_view(internal_log_structure);
         break;
       }
+      case 'g':
+      case 'G':
+      {
+        urgency_accept[LOG_URGENCY_EMERGENCY] = 
+	  !urgency_accept[LOG_URGENCY_EMERGENCY];
+	update_view(internal_log_structure);
+	break;
+      }
+      case 'e':
+      case 'E':
+      {
+        urgency_accept[LOG_URGENCY_ERROR] = 
+	  !urgency_accept[LOG_URGENCY_ERROR];
+	update_view(internal_log_structure);
+	break;
+      }
+      case 'w':
+      case 'W':
+      {
+        urgency_accept[LOG_URGENCY_WARNING] = 
+	  !urgency_accept[LOG_URGENCY_WARNING];
+	update_view(internal_log_structure);
+	break;
+      }
+      case 'i':
+      case 'I':
+      {
+        urgency_accept[LOG_URGENCY_INFORMATIVE] = 
+	  !urgency_accept[LOG_URGENCY_INFORMATIVE];
+	update_view(internal_log_structure);
+	break;
+      }
+      case 'd':
+      case 'D':
+      {
+        urgency_accept[LOG_URGENCY_DEBUG] = 
+	  !urgency_accept[LOG_URGENCY_DEBUG];
+	update_view(internal_log_structure);
+	break;
+      }
     }
   }
 
@@ -356,6 +409,12 @@ static void handle_connection (mailbox_id_type reply_mailbox_id)
         log_add (&server_log_structure,ipc_log_print);
 	
         break;
+      }
+      case   IPC_GENERAL_CONNECTION_CLOSE:
+      {
+        done = TRUE;
+	
+	break;
       }
     }
   }
@@ -414,20 +473,23 @@ return_type main (int argv, char** args)
 
     if(use_keyboard)
     {
-      console_use_keyboard (&console_structure_server, TRUE, CONSOLE_KEYBOARD_NORMAL);
+      console_use_keyboard (&console_structure_server, TRUE, 
+                            CONSOLE_KEYBOARD_NORMAL);
     }
 
     /* Disable keyboard cursor. */
-    console_keyboard_cursor_set(&console_structure_server, FALSE);
+    
+    console_keyboard_cursor_set (&console_structure_server, FALSE);
 
     console_clear (&console_structure_server);
 
-    init_internal_log_structure(&server_log_structure,&console_structure_server,
-	server_title);
+    init_internal_log_structure (&server_log_structure,
+                                 &console_structure_server, server_title);
 
     /* Print the titlebar. */
 
-    update_view(&server_log_structure);    
+    update_view (&server_log_structure);    
+    
     /* Main loop. */
     
     system_thread_name_set ("Service handler");
@@ -440,7 +502,7 @@ return_type main (int argv, char** args)
 
         while (TRUE)
         {
-          keyboard_handler(&server_log_structure);
+          keyboard_handler (&server_log_structure);
         }      
       }
     }
@@ -500,20 +562,22 @@ return_type main (int argv, char** args)
 
     if(use_keyboard)
     {
-      console_use_keyboard (&console_structure_kernel, TRUE, CONSOLE_KEYBOARD_NORMAL);
+      console_use_keyboard (&console_structure_kernel, TRUE, 
+                            CONSOLE_KEYBOARD_NORMAL);
     }
 
     /* Disable keyboard cursor. */
+    
     console_keyboard_cursor_set(&console_structure_server, FALSE);
 
     console_clear (&console_structure_kernel);
 
-    init_internal_log_structure(&kernel_log_structure,&console_structure_kernel,
-	kernel_title);
+    init_internal_log_structure (&kernel_log_structure, 
+                                 &console_structure_kernel, kernel_title);
 
     /* Print the titlebar. */
 
-    update_view(&kernel_log_structure);    
+    update_view (&kernel_log_structure);    
   
     if(use_keyboard)
     {

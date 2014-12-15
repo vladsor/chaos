@@ -75,6 +75,7 @@ int main (void)
   console_attribute_set (&console_structure, CONSOLE_COLOUR_GRAY,
                          CONSOLE_COLOUR_BLUE, CONSOLE_ATTRIBUTE_RESET);
   console_mouse_cursor_set (&console_structure, TRUE);
+  console_scroll_set (&console_structure, TRUE);
   console_clear (&console_structure);
 
   /* FIXME: This should not be put in cluido, really... */

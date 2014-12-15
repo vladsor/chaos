@@ -75,7 +75,12 @@ typedef struct
   char* name;
 
   /* Queue priority. */
+  
   unsigned int priority;
+  
+  /* Queue attributes. */
+  
+  unsigned int attributes;
 
   /* Who owns the event's queue. */
 
@@ -126,7 +131,14 @@ extern return_type event_queue_create
 extern return_type event_queue_destroy (event_queue_id_type event_queue_id);
 
 extern return_type event_queue_flush (event_queue_id_type event_queue_id);
-
+/*
+extern return_type event_queue_reader_register
+  (event_queue_id_type event_queue_id);
+extern return_type event_queue_reader_register_kernel
+  (event_queue_id_type event_queue_id,
+   process_id_type user_process_id, cluster_id_type user_cluster_id,
+   thread_id_type user_thread_id);
+*/
 extern return_type event_queue_send
   (event_queue_id_type event_queue_id, event_parameter_type *event_parameter);
 

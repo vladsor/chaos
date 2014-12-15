@@ -84,6 +84,7 @@ init.o: init.c cluido.h config.h \
  /mnt/chaos/data/programming/c/headers/memory/set.h \
  /mnt/chaos/data/programming/c/headers/memory/types.h \
  /mnt/chaos/data/programming/c/headers/memory/slab.h \
+ /mnt/chaos/data/programming/c/headers/memory/inlines.h \
  /mnt/chaos/data/programming/c/headers/pci/pci.h \
  /mnt/chaos/data/programming/c/headers/pci/functions.h \
  /mnt/chaos/data/programming/c/headers/pci/return_values.h \

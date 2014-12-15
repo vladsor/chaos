@@ -119,9 +119,9 @@ typedef struct
   unsigned int button_state;
   int delta_x;
   int delta_y;
-  /* x =  x_divider */
-  int x_divider;
-  int y_divider;
+  /* virtual coordinates */
+  int x;
+  int y;
   unsigned int x_scale;
   unsigned int y_scale;
 } mouse_type;

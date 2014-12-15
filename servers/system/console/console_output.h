@@ -27,7 +27,13 @@
 #include "console.h"
 
 extern void console_output (console_type *console, const char *string);
-extern void set_keyboard_cursor_visibility(console_type *console, bool visibility);
+
+extern void keyboard_cursor_set(console_type *console, bool visibility);
+
+#if SCROLL
+extern void console_scroll_set(console_type *console, bool enabled);
+extern void console_scroll(console_type *console, int lines);
+#endif
 
 extern void mouse_cursor_set(console_type *console, bool visibility);
 extern void mouse_cursor_update(int width, int height, bool visibility, 

@@ -206,6 +206,8 @@ int main (void)
     return -1;
   }
 
+  system_call_process_parent_unblock ();
+
   /* Main loop. */
 
   system_thread_name_set ("Service handler");

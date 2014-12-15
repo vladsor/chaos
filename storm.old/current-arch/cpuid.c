@@ -50,9 +50,8 @@ enum
   GET_AMD_CPU_STRING_1	= 0x80000002,
   GET_AMD_CPU_STRING_2	= 0x80000003,
   GET_AMD_CPU_STRING_3	= 0x80000004,
-  GET_AMD_CACHE_L1	= 0x80000005,
-  GET_AMD_CACHE_L2	= 0x80000006
-
+  GET_AMD_CACHE_L1_INFO	= 0x80000005,
+  GET_AMD_CACHE_L2_INFO	= 0x80000006
 };
 
 full_cpu_info CPU;
@@ -103,11 +102,12 @@ void detect_cpu(void)
   }
   else
   {
+    feature_set(FEATURE_CPUID, TRUE);
     debug_print("has CPUID.\n");
     process_cpu_id();
   }
 
-  if(get_cpu_feature(CPU,FEATURE_FPU))
+  if(cpu_feature_get(CPU, FEATURE_FPU))
   {
     CPU.fpu_type_id = FPU_BUILT_IN;
   }
@@ -183,7 +183,7 @@ void process_cpu_id(void)
         break;
       default:
     }
-    if(get_cpu_feature(CPU,FEATURE_TSC))
+    if(cpu_feature_get(CPU,FEATURE_TSC))
     {
        debug_print("detecting frequency...");
        CPU.frequency = (u64)cpuid_get_cpu_speed ();
@@ -347,92 +347,144 @@ int get_fpu_name(void)
   return FALSE;
 }
 
-void add_feature(CPU_Capability cap,u32 value)
+void feature_set(CPU_Capability cap,bool value)
 {
   CPU.features[cap] = value;
 }
 
 void process_features(u32 features)
 {
-    // Feature Bit Test Capabilities
+    /* Feature Bit Test Capabilities */
 
 /* bit  0 = FPU		*/    
-    add_feature(FEATURE_FPU  ,	(features >>  0) & 1 );
-/* bit  1 = VME		*/    
-    add_feature(FEATURE_VME  ,	(features >>  1) & 1 );
-    add_feature(FEATURE_DEBUG,	(features >>  2) & 1 );	// bit  2 = Debugger extensions
-    add_feature(FEATURE_PSE  ,	(features >>  3) & 1 );	// bit  3 = Page Size Extensions
-    add_feature(FEATURE_TSC  ,	(features >>  4) & 1 );	// bit  4 = Time Stamp Counter
-    add_feature(FEATURE_MSR  ,	(u32)((features >>  5) & 1) );	// bit  5 = Model Specific Registers
-    add_feature(FEATURE_PAE  ,	(u32)((features >>  6) & 1) );	// bit  6 = PAE
-    add_feature(FEATURE_MCE  ,	(u32)((features >>  7) & 1) ); 	// bit  7 = Machine Check Extensions
-    add_feature(FEATURE_CMPXCHG8,	(u32)((features >>  8) & 1) );	// bit  8 = CMPXCHG8 instruction
-    add_feature(FEATURE_APIC ,	(u32)((features >>  9) & 1) );	// bit  9 = APIC
-// bit 10 = Reserved
-    add_feature(FEATURE_SYSENTER,	(u32)((features >> 11) & 1) );	// bit 11 = SYSENTER instruction
-    add_feature(FEATURE_MTRR,	(u32)((features >> 12) & 1) );	// bit 12 = Memory Type Range Registers
-    add_feature(FEATURE_GPE,	(u32)((features >> 13) & 1) );	// bit 13 = Global Paging Extensions
-    add_feature(FEATURE_MCA,	(u32)((features >> 14) & 1) );	// bit 14 = Machine Check Architecture
-    add_feature(FEATURE_CMOV,	(u32)((features >> 15) & 1) );	// bit 15 = CMOV instruction
-    add_feature(FEATURE_PAT,	(u32)((features >> 16) & 1) );	// bit 16 = Page Attribue Table
-    add_feature(FEATURE_PSE36,	(u32)((features >> 17) & 1) );	// bit 17 = PSE36 (Page Size Extensions)
-// ?
-    add_feature(FEATURE_PSN,	(u32)((features >> 18) & 1) );	// bit 18 = Product Serial Number
-    add_feature(FEATURE_CLFLSH,	(u32)((features >> 19) & 1) );	// bit 19 = cache line flush instruction
-// bit 20 = Reserved
-    add_feature(FEATURE_DTES,	(u32)((features >> 21) & 1) );	// bit 21 = Debug Trace and EMON Store
-    add_feature(FEATURE_ACPI,	(u32)((features >> 22) & 1) );	// bit 22 = processor duty cycle control 
+    feature_set(FEATURE_FPU  ,	(features >>  0) & 1 );
+    
+/* bit  1 = Virtual Mode Extensions		*/    
+    feature_set(FEATURE_VME  ,	(features >>  1) & 1 );
+    
+/* bit  2 = Debug extensions */
+    feature_set(FEATURE_DEBUG,	(features >>  2) & 1 );
+    
+/* bit  3 = Page Size Extensions */
+    feature_set(FEATURE_PSE  ,	(features >>  3) & 1 );
 
-/* +		*/
+/* bit  4 = Time Stamp Counter */
+    feature_set(FEATURE_TSC  ,	(features >>  4) & 1 );
+
+/* bit  5 = Model Specific Registers */
+    feature_set(FEATURE_MSR  ,	(u32)((features >>  5) & 1) );
+    
+/* bit  6 = Page Size Extensions */
+    feature_set(FEATURE_PAE  ,	(u32)((features >>  6) & 1) );
+
+/* bit  7 = Machine Check Extensions */
+    feature_set(FEATURE_MCE  ,	(u32)((features >>  7) & 1) );
+
+/* bit  8 = CMPXCHG8 instruction */
+    feature_set(FEATURE_CMPXCHG8,	(u32)((features >>  8) & 1) );
+
+/* bit  9 = APIC (Advanced Programmable Intrrupt Controller)*/
+    feature_set(FEATURE_APIC ,	(u32)((features >>  9) & 1) );
+
+/* bit 10 = Reserved */
+
+/* bit 11 = SYSENTER instruction */
+    feature_set(FEATURE_SYSENTER,	(u32)((features >> 11) & 1) );
+
+/* bit 12 = Memory Type Range Registers */
+    feature_set(FEATURE_MTRR,	(u32)((features >> 12) & 1) );
+
+/* bit 13 = Global Paging Extensions */
+    feature_set(FEATURE_GPE,	(u32)((features >> 13) & 1) );
+    
+/* bit 14 = Machine Check Architecture */
+    feature_set(FEATURE_MCA,	(u32)((features >> 14) & 1) );
+
+/* bit 15 = CMOV instruction */
+    feature_set(FEATURE_CMOV,	(u32)((features >> 15) & 1) );
+    
+/* bit 16 = Page Attribue Table */
+    feature_set(FEATURE_PAT,	(u32)((features >> 16) & 1) );
+
+/* bit 17 = PSE36 (Page Size Extensions) */
+    feature_set(FEATURE_PSE36,	(u32)((features >> 17) & 1) );
+
+/* bit 18 = Product Serial Number */
+    feature_set(FEATURE_PSN,	(u32)((features >> 18) & 1) );
+    
+/* bit 19 = cache line flush instruction */
+    feature_set(FEATURE_CLFLSH,	(u32)((features >> 19) & 1) );
+
+/* bit 20 = Reserved */
+
+/* bit 21 = Debug Trace and EMON Store */
+    feature_set(FEATURE_DTES,	(u32)((features >> 21) & 1) );
+    
+/* bit 22 = processor duty cycle control */
+    feature_set(FEATURE_ACPI,	(u32)((features >> 22) & 1) );
 
 /* bit 23 = MMX		*/
-    add_feature(FEATURE_MMX,	(u32)((features >> 23) & 1) );
+    feature_set(FEATURE_MMX,	(u32)((features >> 23) & 1) );
 
 /* bit 24 = FXSAVE/FXRSTOR instruction	*/
-    add_feature(FEATURE_FXSAVE,	(u32)((features >> 24) & 1) );
+    feature_set(FEATURE_FXSAVE,	(u32)((features >> 24) & 1) );
 
 /* bit 25 = SSE		*/
-    add_feature(FEATURE_SSE,	(u32)((features >> 25) & 1) );
-
-/* ?			*/
+    feature_set(FEATURE_SSE,	(u32)((features >> 25) & 1) );
 
 /* bit 26 = SSE2	*/
-    add_feature(FEATURE_SSE_2,	(u32)((features >> 26) & 1) );
+    feature_set(FEATURE_SSE_2,	(u32)((features >> 26) & 1) );
 
 /* bit 27 = Self Snoop	*/
-    add_feature(FEATURE_SELF_SNOOP,	(u32)((features >> 27) & 1) );
+    feature_set(FEATURE_SELF_SNOOP,	(u32)((features >> 27) & 1) );
 /* bit 28 = Reserved	*/
 
 /* bit 29 = Automatic Clock Control	*/
-    add_feature(FEATURE_ACC,	(u32)((features >> 29) & 1) );
+    feature_set(FEATURE_ACC,	(u32)((features >> 29) & 1) );
 
 /* bit 30 = IA-64	*/
-    add_feature(FEATURE_IA_64,	(u32)((features >> 30) & 1) );
+    feature_set(FEATURE_IA_64,	(u32)((features >> 30) & 1) );
 
 /* bit 31 = Reserved	*/
+
 }
+
 void process_amd_features (u32 features)
 {
-    u32 functions;
-    u32 dummy;
-    u32 ext_features;
+  u32 functions;
+  u32 dummy;
+  u32 ext_features;
+  u32 temp1, temp2, temp3, temp4;
 
-//    debug_print("getting AMD features...\n");
+  cpuid(CHECK_AMD_FEATURES, &functions, &dummy, &dummy, &dummy);
 
-    cpuid(CHECK_AMD_FEATURES, &functions, &dummy, &dummy, &dummy);
+  debug_print("features:%x\n",functions);
 
-    debug_print("features:%x\n",functions);
+  if(functions >= GET_AMD_CACHE_L2_INFO)
+  {
+    debug_print("getting AMD cache L2 features...\n");
 
-    if(functions >= GET_AMD_CACHE_L2)
-    {
-        debug_print("getting AMD cache L2 features...\n");
-    }
-    if(functions >= GET_AMD_CACHE_L1)
-    {
-        debug_print("getting AMD cache L1 features...\n");
-    }	
+    cpuid(GET_AMD_CACHE_L2_INFO,(u32*) &temp1,
+	       (u32*) &temp2,(u32*) &temp3, (u32*) &temp4);        
+
+    CPU.cache_l2_size = (temp3 >> 16) & 0xFFFF;
+    feature_set(FEATURE_CACHE_L2_INFO, TRUE);
+  }
+  if(functions >= GET_AMD_CACHE_L1_INFO)
+  {
+    debug_print("getting AMD cache L1 features...\n");
+
+    cpuid(GET_AMD_CACHE_L1_INFO,(u32*) &temp1,
+	       (u32*) &temp2,(u32*) &temp3, (u32*) &temp4);        
+
+    CPU.data_cache_l1_size = (temp3 >> 24) & 0xFF;
+    CPU.instructions_cache_l1_size = (temp4 >> 24) & 0xFF;
+    feature_set(FEATURE_CACHE_L1_INFO, TRUE);
+  }	
+
     if(functions >= GET_AMD_CPU_STRING_3)
     {
+        feature_set(FEATURE_HARD_NAME, TRUE);
         debug_print("getting AMD processor string...\n");
         cpuid(GET_AMD_CPU_STRING_3,(u32*) &CPU.cpu_name[32],
 	       (u32*) &CPU.cpu_name[36],(u32*) &CPU.cpu_name[40],
@@ -457,14 +509,20 @@ void process_amd_features (u32 features)
 	       (u32*) &dummy,(u32*) &dummy,(u32*) &ext_features);        
     }
 
-    // bit 22 (ext) = SSE MMX Extensions
-    add_feature(FEATURE_SSE_MMX,(ext_features >> 22) & 1 );	
+    /* bit 22 (ext) = SSE MMX Extensions */
+    feature_set(FEATURE_SSE_MMX,(ext_features >> 22) & 1 );	
 
-    // bits 25|22(ext) = MMX Extensions
-    add_feature(FEATURE_MMX_EXT,((features >> 25)&1) | ((ext_features >> 22)&1) );
+    /* bits 25|22(ext) = MMX Extensions */
+    feature_set(FEATURE_MMX_EXT,((features >> 25)&1) | ((ext_features >> 22)&1) );
 
-    // AMD extended information
-    add_feature(FEATURE_AA_64,	(ext_features >> 29) & 1 );// bit 29 (ext) = AA-64
-    add_feature(FEATURE_3DNOW_EXT,	(ext_features >> 30) & 1 );// bit 30 (ext) = Extended 3DNow!
-    add_feature(FEATURE_3DNOW,    	(ext_features >> 31) & 1 );// bit 31 (ext) = 3DNow!
+    /* AMD extended information */
+    
+    /* bit 29 (ext) = AA-64 */
+    feature_set(FEATURE_AA_64,	(ext_features >> 29) & 1 );
+    
+    /* bit 30 (ext) = Extended 3DNow! */
+    feature_set(FEATURE_3DNOW_EXT,	(ext_features >> 30) & 1 );
+    
+    /* bit 31 (ext) = 3DNow! */
+    feature_set(FEATURE_3DNOW,    	(ext_features >> 31) & 1 );
 }

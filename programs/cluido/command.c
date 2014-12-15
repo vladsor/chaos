@@ -69,6 +69,7 @@ void command_ipc_info (int number_of_arguments, char **argument);
 void command_irq (int number_of_arguments, char **argument);
 void command_kill (int number_of_arguments, char **argument);
 void command_memory (int number_of_arguments, char **argument);
+void command_mount (int number_of_arguments, char **argument);
 
 void command_output_to_log(int number_of_arguments, char **argument);
 
@@ -91,6 +92,84 @@ void command_unset (int number_of_arguments, char **argument);
 void command_uptime (int number_of_arguments, char **argument);
 void command_version (int number_of_arguments, char **argument);
 
+void command_bug (int number_of_arguments, char **argument);
+
+static void rec(int level)
+{
+  console_print_formatted (&console_structure, "level %u\n", level);
+  rec(level+1);
+}
+void command_bug (int number_of_arguments __attribute__ ((unused)),
+                  char **argument __attribute__ ((unused)))
+{
+  if (!string_compare(argument[1], "stack"))
+  {
+    unsigned int i,temp;
+    unsigned int repeat;
+    string_to_number(argument[2], &repeat, NULL);
+    for(i=0;i<repeat;i++)
+    {
+      console_print_formatted (&console_structure, "push %u\n" ,i );
+      asm("pushl $0x0");
+      asm("pushl $0x0");
+    }
+    for(i=0;i<repeat;i++)
+    {
+      console_print_formatted (&console_structure, "pop %u\n" ,i );
+      asm("popl %%eax " : "=&a"(temp));
+      asm("popl %%eax " : "=&a"(temp));
+    }
+  }
+  else if (!string_compare(argument[1], "rec"))
+  {
+    rec(0);
+  }
+  else if (!string_compare(argument[1], "int"))
+  {
+    asm("int $3");
+  }
+  else if (!string_compare(argument[1], "break"))
+  {
+    unsigned int i= 50;
+    console_print_formatted (&console_structure, "%u\n" ,i/0 );
+  }
+  else if (!string_compare(argument[1], "memory"))
+  {
+    u16 temp;
+    asm("\
+      mov $0xFFFF, %%ax
+      mov %%ax, %%ss
+    "
+    : "=&a"(temp));
+  }
+}
+
+static void ArithTest (void);
+static void ArithTest (void)
+{
+  unsigned int eax, ebx, ecx, edx;
+  asm ("
+    incl %%ecx
+    movl $0x08088405, %%edx
+    mull %%edx
+    movl %%eax,  %%ebx
+    cdq
+    idivl %%ecx
+    lea	3(%%edx,%%eax,2), %%eax
+    roll %%cl, %%edx
+    xorl %%edx, %%edx
+    divl %%ecx
+    imull %%edx
+    sbbl %%edx, %%eax
+    movl %%ebx, %%eax
+  " 
+  : "=&a"(eax),
+    "=&b"(ebx),
+    "=&c"(ecx),
+    "=&d"(edx));
+}
+
+
 /* Structure for holding a list of all the commands, and which
    functions they correspond to. */
 
@@ -99,7 +178,7 @@ command_type command[] =
   { "?", "", "Display help about available commands.", command_help },
   { "arp", "", "Show the entries in the ARP table.", command_arp },
   { "benchmark", "", "Do some basic IPC benchmarking.", command_benchmark },
-
+  { "bug","","",command_bug },
   { "char_set","","Show current char set.", command_char_set },
 
   { "clear", "", "Clear the console.", command_clear },
@@ -130,8 +209,11 @@ command_type command[] =
   { "ls", "", "See 'dir'", command_directory_list },
   { "kill", "THREAD", "Kills the given thread.", command_kill },
   { "memory", "", "Display memory amount and usage.", command_memory },
+
+  { "mount", "","Mount device.", command_mount },
+
   //  { "nibbles", "", "Deathmatch Nibbles - another game.", command_nibbles },
-  { "pci", "", "Display information about any PCI devices in the system.",
+  { "pci", "", "Display information about any PCI device in the system.",
     command_pci },
   { "ports", "", "Display information about the I/O ports in use.",
     command_ports },
@@ -256,17 +338,14 @@ void command_event_queue (int number_of_arguments __attribute__ ((unused)),
     kernelfs_event_queue_info->kernelfs_class = KERNELFS_CLASS_EVENT_QUEUE_INFO;
     system_call_kernelfs_entry_read ( kernelfs_event_queue_info );
 
-    console_print_formatted( &console_structure, "Number of event queue : %u\n",
-      number);
-
-    console_print( &console_structure, "Name   ID     Number of events\n");
+    console_print( &console_structure, "QUEUE_ID EVENTS NAME\n");
         
     for(i=0;i<number;i++)
     {
-      console_print_formatted( &console_structure, "%s %lu %lu\n",
-        kernelfs_event_queue_info[i].name, 
+      console_print_formatted( &console_structure, "%-8lu %-6lu %s.\n",
 	kernelfs_event_queue_info[i].event_queue_id,
-	kernelfs_event_queue_info[i].number_of_events);
+	kernelfs_event_queue_info[i].number_of_events,
+	kernelfs_event_queue_info[i].name);
     }
     
   }
@@ -295,6 +374,38 @@ void command_ipc_info (int number_of_arguments __attribute__ ((unused)),
   console_print_formatted(&console_structure, "mailbox numbers : %lu \n", ipc_info.mailbox_numbers );
   console_print_formatted(&console_structure, "event queue numbers : %lu \n", ipc_info.event_queue_numbers );
   
+}
+
+void command_mount (int number_of_arguments __attribute__ ((unused)),
+                  char **argument __attribute__ ((unused)))
+{
+  mailbox_id_type mailbox_id[10];
+  unsigned int services = 1;  
+  virtual_file_system_mount_type mount;
+  message_parameter_type message_parameter;
+
+  if (ipc_service_resolve ("block", mailbox_id, &services, 5, &empty_tag) !=
+      IPC_RETURN_SUCCESS)
+  {
+    log_print (&log_structure, LOG_URGENCY_EMERGENCY, 
+               "No block services found.");
+    return;
+  }
+
+  mount.mailbox_id = mailbox_id[0];
+  string_copy (mount.location, "ramdisk");
+
+  /* That's it. Send the message. */
+
+  message_parameter.protocol = IPC_PROTOCOL_VIRTUAL_FILE_SYSTEM;
+  message_parameter.message_class = IPC_VIRTUAL_FILE_SYSTEM_MOUNT;
+  message_parameter.data = &mount;
+  message_parameter.length = sizeof (virtual_file_system_mount_type);
+  message_parameter.block = TRUE;
+  ipc_send (vfs_structure.output_mailbox_id, &message_parameter);
+
+  log_print (&log_structure, LOG_URGENCY_DEBUG,
+             "Mounted the first available block service as //ramdisk.");
 }
 
 /* Show the entries in the ARP table. */
@@ -351,6 +462,7 @@ void command_benchmark (int number_of_arguments __attribute__ ((unused)),
 {
   int counter;
   time_type start_time, end_time, phony;
+  unsigned long int i;
   
   system_call_timer_read (&start_time);
     
@@ -374,6 +486,16 @@ void command_benchmark (int number_of_arguments __attribute__ ((unused)),
   system_call_timer_read (&end_time);
   console_print_formatted (&console_structure,
                            "%llu milliseconds (1 000 000 system calls).\n",
+                           end_time - start_time);
+
+  system_call_timer_read (&start_time);
+  for(i=0;i<4000000000LL;i++)
+  {
+    ArithTest();
+  }
+  system_call_timer_read (&end_time);
+  console_print_formatted (&console_structure,
+                           "%llu milliseconds (MAXINT).\n",
                            end_time - start_time);
 }
 
@@ -474,10 +596,17 @@ void command_cpu (int number_of_arguments __attribute__ ((unused)),
                                cpu_info.info.fpu_name);
             console_print_formatted (&console_structure, "frequency %u Hz\n",
                                cpu_info.info.frequency);
+
+            console_print_formatted (&console_structure, "Cache L1 size"	    
+	    " data: %uKB, instruction: %uKB, L2 size: %uKB\n",
+                               cpu_info.info.data_cache_l1_size,
+			       cpu_info.info.instructions_cache_l1_size,
+			       cpu_info.info.cache_l2_size);
+
             console_print (&console_structure, "Supports:\n");
 	    for(i=0; i<number ;i++)
 	    {
-        	if(get_cpu_feature(cpu_info.info,CPU_Cap_records[i].cap))
+        	if(cpu_feature_get(cpu_info.info,CPU_Cap_records[i].cap))
 		{
 	           console_print_formatted (&console_structure, "%s\n",
                            CPU_Cap_records[i].info);
@@ -490,6 +619,21 @@ void command_cpu (int number_of_arguments __attribute__ ((unused)),
   }
 
 }
+
+
+#define WIDTH           320
+#define HEIGHT          200
+#define DEPTH           8
+
+#define X_MIN           500
+#define X_MAX          1000
+
+#define Y_MIN           500
+#define Y_MAX          1000
+
+#define B00011100       0x1C
+#define B11100000       0xE0
+
 
 
 /* Cause an illegal pagefault. */
@@ -505,6 +649,7 @@ void command_crash (int number_of_arguments __attribute__ ((unused)),
 void command_demo (int number_of_arguments __attribute__ ((unused)),
                    char *argument[] __attribute__ ((unused)))
 {
+#if FALSE
   bool done = FALSE;
   u8 *screen = (u8 *) 0xA0000;
   int x, y, index, fov = 256;
@@ -534,20 +679,6 @@ void command_demo (int number_of_arguments __attribute__ ((unused)),
   memory_allocate ((void **) &star_c, sizeof (u8) * NUM_STARS);
 
   /* FIXME. */
-
-#define WIDTH           320
-#define HEIGHT          200
-#define DEPTH           8
-
-#define X_MIN           500
-#define X_MAX          1000
-
-#define Y_MIN           500
-#define Y_MAX          1000
-
-#define B00011100       0x1C
-#define B11100000       0xE0
-
   if (console_mode_set (&console_structure, WIDTH, HEIGHT, DEPTH, 
                         VIDEO_MODE_TYPE_GRAPHIC) != CONSOLE_RETURN_SUCCESS)
   {
@@ -660,6 +791,7 @@ void command_demo (int number_of_arguments __attribute__ ((unused)),
   }
 
   console_clear (&console_structure);
+#endif
 }
 
 /* Change current working directory. */
@@ -1280,23 +1412,49 @@ void command_output_to_log (int number_of_arguments __attribute__ ((unused)),
 void command_pci (int number_of_arguments __attribute__ ((unused)),
                   char *argument[] __attribute__ ((unused)))
 {
-  unsigned int number_of_devices;
-  pci_device_probe_type probe;
-  pci_device_info_type *device_info;
-  unsigned int i;
+  static unsigned int number_of_devices, i;
+  message_parameter_type message_parameter;
+  static pci_device_info_type *device_info;
+  unsigned int size;
 
-//  pci_get_number_of_devices (&pci_structure, &number_of_devices);
-
-  pci_device_exists (&pci_structure, &probe, &device_info, &number_of_devices);
-
-  console_print_formatted (&console_structure, "Number of PCI devices: %u\n",
+  message_parameter.protocol = IPC_PROTOCOL_PCI;
+  message_parameter.message_class = IPC_PCI_DEVICE_GET_AMOUNT;
+  message_parameter.data = NULL;
+  message_parameter.length = 0;
+  message_parameter.block = TRUE;
+  ipc_send (pci_structure.output_mailbox_id, &message_parameter);
+  
+  message_parameter.data = &number_of_devices;
+  message_parameter.length = sizeof (unsigned int);
+  ipc_receive (pci_structure.input_mailbox_id, &message_parameter, &size);
+/*
+  console_print_formatted (&console_structure, "Number of PCI devices: %lu\n",
                            number_of_devices);
+*/
+  memory_allocate ((void **) &device_info,
+                         number_of_devices * sizeof (pci_device_info_type));
+
+  message_parameter.message_class = IPC_PCI_DEVICE_GET_INFO;
+  message_parameter.data = NULL;
+  message_parameter.length = 0;
+  message_parameter.block = TRUE;
+  ipc_send (pci_structure.output_mailbox_id, &message_parameter);
+
+  message_parameter.data = device_info;
+  message_parameter.length = number_of_devices * sizeof (pci_device_info_type);
+  ipc_receive (pci_structure.input_mailbox_id, &message_parameter, &size);
+
+  console_print_formatted (&console_structure, "%-35s %-35s %-4s\n",
+                           "DEVICE NAME","VENDOR NAME","IRQ");
 
   for(i=0;i<number_of_devices;i++)
   {
-    console_print_formatted (&console_structure, "%u\n",
-    device_info[i].irq);
+    console_print_formatted (&console_structure, "%-35s %-35s %-4lu\n",
+      device_info[i].device_name, device_info[i].vendor_name, 
+      device_info[i].irq);
   }
+  
+  memory_deallocate ((void **) &device_info);
 }
 
 /* Get information about the status of the I/O ports in the system. */

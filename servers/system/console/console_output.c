@@ -1094,7 +1094,7 @@ void console_output_at (console_type *console, int x, int y,
 
 #endif
 
-void set_keyboard_cursor_visibility(console_type *console, bool visibility)
+void keyboard_cursor_set(console_type *console, bool visibility)
 {
   video_cursor_type video_cursor;
   message_parameter_type message_parameter;
@@ -1135,10 +1135,11 @@ void set_keyboard_cursor_visibility(console_type *console, bool visibility)
 void mouse_cursor_set(console_type *console, bool visibility)
 {
   unsigned int buffer_index;  
+  
   int mouse_x, mouse_y;
 
-  mouse_x = ( console->width * old_mouse_cursor.x_divider) / 1000000;
-  mouse_y = (console->height * old_mouse_cursor.y_divider) / 1000000;
+  mouse_x = ( console->width * old_mouse_cursor.x) / 1000000;
+  mouse_y = (console->height * old_mouse_cursor.y) / 1000000;
 
   console->mouse_cursor_visibility = visibility;
 
@@ -1161,16 +1162,17 @@ void mouse_cursor_update(int width, int height, bool visibility,
  ipc_mouse_event_type *ipc_mouse_event)
 {
   unsigned int buffer_index;  
-  int old_mouse_x, old_mouse_y, new_mouse_x, new_mouse_y;
+  int old_mouse_x, old_mouse_y;
+  int new_mouse_x, new_mouse_y;
   
-  mouse_cursor.x_divider = ipc_mouse_event->x_divider;
-  mouse_cursor.y_divider = ipc_mouse_event->y_divider;
+  mouse_cursor.x = ipc_mouse_event->x;
+  mouse_cursor.y = ipc_mouse_event->y;
   
-  old_mouse_x = ( width * old_mouse_cursor.x_divider) / 1000000;
-  old_mouse_y = (height * old_mouse_cursor.y_divider) / 1000000;
+  old_mouse_x = ( width * old_mouse_cursor.x) / 1000000;
+  old_mouse_y = (height * old_mouse_cursor.y) / 1000000;
 
-  new_mouse_x = ( width * mouse_cursor.x_divider) / 1000000;
-  new_mouse_y = (height * mouse_cursor.y_divider) / 1000000;
+  new_mouse_x = ( width * mouse_cursor.x) / 1000000;
+  new_mouse_y = (height * mouse_cursor.y) / 1000000;
 
   buffer_index = (old_mouse_y * width + old_mouse_x);
 //  screen[buffer_index].attribute = !screen[buffer_index].attribute - 2;
