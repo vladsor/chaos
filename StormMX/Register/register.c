@@ -557,10 +557,10 @@ return_t register_init (int argc UNUSED, char *argv[] UNUSED)
     register_object_create ((handle_t *) &object_kernel, kernel_class_id, NULL);
 
     integer_init ();
-    mutex_init (0, NULL);
-    semaphore_init (0, NULL);
-    event_channel_init (0, NULL);
-    stream_channel_init (0, NULL);
+//    mutex_init (0, NULL);
+//    semaphore_init (0, NULL);
+//    event_channel_init (0, NULL);
+//    stream_channel_init (0, NULL);
 
     storm_module_init (0, NULL);
     

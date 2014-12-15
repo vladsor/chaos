@@ -2,6 +2,8 @@
 
 #include "Include/exception.h"
 
+#define DEBUG_MODULE_NAME "Exception"
+
 #define DEBUG_LEVEL DEBUG_LEVEL_INFORMATIVE
 #include <debug/macros.h>
 
@@ -44,8 +46,8 @@ void exception_invoke_handler (thread_t *thread,
     p_exception_context_t context = NULL;
 
     DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
-        "%s::%s (%p, %p)\n",
-        __FILE__, __FUNCTION__, thread, exception_info);
+        "%s: %s (%p, %p)\n",
+        DEBUG_MODULE_NAME, __FUNCTION__, thread, exception_info);
 
     context = (p_exception_context_t) thread->context_list.last;
     
@@ -57,13 +59,17 @@ void exception_invoke_handler (thread_t *thread,
             "Hardware exception %u in %s[%p] at %p\n", 
             exception_info->id, thread->name, thread, 
             (void *) exception_info->pc);
-        
-        exception_print_screen (exception_hardware_descriptions[index].class_id,
-            exception_hardware_descriptions[index].description, 
-            exception_hardware_descriptions[index].reason,
-            exception_hardware_descriptions[index].error_code_type, 
-            (exception_hardware_info_t *) exception_info, thread);
-        
+
+        if (output_enabled)
+        {        
+            exception_print_screen (
+                exception_hardware_descriptions[index].class_id,
+                exception_hardware_descriptions[index].description, 
+                exception_hardware_descriptions[index].reason,
+                exception_hardware_descriptions[index].error_code_type, 
+                (exception_hardware_info_t *) exception_info, 
+                thread);
+        }
         while (TRUE);
     }
     
@@ -99,8 +105,8 @@ void exception_invoke_handler (thread_t *thread,
         exception_remove_handler (thread);
         
         DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
-            "%s::%s Jumps to: %p (%p)\n",
-            __FILE__, __FUNCTION__, 
+            "%s: %s Jumps to: %p (%p)\n",
+            DEBUG_MODULE_NAME, __FUNCTION__, 
             (void *) context->state.irq_cpu_registers.eip,
             (void *) context->state.irq_cpu_registers.esp);
 

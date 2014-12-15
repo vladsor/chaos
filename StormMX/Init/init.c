@@ -30,22 +30,22 @@ static uint64_t temporary_gdt[] =
     DESCRIPTOR_NULL,
 
     /* Kernel code segment (exec). */
-    DESCRIPTOR_CODE(0x0, SEGMENT_SIZE_MAX, SEGMENT_GRANULARITY_PAGE,
+    DESCRIPTOR_CODE (0x0, SEGMENT_SIZE_MAX, SEGMENT_GRANULARITY_PAGE,
         PRIVILEGE_LEVEL_SYSTEM, SEGMENT_PRESENT, SEGMENT_DIGIT_32),
 
     /* Kernel data segment (read/write). Only used for setting the SP0
        in user processes; needed since SS.RPL == CS.DPL needs to be
        true. If you don't understand this, nevermind. But do not try
        to be "smart" and delete this; it will break the system. */
-    DESCRIPTOR_DATA(0x0, SEGMENT_SIZE_MAX, SEGMENT_GRANULARITY_PAGE,
+    DESCRIPTOR_DATA (0x0, SEGMENT_SIZE_MAX, SEGMENT_GRANULARITY_PAGE,
         PRIVILEGE_LEVEL_SYSTEM, SEGMENT_PRESENT, SEGMENT_DIGIT_32),
     
     /* Process code segment (exec). */
-    DESCRIPTOR_CODE(0x0, SEGMENT_SIZE_MAX, SEGMENT_GRANULARITY_PAGE,
+    DESCRIPTOR_CODE (0x0, SEGMENT_SIZE_MAX, SEGMENT_GRANULARITY_PAGE,
         PRIVILEGE_LEVEL_USER, SEGMENT_PRESENT, SEGMENT_DIGIT_32),
 
     /* Process data segment (read/write). */
-    DESCRIPTOR_DATA(0, SEGMENT_SIZE_MAX, SEGMENT_GRANULARITY_PAGE,
+    DESCRIPTOR_DATA (0, SEGMENT_SIZE_MAX, SEGMENT_GRANULARITY_PAGE,
         PRIVILEGE_LEVEL_USER, SEGMENT_PRESENT, SEGMENT_DIGIT_32),
 };
 

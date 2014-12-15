@@ -31,3 +31,26 @@ thread_exit_lowlevel:
     pushl %eax
 
     call thread_exit
+
+.globl thread_load_state
+.globl thread_load_state2
+.extern dump_stack
+.extern current_stack_pointer
+
+thread_load_state2:
+   movl current_stack_pointer, %esp ;
+   
+thread_load_state:
+        popl    %edi
+        popl    %esi
+        popl    %ebp
+
+        /* %esp can't be popped for obvious reasons. */
+        addl    $4, %esp
+
+        popl    %ebx
+        popl    %edx
+        popl    %ecx
+        popl    %eax
+
+        iret

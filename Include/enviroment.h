@@ -7,6 +7,7 @@
 #elif defined (__STORM_KERNEL_MODULE__)
 #    include "../Enviroments/System/system_enviroment.h"
 #    include "modules.h"
+#elif defined (__STORM_PROGRAM__)
 #else
 //#    include "../Libraries/system_enviroment/user_enviroment.h"
 //#    include "system_call.h"

@@ -5,7 +5,7 @@
 /* Copyright 2002 chaos development. */
 /* Use freely under the terms listed in the file LICENSE. */
 
-#include <../Enviroments/System/ia32/Exceptions/codes.h>
+#include <System/ia32/Exceptions/codes.h>
 #include "Include/defines.h"
 
 #define EXCEPTION_HANDLER_WITH_ERROR_CODE(NAME)           \

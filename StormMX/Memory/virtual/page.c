@@ -7,11 +7,12 @@
 
 #include <enviroment.h>
 
-#include "../../Init/Include/multiboot.h"
-
 #include "../Include/page.h"
 
-#define DEBUG_LEVEL DEBUG_LEVEL_INFORMATIVE
+#define DEBUG_MODULE_NAME "VirtualMemory"
+
+//#define DEBUG_LEVEL DEBUG_LEVEL_INFORMATIVE
+//#define DEBUG_LEVEL DEBUG_LEVEL_NONE
 #include <debug/macros.h>
 
 /* Find a mapping. */
@@ -19,15 +20,28 @@ return_t page_lookup (page_directory_t *page_directory,
     page_number_t virtual_page, page_number_t *physical_page, 
     unsigned int *flags)
 {
-    unsigned int page_directory_index = PAGE_DIRECTORY_INDEX (virtual_page);
-    unsigned int page_table_index = PAGE_TABLE_INDEX (virtual_page);
-    
+    unsigned int page_directory_index;
+    unsigned int page_table_index;
+
     page_table_t *page_table;
+    
+    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, "%s: %s (%p %X %p %p)\n", 
+        DEBUG_MODULE_NAME, __FUNCTION__, 
+        page_directory, virtual_page, physical_page, flags);
+    
+    page_directory_index = PAGE_DIRECTORY_INDEX (virtual_page);
+    page_table_index = PAGE_TABLE_INDEX (virtual_page);
     
     if (page_directory[page_directory_index].present == 0)
     {
         physical_page = NULL;
         flags = NULL;
+
+        DEBUG_PRINT (DEBUG_LEVEL_ERROR, 
+            "%s: %s Page table [%u] not present.\n", 
+            DEBUG_MODULE_NAME, __FUNCTION__, 
+            page_directory_index);
+            
         return STORM_RETURN_NOT_FOUND;
     }
 
@@ -38,6 +52,12 @@ return_t page_lookup (page_directory_t *page_directory,
     {
         physical_page = NULL;
         flags = NULL;
+
+        DEBUG_PRINT (DEBUG_LEVEL_ERROR, 
+            "%s: %s Page [%u] not present.\n", 
+            DEBUG_MODULE_NAME, __FUNCTION__, 
+            page_table_index);
+
         return STORM_RETURN_NOT_FOUND;
     }
 
@@ -55,7 +75,7 @@ return_t page_map (page_directory_t *page_directory,
     uint32_t counter;
 
     DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, "%s::%s (%p %X %X %u %X)\n", 
-        __FILE__, __FUNCTION__, 
+        DEBUG_MODULE_NAME, __FUNCTION__, 
         page_directory, virtual_page, physical_page, pages, flags);
 
     /* Main loop. */
@@ -123,4 +143,3 @@ void page_enable (page_directory_t *page_directory)
     /* Enable paging (virtual memory). */
     cpu_cr0_enable (CPU_CR0_PG);
 }
-

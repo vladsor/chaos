@@ -695,17 +695,18 @@ enum
                   :                      \
                   "=a" (save_cr4))
 
+static inline void cpu_tr_load (uint16_t load_tr)
+{
+    asm volatile ("ltr %0"
+                  : /* no output */
+                  :
+                  "rm" (load_tr));
+}
+
 #define cpu_tr_save(save_tr)             \
     asm volatile ("str %0"               \
                   :                      \
                   "=a" (save_tr))
-
-#define cpu_tr_load(load_tr)             \
-    asm volatile ("ltr %0"               \
-                  : /* no output */      \
-                  :                      \
-                  "r" (load_tr))
-
 
 #define cpu_gdtr_save(save_cr3)          \
     asm volatile ("sgdt %0"              \
@@ -716,7 +717,7 @@ enum
     asm volatile ("ltr %0"               \
                   : /* no output */      \
                   :                      \
-                  "r" (load_tr))
+                  "rm" (load_tr))
 
 #define cpu_cs_save(save_cs)             \
     asm volatile ("movl %%cs, %0"        \

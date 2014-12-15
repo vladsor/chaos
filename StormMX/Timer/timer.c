@@ -166,7 +166,7 @@ return_t timer_init (int argc, char *argv[])
     timer_sleep_init ();
     timer_system_init ();
 
-    irq_register (0, &timer_handler);
+    irq_register (0, &timer_handler, NULL);
     
     return STORM_RETURN_SUCCESS;
 }

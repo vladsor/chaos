@@ -1,0 +1,1 @@
+    mount -o loop ./chaos.flp /mnt/floppy

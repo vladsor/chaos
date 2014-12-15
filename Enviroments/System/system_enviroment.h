@@ -7,9 +7,6 @@
 #endif
 
 #include "ia32/descriptor.h"
-#include "ia32/gdt.h"
-#include "ia32/idt.h"
-
 #include "ia32/selectors.h"
 #include "ia32/page.h"
 #include "ia32/limits.h"

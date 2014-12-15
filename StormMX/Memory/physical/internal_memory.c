@@ -12,12 +12,6 @@
 static range_node_t temp_buffer[INTERNAL_MEMORY_SIZE];
 STATIC_POOL (pool, INTERNAL_MEMORY_SIZE);
 
-raw_memory_interface_t imemory = 
-{ 
-    internal_memory_allocate, 
-    internal_memory_deallocate
-};
-
 void internal_memory_init (void)
 {
     pool_of_integers_init (pool, INTERNAL_MEMORY_SIZE);
@@ -27,7 +21,7 @@ void internal_memory_deinit (void)
 {
 }
 
-void * internal_memory_allocate (void)
+static void * internal_memory_allocate (void)
 {
     uint32_t index;
     return_t return_value;
@@ -45,7 +39,7 @@ void * internal_memory_allocate (void)
     return pointer;
 }
 
-void internal_memory_deallocate (void *pointer)
+static void internal_memory_deallocate (void *pointer)
 {
     uint32_t index;
     
@@ -59,4 +53,8 @@ void internal_memory_deallocate (void *pointer)
     pool_of_integers_deallocate (pool, index);
 }
 
-
+raw_memory_interface_t imemory = 
+{ 
+    internal_memory_allocate, 
+    internal_memory_deallocate
+};

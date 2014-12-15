@@ -1,9 +1,4 @@
 
-typedef struct
-{
-  page_directory_t *page_directory;
-} process_t;
-
 extern void global_memory_init (void);
 
 /**

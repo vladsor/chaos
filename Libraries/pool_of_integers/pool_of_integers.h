@@ -24,8 +24,8 @@ typedef struct                     \
     uint32_t used_blocks;          \
     uint32_t map[(par_size)];      \
 } name_t;                          \
-name_t name_impl;                  \
-pool_of_integers_t *name = (pool_of_integers_t *) &name_impl
+static name_t name_impl;                  \
+static pool_of_integers_t *name = (pool_of_integers_t *) &name_impl
 
 #define POOL_GET(p,i) \
     BIT_GET (((p)->map[((i) - 1) / 32]), (((i) - 1) % 32))

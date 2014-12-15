@@ -119,7 +119,7 @@ int pcnet32_init_ring (ethernet_device_t *dev)
 }
 
 
-void pcnet32_tx_timeout (ethernet_device_t *dev)
+void pcnet32_tx_timeout (ethernet_device_t *dev)
 {
     pcnet32_private_t *lp = dev->priv;
     unsigned int ioaddr = dev->base_addr;
@@ -188,7 +188,7 @@ int pcnet32_start_xmit (ethernet_device_t *dev, void *data, size_t length)
      */
     status = 0x8300;
     
-    if ((lp->ltint) && ((lp->cur_tx - lp->dirty_tx == TX_RING_SIZE/2) ||
+    if ((lp->ltint) && ((lp->cur_tx - lp->dirty_tx == TX_RING_SIZE/2) ||
         (lp->cur_tx - lp->dirty_tx >= TX_RING_SIZE-2)))
     {
         /* Enable Successful-TxDone interrupt if we have
@@ -257,8 +257,7 @@ int pcnet32_rx (ethernet_device_t *dev)
             lp->rx_ring[entry].status) >> 8;
 
         if (status != 0x03)
-        {
-        	/* There was an error. */
+        {			/* There was an error. */
             /* 
              * There is a tricky error noted by John Murphy,
              * <murf@perftech.com> to Russ Nelson: Even with full-sized
@@ -302,7 +301,7 @@ int pcnet32_rx (ethernet_device_t *dev)
                 if (pkt_len > rx_copybreak)
                 {
 //                    struct sk_buff *newskb;
-                    void *new_data;
+				    void *new_data;
                     memory_allocate (&new_data, PKT_BUF_SZ);
                     
 //                    if ((newskb = dev_alloc_skb (PKT_BUF_SZ)))
@@ -310,7 +309,6 @@ int pcnet32_rx (ethernet_device_t *dev)
                     {
 //                        skb_reserve (newskb, 2);
 //                        skb = lp->rx_skbuff[entry];
-                        data = lp->rx_skbuff[entry];
 //                        skb_put (skb, pkt_len);
 //                        lp->rx_skbuff[entry] = newskb;
                         lp->rx_skbuff[entry] = new_data;
@@ -373,17 +371,18 @@ int pcnet32_rx (ethernet_device_t *dev)
 //                    eth_copy_and_sum(skb, 
 //                        (unsigned char *)(lp->rx_skbuff[entry]->tail), 
 //                        pkt_len, 0);
-                    memory_copy (data, lp->rx_skbuff[entry], pkt_len);
+                    memory_copy (data, lp->rx_skbuff[entry], pkt_len);
                 }
                 
 //                lp->stats.rx_bytes += skb->len;
 //                skb->protocol = eth_type_trans(skb,dev);
 //                netif_rx(skb);
-
                 lp->stats.rx_packets++;
-                DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
-                    "Packet#: %u, data: %p\n",
-                    lp->stats.rx_packets, data);
+
+                DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
+                    "%s Receive packet: %u (%u bytes).\n", 
+                    __FUNCTION__,
+                    lp->stats.rx_packets, pkt_len);
             }
         }
         

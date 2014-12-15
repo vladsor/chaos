@@ -9,8 +9,8 @@
 
 #include "hash_table.h"
 
-//#define DEBUG_LEVEL DEBUG_LEVEL_INFORMATIVE
-#define DEBUG_LEVEL DEBUG_LEVEL_NONE
+#define DEBUG_LEVEL DEBUG_LEVEL_INFORMATIVE
+//#define DEBUG_LEVEL DEBUG_LEVEL_NONE
 #include <debug/macros.h>
 
 /**
@@ -194,6 +194,10 @@ hash_element_t *hash_table_search_element (hash_table_t *hash_table, void *key)
          "Hashtable: %s (%p, %p)\n",
         __FUNCTION__, hash_table, key);
 
+    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
+         "Hashtable::%s KeyToHash: %p, KeysCompare: %p\n",
+        __FUNCTION__, hash_table->key_to_hash, hash_table->key_compare);
+
     hash = hash_table->key_to_hash (key);
 
     DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
@@ -209,7 +213,7 @@ hash_element_t *hash_table_search_element (hash_table_t *hash_table, void *key)
          "Hashtable: Testing node: %p\n", node);
 	
     while ((node != NULL) && 
-	(hash_table->key_compare (node->key_n_data, key) != CONDITION_EQUAL))
+        (hash_table->key_compare (node->key_n_data, key) != CONDITION_EQUAL))
     {
         node = (hash_element_t *) node->next;
 	

@@ -1,11 +1,14 @@
 #include <enviroment.h>
-#include <memory_inlines.h>
+
 #include <list.h>
 
 #include "../Include/thread.h"
-#include "../Include/spinlock.h"
+#include "../Include/process.h"
+
+#define DEBUG_MODULE_NAME "Thread"
 
 //#define DEBUG_LEVEL DEBUG_LEVEL_INFORMATIVE
+//#define DEBUG_LEVEL DEBUG_LEVEL_INFORMATIVE1
 #define DEBUG_LEVEL DEBUG_LEVEL_NONE
 #include <debug/macros.h>
 
@@ -28,9 +31,9 @@ spinlock_t threads_lock = SPIN_UNLOCKED;
 
 thread_t *thread_get_current (void)
 {
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
-         "%s::%s Current thread: %p [%p, %p]\n",
-        __FILE__, __FUNCTION__, current_thread, 
+    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE2,
+        "%s: %s Current thread: %p [%p, %p]\n",
+        DEBUG_MODULE_NAME, __FUNCTION__, current_thread, 
         current_thread->previous, current_thread->next);
         
     return (thread_t *) current_thread;
@@ -39,12 +42,12 @@ thread_t *thread_get_current (void)
 return_t thread_lock (thread_t *thread)
 {
     DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
-         "%s::%s (%p)\n",
-        __FILE__, __FUNCTION__, thread);
+        "%s: %s (%p)\n",
+        DEBUG_MODULE_NAME, __FUNCTION__, thread);
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
-         "%s::%s (%p; %p)\n",
-        __FILE__, __FUNCTION__, thread->previous, thread->next);
+    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1,
+        "%s: %s (%p; %p)\n",
+        DEBUG_MODULE_NAME, __FUNCTION__, thread->previous, thread->next);
 
 //    cpu_interrupts_disable ();
     spin_lock (&threads_lock);
@@ -53,7 +56,7 @@ return_t thread_lock (thread_t *thread)
     list_node_insert (&waiting_threads, (list_node_t *) thread, 
         LIST_OPTION_LAST);
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
+    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1,
          "%s::%s Call thread_yield.\n",
         __FILE__, __FUNCTION__);
         
@@ -76,8 +79,8 @@ return_t thread_lock (thread_t *thread)
 return_t thread_unlock (thread_t *thread)
 {
     DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
-         "%s::%s (%p)\n",
-        __FILE__, __FUNCTION__, thread);
+        "%s: %s (%p)\n",
+        DEBUG_MODULE_NAME, __FUNCTION__, thread);
 
 //    cpu_interrupts_disable ();
     spin_lock (&threads_lock);
@@ -93,7 +96,7 @@ return_t thread_unlock (thread_t *thread)
     return 0;
 }
 
-irq_cpu_registers_t default_state =
+static irq_cpu_registers_t default_state =
 {
     /* edi = */ 0,
     /* esi = */ 0,
@@ -122,19 +125,20 @@ return_t thread_create (thread_t *thread, p_thread_function_t thread_function,
     memory_set_uint8 ((uint8_t *) thread, 0, sizeof (thread_t));
     thread->priority = THREAD_NEW_PRIORITY;
     thread->timeslices = 0;
+    thread->process = &process_kernel;
 
     return_value = memory_allocate ((void **) &thread->stack, 
         THREAD_STACK_SIZE);
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
+    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1,
          "%s::%s Stack: %p-%p\n",
         __FILE__, __FUNCTION__, 
         thread->stack, thread->stack + THREAD_STACK_SIZE - 1);
     
     thread->stack_pointer = thread->stack + THREAD_STACK_SIZE - 4 - 
         sizeof (p_void_t);
-    ((uint32_t *) thread->stack_pointer)[0] = &thread_exit_lowlevel;
-    ((uint32_t *) thread->stack_pointer)[1] = parameter;
+    ((uint32_t *) thread->stack_pointer)[0] = (uint32_t) &thread_exit_lowlevel;
+    ((uint32_t *) thread->stack_pointer)[1] = (uint32_t) parameter;
 //    memory_copy (thread->stack_pointer + 4, &data, sizeof (sequence_t));
 //    thread->stack_pointer--;
     
@@ -155,7 +159,7 @@ return_t thread_create (thread_t *thread, p_thread_function_t thread_function,
     spin_unlock (&threads_lock);
     //cpu_interrupts_enable ();
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
+    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE2,
          "%s::%s Done: %p.\n",
         __FILE__, __FUNCTION__, thread->next);
 
@@ -190,8 +194,10 @@ return_t thread_name_get (thread_t *thread, char *name)
     return 0;
 }
 
-static int dispatch_task_flag = 0;
-
+static int dispatch_flag = 0;
+uint32_t jump_data[2] = {0, 0};
+extern void thread_load_state (void);
+extern void thread_load_state2 (void);
 void thread_switch_to_next (void)
 {
     static thread_t *next_thread = NULL;
@@ -213,17 +219,25 @@ void thread_switch_to_next (void)
     }
 
     DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1,
-         "%s::%s Current thread: %p, Next thread: %p, Stack pointer: %p.\n",
-        __FILE__, __FUNCTION__, 
+         "%s: %s Current thread: %p, Next thread: %p, Stack pointer: %p.\n",
+        DEBUG_MODULE_NAME, __FUNCTION__, 
         current_thread, next_thread, current_stack_pointer);
 
     if (next_thread != current_thread)
     {
-        if (next_thread->process == current_thread_process)
+        if (next_thread->process == current_thread->process)
         {
+            DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
+                "%s: %s Jump to %p [%s].\n",
+                DEBUG_MODULE_NAME, __FUNCTION__, 
+                NULL, next_thread->name);
+
             current_thread->stack_pointer = current_stack_pointer;
+            
             current_thread = next_thread;
             current_stack_pointer = current_thread->stack_pointer;
+                pic_acknowledge (0);
+            goto *(&thread_load_state2);
         }
         else
         {
@@ -231,29 +245,61 @@ void thread_switch_to_next (void)
             tss_t *next_tss;
             int pr_level;
             
-            current_tss = current_thread_process->tss;
+            current_tss = current_thread->process->tss;
             next_tss = next_thread->process->tss;
+
+            DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1,
+                "%s: %s Current tss: %p, Next tss: %p.\n",
+                DEBUG_MODULE_NAME, __FUNCTION__, 
+                current_tss, next_tss);
+
+            DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1,
+                "%s: %s Next tss: cr3: %08X, cs: %04X, eax: %X.\n",
+                DEBUG_MODULE_NAME, __FUNCTION__, 
+                next_tss->cr3, next_tss->cs, next_tss->eax);
             
-            pr_level = PRIVILEGE_LEVEL_SYSTEM;
-                
-            current_thread = next_thread;
             dispatch_flag ^= 1;
             
             if (dispatch_flag == 0)
             {
                 gdt_setup_tss_descriptor (DESCRIPTOR_INDEX_TSS1, next_tss, 
-                    pr_level, sizeof (tss_t) + next->iomap_size);
+                    PRIVILEGE_LEVEL_SYSTEM, sizeof (tss_t));
 //                jump_data[1] = SELECTOR_TSS1;
+
+                DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
+                    "%s: %s Jump to %p [%s].\n",
+                    DEBUG_MODULE_NAME, __FUNCTION__, 
+                    next_tss->eip, next_thread->name);
+//            while (1);
+                current_thread->stack_pointer = current_stack_pointer;
+
+                current_thread = next_thread;
+                next_tss->eip = &thread_load_state;
+                next_tss->esp = next_thread->stack_pointer;
                 
-                asm ("ljmp %0:$0", SELECTOR_TSS1);
+                pic_acknowledge (0);
+                asm ("ljmp %0, $0x0": : "n" SELECTOR_TSS1);
+//            asm ("ljmp *jump_data");
             }
             else
             {
                 gdt_setup_tss_descriptor (DESCRIPTOR_INDEX_TSS2, next_tss, 
-                    pr_level, sizeof (tss_t) + next->iomap_size);
+                    PRIVILEGE_LEVEL_SYSTEM, sizeof (tss_t));
 //                jump_data[1] = SELECTOR_TSS2;
 
-                asm ("ljmp %0:$0", SELECTOR_TSS2);
+                DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
+                    "%s: %s Jump to %p [%s].\n",
+                    DEBUG_MODULE_NAME, __FUNCTION__, 
+                    next_tss->eip, next_thread->name);
+                current_thread->stack_pointer = current_stack_pointer;
+
+                current_thread = next_thread;
+                next_tss->eip = &thread_load_state;
+                next_tss->esp = next_thread->stack_pointer;
+
+                pic_acknowledge (0);
+                asm ("ljmp %0, $0x0": : "n" SELECTOR_TSS2);
+//            asm ("ljmp *jump_data");
             }
             
 //            asm ("ljmp *jump_data");
@@ -283,7 +329,7 @@ void thread_print_list (void)
     }
 
     for (i = (iterator_t *) list_get_iterator (&waiting_threads); 
-    iterator$has_next (i); )
+        iterator$has_next (i); )
     {
         thread = (thread_t *) iterator$get_next (i);
         
@@ -300,13 +346,14 @@ void thread_print_list (void)
 static thread_t thr;
 static char *thread_screen = (char *)(0xB8000);
 
-static return_t thread_test (void)
+static return_t thread_test (p_void_t par UNUSED)
 {
     while (TRUE)
     {
         thread_screen[159]++;
     }
 }
+extern page_directory_t *global_page_directory;
 
 return_t thread_init (int argc UNUSED, char *argv[] UNUSED, char **envp UNUSED)
 {
@@ -317,13 +364,16 @@ return_t thread_init (int argc UNUSED, char *argv[] UNUSED, char **envp UNUSED)
     list_create (&running_threads);
     list_create (&waiting_threads);    
 
+    memory_clear (&tss_kernel, sizeof (tss_t));
+    tss_kernel.cr3 = global_page_directory;
     process_kernel.tss = &tss_kernel;
-    gdt_setup_tss_descriptor (DESCRIPTOR_INDEX_TSS1, tss_kernel, 
+    gdt_setup_tss_descriptor (DESCRIPTOR_INDEX_TSS1, &tss_kernel, 
         PRIVILEGE_LEVEL_SYSTEM, sizeof (tss_t));
 
     thread_main.process = NULL;
     thread_main.stack = NULL;
     list_create (&thread_main.context_list);
+    thread_main.process = &process_kernel;
     
     list_node_insert (&running_threads, (list_node_t *) &thread_main, 
         LIST_OPTION_FIRST);

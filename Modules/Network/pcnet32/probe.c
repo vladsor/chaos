@@ -56,7 +56,7 @@ static ethernet_device_t * pcnet32_probe1 (unsigned long ioaddr, unsigned char i
 #endif
     int ltint = 0;
     int chip_version;
-    char *chipname = "UNKNOWN";
+    char *chipname;
     ethernet_device_t *dev;
     pcnet32_access_t *a = NULL;
 
@@ -208,12 +208,12 @@ static ethernet_device_t * pcnet32_probe1 (unsigned long ioaddr, unsigned char i
     }
 */
     memory_allocate ((void **) &dev, sizeof (ethernet_device_t));
-    memory_set_uint8 ((uint8_t *) dev, 0, sizeof (ethernet_device_t));
+    memory_clear ((uint8_t *) dev, sizeof (ethernet_device_t));
 
     DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
         "\"%s\": \"%s\" at %#3lx,\n", dev->name, chipname, ioaddr);
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, "EA: ");
+    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, "EA: ");
     /* In most chips, after a chip reset, the ethernet address is read from the
      * station address PROM at the base address and programmed into the
      * "Physical Address Registers" CSR12-14.
@@ -235,12 +235,12 @@ static ethernet_device_t * pcnet32_probe1 (unsigned long ioaddr, unsigned char i
             ".%2.2x.%2.2x", 
             dev->ethernet_address[2 * i], dev->ethernet_address[2 * i + 1]);
     }
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, "\n");
+    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, "\n");
     
     {
         uint8_t promaddr[6];
 
-        DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, "EA: ");
+        DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, "EA: ");
         for (i = 0; i < 6; i++) 
         {
             promaddr[i] = port_uint8_in (ioaddr + i);
@@ -248,7 +248,7 @@ static ethernet_device_t * pcnet32_probe1 (unsigned long ioaddr, unsigned char i
             DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
               ".%2.2x", promaddr[i]);
         }
-        DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, "\n");
+        DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, "\n");
         
         if (!memory_compare (promaddr, dev->ethernet_address, 6))
         {
@@ -276,6 +276,7 @@ static ethernet_device_t * pcnet32_probe1 (unsigned long ioaddr, unsigned char i
         DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
             " %2.2x", dev->ethernet_address[i]);
     }
+    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, "\n");
 
     if (((chip_version + 1) & 0xfffe) == 0x2624)
     { /* Version 0x2623 or 0x2624 */
@@ -283,7 +284,7 @@ static ethernet_device_t * pcnet32_probe1 (unsigned long ioaddr, unsigned char i
         i = a->read_csr (ioaddr, 80) & 0x0C00;  /* Check tx_start_pt */
         
         DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
-            "\n    tx_start_pt(0x%04x):", i);
+            "    tx_start_pt(0x%04x):", i);
         
         switch (i>>10) 
         {
@@ -372,7 +373,7 @@ static ethernet_device_t * pcnet32_probe1 (unsigned long ioaddr, unsigned char i
     spin_init (&lp->lock);
     
     dev->priv = lp;
-    string_copy (lp->name, chipname);
+    lp->name = chipname;
     lp->shared_irq = shared;
     lp->full_duplex = fdx;
 #ifdef DO_DXSUFLO

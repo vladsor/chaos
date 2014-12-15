@@ -6,6 +6,7 @@
 
 #include <enviroment.h>
 
+#define DEBUG_MODULE_NAME "Clock"
 #define DEBUG_LEVEL DEBUG_LEVEL_INFORMATIVE
 #include <debug/macros.h>
 
@@ -85,8 +86,9 @@ return_t clock_init (int argc UNUSED, char *argv[] UNUSED)
     rtc_read (&rtc_time);
     
     DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
-        "CLOCK: %u/%2.2u/%2.2u %2.2u:%2.2u:%2.2u\n",
-        rtc_time.year, rtc_time.month, rtc_time.day_of_month, rtc_time.hours, 
+        "%s: %u/%2.2u/%2.2u %2.2u:%2.2u:%2.2u\n",
+        DEBUG_MODULE_NAME, 
+        rtc_time.day_of_month, rtc_time.month, rtc_time.year, rtc_time.hours, 
         rtc_time.minutes, rtc_time.seconds);
     
     /* Convert this time to the chaos format. */

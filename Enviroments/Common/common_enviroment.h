@@ -34,28 +34,13 @@ typedef int             return_t;
 /**
  * @brief               A function pointer. 
  */
-typedef return_t        (*function_t)(void);   /* Can be used even if
+typedef return_t        (*function_t) (void);   /* Can be used even if
                                                   the function uses
                                                   arguments. */
 /**
  * @brief               A linear/physical address. 
  */
 typedef                 uint32_t address_t;
-
-/**
- * @brief               A unique process ID.
- */
-typedef unsigned int    process_id_t;
-
-/**
- * @brief               A unique thread ID.
- */
-typedef unsigned int    thread_id_t;
-
-/**
- * @brief               A unique service provider ID.
- */
-typedef uint64_t        service_id_t;
 
 /**
  * @brief               The process ID of the kernel process (idle thread).
@@ -136,6 +121,7 @@ enum condition_t
 #include "ia32/page.h"
 #include "ia32/cpu_features.h"
 #include "ia32/locks.h"
+#include "ia32/memory.h"
 
 #endif /* __ENVIROMENT_ENVIROMENT_H__ */
 

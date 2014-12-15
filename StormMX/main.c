@@ -7,6 +7,7 @@
 
 #include <enviroment.h>
 
+#define DEBUG_MODULE_NAME "Init"
 #define DEBUG_LEVEL DEBUG_LEVEL_INFORMATIVE
 //#define DEBUG_LEVEL DEBUG_LEVEL_NONE
 #include <debug/macros.h>
@@ -55,8 +56,8 @@ static bool subsystem_set_parameters (char *name, char *parameters)
     unsigned int i;
 
     DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
-        "%s::%s (%s, %s)\n", 
-        __FILE__, __FUNCTION__, name, parameters);
+        "%s: %s (%s, %s)\n", 
+        DEBUG_MODULE_NAME, __FUNCTION__, name, parameters);
 
     for(i = 0; i < NUMBER_OF_BUILT_IN; i++)
     {
@@ -154,7 +155,7 @@ void main_bootup (int argument_count, char *arguments[])
     
     for (i = 1; i < (unsigned int) argument_count; i++)
     {
-        DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE,
+        DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE1,
             "Argument[%u]=%s\n", i, arguments[i]);
 
         argument_analyse (arguments[i]);
@@ -167,8 +168,8 @@ void main_bootup (int argument_count, char *arguments[])
             return_t return_value;
             
             DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
-                "Starting subsystem \'%s\'.\n",
-                subsystem_built_in[i].name);
+                "%s: Starting subsystem \'%s\'.\n",
+                DEBUG_MODULE_NAME, subsystem_built_in[i].name);
 
             string_copy (temp_buffer, subsystem_built_in[i].name);
             
@@ -191,5 +192,7 @@ void main_bootup (int argument_count, char *arguments[])
         }
     }
 
-    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, "IDLE.\n");
+    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
+        "%s: All done. Idleing now.\n",
+        DEBUG_MODULE_NAME);
 }

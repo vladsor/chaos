@@ -403,7 +403,7 @@ typedef struct
      * string table. 
      */
     uint16_t section_string_index;
-} PACKED elf_header_t;
+} elf_header_t PACKED;
 
 /**
  * @brief       An ELF section header entry. 
@@ -439,7 +439,7 @@ typedef struct
      * @brief The size of each section entry. 
      */
     uint32_t entry_size;
-} elf_section_header_t;
+} elf_section_header_t PACKED;
 
 /**
  * @brief       An ELF program header entry. 
@@ -486,7 +486,7 @@ typedef struct
      * Values of 0 and 1 means no specific alignment. 
      */
     uint32_t align;
-} elf_program_header_t;
+} elf_program_header_t PACKED;
 
 /** 
  * @brief A symbol table entry. 
@@ -525,7 +525,7 @@ typedef struct
      * defined in relation to. 
      */
     uint16_t section_header;
-} PACKED elf_symbol_t;
+} elf_symbol_t PACKED;
 
 /** 
  * @brief A relocation table entry.
@@ -547,7 +547,7 @@ typedef struct
      * @brief The index into the symbol table of this relocation.
      */
     uint32_t symbol_index : 24;
-} elf_relocation_t;
+} elf_relocation_t PACKED;
 
 /**
  * @brief Our parsed ELF, with some important sections picked out.
@@ -581,6 +581,30 @@ typedef struct
      */
     void *image;
 } elf_parsed_t;
+
+/**
+ * @brief Our parsed ELF, with some important sections picked out.
+ */
+typedef struct
+{
+    /**
+     * @brief The ELF header itself. 
+     */
+    elf_header_t *elf_header;
+
+    /**
+     * @brief The section containing strings, used for dynamic linking. 
+     */
+    elf_section_header_t *string_header;
+
+    /**
+     * @brief The section containing the symbol table, used for
+     * dynamic linking. 
+     */
+    elf_section_header_t *symbol_header;
+
+} elf_parsed_program_t;
+
 
 /**
  * @brief               Make sure the given ELF is identified properly. 

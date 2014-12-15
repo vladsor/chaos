@@ -6,7 +6,7 @@
  * @author              Per Lundberg <per@chaosdev.org>
  * @author              Henrik Hallin <hal@chaosdev.org>
  * @author              Vladimir Sorokin
- * @version             1.11
+ * @version             1.12
  * @date                1998-2004
  */
 
@@ -27,13 +27,12 @@ extern descriptor_t gdt[];
  * @param tss_size      The sizeof TSS segment.
  * @param dpl           The DPL (Descriptor Privilege Level, see Intel
  *                      documentation)
- * @param limit         The limit of the descriptor (size of the TSS).
  */
 static inline void gdt_setup_tss_descriptor (uint16_t entry, tss_t *address,
-	int tss_size, int dpl, int limit)
+	int tss_size, int dpl)
 {
-  ((uint64_t *) gdt)[entry] = DESCRIPTOR_TSS ((uint32_t) address, tss_size, dpl,
-      limit, SEGMENT_PRESENT, SEGMENT_DIGIT_32);
+  ((uint64_t *) gdt)[entry] = DESCRIPTOR_TSS ((uint32_t) address, tss_size, 
+      SEGMENT_GRANULARITY_BYTE, dpl, SEGMENT_PRESENT, SEGMENT_DIGIT_32);
 }
 
 /**

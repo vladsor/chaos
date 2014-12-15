@@ -16,8 +16,8 @@
  * @param size          Length of memory areas.
  * @return              TRUE if equals, FALSE otherwise.
  */
-static inline bool memory_compare (void *memory1, void *memory2, 
-    size_t size)
+static inline int memory_compare (void *memory1, void *memory2, 
+    unsigned int size)
 {
   register int eax;
   int esi, edi, ecx;

@@ -84,13 +84,4 @@ static inline void memory_set_uint32 (uint32_t *address, uint32_t value,
                    "memory");
 }
 
-/**
- * @brief               Clear (zero out) a page.
- * @param address       The base address of the page to clear.
- */
-static inline void memory_clear_page (void *address)
-{
-    memory_set_uint32 ((uint32_t *) address, 0, PAGE_SIZE / 4);
-}
-
 #endif /* !__MEMORY_INLINES_SET__ */

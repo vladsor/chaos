@@ -9,16 +9,8 @@
 #define WAIT_DRQ        20      /* DRQ asserted after ATA_CMD_WR(MUL) */
 
 /* 'Cmd' field of 'drivecmd' structure */
-#define DRV_CMD_RD      1
-#define DRV_CMD_WR      2
-
-/* ATA or ATAPI command structure */
-typedef struct
-{
-    uint32_t Blk;        /* in SECTORS */
-    uint32_t Count;      /* in BYTES */
-    uint8_t Dev, Cmd, *Data;
-} drivecmd;
+#define DRIVE_COMMAND_READ      1
+#define DRIVE_COMMAND_WRITE     2
 
 /* ATA sector size */
 #define ATA_LG_SECTSIZE         9       /* 512 byte ATA drive sectors */
@@ -79,65 +71,81 @@ typedef struct /* 'identify' structure, as per ANSI ATA2 rev.2f spec */
 /* This fixed the drive-goes-north-after-ATAPI-identify bug
         u16 Res69, Res70; } ataid; */
     uint16_t Res[187];
-} ataid;
+} ata_id_t;
 
 /* generalized drive info structure */
 typedef struct
 {
-    uint16_t Flags;
-    uint8_t  DrvSel;              /* ATA, ATAPI only (LUN for SCSI?) */
-    uint8_t  MultSect;            /* ATA only */
-    uint16_t Sects, Heads, Cyls;/* CHS ATA only */
-    uint16_t IOAdr;
-} drive;
+    uint16_t flags;
+    uint8_t  drive_select;              /* ATA, ATAPI only (LUN for SCSI?) */
+    uint8_t  multi_sectors;            /* ATA only */
+    uint16_t sectors;
+    uint16_t heads;
+    uint16_t cylinders;/* CHS ATA only */
+    uint16_t io_address;
+} drive_t;
+
+typedef drive_t * p_drive_t;
+
+/* ATA or ATAPI command structure */
+typedef struct
+{
+    uint32_t bulk;        /* in SECTORS */
+    uint32_t count;      /* in BYTES */
+
+    uint8_t command;
+    uint8_t *data;
+} drive_command_t;
+
+typedef drive_command_t * p_drive_command_t;
 
 /* ATAPI packet command bytes */
-#define ATAPI_CMD_START_STOP    0x1B    /* eject/load */
-#define ATAPI_CMD_READ10        0x28    /* read data sector(s) */
-#define ATAPI_CMD_READTOC       0x43    /* read audio table-of-contents */
-#define ATAPI_CMD_PLAY          0x47    /* play audio */
-#define ATAPI_CMD_PAUSE         0x4B    /* pause/continue audio */
+#define ATAPI_COMMAND_START_STOP    0x1B    /* eject/load */
+#define ATAPI_COMMAND_READ10        0x28    /* read data sector(s) */
+#define ATAPI_COMMAND_READ_TOC      0x43    /* read audio table-of-contents */
+#define ATAPI_COMMAND_PLAY          0x47    /* play audio */
+#define ATAPI_COMMAND_PAUSE         0x4B    /* pause/continue audio */
 
 /* ATAPI data/command transfer 'phases' */
-#define ATAPI_PH_ABORT          0       /* other possible phases (1, 2, */
-#define ATAPI_PH_DONE           3       /* and 11) are invalid */
-#define ATAPI_PH_DATAOUT        8
-#define ATAPI_PH_CMDOUT         9
-#define ATAPI_PH_DATAIN         10
+#define ATAPI_PHASE_ABORT          0       /* other possible phases (1, 2, */
+#define ATAPI_PHASE_DONE           3       /* and 11) are invalid */
+#define ATAPI_PHASE_DATAOUT        8
+#define ATAPI_PHASE_CMDOUT         9
+#define ATAPI_PHASE_DATAIN         10
 
 typedef struct                  /* 4 bytes */
 {
-    uint8_t Res0, Min, Sec, Frame;
-} atapimsf;
+    uint8_t reserved0;
+    uint8_t minutes;
+    uint8_t seconds;
+    uint8_t frame;
+} atapi_msf_t PACKED;
 
 typedef struct                  /* 4 bytes */
 {
-    uint16_t TocLen;
-    uint8_t FirstTrk;
-    uint8_t LastTrk;
-} atapitocheader;
+    uint16_t toc_length;
+    uint8_t first_track;
+    uint8_t last_track;
+} atapi_toc_header_t PACKED;
 
 typedef struct                  /* 8 bytes */
 {
-    uint8_t Res0;
-/* In Linux ide.h, the next field was 'unsigned control : 4'
-I thought "hey, unsigned is 32 bits under GNU"... and that led
-to great confusion. The size of this structure _IS_ 8 bytes. */
-    uint8_t Ctrl : 4;
-    uint8_t Adr : 4;
-    uint8_t Trk;
-    uint8_t Res1;
+    uint8_t reserved0;
+    uint8_t control : 4;
+    uint8_t address : 4;
+    uint8_t track;
+    uint8_t reserved1;
 
     union
     {
-        uint32_t Block;
-        atapimsf Time;
-    } Where;
-} atapitocentry;
+        uint32_t block;
+        atapi_msf_t time;
+    } where;
+} atapi_toc_entry_t PACKED;
 
 typedef struct
 {
-    atapitocheader Hdr;
-    atapitocentry Ent[100];
-} atapitoc;
+    atapi_toc_header_t header;
+    atapi_toc_entry_t entries[100];
+} atapi_toc_t PACKED;
 

@@ -8,7 +8,6 @@
 #define __LIBRARY_STRING_STRING_H__
 
 #include <enviroment.h>
-#include <memory_inlines.h>
 
 #include "defines.h"
 #include "return_values.h"

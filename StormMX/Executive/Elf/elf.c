@@ -10,6 +10,8 @@
 
 #include "../Include/elf.h"
 
+#define DEBUG_MODULE_NAME "Elf"
+
 //#define DEBUG_LEVEL DEBUG_LEVEL_INFORMATIVE
 #define DEBUG_LEVEL DEBUG_LEVEL_NONE
 #include <debug/macros.h>
@@ -387,28 +389,7 @@ return_t elf_load_module (elf_parsed_t *elf_parsed)
     return STORM_RETURN_SUCCESS;
 }
 
-/**
- * @brief Our parsed ELF, with some important sections picked out.
- */
-typedef struct
-{
-    /**
-     * @brief The ELF header itself. 
-     */
-    elf_header_t *elf_header;
-
-    /**
-     * @brief The section containing strings, used for dynamic linking. 
-     */
-    elf_section_header_t *string_header;
-
-    /**
-     * @brief The section containing the symbol table, used for
-     * dynamic linking. 
-     */
-    elf_section_header_t *symbol_header;
-
-} elf_parsed_program_t;
+#if defined (SUBSYSTEM_PROCESS)
 
 /* Parse the given ELF header. */
 return_t elf_parse_program (elf_header_t *elf_header, 
@@ -419,9 +400,10 @@ return_t elf_parse_program (elf_header_t *elf_header,
     unsigned int elf_type;
 
     DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
-        "%s::%s\n",
-        __FILE__, __FUNCTION__);
-    
+        "%s: %s (%p, %p)\n",
+        DEBUG_MODULE_NAME, __FUNCTION__,
+        elf_header, elf_parsed);
+
     /* Make sure the ELF is valid. */
     if (elf_identify (elf_header) != STORM_ELF_PROGRAM)
     {
@@ -429,6 +411,7 @@ return_t elf_parse_program (elf_header_t *elf_header,
     }
 
     elf_parsed->elf_header = elf_header;
+    return 0;
 
     /* Find the string table and symbol table. */
     for (index = 0; index < elf_header->section_header_entries; index++)
@@ -461,29 +444,48 @@ return_t elf_parse_program (elf_header_t *elf_header,
     }
 
     DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
-        "%s::%s String table: %p, Symbol table: %p.\n",
-        __FILE__, __FUNCTION__, 
+        "%s: %s String table: %p, Symbol table: %p.\n",
+        DEBUG_MODULE_NAME, __FUNCTION__, 
         elf_parsed->string_header, elf_parsed->symbol_header);
 
     return STORM_RETURN_SUCCESS;
 }
 
-#if 0
+#define ELF_SECTION_TYPE_PROGRAM ELF_SECTION_TYPE_UNDEFINED
+
 /* Load an ELF. Allocate memory for it, and copy the data from the
    different sections there. */
-static return_t elf_load_program (elf_header_t *elf_header, 
+return_t elf_load_program (elf_parsed_program_t *elf_parsed,
     process_t *process)
 {
     return_t return_value;
+    elf_header_t *elf_header = elf_parsed->elf_header;
+    int index;
+    page_directory_t *page_directory = process->page_directory;
+
+    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
+        "%s: %s (%p, %p)\n",
+        DEBUG_MODULE_NAME, __FUNCTION__,
+        elf_parsed, process);
+
+    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
+        "%s: %s Elf header: %p\n",
+        DEBUG_MODULE_NAME, __FUNCTION__,
+        elf_header);
 
     /* Find the highest end address of a section. This presumes that
        the sections come right after each other, which is a reasonable
        presumption since we control ELF generation for our OS. */
-    for (int index = 0; index < elf_header->section_header_entries; index++)
+    for (index = 0; index < elf_header->section_header_entries; index++)
     {
         elf_section_header_t *section_header = (elf_section_header_t *) 
             (((uint32_t) elf_header) + elf_header->section_header_offset + 
             (index * elf_header->section_header_entry_size));
+
+        DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE2, 
+            "%s: %s Section header: %p\n",
+            DEBUG_MODULE_NAME, __FUNCTION__, section_header);
+
 
         if (section_header->flags & ELF_SECTION_FLAG_ALLOCATE &&
             section_header->type == ELF_SECTION_TYPE_PROGRAM)
@@ -494,6 +496,12 @@ static return_t elf_load_program (elf_header_t *elf_header,
             size_t file_offset = 0;
             unsigned int page_offset = 0;
 
+            DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
+                "%s: %s Program section header: %p (%p, %X, %X)\n",
+                DEBUG_MODULE_NAME, __FUNCTION__, 
+                section_header, section_header->address, 
+                section_header->offset, section_header->size);
+
             /* If the first page is not page aligned, handle it
                slightly differently. */
             if (section_header->address % PAGE_SIZE != 0)
@@ -503,8 +511,8 @@ static return_t elf_load_program (elf_header_t *elf_header,
                 size_t size = MIN (section_header->size, PAGE_SIZE - offset);
                 
                 DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
-                    "Section header size: %x\n",
-                    section_header->size);
+                    "%s: %s Section header size: %x\n",
+                    DEBUG_MODULE_NAME, __FUNCTION__, section_header->size);
 
                 /* If this section overlaps another section, find the
                    physical addres of the page that has already been
@@ -512,23 +520,23 @@ static return_t elf_load_program (elf_header_t *elf_header,
                 unsigned int flags;
                 page_number_t page_number;
                 
-                return_value = memory_virtual_find (page_directory, 
+                return_value = virtual_memory_lookup (page_directory, 
                     PAGE_NUMBER (section_header->address), &page_number, &flags);
 
                 /* Yes -- use this physical address instead. */
                 // FIXME: Check that the flags are valid.
                 if (return_value == STORM_RETURN_SUCCESS)
                 {
-                    buffer = (void *) (page_number * PAGE_SIZE);
+                    buffer = (void *) PAGE_ADDRESS (page_number);
                 }
                 /* The page is not mapped, so map it please. */
                 else 
                 {
                     /* Allocate memory for this section and map it at
                        the right place. */
-                    return_value = memory_physical_allocate (&buffer, 1);
+                    return_value = physical_memory_allocate (&page_number, 1);
                     
-                    buffer = (void *) (buffer * PAGE_SIZE);
+                    buffer = (void *) PAGE_ADDRESS (page_number);
                     
                     if (return_value != STORM_RETURN_SUCCESS)
                     {
@@ -541,8 +549,7 @@ static return_t elf_load_program (elf_header_t *elf_header,
                     /* Map this memory at the right place. */
                     // FIXME: Get some of the flags from the section
                     // (like writable).
-                    return_value = memory_virtual_map
-                        (page_directory, 
+                    return_value = virtual_memory_map (page_directory, 
                          PAGE_NUMBER (section_header->address),
                          PAGE_NUMBER (buffer), 1, PAGE_USER);
                          
@@ -554,29 +561,26 @@ static return_t elf_load_program (elf_header_t *elf_header,
                         return return_value;
                     }
                 }                    
-                
-#if DEBUG
-                debug_print ("Copying to %x from %x (length %d)\n",
-                             (void *) ((address_t) buffer + offset),
-                             (void *) (elf_header + section_header->offset),
-                             size);
-                debug_memory_dump ((void *) (((address_t) elf_header) +
-                                             section_header->offset),
-                                   size / 4);
-#endif         
+
+                DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
+                    "%s: %s Copying to %p frop %x (%d bytes)\n",
+                    DEBUG_MODULE_NAME, __FUNCTION__, 
+                    (void *) ((address_t) buffer + offset),
+                    (void *) (((address_t) elf_header) + 
+                        section_header->offset), size);                
+                                       
                 memory_copy ((void *) ((address_t) buffer + offset),
                              (void *) (((address_t) elf_header) +
                                        section_header->offset), size);
-#if DEBUG
-                debug_memory_dump ((void *) (((address_t) elf_header) + 
-                                             section_header->offset),
-                                   size / 4);
-#endif
                 
                 remaining_size -= size;
                 file_offset += size;
                 page_offset++;
             }
+
+            DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
+                "%s: %s Remaining size: %u (%X)\n",
+                DEBUG_MODULE_NAME, __FUNCTION__, remaining_size, file_offset);
             
             /* We have to take it one page at a time. */
             while (remaining_size > 0)
@@ -587,33 +591,40 @@ static return_t elf_load_program (elf_header_t *elf_header,
                 unsigned int flags;
                 page_number_t page_number;
                 
-                return_value = memory_virtual_find (page_directory, 
+                return_value = virtual_memory_lookup (page_directory, 
                     PAGE_NUMBER (section_header->address), &page_number, &flags);
 
                 /* If it was found, use it instead of overwriting it. */
                 if (return_value == STORM_RETURN_SUCCESS)
                 {
-                    buffer = (void *) (page_number * PAGE_SIZE);
+                    buffer = (void *) PAGE_ADDRESS (page_number);
                 }
                 else
                 {
                     /* Allocate memory for this section and map it at the
                        right place. */
-                    return_value = memory_physical_allocate (&buffer, 1);
+                    return_value = physical_memory_allocate (&page_number, 1);
                     
                     if (return_value != STORM_RETURN_SUCCESS)
                     {
-                        debug_print ("Failed to allocate memory");
+                        DEBUG_PRINT (DEBUG_LEVEL_ERROR, 
+                            "Failed to allocate memory");
                         return return_value;
                     }
                     
+                    buffer = (void *) PAGE_ADDRESS (page_number);
+
+                    DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
+                        "%s: %s Buffer: %p\n",
+                        DEBUG_MODULE_NAME, __FUNCTION__, buffer);
+                    
+                    memory_set_uint8 ((uint8_t *) buffer, 0, PAGE_SIZE);
                     /* Map this memory at the right place. */
                     // FIXME: Get some of the flags from the section (like
                     // writable).
-                    return_value = memory_virtual_map (page_directory, 
+                    return_value = virtual_memory_map (page_directory, 
                          PAGE_NUMBER (section_header->address) + page_offset,
-                         PAGE_NUMBER (buffer), 1, PAGE_WRITABLE |
-                         PAGE_NON_PRIVILEGED | PAGE_WRITE_THROUGH);
+                         PAGE_NUMBER (buffer), 1, PAGE_USER);
                          
                     if (return_value != STORM_RETURN_SUCCESS)
                     {
@@ -642,11 +653,17 @@ static return_t elf_load_program (elf_header_t *elf_header,
                 }
 
                 DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
-                    "Copying to %x from %x (%d bytes)\n", buffer, 
-                    (void *) (elf_header + section_header->offset + 
+                    "Address: %X %X %X\n",
+                    (uint32_t) elf_header, 
+                    (uint32_t) section_header->offset,
+                    (uint32_t) file_offset);
+
+                DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, 
+                    "Copying to %p from %p (%d bytes)\n", buffer, 
+                    (void *) ((address_t) elf_header + section_header->offset + 
                     file_offset), length);
                     
-                memory_copy (buffer, (void *) (elf_header + 
+                memory_copy (buffer, (void *) ((address_t) elf_header + 
                     section_header->offset + file_offset), length);
                     
                 remaining_size -= length;
@@ -655,65 +672,9 @@ static return_t elf_load_program (elf_header_t *elf_header,
             }
         }
     }
+
+    process->entry_point = elf_header->entry_point;
   
     return STORM_RETURN_SUCCESS;
-}
-#endif
-
-#if 0
-
-/* Run the ELF binary at the given address (as a user binary). We only
-   have to support static images at the moment so it's incredibly
-   simple actually... :) */
-return_t elf_run (void *buffer)
-{
-    return_t return_value;
-    elf_header_t *elf_header = (elf_header_t *) buffer;
-    process_id_t process_id;
-    void *page_directory;
-    unsigned int elf_type;
-
-    /* Make sure this is a valid ELF. */
-    elf_type = elf_identify (elf_header);
-    
-    if (return_value != STORM_ELF_PROGRAM)
-    {
-        DEBUG_PRINT (DEBUG_LEVEL_ERROR, "Invalid ELF.\n");
-        
-        return -1;
-    }
-
-    /* Seems to be a valid ELF! We try and load it. But first, we need
-       the kernel set up some things for us:
-
-         1) a page directory (for mapping)
-         2) a process ID (for allocating memory) 
-
-       This is done by the very nice kernel function
-       process_precreate. We have done it this way so that adding
-       support for another binary format is incredibly
-       simple. Ideally, it should not even require a reboot of the
-       system. */
-    return_value = process_precreate (&process_id, &page_directory);
-    
-    if (return_value != STORM_RETURN_SUCCESS)
-    {
-        debug_print ("Failed precreating process.\n");
-        return return_value;
-    }
-   
-    /* Allocate pages and copy the sections to this space. */
-    return_value = elf_load (elf_header, process_id, page_directory);
-    if (return_value != STORM_RETURN_SUCCESS)
-    {
-        debug_print ("Failed loading ELF.\n");
-        
-        return return_value;
-    }
-
-    /* Create the process. */
-    return_value = process_create (process_id, elf_header->entry_point);
-
-    return return_value;
 }
 #endif

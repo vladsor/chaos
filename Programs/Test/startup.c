@@ -6,6 +6,8 @@
 
 #include <enviroment.h>
 
+#include "test.h"
+
 /* Function prototypes. */
 
 extern return_t main (int argc, char **argv);
@@ -18,10 +20,11 @@ void startup (void)
     handle_t process = HANDLE_THIS_PROCESS;
     return_t return_value;
     uint32_t number_of_arguments;
-    char array_of_arguments[100];
+    char *array_of_arguments[100];
     
     {
-        char parameters[256];
+        char parameters[STRING_MAX_LENGTH];
+        memory_clear (parameters, STRING_MAX_LENGTH);
         process$parameters_get (process, parameters);
 
         number_of_arguments = arguments_parse (parameters, array_of_arguments);
@@ -29,8 +32,8 @@ void startup (void)
 
     return_value = main (number_of_arguments, (char **) array_of_arguments);
 
-    process$exit_code_set (process, return_value);
-    
-    process$destroy (process);
+    process$exit (process, return_value);
+
+    while (TRUE);
 }
 

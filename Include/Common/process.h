@@ -7,6 +7,7 @@
 #ifndef __COMMON_PROCESS_H__
 #define __COMMON_PROCESS_H__
 
+#include <rpool.h>
 
 /* Structure used by process_create. */
 
@@ -34,8 +35,13 @@ typedef struct
     LIST_NODE_PART;
     
     char name[STRING_MAX_LENGTH];
-    
+
+    uint32_t entry_point;
+
     page_directory_t *page_directory;
+    tss_t *tss;
+    
+    pool_t memory_pool;
     
     list_t threads_list;
 } process_t;

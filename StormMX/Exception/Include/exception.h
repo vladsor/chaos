@@ -37,5 +37,7 @@ typedef struct
 
 extern exception_hardware_description_t exception_hardware_descriptions[];
 
+extern bool output_enabled;
+
 #endif /* !__STORM_IA32_EXCEPTION_H__ */
 

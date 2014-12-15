@@ -1,0 +1,8 @@
+make install \
+    compile_flags="-O0 -g -D__STORM_KERNEL__ " \
+    IMAGE_FILE="../../Images/chaos.flp" \
+    LD_SCRIPT="../kernel.ld" \
+    INCLUDES="-I/root/ChaosG4.v006/Include -I/root/ChaosG4.v006/Enviroments" \
+    LIBRARIES="../Libraries/string.a ../Libraries/list.a ../Libraries/pool_of_integers.a ../Libraries/pool_of_ranges.a ../Libraries/avl_tree.a ../Libraries/hash_table.a" \
+    --directory=Debug \
+    --makefile=../Makefile 

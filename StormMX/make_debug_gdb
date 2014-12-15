@@ -1,4 +1,16 @@
 mkdir   DebugGDB
-make    compile_flags="-O0 -g -ggdb -D__STORM_KERNEL__ -DGDB -DGDB_PORT=0 -DGDB_SPEED=9600" \\
-          --directory=Debug \\
-          --makefile=../Makefile 
+make deps \
+    preprocessor_flags="-DGDB -DGDB_PORT=0 -DGDB_SPEED=9600" \
+    INCLUDES="-I/root/ChaosG4.v006/Include -I/root/ChaosG4.v006/Enviroments" \
+    --directory=DebugGDB \
+    --makefile=../Makefile 
+
+make \
+    compile_flags="-O0 -g -ggdb" \
+    preprocessor_flags="-DGDB -DGDB_PORT=0 -DGDB_SPEED=9600" \
+    LD_SCRIPT="../kernel.ld" \
+    INCLUDES="-I/root/ChaosG4.v006/Include -I/root/ChaosG4.v006/Enviroments" \
+    LIBRARIES="../Libraries/string.a ../Libraries/list.a ../Libraries/pool_of_integers.a ../Libraries/pool_of_ranges.a ../Libraries/avl_tree.a" \
+    --directory=DebugGDB \
+    --makefile=../Makefile 
+          

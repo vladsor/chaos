@@ -35,3 +35,8 @@ return_t module_start (int argc, char *argv[])
     
     return return_value;
 }
+
+return_t module_stop (void)
+{
+    return 0;
+}

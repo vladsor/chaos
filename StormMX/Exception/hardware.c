@@ -324,12 +324,8 @@ static void exception_print_page_screen (
 
     DEBUG_PRINT (DEBUG_LEVEL_INFORMATIVE, "\n");
 
-    {
-      uint32_t cr2;
-      cpu_cr2_save (cr2);
-    DEBUG_PRINT (DEBUG_LEVEL_ERROR, "  Page address: %p(%p)\n",
-        (void *) exception_info->address, (void*)cr2);
-    }
+    DEBUG_PRINT (DEBUG_LEVEL_ERROR, "  Page address: %p\n",
+        (void *) exception_info->address);
 }
 
 static void exception_print_segment_screen (
@@ -482,7 +478,6 @@ void exception_print_screen (uint32_t class_id, char *description,
   
     debug_dump_registers (dump_thread);
 */    
-
     dump_registers (exception_info);
 }
 

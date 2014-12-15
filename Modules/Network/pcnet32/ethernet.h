@@ -42,8 +42,6 @@ typedef struct
     uint8_t data[0];
 } network_ethernet_header_t PACKED;
 
-#include <memory_inlines.h>
-
 /**
  * is_valid_ether_addr - Determine if the given Ethernet address is valid
  * @addr: Pointer to a six-byte array containing the Ethernet address
@@ -58,7 +56,7 @@ static inline int is_valid_ethernet_address (uint8_t *addr)
 {
 	const char zaddr[6] = {0,};
 
-	return !(addr[0]&1) && !memory_compare (addr, zaddr, 6);
+	return !(addr[0]&1) && memory_compare (addr, (void *) zaddr, 6);
 }
 
 /*
@@ -68,35 +66,35 @@ static inline int is_valid_ethernet_address (uint8_t *addr)
  
 typedef struct 
 {
-	unsigned long rx_packets;		/* total packets received	*/
-	unsigned long tx_packets;		/* total packets transmitted	*/
-	unsigned long rx_bytes;		/* total bytes received 	*/
-	unsigned long tx_bytes;		/* total bytes transmitted	*/
-	unsigned long rx_errors;		/* bad packets received		*/
-	unsigned long tx_errors;		/* packet transmit problems	*/
-	unsigned long rx_dropped;		/* no space in linux buffers	*/
-	unsigned long tx_dropped;		/* no space available in linux	*/
-	unsigned long multicast;		/* multicast packets received	*/
-	unsigned long collisions;
+	unsigned long	rx_packets;		/* total packets received	*/
+	unsigned long	tx_packets;		/* total packets transmitted	*/
+	unsigned long	rx_bytes;		/* total bytes received 	*/
+	unsigned long	tx_bytes;		/* total bytes transmitted	*/
+	unsigned long	rx_errors;		/* bad packets received		*/
+	unsigned long	tx_errors;		/* packet transmit problems	*/
+	unsigned long	rx_dropped;		/* no space in linux buffers	*/
+	unsigned long	tx_dropped;		/* no space available in linux	*/
+	unsigned long	multicast;		/* multicast packets received	*/
+	unsigned long	collisions;
 
 	/* detailed rx_errors: */
-	unsigned long rx_length_errors;
-	unsigned long rx_over_errors;		/* receiver ring buff overflow	*/
-	unsigned long rx_crc_errors;		/* recved pkt with crc error	*/
-	unsigned long rx_frame_errors;	/* recv'd frame alignment error */
-	unsigned long rx_fifo_errors;		/* recv'r fifo overrun		*/
-	unsigned long rx_missed_errors;	/* receiver missed packet	*/
+	unsigned long	rx_length_errors;
+	unsigned long	rx_over_errors;		/* receiver ring buff overflow	*/
+	unsigned long	rx_crc_errors;		/* recved pkt with crc error	*/
+	unsigned long	rx_frame_errors;	/* recv'd frame alignment error */
+	unsigned long	rx_fifo_errors;		/* recv'r fifo overrun		*/
+	unsigned long	rx_missed_errors;	/* receiver missed packet	*/
 
 	/* detailed tx_errors */
-	unsigned long tx_aborted_errors;
-	unsigned long tx_carrier_errors;
-	unsigned long tx_fifo_errors;
-	unsigned long tx_heartbeat_errors;
-	unsigned long tx_window_errors;
+	unsigned long	tx_aborted_errors;
+	unsigned long	tx_carrier_errors;
+	unsigned long	tx_fifo_errors;
+	unsigned long	tx_heartbeat_errors;
+	unsigned long	tx_window_errors;
 	
 	/* for cslip etc */
-	unsigned long rx_compressed;
-	unsigned long tx_compressed;
+	unsigned long	rx_compressed;
+	unsigned long	tx_compressed;
 } net_device_stats_t;
 
 

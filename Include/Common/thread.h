@@ -3,6 +3,7 @@
 
 #include <list.h>
 #include "irq.h"
+#include "process.h"
 
 typedef struct
 {
@@ -24,10 +25,14 @@ typedef struct
     uint32_t state;
     uint32_t priority;
     uint64_t timeslices;
+    process_t *process;
 
     cpu_state_t cpu_state;
     uint8_t *stack;
     uint8_t *stack_pointer;
+
+    uint8_t *user_stack;
+    uint8_t *user_stack_pointer;
     
     list_t context_list;    
 

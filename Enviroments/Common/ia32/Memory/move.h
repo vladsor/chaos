@@ -10,35 +10,24 @@ static inline void * memory_move (void *dest, const void *src, size_t n)
     
     if (dest < src)
     {
-        asm volatile (
-            "cld\n"
-            "rep\n"
-            "movsb"
-        :
-            "=&c" (__d0), 
-            "=&S" (__d1), 
-            "=&D" (__d2)
-        : 
-            "0" (n), 
-            "1" (src), 
-            "2" (dest)
-        : "memory");
+        asm volatile
+      ("cld\n\t"
+       "rep\n\t"
+       "movsb"
+       : "=&c" (__d0), "=&S" (__d1), "=&D" (__d2)
+       : "0" (n), "1" (src), "2" (dest)
+       : "memory");
     }
     else
     {
-        asm volatile (
-            "std\n"
-            "rep\n"
-            "movsb\n"
-            "cld"
-        : 
-            "=&c" (__d0), 
-            "=&S" (__d1), 
-            "=&D" (__d2)
-        : 
-            "0" (n), 
-            "1" (n - 1 + (const char *) src),
-            "2" (n - 1 + (char *) dest)
+        asm volatile
+      ("std\n\t"
+       "rep\n\t"
+       "movsb\n\t"
+       "cld"
+       : "=&c" (__d0), "=&S" (__d1), "=&D" (__d2)
+       : "0" (n), "1" (n - 1 + (const char *) src),
+	 "2" (n - 1 + (char *) dest)
        : "memory");
     }
 

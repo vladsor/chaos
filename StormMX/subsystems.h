@@ -28,6 +28,7 @@ extern main_function_t vfat_main;
 
 extern void posix_init (void);
 extern int main (int argc, char *argv[], char **envp);
+extern return_t system_call_init (void);
 
 
 subsystem_built_in_t subsystem_built_in[] =
@@ -82,6 +83,10 @@ subsystem_built_in_t subsystem_built_in[] =
 
 #if defined (SUBSYSTEM_TIMER) && defined (SUBSYSTEM_THREAD)
     {"thread",            &thread_init,           TRUE,  ""},
+#endif
+
+#if defined (SUBSYSTEM_SYSTEM_CALL)
+    {"system_call",       &system_call_init,      TRUE,  ""},
 #endif
 
 #if defined (SUBSYSTEM_PROCESS) && defined (SUBSYSTEM_THREAD)

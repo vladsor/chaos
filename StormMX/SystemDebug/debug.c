@@ -11,12 +11,8 @@
 /* Copyright 2002 chaos development. */
 /* Use freely under the terms listed in the file LICENSE. */
 
-//#define GDB
-//#define GDB_PORT 0
-//#define GDB_SPEED 9600
-
 #include <enviroment.h>
-#include <memory_inlines.h>
+
 #include <string.h>
 
 #include "Include/debug.h"

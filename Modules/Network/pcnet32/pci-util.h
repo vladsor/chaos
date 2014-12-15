@@ -1,4 +1,3 @@
-#include <memory_inlines.h>
 
 /* these helpers provide future and backwards compatibility
  * for accessing popular PCI BAR info */

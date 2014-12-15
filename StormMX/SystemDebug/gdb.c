@@ -83,7 +83,7 @@
  *
  ****************************************************************************/
 #include <enviroment.h>
-#include <memory_inlines.h>
+
 #include <string.h>
 
 #include "Include/gdb.h"
