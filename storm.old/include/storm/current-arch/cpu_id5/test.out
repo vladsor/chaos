@@ -1,0 +1,30 @@
+known vendor: AuthenticAMD
+CPU: AMD Athlon
+ext CPU: AMD Athlon(tm) Processor
+model 2,stepping 2
+This processor support:
+Supports CPUID instruction
+FPU present
+Virtual Mode Extensions
+Debug Extensions
+Page Size Extensions
+Time Stamp Counter
+Model Specific Registers
+Page Address Exceptions
+Machine Check Extensions
+CMPXCHG8 instruction
+SYSENTER/SYSEXIT instruction
+Memory Type Range Registers
+Global Paging Extensions
+Machine Check Architecture
+CMOV instruction
+Page Attribue Table
+PSE36 (Page Size Extensions)
+FXSAVE/FXRSTOR instruction
+MMX Extensions
+MMX support
+SSE MMX support (same as MMX extensions)
+3DNow! support
+Extended 3DNow! support
+0:84202228 c:10
+152 MHz

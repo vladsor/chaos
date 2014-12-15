@@ -1,4 +1,4 @@
-/* $chaos: return_values.h,v 1.1 2002/06/24 21:36:43 per Exp $ */
+/* $Id: return_values.h,v 1.2 2000/09/29 21:08:25 hal Exp $ */
 /* Abstract: Return values used by the console library. */
 /* Author: Per Lundberg <plundis@chaosdev.org> */
 
@@ -26,21 +26,26 @@
 
 enum
 {
-    /* The function completed successfully. */
-    CONSOLE_RETURN_SUCCESS,
-    
-    /* One or more of the services required by this library was not
-       available. */
-    CONSOLE_RETURN_SERVICE_UNAVAILABLE,
-    
-    /* One or more of the input arguments was invalid. */
-      CONSOLE_RETURN_INVALID_ARGUMENT,
-    
-    /* The console server returned unrecognized data. */
-    CONSOLE_RETURN_BAD_DATA_RETURNED,
-    
-    /* The given console structure was already initialised. */
-    CONSOLE_RETURN_ALREADY_INITIALISED,
+  /* The function completed successfully. */
+
+  CONSOLE_RETURN_SUCCESS,
+
+  /* One or more of the services required by this library was not
+     available. */
+
+  CONSOLE_RETURN_SERVICE_UNAVAILABLE,
+
+  /* One or more of the input arguments was invalid. */
+
+  CONSOLE_RETURN_INVALID_ARGUMENT,
+
+  /* The console server returned unrecognized data. */
+
+  CONSOLE_RETURN_BAD_DATA_RETURNED,
+
+  /* The given console structure was already initialised. */
+
+  CONSOLE_RETURN_ALREADY_INITIALISED,
 };
 
 #endif /* !__LIBRARY_CONSOLE_RETURN_VALUES_H__ */

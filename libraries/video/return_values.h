@@ -1,23 +1,40 @@
-/* $chaos: return_values.h,v 1.1 2002/07/11 21:43:44 per Exp $ */
+/* $Id: return_values.h,v 1.1.1.1 2000/09/26 19:08:08 plundis Exp $ */
 /* Abstract: Video library return values. */
-/* Author: Per Lundberg <per@chaosdev.org> */
+/* Author: Per Lundberg <plundis@chaosdev.org> */
 
-/* Copyright 2002 chaos development. */
-/* Use freely under the terms listed in the file COPYING. */
+/* Copyright 2000 chaos development. */
 
-#ifndef __VIDEO_RETURN_VALUES_H__
-#define __VIDEO_RETURN_VALUES_H__
+/* This library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public License
+   as published by the Free Software Foundation; either version 2 of
+   the License, or (at your option) any later version.
+
+   This library is distributed in the hope that it will be useful, but
+   WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with this library; if not, write to the Free Software
+   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
+   USA. */
+
+#ifndef __LIBRARY_VIDEO_RETURN_TYPES_H__
+#define __LIBRARY_VIDEO_RETURN_TYPES_H__
 
 enum
 {
-    /* The function executed successfully. */
-    VIDEO_RETURN_SUCCESS,
-    
-    /* One of the arguments to a function was invalid in some way. */
-    VIDEO_RETURN_INVALID_ARGUMENT,
+  /* The function completed successfully. */
 
-    /* The video service could not be resolved. */
-    VIDEO_RETURN_SERVICE_UNAVAILABLE,
+  VIDEO_RETURN_SUCCESS,
+
+  /* No video service was found. */
+
+  VIDEO_RETURN_SERVICE_UNAVAILABLE,
+
+  /* The requested mode could not be set up. */
+
+  VIDEO_RETURN_MODE_UNAVAILABLE,
 };
 
-#endif /* !__VIDEO_RETURN_VALUES_H__ */
+#endif /* !__LIBRARY_VIDEO_RETURN_TYPES */

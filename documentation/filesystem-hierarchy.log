@@ -1,0 +1,136 @@
+This is pdfTeX, Version 3.14159-14f-released-20000525 (Web2C 7.3.1) (format=pdfjadetex 2000.9.15)  15 SEP 2000 16:13
+**filesystem-hierarchy.tex
+(filesystem-hierarchy.tex{/usr/share/texmf/pdftex/config/pdftex.cfg}
+JadeTeX 2000/04/10: 2.18
+LaTeX Font Info:    Try loading font information for T1+ptm on input line 1.
+(/usr/share/texmf/tex/latex/psnfss/t1ptm.fd
+File: t1ptm.fd 1998/07/06 Fontinst v1.800 font definitions for T1/ptm.
+)
+Elements will be labelled
+Jade begin document sequence at 20
+No file filesystem-hierarchy.aux.
+\openout1 = `filesystem-hierarchy.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for OT2/wncyr/m/n on input line 20.
+LaTeX Font Info:    Try loading font information for OT2+wncyr on input line 20
+.
+(/usr/share/texmf/tex/latex/cyrillic/ot2wncyr.fd
+File: ot2wncyr.fd 1999/05/31 v3.2 Computer Modern Cyrillic font definitions
+)
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for T2A/cmr/m/n on input line 20.
+LaTeX Font Info:    Try loading font information for T2A+cmr on input line 20.
+
+(/usr/share/texmf/tex/latex/cyrillic/t2acmr.fd
+File: t2acmr.fd 1999/01/07 v1.0 Computer Modern Cyrillic font definitions
+)
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 20.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 20.
+
+(/usr/share/texmf/tex/latex/base/ts1cmr.fd
+File: ts1cmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for LECO/omseco/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for LECX/omsecx/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for LECY/omsecy/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for LEGR/omsegr/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for LEHA/omseha/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for LEIP/omseip/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for LELA/omsela/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for LETI/omseti/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+
+(/usr/share/texmf/tex/context/base/supp-pdf.tex
+(/usr/share/texmf/tex/context/base/supp-mis.tex
+loading : Context Support Macros / Missing
+\protectiondepth=\count114
+\scratchcounter=\count115
+\scratchdimen=\dimen131
+\scratchskip=\skip53
+\scratchmuskip=\muskip10
+\scratchbox=\box61
+\scratchread=\read1
+\scratchwrite=\write4
+\nextbox=\box62
+\nextdepth=\dimen132
+\everyline=\toks21
+\!!counta=\count116
+\!!countb=\count117
+\recursecounter=\count118
+)
+loading : Context Support Macros / PDF
+\nofMPsegments=\count119
+\nofMParguments=\count120
+)
+Package hyperref Info: Link coloring ON on input line 20.
+ (/usr/share/texmf/tex/latex/hyperref/nameref.sty
+Package: nameref 2000/05/08 v2.18 Cross-referencing by name of section
+\c@section@level=\count121
+)
+\openout3 = `filesystem-hierarchy.out'.
+
+LaTeX Info: Redefining \ref on input line 20.
+LaTeX Info: Redefining \pageref on input line 20.
+LaTeX Font Info:    Try loading font information for T1+phv on input line 134.
+
+(/usr/share/texmf/tex/latex/psnfss/t1phv.fd
+File: t1phv.fd 1998/07/06 Fontinst v1.800 font definitions for T1/phv.
+)
+LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <12> not available
+(Font)              Font shape `T1/phv/b/n' tried instead on input line 134.
+LaTeX Font Info:    Try loading font information for U+msa on input line 317.
+
+(/usr/share/texmf/tex/latex/amsfonts/umsa.fd
+File: umsa.fd 1995/01/05 v2.2e AMS font definitions
+)
+LaTeX Font Info:    Try loading font information for U+msb on input line 317.
+
+(/usr/share/texmf/tex/latex/amsfonts/umsb.fd
+File: umsb.fd 1995/01/05 v2.2e AMS font definitions
+)
+LaTeX Font Info:    Try loading font information for U+wasy on input line 317.
+
+(/usr/share/texmf/tex/latex/wasysym/uwasy.fd
+File: uwasy.fd 1999/05/13 v1.0iWasy-2 symbol font definitions
+)
+LaTeX Font Info:    Try loading font information for U+stmry on input line 317.
+
+
+(/usr/share/texmf/tex/latex/misc/ustmry.fd) [1.0.47{/usr/share/texmf/dvips/conf
+ig/pdftex.map}] [2.0.47] [3.0.47
+
+] (filesystem-hierarchy.aux) ) 
+Here is how much of TeX's memory you used:
+ 728 strings out of 44791
+ 8563 string characters out of 348795
+ 229950 words of memory out of 348001
+ 12796 multiletter control sequences out of 10000+32500
+ 16451 words of font info for 38 fonts, out of 400000 for 1000
+ 14 hyphenation exceptions out of 1000
+ 27i,11n,39p,255b,1408s stack positions out of 1500i,500n,1500p,50000b,5000s
+{/usr/share/texmf/dvips/base/8r.enc}</usr/share/t
+exmf/fonts/type1/bluesky/cm/cmmi10.pfb>
+Output written on filesystem-hierarchy.pdf (3 pages, 17370 bytes).

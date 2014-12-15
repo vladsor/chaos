@@ -1,0 +1,6 @@
+tag.o: tag.c ../include/storm/generic/tag.h \
+ ../include/storm/generic/defines.h ../include/storm/generic/types.h \
+ ../include/storm/types.h ../include/storm/current-arch/types.h \
+ ../include/storm/defines.h ../include/storm/current-arch/defines.h \
+ ../include/storm/generic/limits.h ../include/storm/limits.h \
+ ../include/storm/tag.h

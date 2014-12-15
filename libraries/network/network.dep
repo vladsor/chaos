@@ -1,0 +1,35 @@
+network.o: network.c ../ipc/ipc.h ../ipc/defines.h ../ipc/types.h \
+ ../system/system.h ../system/alignment.h ../system/bit.h \
+ ../system/byte_order.h \
+ /mnt/chaos/data/programming/c/headers/storm/storm.h \
+ /mnt/chaos/data/programming/c/headers/storm/ia32/cpuid.h \
+ /mnt/chaos/data/programming/c/headers/storm/ia32/defines.h \
+ /mnt/chaos/data/programming/c/headers/storm/generic/limits.h \
+ /mnt/chaos/data/programming/c/headers/storm/types.h \
+ /mnt/chaos/data/programming/c/headers/storm/limits.h \
+ /mnt/chaos/data/programming/c/headers/storm/generic/types.h \
+ /mnt/chaos/data/programming/c/headers/storm/current-arch/types.h \
+ /mnt/chaos/data/programming/c/headers/storm/ia32/types.h \
+ /mnt/chaos/data/programming/c/headers/storm/defines.h \
+ /mnt/chaos/data/programming/c/headers/storm/dma.h \
+ /mnt/chaos/data/programming/c/headers/storm/mailbox.h \
+ /mnt/chaos/data/programming/c/headers/storm/event_queue.h \
+ /mnt/chaos/data/programming/c/headers/storm/return_values.h \
+ /mnt/chaos/data/programming/c/headers/storm/kernelfs.h \
+ /mnt/chaos/data/programming/c/headers/storm/process.h \
+ /mnt/chaos/data/programming/c/headers/storm/tag.h \
+ /mnt/chaos/data/programming/c/headers/storm/thread.h \
+ /mnt/chaos/data/programming/c/headers/storm/service.h \
+ /mnt/chaos/data/programming/c/headers/storm/state.h \
+ /mnt/chaos/data/programming/c/headers/storm/system_calls.h \
+ ../system/endian.h ../system/little_endian.h ../system/functions.h \
+ ../system/port.h ../system/return_values.h ../system/system_calls.h \
+ ../ipc/functions.h ../ipc/protocols.h ../ipc/block.h ../ipc/console.h \
+ ../ipc/ethernet.h ../ipc/file_system.h ../ipc/general.h ../ipc/ipv4.h \
+ ../network/network.h ../network/ethernet.h ../network/functions.h \
+ ../network/return_values.h ../ipc/keyboard.h ../ipc/log.h \
+ ../ipc/mouse.h ../ipc/pci.h ../ipc/rtc.h ../ipc/serial.h \
+ ../ipc/sound.h ../ipc/video.h ../ipc/virtual_file_system.h \
+ ../ipc/return_values.h ../string/string.h ../string/functions.h \
+ /usr/lib/gcc-lib/i386-redhat-linux/2.95.1/include/stdarg.h \
+ ../string/inlines.h ../string/return_values.h

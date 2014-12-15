@@ -1,0 +1,57 @@
+TODO ($Id: TODO,v 1.2 2000/10/12 06:25:09 plundis Exp $)
+====
+
+storm 0.5.0
+-----------
+
+  * Fix all known bugs. (yeah, right! All critical ones at least.)
+  * Finish the thread_destroy () function.
+  * FIX AVL_NODE_DELETE!!! Or whatever is thrashing our AVL trees. 
+
+storm 0.6.0
+-----------
+
+  * Fix the broken parts of the DMA code, if any.
+  * Capabilities. We only need the basic stuff (like, is this thread
+    allowed to change the status of other threads?). Most real work will be
+    done by the security server.
+  * Move header files. Think about how it really should be.
+  * Increase the granularity of the mutexing. I.e., the whole mailbox
+    tree shouldn't have to be locked whenever a mailbox is accessed, etc.
+  * Generic code should be put in the generic subdirectories to ease
+    future portings to other systems. We should give this some time.
+  * Better kernelfs interface. More data should be available.
+  * Use int and unsigned int everywhere feasible. Audit the code and
+    make sure this is so.
+
+storm 0.7.0
+-----------
+
+  * Finish up the new scheduler.
+  * Implement soft real time priority and use it for the interrupt
+    handler threads. Right now, the latency can be far too high at
+    times.
+  * Create system_call_memory_virtual_server () and
+    system_call_memory_virtual_client ().
+  * Support FPU.
+
+storm 1.0.0
+-----------
+
+  * SMP.
+  * Alpha port.
+  * Sparc port. Sparc64 if we can get a machine.
+  * M68k port. (Amiga and Macintosh primarily)
+  * PPC? If we can get someone to lend us hardware... or letting
+    someone else do the dirty work.
+
+storm X.Y.Z
+------------
+
+  * Optimize for SSE, 3DNow! and Enhanced 3DNow! Fix the MMX code.
+  * Fix all FIXMEs.
+  * Implement support for hierarchical thread-system:
+     * process (program).
+     * cluster (collection of threads sharing only process' code).
+     * thread (threads sharing the cluster's data).
+  * FPU emulation?

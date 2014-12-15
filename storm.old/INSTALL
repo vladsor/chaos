@@ -1,0 +1,11 @@
+INSTALL ($Id: INSTALL,v 1.1.1.1 2000/09/26 19:08:16 plundis Exp $)
+=======
+
+Do like this:
+
+  ./configure
+  make install
+
+...and hope it works. :-)
+
+-- Per Lundberg <plundis@chaosdev.org>  Sat, 22 Jul 2000 14:21:08 +0200

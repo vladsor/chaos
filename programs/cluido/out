@@ -1,0 +1,11 @@
+
+  Compiling program: cluido...
+
+Compiling cluido.c...
+In file included from cluido.h:26,
+                 from cluido.c:26:
+cpuid.h:111: parse error before `INIT_CODE'
+cc1: warnings being treated as errors
+cpuid.h:111: warning: type defaults to `int' in declaration of `INIT_CODE'
+cpuid.h:111: warning: data definition has no type or storage class
+make: *** [cluido.o] Error 1

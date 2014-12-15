@@ -1,0 +1,19 @@
+README ($Id: README,v 1.1.1.1 2000/09/26 19:08:07 plundis Exp $)
+======
+
+This is the ISO C 9X compatible library. The idea is to be 100%
+compatible, if possible. Nothing else (for example, POSIX, BSD or
+System V functions) can be put here.
+
+One file per function is reasonable in most cases, but if there are
+several similar ones, they can be put into separate files.
+
+Please note that this library is provided for COMPATIBILITY PURPOSES
+ONLY. NO DEVELOPMENT OF NEW CHAOS PROGRAMS SHOULD USE THIS
+LIBRARY. This can not really be emphasized enough -- we treat this a a
+deprecated library. A lot of bugs are inherent to the lack of good
+design, so please don't try to fix things. Of course, there may be
+bugs in our design (but they should be few; much of this is borrowed
+from other, well-tested systems).
+
+-- Per Lundberg <plundis@chaosdev.org>  Fri, 25 Aug 2000 15:43:54 +0200

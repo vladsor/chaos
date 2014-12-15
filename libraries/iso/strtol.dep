@@ -1,0 +1,4 @@
+strtol.o: strtol.c limits.h features.h \
+ /usr/lib/gcc-lib/i386-redhat-linux/2.95.1/include/limits.h ctype.h \
+ errno.h stdlib.h \
+ /usr/lib/gcc-lib/i386-redhat-linux/2.95.1/include/stddef.h

@@ -1,0 +1,9 @@
+idt.o: idt.c ../include/storm/ia32/defines.h \
+ ../include/storm/generic/limits.h ../include/storm/types.h \
+ ../include/storm/limits.h ../include/storm/generic/types.h \
+ ../include/storm/current-arch/types.h \
+ ../include/storm/ia32/descriptor.h ../include/storm/ia32/gdt.h \
+ ../include/storm/ia32/types.h ../include/storm/ia32/idt.h \
+ ../include/storm/generic/defines.h ../include/storm/defines.h \
+ ../include/storm/current-arch/defines.h \
+ ../include/storm/ia32/memory.h ../include/storm/ia32/string.h

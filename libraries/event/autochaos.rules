@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!-- $Id: autochaos.rules,v 1.2 2000/10/10 20:04:13 plundis Exp $ -->
+
+<autochaos>
+  <package name="event" version="0.0.1" type="library" license="LGPL">
+    <makefile>makefile</makefile>
+    <include>..</include>
+    <library type="depend">system</library>
+    <library type="depend">memory</library>
+
+    <!-- Sources. -->
+
+    <source>event.c</source>
+    <header>event.h</header>
+    <header>functions.h</header>
+    <header>return_values.h</header>
+  </package>
+</autochaos>
+
+<!--
+
+Local Variables: 
+  mode: html
+End:
+
+-->

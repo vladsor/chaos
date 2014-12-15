@@ -1,0 +1,1 @@
+strrchr.o: strrchr.S DEFS.h

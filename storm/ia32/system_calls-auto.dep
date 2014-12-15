@@ -1,0 +1,6 @@
+system_calls-auto.o: system_calls-auto.c \
+ ../include/storm/ia32/system_calls.h ../include/storm/ia32/defines.h \
+ ../include/storm/generic/limits.h ../include/storm/types.h \
+ ../include/storm/limits.h ../include/storm/generic/types.h \
+ ../include/storm/current-arch/types.h ../include/storm/ia32/types.h \
+ ../include/storm/system_calls.h ../include/storm/ia32/wrapper.h

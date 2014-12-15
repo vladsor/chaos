@@ -1,0 +1,10 @@
+README ($Id: README,v 1.1.1.1 2000/09/26 19:08:16 plundis Exp $)
+======
+
+All CPU generic code are to be put here. Please, be very aware that
+the code here *must* run on different endian-size systems, so be
+careful with what you put here.
+
+(Right now, far too much is put in the ia32 subdirectory. If you would
+be interested of moving things here, please do so, and send us a
+patch. Thanks.)

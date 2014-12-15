@@ -1,0 +1,13 @@
+        port_channel_0  equ 40h
+        quarz_frequancy equ 1193180 
+
+set_port_counter macro
+        out port_channel_0, al
+        xchg ah, al
+        out port_channel_1, al
+endm
+read_port_counter macro
+        in port_channel_0
+        mov ah, al
+        in port_channel_0
+endm

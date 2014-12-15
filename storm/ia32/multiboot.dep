@@ -1,0 +1,13 @@
+multiboot.o: multiboot.c ../include/storm/generic/arguments.h \
+ ../include/storm/types.h ../include/storm/generic/defines.h \
+ ../include/storm/generic/types.h \
+ ../include/storm/current-arch/types.h ../include/storm/defines.h \
+ ../include/storm/current-arch/defines.h \
+ ../include/storm/generic/limits.h ../include/storm/limits.h \
+ ../include/storm/generic/memory.h \
+ ../include/storm/current-arch/memory.h \
+ ../include/storm/generic/mutex.h \
+ ../include/storm/current-arch/mutex.h \
+ ../include/storm/generic/multiboot.h ../include/storm/generic/bit.h \
+ ../include/storm/generic/string.h \
+ ../include/storm/current-arch/string.h

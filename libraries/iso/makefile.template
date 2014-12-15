@@ -1,0 +1,12 @@
+EXTRA_CFLAGS=-Wno-aggregate-return
+
+.PHONY: cross-install
+
+cross-install: all
+	mkdir -p /usr/local/i386-chaosdev-storm-chaos/lib
+	cp library_iso.a /usr/local/i386-chaosdev-storm-chaos/lib/libc.a
+	mkdir -p /usr/local/i386-chaosdev-storm-chaos/include
+	for header in $(HEADERS) ; do cp $$header /usr/local/i386-chaosdev-storm-chaos/include ; done
+	cp ../startup.c .
+	$(MAKE) startup.o
+	cp startup.o /usr/local/lib/gcc-lib/i386-chaosdev-storm-chaos/2.95.2/crt1.o

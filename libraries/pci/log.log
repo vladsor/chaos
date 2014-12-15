@@ -1,0 +1,9 @@
+
+  Compiling library: pci...
+
+Compiling pci.c...
+Creating library...
+mkdir -p /mnt/chaos/data/programming/libraries/static
+cp library_pci.a /mnt/chaos/data/programming/libraries/static
+mkdir -p /mnt/chaos/data/programming/c/headers/pci
+for header in functions.h return_values.h pci.h ; do cp $header /mnt/chaos/data/programming/c/headers/pci ; done

@@ -1,0 +1,2 @@
+time.o: time.c ../include/storm/current-arch/types.h \
+ ../include/storm/types.h ../include/storm/generic/types.h

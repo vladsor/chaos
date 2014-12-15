@@ -1,0 +1,25 @@
+memory.o: memory.c ../include/storm/generic/defines.h \
+ ../include/storm/generic/types.h ../include/storm/types.h \
+ ../include/storm/current-arch/types.h ../include/storm/defines.h \
+ ../include/storm/current-arch/defines.h \
+ ../include/storm/generic/limits.h ../include/storm/limits.h \
+ ../include/storm/generic/memory.h \
+ ../include/storm/current-arch/memory.h \
+ ../include/storm/generic/mutex.h \
+ ../include/storm/current-arch/mutex.h \
+ ../include/storm/generic/memory_virtual.h \
+ ../include/storm/generic/avl.h ../include/storm/ia32/types.h \
+ ../include/storm/generic/bit.h ../include/storm/generic/cpu.h \
+ ../include/storm/current-arch/cpu.h ../include/storm/generic/debug.h \
+ ../include/storm/generic/dispatch.h \
+ ../include/storm/current-arch/tss.h \
+ ../include/storm/generic/capability.h ../include/storm/generic/irq.h \
+ ../include/storm/current-arch/irq.h \
+ ../include/storm/generic/process.h ../include/storm/process.h \
+ ../include/storm/current-arch/debug.h \
+ ../include/storm/ia32/descriptor.h ../config.h \
+ ../include/storm/ia32/idt.h \
+ ../include/storm/current-arch/memory_virtual.h \
+ ../include/storm/current-arch/cpuid.h ../include/storm/ia32/defines.h \
+ ../include/storm/generic/return_values.h \
+ ../include/storm/return_values.h

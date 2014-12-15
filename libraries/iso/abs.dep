@@ -1,0 +1,2 @@
+abs.o: abs.c stdlib.h features.h \
+

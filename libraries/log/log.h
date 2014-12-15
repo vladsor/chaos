@@ -1,17 +1,30 @@
-/* $chaos: log.h,v 1.2 2002/06/23 20:33:44 per Exp $ */
-/* Abstract: Definition of the log protocol. */
-/* Author: Per Lundberg <per@chaosdev.org> */
+/* $Id: log.h,v 1.1.1.1 2000/09/26 19:08:09 plundis Exp $ */
+/* Abstract: Function prototypes for the log library. */
+/* Author: Per Lundberg <plundis@chaosdev.org> */
 
-/* Copyright 2002 chaos development. */
-/* Use freely under the terms listed in the file COPYING. */
+/* Copyright 2000 chaos development. */
 
-#ifndef __LOG_LOG_H__
-#define __LOG_LOG_H__
+/* This library is free software; you can redistribute it and/or
+   modify it under the terms of the GNU Lesser General Public License
+   as published by the Free Software Foundation; either version 2 of
+   the License, or (at your option) any later version.
 
-#include <storm/storm.h>
-#include <log/defines.h>
-#include <log/return_values.h>
+   This library is distributed in the hope that it will be useful, but
+   WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+
+   You should have received a copy of the GNU Lesser General Public
+   License along with this library; if not, write to the Free Software
+   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
+   USA. */
+
+#ifndef __LIBRARY_LOG_LOG_H__
+#define __LIBRARY_LOG_LOG_H__
+
 #include <log/types.h>
 #include <log/functions.h>
+#include <log/return_values.h>
+#include <log/defines.h>
 
-#endif /* !__LOG_LOG_H__ */
+#endif /* !__LIBRARY_LOG_LOG_H__ */

@@ -1,0 +1,118 @@
+Compiling cpu_id.c...
+cpu_id.c:14: storm/ia32.cpuid.h: No such file or directory
+cc1: warnings being treated as errors
+In file included from cpu_id.c:15:
+cpuid.h:67: warning: useless keyword or type name in empty declaration
+cpu_id.c:34: parse error before string constant
+cpu_id.c:54: warning: declaration of `vendor_id' shadows global declaration
+cpu_id.c:56: warning: declaration of `vendor_id' shadows global declaration
+cpu_id.c:58: warning: declaration of `ext_features' shadows global declaration
+cpu_id.c: In function `print':
+cpu_id.c:72: warning: implicit declaration of function `read_tsc'
+cpu_id.c:64: warning: unused variable `str'
+cpu_id.c: At top level:
+cpu_id.c:79: warning: declaration of `vendor_id' shadows global declaration
+cpu_id.c: In function `proccess_vendor':
+cpu_id.c:80: warning: declaration of `vendor_id' shadows global declaration
+cpu_id.c:81: `Vendor_Infos' undeclared (first use in this function)
+cpu_id.c:81: (Each undeclared identifier is reported only once
+cpu_id.c:81: for each function it appears in.)
+cpu_id.c:85: warning: implicit declaration of function `strncmp'
+cpu_id.c:86: `CPU' undeclared (first use in this function)
+cpu_id.c: At top level:
+cpu_id.c:94: warning: declaration of `vendor_id' shadows global declaration
+cpu_id.c: In function `response_cpu':
+cpu_id.c:95: warning: declaration of `vendor_id' shadows global declaration
+cpu_id.c:96: `CPU_Infos' undeclared (first use in this function)
+cpu_id.c:103: `VENDOR_UNKNOWN' undeclared (first use in this function)
+cpu_id.c:105: `CPU' undeclared (first use in this function)
+cpu_id.c: In function `get_cpu_name':
+cpu_id.c:122: `CPU_Names' undeclared (first use in this function)
+cpu_id.c:126: `CPU' undeclared (first use in this function)
+cpu_id.c: At top level:
+cpu_id.c:136: parse error before `cap'
+cpu_id.c:137: warning: function declaration isn't a prototype
+cpu_id.c: In function `add_feature':
+cpu_id.c:138: `CPU' undeclared (first use in this function)
+cpu_id.c:138: `cap' undeclared (first use in this function)
+cpu_id.c:138: `value' undeclared (first use in this function)
+cpu_id.c: At top level:
+cpu_id.c:141: parse error before `cap'
+cpu_id.c:142: warning: function declaration isn't a prototype
+cpu_id.c: In function `get_feature':
+cpu_id.c:143: `CPU' undeclared (first use in this function)
+cpu_id.c:143: `cap' undeclared (first use in this function)
+cpu_id.c:144: warning: control reaches end of non-void function
+cpu_id.c: At top level:
+cpu_id.c:146: warning: declaration of `ext_features' shadows global declaration
+cpu_id.c: In function `proccess_capabilities':
+cpu_id.c:147: warning: declaration of `ext_features' shadows global declaration
+cpu_id.c:150: `HAS_FPU' undeclared (first use in this function)
+cpu_id.c:151: `HAS_VME' undeclared (first use in this function)
+cpu_id.c:152: `HAS_DEBUG' undeclared (first use in this function)
+cpu_id.c:153: `HAS_PSE' undeclared (first use in this function)
+cpu_id.c:154: `HAS_TSC' undeclared (first use in this function)
+cpu_id.c:155: `HAS_MSR' undeclared (first use in this function)
+cpu_id.c:156: `HAS_PAE' undeclared (first use in this function)
+cpu_id.c:157: `HAS_MCE' undeclared (first use in this function)
+cpu_id.c:158: `HAS_CMPXCHG8' undeclared (first use in this function)
+cpu_id.c:159: `HAS_APIC' undeclared (first use in this function)
+cpu_id.c:160: `HAS_SYSENTER' undeclared (first use in this function)
+cpu_id.c:161: `HAS_MTRR' undeclared (first use in this function)
+cpu_id.c:162: `HAS_GPE' undeclared (first use in this function)
+cpu_id.c:163: `HAS_MCA' undeclared (first use in this function)
+cpu_id.c:164: `HAS_CMOV' undeclared (first use in this function)
+cpu_id.c:165: `HAS_PAT' undeclared (first use in this function)
+cpu_id.c:166: `HAS_PSE36' undeclared (first use in this function)
+cpu_id.c:167: `HAS_MMX' undeclared (first use in this function)
+cpu_id.c:168: `HAS_FXSAVE' undeclared (first use in this function)
+cpu_id.c:169: `HAS_SSE' undeclared (first use in this function)
+cpu_id.c:171: `HAS_SSE_MMX' undeclared (first use in this function)
+cpu_id.c:172: `HAS_MMX_EXT' undeclared (first use in this function)
+cpu_id.c:176: `HAS_3DNOW_EXT' undeclared (first use in this function)
+cpu_id.c:177: `HAS_3DNOW' undeclared (first use in this function)
+cpu_id.c:180: `CPU' undeclared (first use in this function)
+cpu_id.c:180: `VENDOR_AMD' undeclared (first use in this function)
+cpu_id.c:183: `CPU_L1_DTLB_ASSOC' undeclared (first use in this function)
+cpu_id.c:184: `CPU_L1_DTLB_ENTRIES' undeclared (first use in this function)
+cpu_id.c:185: `CPU_L1_ITLB_ASSOC' undeclared (first use in this function)
+cpu_id.c:186: `CPU_L1_ITLB_ENTRIES' undeclared (first use in this function)
+cpu_id.c:188: `CPU_L1_DCACHE_SIZE' undeclared (first use in this function)
+cpu_id.c:189: `CPU_L1_DCACHE_ASSOC' undeclared (first use in this function)
+cpu_id.c:190: `CPU_L1_DCACHE_LINES' undeclared (first use in this function)
+cpu_id.c:191: `CPU_L1_DCACHE_LSIZE' undeclared (first use in this function)
+cpu_id.c:193: `CPU_L1_ICACHE_SIZE' undeclared (first use in this function)
+cpu_id.c:194: `CPU_L1_ICACHE_ASSOC' undeclared (first use in this function)
+cpu_id.c:195: `CPU_L1_ICACHE_LINES' undeclared (first use in this function)
+cpu_id.c:196: `CPU_L1_ICACHE_LSIZE' undeclared (first use in this function)
+cpu_id.c:198: `CPU_L2_CACHE_SIZE' undeclared (first use in this function)
+cpu_id.c:199: `CPU_L2_CACHE_ASSOC' undeclared (first use in this function)
+cpu_id.c:200: `CPU_L2_CACHE_LINES' undeclared (first use in this function)
+cpu_id.c:201: `CPU_L2_CACHE_LSIZE' undeclared (first use in this function)
+cpu_id.c:206: `CPU_L1_EDTLB_ASSOC' undeclared (first use in this function)
+cpu_id.c:207: `CPU_L1_EDTLB_ENTRIES' undeclared (first use in this function)
+cpu_id.c:208: `CPU_L1_EITLB_ASSOC' undeclared (first use in this function)
+cpu_id.c:209: `CPU_L1_EITLB_ENTRIES' undeclared (first use in this function)
+cpu_id.c:211: `CPU_L2_DTLB_ASSOC' undeclared (first use in this function)
+cpu_id.c:212: `CPU_L2_DTLB_ENTRIES' undeclared (first use in this function)
+cpu_id.c:213: `CPU_L2_UTLB_ASSOC' undeclared (first use in this function)
+cpu_id.c:214: `CPU_L2_UTLB_ENTRIES' undeclared (first use in this function)
+cpu_id.c:216: `CPU_L2_EDTLB_ASSOC' undeclared (first use in this function)
+cpu_id.c:217: `CPU_L2_EDTLB_ENTRIES' undeclared (first use in this function)
+cpu_id.c:218: `CPU_L2_EUTLB_ASSOC' undeclared (first use in this function)
+cpu_id.c:219: `CPU_L2_EUTLB_ENTRIES' undeclared (first use in this function)
+cpu_id.c: In function `get_all_capabilities':
+cpu_id.c:228: `CPU_Caps' undeclared (first use in this function)
+cpu_id.c:238: warning: implicit declaration of function `string_concat'
+cpu_id.c: In function `cpu_id_init':
+cpu_id.c:247: warning: implicit declaration of function `CPU_is_8086'
+cpu_id.c:251: warning: implicit declaration of function `CPU_is_80286'
+cpu_id.c:255: warning: implicit declaration of function `CPU_is_80386'
+cpu_id.c:259: warning: implicit declaration of function `CPU_is_80486'
+cpu_id.c:264: `HAS_CPUID' undeclared (first use in this function)
+cpu_id.c:265: warning: implicit declaration of function `get_CPU_ID'
+cpu_id.c:266: warning: nested extern declaration of `read_tsc'
+cpu_id.c:268: warning: implicit declaration of function `get_fpu_type'
+cpu_id.c: In function `get_all_capabilities':
+cpu_id.c:229: warning: `value' might be used uninitialized in this function
+make: *** [cpu_id.o] Error 1

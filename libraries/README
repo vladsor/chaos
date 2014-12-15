@@ -1,8 +1,18 @@
-README ($Id: README,v 1.1 2002/06/21 08:01:02 per Exp $)
+README ($Id: README,v 1.1.1.1 2000/09/26 19:08:07 plundis Exp $)
 ======
 
-The chaos libraries are used to define the protocol used by a service
-provider. For example, if a module provides the service "log", it will
-use structures from a library called "log".
+This is the chaos libraries. They are required to compile the servers,
+and eventually to compile virtually any chaos program.
 
--- Per Lundberg <per@chaosdev.org>  Fri, 21 Jun 2002 09:31:14 +0200
+They are *not* licensed under the GPL, but under the Lesser General
+Public License (LGPL), since we want people to be able to write
+non-GPL:ed free software for chaos (for example, BSD-licensed
+programs). This also makes it possible to develop proprietary software
+for chaos, which we do not encourage people to do, but nevertheless
+accept *if* they choose to do so. Please see the file COPYING for more
+information about this.
+
+(You can read more about the licensing of chaos on
+http://www.chaosdev.org/legal.shtml)
+
+-- Per Lundberg <plundis@chaosdev.org>  Fri, 21 Jul 2000 18:52:00 +0200
