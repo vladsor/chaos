@@ -1,4 +1,0 @@
-
-#define CLASS_PCI_MANAGER_ID 0x0003
-
-

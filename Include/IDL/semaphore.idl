@@ -1,6 +1,0 @@
-interface semaphore
-{
-    void up ();
-
-    void down ();
-};

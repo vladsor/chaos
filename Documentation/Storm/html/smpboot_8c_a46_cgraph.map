@@ -1,7 +1,0 @@
-base referer
-rect $apic_8h.html#a12 185,7 260,31
-rect $smpboot_8c.html#a45 168,55 277,79
-rect $apic_8h.html#a16 160,103 285,127
-rect $apic_8h.html#a24 157,150 288,174
-rect $smpboot_8c.html#a40 149,198 296,222
-rect $smpboot_8c.html#a44 152,246 293,270

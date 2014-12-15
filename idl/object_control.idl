@@ -1,0 +1,5 @@
+interface object_control
+{
+    p_void_t create (class_id_t class_id, sequence_t parameters, options);
+    void destroy (p_void_t object);
+};

@@ -1,6 +1,0 @@
-base referer
-rect $structreference__struct__t.html 89,18 265,181
-rect $structevent__consumer__interface__t.html 212,246 412,396
-rect $structevent__supplier__interface__t.html 436,246 625,396
-rect common.tag$structcountlock__t.html 100,284 188,358
-rect $structevent__description__t.html 456,48 594,152

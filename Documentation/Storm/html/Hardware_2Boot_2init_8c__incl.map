@@ -1,5 +1,0 @@
-base referer
-rect $enviroment_8h.html 7,18 103,42
-rect $parse_8h.html 127,18 233,42
-rect $multiboot_8h.html 257,18 396,42
-rect $main_8h.html 420,18 526,42

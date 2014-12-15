@@ -1,4 +1,0 @@
-base referer
-rect $apic_8h.html#a12 409,57 484,81
-rect $apic_8h.html#a10 278,57 358,81
-rect $apic_8c.html#a7 276,105 361,129

@@ -1,8 +1,0 @@
-interface input_stream
-{
-    typedef sequence<octet> data_t;
-
-    unsigned long read (
-        in  unsigned long count,
-        out data_t data);
-}

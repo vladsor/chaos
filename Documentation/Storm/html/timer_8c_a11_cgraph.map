@@ -1,7 +1,0 @@
-base referer
-rect $Hardware_2Irq_2irq_8c.html#a6 152,31 237,55
-rect $pit_8h.html#a29 167,79 223,102
-rect $timer_8c.html#a2 143,126 247,150
-rect $pic_8c.html#a1 296,31 402,55
-rect common.tag$port_8h.html#a3 457,7 558,31
-rect common.tag$port_8h.html#a0 453,55 562,79

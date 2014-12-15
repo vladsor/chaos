@@ -1,7 +1,0 @@
-base referer
-rect $structclass__t.html 81,189 286,411
-rect $structobject__t.html 221,477 296,610
-rect common.tag$structsequence__t.html 140,19 222,93
-rect $structinterface__t.html 353,484 446,604
-rect $structhandle__t.html 312,690 391,810
-rect $structmethod__t.html 573,676 666,825

@@ -1,0 +1,7 @@
+valuetype thread
+    supports thread_control, exception_control
+{
+    factory init (
+        in thread_function_t function,
+        in data_t data);
+};

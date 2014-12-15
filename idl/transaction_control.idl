@@ -1,0 +1,23 @@
+interface transaction_control
+{
+    void begin (void);
+
+    void commit (void);
+    void flush (void);
+
+    void rollback (void);
+
+    void get_status (
+        out unsigned long status);
+
+    void get_options (
+        out unsigned long options);
+
+    void set_options (
+        in  unsigned long options);
+
+    void pause (void);
+    void resume (void);
+
+    void add_operation (object, handle, method_id);
+};

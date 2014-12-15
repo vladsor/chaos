@@ -1,4 +1,0 @@
-
-#define CLASS_ATA_MANAGER_ID 0x0011
-
-

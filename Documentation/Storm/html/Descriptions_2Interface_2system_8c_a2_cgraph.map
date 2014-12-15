@@ -1,5 +1,0 @@
-base referer
-rect $Memory_2memory_8c.html#a2 270,55 396,78
-rect $PhysicalMemory_2allocate_8c.html#a2 445,7 632,31
-rect $slab_8h.html#a4 477,55 600,78
-rect $slab_8h.html#a3 465,102 612,126

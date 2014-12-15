@@ -1,0 +1,48 @@
+interface object_control
+{
+    Object create
+    (
+        in  class_t class,
+        in  unsigned long options,
+        in  data_t parameters
+    ) 
+    raises (EXCEPTION_INVALID_PARAMETERS);
+
+    void destroy 
+    (
+        in  Object handle
+    )
+    raises (EXCEPTION_INVALID_PARAMETERS);
+
+    void open 
+    (
+        in  Object,
+        in  interface_t interface
+    )
+    raises (EXCEPTION_INVALID_PARAMETERS);
+
+    void close 
+    (
+        in  Object
+    )
+    raises (EXCEPTION_INVALID_PARAMETERS);
+
+    Object clone_handle 
+    (
+        in  Object,
+        in  unsigned long options
+    )
+    raises (EXCEPTION_INVALID_PARAMETERS);
+
+    boolean is_nil
+    (
+        in  Object
+    )
+    raises (EXCEPTION_INVALID_PARAMETERS);
+
+    interface_t get_open_interface
+    (
+        in  Object
+    )
+    raises (EXCEPTION_INVALID_PARAMETERS);
+};

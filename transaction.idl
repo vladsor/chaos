@@ -1,0 +1,14 @@
+interface transaction
+{
+    begin ();
+
+    commit ();
+    flush ();
+
+    rollback ();
+
+    get_status ();
+
+    get_options ();
+    set_options ();
+};

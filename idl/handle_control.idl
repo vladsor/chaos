@@ -1,0 +1,7 @@
+interface handle_control
+{
+    p_void_t open (p_void_t object, interface_id_t interface_id, 
+        uint32_t options);
+    void close (p_void_t object, p_void_t handle);
+    p_void_t clone (p_void_t object, p_void_t handle, uint32_t options);
+};

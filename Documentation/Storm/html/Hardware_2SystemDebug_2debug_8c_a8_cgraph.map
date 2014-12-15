@@ -1,7 +1,0 @@
-base referer
-rect $gdb_8h.html#a1 224,6 333,30
-rect $gdb_8h.html#a2 202,54 354,78
-rect common.tag$set_8h.html#a1 404,104 545,128
-rect $Hardware_2SystemDebug_2debug_8c.html#a10 205,153 352,177
-rect common.tag$copy_8h.html#a0 421,152 528,176
-rect $Hardware_2SystemDebug_2debug_8c.html#a9 424,200 525,224

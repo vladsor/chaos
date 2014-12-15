@@ -1,4 +1,0 @@
-
-#define CLASS_PARTITION_MANAGER_ID 0x0014
-
-

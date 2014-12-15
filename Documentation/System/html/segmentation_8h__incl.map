@@ -1,6 +1,0 @@
-base referer
-rect $descriptor_8h.html 6,18 185,42
-rect $selector_8h.html 209,18 372,42
-rect $tss_8h.html 396,18 526,42
-rect $gdt_8h.html 550,18 686,42
-rect $idt_8h.html 710,18 841,42

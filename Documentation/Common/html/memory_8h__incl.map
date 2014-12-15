@@ -1,6 +1,0 @@
-base referer
-rect $copy_8h.html 6,18 121,42
-rect $move_8h.html 145,18 265,42
-rect $set_8h.html 289,18 390,42
-rect $clear_8h.html 414,18 529,42
-rect $compare_8h.html 553,18 692,42

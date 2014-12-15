@@ -1,0 +1,8 @@
+interface quality_control
+{
+    void calibrate ();
+    void get (quality_t quality, object, handle, method_id);
+
+    void calculate_request (request, quality, class_id, parameters, options);
+    void calculate_quality (quality, request);
+};

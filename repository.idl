@@ -1,0 +1,37 @@
+interface repository
+{
+    Object create_object 
+    (
+        in  class_t class,
+        in  unsigned long options,
+        in  data_t parameters
+    ) 
+    raises (EXCEPTION_INVALID_PARAMETERS);
+
+    void destroy_object 
+    (
+        in  Object handle
+    )
+    raises (EXCEPTION_INVALID_PARAMETERS);
+
+    void open_object 
+    (
+        in  Object,
+        in  interface_t interface
+    )
+    raises (EXCEPTION_INVALID_PARAMETERS);
+
+    void close_object 
+    (
+        in  Object
+    )
+    raises (EXCEPTION_INVALID_PARAMETERS);
+
+    Object clone_handle 
+    (
+        in  Object,
+        in  unsigned long options
+    )
+    raises (EXCEPTION_INVALID_PARAMETERS);
+
+};

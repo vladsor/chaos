@@ -1,0 +1,13 @@
+interface thread_control
+{
+    void name_set (
+        in string name);
+
+    void name_get (
+        out string name);
+
+    void lock ();
+    void unlock ();
+
+    void yield ();
+};

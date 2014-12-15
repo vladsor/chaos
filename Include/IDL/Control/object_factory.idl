@@ -1,6 +1,0 @@
-interface object_factory
-{
-	unsigned long long create ();
-	void destroy (in unsigned long long data);
-	unsigned long long clone (in unsigned long long data);
-};

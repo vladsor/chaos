@@ -1,5 +1,0 @@
-base referer
-rect $common_8h.html 6,18 118,42
-rect $flags_8h.html 142,18 228,42
-rect $features_8h.html 251,18 358,42
-rect $bugs_8h.html 382,18 465,42

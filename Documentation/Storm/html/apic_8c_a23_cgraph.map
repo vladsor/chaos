@@ -1,5 +1,0 @@
-base referer
-rect $apic_8h.html#a12 256,7 330,31
-rect $apic_8c.html#a20 209,54 377,78
-rect $apic_8c.html#a19 425,54 585,78
-rect common.tag$port_8h.html#a6 633,54 790,78

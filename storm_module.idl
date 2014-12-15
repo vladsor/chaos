@@ -1,0 +1,9 @@
+
+valuetype storm_module
+{
+    factory init (
+        in sequence<string> arguments);
+};
+
+
+

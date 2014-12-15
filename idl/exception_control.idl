@@ -1,0 +1,20 @@
+typedef struct exception_context_t
+{
+    long dump;
+} exception_context_t;
+
+typedef struct exception_info_t
+{
+    long dump2;
+} exception_info_t;
+
+interface exception_control
+{
+    void add_handler (
+        in exception_context_t exception_context);
+
+    void remove_handler ();
+
+    void invoke_handler (
+        in exception_info_t info);
+};

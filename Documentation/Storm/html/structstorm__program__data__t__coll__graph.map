@@ -1,5 +1,0 @@
-base referer
-rect kernel.tag$structvirtual__memory__t.html 12,160 145,234
-rect kernel.tag$structphysical__memory__t.html 6,18 150,93
-rect kernel.tag$structelf__parsed__program__t.html 169,160 329,234
-rect kernel.tag$structelf__header__t.html 201,18 297,93
