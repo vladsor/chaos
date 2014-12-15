@@ -24,10 +24,6 @@
 
 #include <storm/ia32/defines.h>
 #include <storm/ia32/types.h>
-
-
-//extern cpu_info_type cpu_info;
-//extern parsed_cpu_type parsed_cpu;
  
 /* External functions. */
 
@@ -42,6 +38,11 @@ extern void cpuid_init (void) INIT_CODE;
 #define VENDOR_NexGen_STRING		"NexGenDriven"
 #define VENDOR_RiseTechnology_STRING	"RiseRiseRise"
 #define VENDOR_Transmeta_STRING         "GenuineTMx86"
+
+enum
+{
+  PLATFORM_80x86,
+};
 
 enum
 {
@@ -279,10 +280,19 @@ enum
   CPU_FEATURE_BMC,  
 };
 
+enum
+{
+  CPU_BUG_F0_0F,
+};
+
 #define NAME_LENGTH 49
-#define FEATURES_NUMBER 50
+#define NUMBER_OF_FEATURES 50
+#define NUMBER_OF_BUGS 1
+
 typedef struct
 {
+  u8 platform;
+  
   u16 cpu_type_id;
   u16 cpu_sub_type_id;
   u8 fpu_type_id;
@@ -290,27 +300,31 @@ typedef struct
 
   char cpu_name[NAME_LENGTH];
   char hardware_cpu_name[49];
-  char additional_info[NAME_LENGTH];
   char fpu_name[NAME_LENGTH];
+
   u32 frequency;
   u16 scaled_frequency;
   char frequency_scale;
+
   char vendor_string[13];
   char vendor_name[NAME_LENGTH];
+
   char family;
   char model;
   char stepping;
   char generation;
+
   u32 data_cache_l1_size;
   u32 instructions_cache_l1_size;  
   u32 cache_l2_size;
-  bool features[FEATURES_NUMBER];
+  bool features[NUMBER_OF_FEATURES];
+  bool bugs[NUMBER_OF_BUGS];
 } full_cpu_info;
 
 extern unsigned int cpus;
 extern full_cpu_info CPU;
 										
-static inline bool cpu_feature_get (full_cpu_info cpu,unsigned int feature)
+static inline bool cpu_feature_get (full_cpu_info cpu, unsigned int feature)
 {
   return cpu.features[feature];
 }

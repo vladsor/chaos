@@ -6,7 +6,7 @@ bugs:
 2001-01-22
   ready changes :
   storm
-  separated port.c in two files
+  separated port.c in two files, fixes in port_range_free_all: seems, it works
   
 2001-01-06
   ready changes :

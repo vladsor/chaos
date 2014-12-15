@@ -26,4 +26,4 @@ list.o: list.c ../list/list.h ../list/types.h ../list/functions.h \
  ../system/port.h ../system/return_values.h ../system/system_calls.h \
  ../list/return_values.h ../memory/memory.h ../memory/copy.h \
  ../memory/functions.h ../memory/return_values.h ../memory/set.h \
- ../memory/types.h ../memory/slab.h
+ ../memory/types.h ../memory/slab.h ../memory/inlines.h

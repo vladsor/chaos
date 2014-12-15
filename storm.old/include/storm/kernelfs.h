@@ -159,21 +159,8 @@ typedef struct
   unsigned int kernelfs_class;
 
   /* Output parameters. */
-  /* The exact speed of this CPU. */
-
-  u32 hz;
-
-  char name[64];
-
-  u32 Mhz;
-  char prefix;
   full_cpu_info info;
 
-//  cpu_info_type info;
-
-  /* GenuineIntel, AuthenticAMD, CyrixInstead etcetera.. */
-
-//  u8 vendor[17];
 } kernelfs_cpu_info_type;
 
 typedef struct

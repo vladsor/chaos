@@ -1,10 +1,11 @@
+
 int process_vendor(char vendor[12]);
 int response_cpu(u32 signature);
 int response_cpu_sub_type(void);
 int get_cpu_name(void);
 int get_cpu_sub_name(void);
 int get_fpu_name(void);
-
+void bugs_search (void);
 static inline void feature_set (unsigned int feature,bool value)
 {
   CPU.features[feature] = value;
@@ -20,9 +21,22 @@ void process_amd_features(u32 features);
 void detect_cpu(void);
 void process_cpu_id(void);
 
+u32 INIT_CODE cpuid_get_cpu_speed (void);
 void scaled_frequency(void);
 
-
+enum
+{
+  GET_CPU_VENDOR 	= 0,
+  GET_CPU_INFO 		= 1,
+  CHECK_AMD_FEATURES 	= 0x80000000,
+  GET_AMD_FEATURES 	= 0x80000001,
+  GET_AMD_CPU_STRING_1	= 0x80000002,
+  GET_AMD_CPU_STRING_2	= 0x80000003,
+  GET_AMD_CPU_STRING_3	= 0x80000004,
+  GET_AMD_CACHE_L1_INFO	= 0x80000005,
+  GET_AMD_CACHE_L2_INFO	= 0x80000006
+};
+
 typedef struct
 {
   u8 vendor_id;
@@ -272,53 +286,52 @@ typedef struct
   u8 model;
   u8 stepping;
   u16 cpu_sub_type_id;
-  char* additional_info;
 } cpu_sub_record;
 
 cpu_sub_record CPU_sub_records[] =
 {
-  { CPU_TYPE_AMD_486DX2	,  3,NONE,CPU_SUB_TYPE_Standart	,"" },
-  { CPU_TYPE_AMD_486DX2	,  7,NONE,CPU_SUB_TYPE_WriteBackEnhanced,"" },
-  { CPU_TYPE_AMD_486DX4	,  8,NONE,CPU_SUB_TYPE_Standart	,"" },
-  { CPU_TYPE_AMD_486DX4	,  9,NONE,CPU_SUB_TYPE_WriteBackEnhanced,"" },
-  { CPU_TYPE_AMD_5x86	,0xE,NONE,CPU_SUB_TYPE_Standart	,"" },
-  { CPU_TYPE_AMD_5x86	,0xF,NONE,CPU_SUB_TYPE_WriteBackEnhanced,"" },
+  { CPU_TYPE_AMD_486DX2	,  3,NONE,CPU_SUB_TYPE_Standart	},
+  { CPU_TYPE_AMD_486DX2	,  7,NONE,CPU_SUB_TYPE_WriteBackEnhanced },
+  { CPU_TYPE_AMD_486DX4	,  8,NONE,CPU_SUB_TYPE_Standart	},
+  { CPU_TYPE_AMD_486DX4	,  9,NONE,CPU_SUB_TYPE_WriteBackEnhanced },
+  { CPU_TYPE_AMD_5x86	,0xE,NONE,CPU_SUB_TYPE_Standart	},
+  { CPU_TYPE_AMD_5x86	,0xF,NONE,CPU_SUB_TYPE_WriteBackEnhanced },
 
-  { CPU_TYPE_INTEL_Pentium	,   0,NONE,CPU_SUB_TYPE_A_step	,"iP5A" },
-  { CPU_TYPE_INTEL_Pentium	,   1,NONE,CPU_SUB_TYPE_Standart,"iP5 (60/66)MHz" },
-  { CPU_TYPE_INTEL_Pentium	,   2,NONE,CPU_SUB_TYPE_Standart,"iP54C (75-200)MHz" },
-  { CPU_TYPE_INTEL_Pentium	,   3,NONE,CPU_SUB_TYPE_Overdrive,"iP24T" },
-  { CPU_TYPE_INTEL_Pentium	,   4,NONE,CPU_SUB_TYPE_MMX	,"iP55C" },
-  { CPU_TYPE_INTEL_Pentium	,   7,NONE,CPU_SUB_TYPE_Standart,"iP54C 75-200MHz" },
-  { CPU_TYPE_INTEL_Pentium	,   8,NONE,CPU_SUB_TYPE_MMX	,"iP55C (0.25µm)" },
+  { CPU_TYPE_INTEL_Pentium	,   0,NONE,CPU_SUB_TYPE_A_step },
+  { CPU_TYPE_INTEL_Pentium	,   1,NONE,CPU_SUB_TYPE_Standart },
+  { CPU_TYPE_INTEL_Pentium	,   2,NONE,CPU_SUB_TYPE_Standart },
+  { CPU_TYPE_INTEL_Pentium	,   3,NONE,CPU_SUB_TYPE_Overdrive },
+  { CPU_TYPE_INTEL_Pentium	,   4,NONE,CPU_SUB_TYPE_MMX },
+  { CPU_TYPE_INTEL_Pentium	,   7,NONE,CPU_SUB_TYPE_Standart },
+  { CPU_TYPE_INTEL_Pentium	,   8,NONE,CPU_SUB_TYPE_MMX },
 
-  { CPU_TYPE_AMD_K5		,   0,NONE,CPU_SUB_TYPE_Standart,"(75/90/100)MHz" },
-  { CPU_TYPE_AMD_K5		,   1,NONE,CPU_SUB_TYPE_Standart,"(120/133)MHz" },
-  { CPU_TYPE_AMD_K5		,   2,NONE,CPU_SUB_TYPE_Standart,"(166)MHz" },
-  { CPU_TYPE_AMD_K5		,   3,NONE,CPU_SUB_TYPE_Standart,"(200)MHz" },
+  { CPU_TYPE_AMD_K5		,   0,NONE,CPU_SUB_TYPE_Standart },
+  { CPU_TYPE_AMD_K5		,   1,NONE,CPU_SUB_TYPE_Standart },
+  { CPU_TYPE_AMD_K5		,   2,NONE,CPU_SUB_TYPE_Standart },
+  { CPU_TYPE_AMD_K5		,   3,NONE,CPU_SUB_TYPE_Standart },
  
-  { CPU_TYPE_INTEL_Pentium_Pro	,   0,NONE,CPU_SUB_TYPE_A_step	,"" },
-  { CPU_TYPE_INTEL_Pentium_Pro	,   1,NONE,CPU_SUB_TYPE_Standart,"" },
+  { CPU_TYPE_INTEL_Pentium_Pro	,   0,NONE,CPU_SUB_TYPE_A_step },
+  { CPU_TYPE_INTEL_Pentium_Pro	,   1,NONE,CPU_SUB_TYPE_Standart },
 
-  { CPU_TYPE_INTEL_Pentium_II	,   3,   0,CPU_SUB_TYPE_Standart,"(0.28µm)" },
-  { CPU_TYPE_INTEL_Pentium_II	,   5,   1,CPU_SUB_TYPE_Celeron	,"(0.25µm)" },
-  { CPU_TYPE_INTEL_Pentium_II	,   5,   2,CPU_SUB_TYPE_Standart,"(0.25µm)" },
-  { CPU_TYPE_INTEL_Pentium_II	,   5,   3,CPU_SUB_TYPE_Xeon	,"(0.25µm)" },
-  { CPU_TYPE_INTEL_Pentium_II	,   6,   1,CPU_SUB_TYPE_Celeron	,"(0.25µm)" },
-  { CPU_TYPE_INTEL_Pentium_III	,   7,   1,CPU_SUB_TYPE_CeleronII,"(0.25µm)" },
-  { CPU_TYPE_INTEL_Pentium_III	,   7,   2,CPU_SUB_TYPE_Standart,"(0.25µm)" },
-  { CPU_TYPE_INTEL_Pentium_III	,   7,   3,CPU_SUB_TYPE_Xeon	,"(0.25µm)" },
-  { CPU_TYPE_INTEL_Pentium_III	,   8,   1,CPU_SUB_TYPE_CeleronII,"(0.18µm)" },
-  { CPU_TYPE_INTEL_Pentium_III	,   8,   2,CPU_SUB_TYPE_Standart,"(0.18µm)" },
-  { CPU_TYPE_INTEL_Pentium_III	,   8,   3,CPU_SUB_TYPE_Xeon	,"(0.18µm)" },
+  { CPU_TYPE_INTEL_Pentium_II	,   3,   0,CPU_SUB_TYPE_Standart },
+  { CPU_TYPE_INTEL_Pentium_II	,   5,   1,CPU_SUB_TYPE_Celeron },
+  { CPU_TYPE_INTEL_Pentium_II	,   5,   2,CPU_SUB_TYPE_Standart },
+  { CPU_TYPE_INTEL_Pentium_II	,   5,   3,CPU_SUB_TYPE_Xeon },
+  { CPU_TYPE_INTEL_Pentium_II	,   6,   1,CPU_SUB_TYPE_Celeron },
+  { CPU_TYPE_INTEL_Pentium_III	,   7,   1,CPU_SUB_TYPE_CeleronII },
+  { CPU_TYPE_INTEL_Pentium_III	,   7,   2,CPU_SUB_TYPE_Standart },
+  { CPU_TYPE_INTEL_Pentium_III	,   7,   3,CPU_SUB_TYPE_Xeon },
+  { CPU_TYPE_INTEL_Pentium_III	,   8,   1,CPU_SUB_TYPE_CeleronII },
+  { CPU_TYPE_INTEL_Pentium_III	,   8,   2,CPU_SUB_TYPE_Standart },
+  { CPU_TYPE_INTEL_Pentium_III	,   8,   3,CPU_SUB_TYPE_Xeon },
 
-  { CPU_TYPE_AMD_K6	,   6,NONE,CPU_SUB_TYPE_Standart,"266MHz (0.30µm)" },
-  { CPU_TYPE_AMD_K6	,   7,NONE,CPU_SUB_TYPE_Standart,"300MHz (0.25µm)" },
-  { CPU_TYPE_AMD_K6_2	,   8,NONE,CPU_SUB_TYPE_Standart,"" },
-  { CPU_TYPE_AMD_K6_3	,   9,NONE,CPU_SUB_TYPE_Standart,"" },
+  { CPU_TYPE_AMD_K6	,   6,NONE,CPU_SUB_TYPE_Standart },
+  { CPU_TYPE_AMD_K6	,   7,NONE,CPU_SUB_TYPE_Standart },
+  { CPU_TYPE_AMD_K6_2	,   8,NONE,CPU_SUB_TYPE_Standart },
+  { CPU_TYPE_AMD_K6_3	,   9,NONE,CPU_SUB_TYPE_Standart },
 
-  { CPU_TYPE_AMD_Athlon	,   1,NONE,CPU_SUB_TYPE_Standart,"(0.25µm)" },
-  { CPU_TYPE_AMD_Athlon	,   2,NONE,CPU_SUB_TYPE_Standart,"(0.18µm)" },
-  { CPU_TYPE_AMD_Athlon	,   3,NONE,CPU_SUB_TYPE_Duron	,"with intagrated 64K L2 cache" },
-  { CPU_TYPE_AMD_Athlon	,   4,NONE,CPU_SUB_TYPE_Thinderbird,"with intagrated 256K L2 cache" },
+  { CPU_TYPE_AMD_Athlon	,   1,NONE,CPU_SUB_TYPE_Standart },
+  { CPU_TYPE_AMD_Athlon	,   2,NONE,CPU_SUB_TYPE_Standart },
+  { CPU_TYPE_AMD_Athlon	,   3,NONE,CPU_SUB_TYPE_Duron },
+  { CPU_TYPE_AMD_Athlon	,   4,NONE,CPU_SUB_TYPE_Thinderbird },
 };

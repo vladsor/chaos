@@ -618,7 +618,7 @@ cpu_cap_record CPU_Cap_records [] =
   { CPU_FEATURE_BMC	,"Bus Multiplier Control"}
 };
 
-kernelfs_cpu_info_type cpu_info;
+static kernelfs_cpu_info_type cpu_info;
 void command_cpu (int number_of_arguments __attribute__ ((unused)),
                   char **argument __attribute__ ((unused)))
 {
@@ -643,10 +643,13 @@ void command_cpu (int number_of_arguments __attribute__ ((unused)),
 	    int number = sizeof(CPU_Cap_records)/sizeof(cpu_cap_record);
 	    int i;
 	    console_print_formatted (&console_structure, "CPU 0: %s %s,",
-                 cpu_info.info.cpu_name,cpu_info.info.additional_info);
+                                     cpu_info.info.cpu_name);
             console_print_formatted (&console_structure, " model %X%X%X.\n",
                            (u16)cpu_info.info.family, (u16)cpu_info.info.model, 
 			   (u16)cpu_info.info.stepping);
+
+            console_print_formatted (&console_structure, "Generation %u.\n",
+                                     cpu_info.info.generation);
             console_print_formatted (&console_structure, "Vendor: %s.\n",
                                cpu_info.info.vendor_name);
             console_print_formatted (&console_structure, "Vendor string: %s.\n",
@@ -682,7 +685,6 @@ void command_cpu (int number_of_arguments __attribute__ ((unused)),
     }
     default :
   }
-
 }
 
 

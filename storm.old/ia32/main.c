@@ -228,19 +228,6 @@ return_type main (int arguments, char *argument[])
   
   system_calls_init (); 
 
-  /* Print out some information about the machine we're on. */
-/*
-  if (cpu_info.flags.flags.tsc)
-  {
-    debug_print ("Machine: %s at %u Hz (~%u MHz).\n",
-                 parsed_cpu.name, parsed_cpu.speed,
-                 parsed_cpu.speed / 1000000);
-  }
-  else
-  {
-    debug_print ("Machine: %s.\n", parsed_cpu.name);
-  }
-*/
   /* And memory. */
   /* FIXME: Report the correct memory sizes back to the enterprise. */
   
@@ -250,24 +237,13 @@ return_type main (int arguments, char *argument[])
                (memory_physical_get_used () * SIZE_PAGE) / KB - 384,
                (memory_physical_get_free () * SIZE_PAGE) / KB);
   
-  /* Enable this if storm could not detect the cpu type, read the values and
-     fill in the cpu type table in cpuid.c. */
 
-#if TRUE
-//  debug_print ("CPU: Family %u, model %u.\n", cpu_info.family, cpu_info.model);
-//  debug_print ("vendor %s.\n", parsed_cpu.vendor);
-
-  debug_print ("CPU:%s\n", CPU.cpu_name);
-  debug_print ("vendor name: %s.\n", CPU.vendor_name);
-  debug_print ("vendor string: %s.\n", CPU.vendor_string);
-  debug_print ("FPU:%s\n", CPU.fpu_name);
-
-//  for(i=0;i<CPU.features_number;i++)
-//    debug_print("%s\n",CPU.features_names[i]);
-#endif
+  debug_print ("CPU ID: %u.\n", CPU.cpu_type_id);
+  debug_print ("Vendor ID: %u.\n", CPU.vendor_id);
+  debug_print ("Vendor string: %s.\n", CPU.vendor_string);
+  debug_print ("FPU ID: %u.\n", CPU.fpu_type_id);
 
   /* Set up paging and map global memory. */
-//  cpu_halt();
 
   memory_virtual_enable ();
 
@@ -382,8 +358,6 @@ return_type main (int arguments, char *argument[])
     //    memory_physical_deallocate
     //      (GET_PAGE_NUMBER (multiboot_module_info[index].start));
   } 
-
-//  cpu_halt();
 
   /* Initialise the dispatcher. Must be done after process
      initialisation. */

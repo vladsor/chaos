@@ -66,7 +66,7 @@ void port_fix (unsigned int start, unsigned int ports)
 
   /* If the TSS is too small, expand it. */
   
-  if (current_tss->iomap_size < BIT_IN_BYTES (start + ports - 1))
+  if (current_tss->iomap_size < BIT_IN_BYTES (start + ports))
   {
     int old_iomap_size = current_tss->iomap_size;
     storm_tss_type *old_tss = current_tss;
@@ -116,8 +116,6 @@ void port_fix (unsigned int start, unsigned int ports)
     memory_global_deallocate (old_tss);
   }
 
-  mutex_kernel_signal (&tss_tree_mutex);
-
   /* Add the port range to the callers I/O-map. */
 
   for (port = start; port < start + ports; port++)
@@ -137,4 +135,14 @@ void port_fix (unsigned int start, unsigned int ports)
       irq[index].tss = current_tss;
     }
   }
+}
+
+void port_unfix (unsigned int start, unsigned int ports)
+{
+#if !OPTION_REALESE
+  if (current_tss->iomap_size < BIT_IN_BYTES (start + ports))
+  {
+    DEBUG_HALT ("Bug in iomap.");
+  }
+#endif
 }

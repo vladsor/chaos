@@ -159,6 +159,8 @@ return_type port_range_register (unsigned int start, unsigned int ports,
   } 
  
   port_fix (start, ports);
+  
+  mutex_kernel_signal (&tss_tree_mutex);
 
   return STORM_RETURN_SUCCESS;
 }
@@ -182,6 +184,8 @@ return_type port_range_unregister (unsigned int start)
   {
     return STORM_RETURN_INVALID_ARGUMENT;
   }
+  
+  port_unfix (port->start, port->length);
 
   /* Unlink this entry from the list. First, check if it is the only
      entry. If so, everything gets very simple. */
@@ -220,8 +224,6 @@ return_type port_range_unregister (unsigned int start)
     previous->next = (struct port_range_type *) next;
     next->previous = (struct port_range_type *) previous;
   }
-  
-//  port_unfix (start, ports);
 
   return STORM_RETURN_SUCCESS;
 }

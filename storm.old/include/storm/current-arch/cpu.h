@@ -96,6 +96,15 @@ static inline u32 cpu_get_eflags (void)
   return return_value;
 }
 
+static inline void cpu_set_eflags (u32 new_eflags)
+{
+  asm volatile 
+  ("\
+    pushl %0
+    popf"
+   : "=a" (new_eflags));
+}
+
 static inline u32 cpu_get_cs (void)
 {
   u32 return_value;
@@ -178,22 +187,12 @@ static inline void cpu_reset (void)
   while (TRUE);
 }
 
-/*
-static inline void cpuid (u32 command, u32 *eax, u32 *ebx, u32 *ecx, u32 *edx)
-{
-  asm volatile ("cpuid"
-       : "=a" (*eax), "=b" (*ebx), "=c" (*ecx), "=d" (*edx)
-       : "a" (command)
-       : "cc");
-}
-*/
 
 #define cpuid(command,val1,val2,val3,val4) \
        __asm__ __volatile__("cpuid" \
 			    : "=a" (val1), "=b" (val2),\
 			      "=c" (val3),  "=d" (val4) \
-			    : "a" (command)\
-			    : "cc");
+			    : "a" (command));
 
 /*
  * Access to machine-specific registers (available on 586 and better only)

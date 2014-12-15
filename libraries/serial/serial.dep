@@ -32,8 +32,9 @@ serial.o: serial.c ../ipc/ipc.h ../ipc/defines.h ../ipc/types.h \
  ../ipc/sound.h ../ipc/video.h ../ipc/virtual_file_system.h \
  ../ipc/return_values.h ../memory/memory.h ../memory/copy.h \
  ../memory/functions.h ../memory/return_values.h ../memory/set.h \
- ../memory/types.h ../memory/slab.h ../serial/serial.h \
- ../serial/defines.h ../serial/functions.h ../serial/return_values.h \
- ../serial/types.h ../string/string.h ../string/functions.h \
+ ../memory/types.h ../memory/slab.h ../memory/inlines.h \
+ ../serial/serial.h ../serial/defines.h ../serial/functions.h \
+ ../serial/return_values.h ../serial/types.h ../string/string.h \
+ ../string/functions.h \
  /usr/lib/gcc-lib/i386-redhat-linux/2.95.1/include/stdarg.h \
  ../string/inlines.h ../string/return_values.h
