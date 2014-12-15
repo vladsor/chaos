@@ -1,4 +1,4 @@
-/* $Id: kernel.ld,v 1.1.1.1 2000/09/26 19:08:16 plundis Exp $ */
+/* $Id: kernel.ld,v 1.2 2001/02/10 21:25:59 jojo Exp $ */
 /* Abstract: storm linker script. Heavily based on the elf_i386.xbn
    from GNU binutils. */
 /* Author: Per Lundberg <plundis@chaosdev.org> */

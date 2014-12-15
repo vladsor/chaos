@@ -1,4 +1,4 @@
-/* $Id: tag.h,v 1.1.1.1 2000/09/26 19:08:17 plundis Exp $ */
+/* $Id: tag.h,v 1.2 2001/02/10 21:26:13 jojo Exp $ */
 /* Abstract: Tag item structure. */
 /* Author: Per Lundberg <plundis@chaosdev.org> */
 

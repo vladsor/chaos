@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# $Id: system_calls.pl,v 1.7 2000/10/22 14:59:39 plundis Exp $
+# $Id: system_calls.pl,v 1.3 2001/02/12 02:26:19 john Exp $
 
 # Abstract: Generate files with system call stuff. Since they are a
 # bunch, updating them all manually was a little
@@ -35,6 +35,8 @@ my @system_call =
  'service_create',                3,
  'service_destroy',		  1,
  'service_get',                   3,
+ 'service_protocol_get',          2,
+ 'service_protocol_get_amount',   1,
  
  'dma_transfer',                  5,
  'dma_transfer_cancel',           1,
@@ -49,21 +51,11 @@ my @system_call =
  'memory_allocate',		  3,
  'memory_deallocate',             1,
  'memory_reserve',                3,
-
- # THIS FUNCTION IS EXTREMELY INSECURE!!! We will remove it before you
- # even knew it existed. It will eventually be replaced by
- # memory_map_server and memory_map_client
-
- 'memory_virtual_map',            4,
  'memory_get_physical_address',   2,
  
  'port_range_register',           3,
  'port_range_unregister',         1,
 
- # This function will be removed RSN.
-
- 'debug_print_simple',		  1,
- 
  'process_create',                1,
  'process_name_set',              1,
  'process_parent_unblock',        0,
@@ -80,6 +72,17 @@ my @system_call =
  # continues the task switching.
 
  'dispatch_next',                 0,
+ 
+ 'event_queue_create',            2,
+ 'event_queue_destroy',           1,
+ 'event_queue_flush',             1,
+ 'event_queue_get_info',          2,
+
+ 'event_queue_register_listener', 2,
+ 'event_queue_unregister_listener',1,
+
+ 'event_queue_generate_event',    3,
+ 'event_queue_wait_event',        3,
 );
 
 my $system_calls = scalar @system_call / 2;
@@ -104,8 +107,8 @@ my $FILE;
 
 open (FILE, ">wrapper.c") or die ("Couldn't create wrapper.c");
 
-print (FILE "\
-/* Generated automatically by system_calls.pl */
+print (FILE 
+"/* Generated automatically by system_calls.pl. Don't change. */
 
 #include <storm/ia32/defines.h>
 #include <storm/ia32/wrapper.h>
@@ -131,7 +134,7 @@ void wrapper_$system_call[$count * 2] (void)
     print (FILE "                pushl  32 + 4 + $system_call[$count * 2 + 1] * 4(%esp)\n");
   }
   print (FILE "\
-                call	$system_call[$count * 2]
+                call	system_call_$system_call[$count * 2]
 
                 addl	\$4 * $system_call[$count * 2 + 1], %esp
 
@@ -178,7 +181,7 @@ for ($count = 1; $count < $system_calls; $count++)
 };
 
 print (FILE "};\n\
-#endif /* !__STORM_SYSTEM_CALL_H__ */");
+#endif /* !__STORM_SYSTEM_CALL_H__ */\n");
   
 close (FILE);
 

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
-<!-- $Id: autochaos.rules,v 1.1.1.1 2000/09/26 19:08:09 plundis Exp $ -->
+<!-- $Id: autochaos.rules,v 1.2 2001/02/10 21:22:29 jojo Exp $ -->
 
 <autochaos>
   <package name="console" version="0.0.1" type="library" license="LGPL">
     <makefile>makefile</makefile>
-    <library type="depend">memory</library>
     <include>..</include>
+    <library type="depend">memory</library>
 
     <!-- Sources. -->
 

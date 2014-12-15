@@ -1,4 +1,4 @@
-/* $Id: limits.c,v 1.1.1.1 2000/09/26 19:08:16 plundis Exp $ */
+/* $Id: limits.c,v 1.2 2001/02/10 21:25:59 jojo Exp $ */
 /* Abstract: Limitation variables. All of those should be overridable
    via kernel parameters or otherwise. */
 /* Authors: Per Lundberg <plundis@chaosdev.org>
@@ -43,6 +43,8 @@ limit_type limit_memory = 0;
 /* Number of entries in the mailbox hash table. */
 
 limit_type limit_mailbox_hash_entries = 1024;
+
+limit_type limit_event_queue_hash_entries = 1024;
 
 /* Number of entries in the thread hash table. */
 

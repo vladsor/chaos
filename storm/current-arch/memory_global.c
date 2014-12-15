@@ -1,4 +1,4 @@
-/* $Id: memory_global.c,v 1.2 2000/10/22 14:59:39 plundis Exp $ */
+/* $Id: memory_global.c,v 1.2 2001/02/10 21:26:01 jojo Exp $ */
 /* Abstract: Memory allocation functions for the global memory area. */
 /* Authors: Henrik Hallin <hal@chaosdev.org>
             Per Lundberg <plundis@chaosdev.org> */

@@ -1,4 +1,4 @@
-/* $Id: idle.c,v 1.1.1.1 2000/09/26 19:08:16 plundis Exp $ */
+/* $Id: idle.c,v 1.2 2001/02/10 21:25:50 jojo Exp $ */
 /* Abstract: Idle thread. The idle thread does some more things in
    chaos than just wasting CPU cycles; it performs actual thread
    deletion (since it's a little hard to do when the thread is still

@@ -1,4 +1,4 @@
-/* $Id: mailbox.h,v 1.1.1.1 2000/09/26 19:08:17 plundis Exp $ */
+/* $Id: mailbox.h,v 1.2 2001/02/10 21:26:22 jojo Exp $ */
 /* Abstract: Function prototypes for the mailbox IPC system. */
 /* Author: Per Lundberg <plundis@chaosdev.org> */
 
@@ -115,6 +115,7 @@ extern return_type mailbox_receive
   (mailbox_id_type mailbox_id, message_parameter_type *message_parameter);
 
 extern void mailbox_init (void) INIT_CODE;
+
 extern return_type mailbox_create_kernel
   (mailbox_id_type *mailbox_id, unsigned int size,
    process_id_type user_process_id, cluster_id_type user_cluster_id,

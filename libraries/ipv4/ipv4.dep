@@ -1,0 +1,37 @@
+ipv4.o: ipv4.c ../ipc/ipc.h ../ipc/defines.h ../ipc/types.h \
+ /mnt/chaos/data/programming/c/headers/system/system.h \
+ /mnt/chaos/data/programming/c/headers/system/alignment.h \
+ /mnt/chaos/data/programming/c/headers/system/bit.h \
+ /mnt/chaos/data/programming/c/headers/system/byte_order.h \
+ /mnt/chaos/data/programming/c/headers/storm/storm.h \
+ /mnt/chaos/data/programming/c/headers/storm/types.h \
+ /mnt/chaos/data/programming/c/headers/storm/defines.h \
+ /mnt/chaos/data/programming/c/headers/storm/dma.h \
+ /mnt/chaos/data/programming/c/headers/storm/mailbox.h \
+ /mnt/chaos/data/programming/c/headers/storm/event_queue.h \
+ /mnt/chaos/data/programming/c/headers/storm/limits.h \
+ /mnt/chaos/data/programming/c/headers/storm/return_values.h \
+ /mnt/chaos/data/programming/c/headers/storm/kernelfs.h \
+ /mnt/chaos/data/programming/c/headers/storm/process.h \
+ /mnt/chaos/data/programming/c/headers/storm/tag.h \
+ /mnt/chaos/data/programming/c/headers/storm/thread.h \
+ /mnt/chaos/data/programming/c/headers/storm/service.h \
+ /mnt/chaos/data/programming/c/headers/storm/state.h \
+ /mnt/chaos/data/programming/c/headers/storm/system_calls.h \
+ /mnt/chaos/data/programming/c/headers/system/endian.h \
+ /mnt/chaos/data/programming/c/headers/system/little_endian.h \
+ /mnt/chaos/data/programming/c/headers/system/functions.h \
+ /mnt/chaos/data/programming/c/headers/system/port.h \
+ /mnt/chaos/data/programming/c/headers/system/return_values.h \
+ /mnt/chaos/data/programming/c/headers/system/system_calls.h \
+ ../ipc/functions.h ../ipc/protocols.h ../ipc/block.h ../ipc/console.h \
+ ../ipc/keyboard.h ../ipc/ethernet.h ../ipc/file.h ../ipc/general.h \
+ ../ipc/ipv4.h ../ipc/log.h ../ipc/mouse.h ../ipc/pci.h \
+ ../ipc/serial.h ../ipc/sound.h ../ipc/video.h ../ipc/return_values.h \
+ ../ipv4/ipv4.h ../ipv4/defines.h ../ipv4/ethernet.h ../ipv4/types.h \
+ ../ipv4/functions.h ../ipv4/return_values.h \
+ /mnt/chaos/data/programming/c/headers/string/string.h \
+ /mnt/chaos/data/programming/c/headers/string/functions.h \
+ /usr/lib/gcc-lib/i386-redhat-linux/2.95.1/include/stdarg.h \
+ /mnt/chaos/data/programming/c/headers/string/inlines.h \
+ /mnt/chaos/data/programming/c/headers/string/return_values.h

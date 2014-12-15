@@ -1,4 +1,4 @@
-/* $Id: time.c,v 1.1.1.1 2000/09/26 19:08:16 plundis Exp $ */
+/* $Id: time.c,v 1.2 2001/02/10 21:26:07 jojo Exp $ */
 /* Abstract: Architecture dependent time management. */
 /* Author: Per Lundberg <plundis@chaosdev.org> */
 
@@ -96,4 +96,5 @@ void time_init (void)
   /* Convert this time to the chaos format. */
 
   time = gregorian_to_chaos (year, month, day, hours, minutes, seconds);
+  uptime = 0;
 }

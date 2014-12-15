@@ -1,21 +1,25 @@
-TODO ($Id: TODO,v 1.4 2000/10/21 18:26:20 plundis Exp $)
+TODO ($Id: TODO,v 1.2 2001/02/10 21:25:44 jojo Exp $)
 ====
 
 (In no special order)
 
-storm 0.5.0
------------
-
-  * Fix all known bugs. (yeah, right! All critical ones at least.)
-  * FIX AVL_NODE_DELETE!!! Or whatever is thrashing our AVL trees. 
-
 storm 0.6.0
 -----------
-
+ 
+  * Time-out support for all system calls. Do this through
+    system_call_timeout_set (), which sets a time limit for coming
+    system calls.
+  * All mutexing should be done by the functions in system_call.c
+  * Shared memory!!! Create system_call_memory_virtual_server () and
+    system_call_memory_virtual_client ().
+  * Check how the thread_create () function works (and should
+    work...).
+  * Fix all known bugs. (yeah, right! All critical ones at least.)
+  * FIX AVL_NODE_DELETE!!! Or whatever is thrashing our AVL trees. 
   * Make the idle thread have a list of tasks that need to be done.
   * Capabilities. We only need the basic stuff (like, is this thread
-    allowed to change the status of other threads?). Most real work will be
-    done by the security server.
+    allowed to change the status of other threads?). We must also
+    provide an infrastructure for user-level capabilities.
   * Move header files. Think about how it really should be.
   * Increase the granularity of the mutexing. I.e., the whole mailbox
     tree shouldn't have to be locked whenever a mailbox is accessed, etc.
@@ -24,21 +28,19 @@ storm 0.6.0
   * Better kernelfs interface. More data should be available.
   * Use int and unsigned int everywhere feasible. Audit the code and
     make sure this is so.
-  * Shared memory!!!
   * FPU support and FPU emulation?
-  * Check how the thread_create () function works (and should
-    work...).
 
 storm 0.7.0
 -----------
 
-  * Finish up the new scheduler.
-  * Implement soft real time priority and use it for the interrupt
-    handler threads. Right now, the latency can be far too high at
-    times.
-  * Create system_call_memory_virtual_server () and
-    system_call_memory_virtual_client ().
-  * Support FPU.
+  * Finish up the new scheduler. Implement soft real time priority and
+    use it for the interrupt handler threads. Right now, the latency
+    can be far too high at times.
+  * Optimize for SSE, 3DNow! and Enhanced 3DNow! Fix the MMX code.
+  * Implement support for hierarchical thread-system:
+     * process (program).
+     * cluster (collection of threads sharing only process' code).
+     * thread (threads sharing the cluster's data).
 
 storm 1.0.0
 -----------
@@ -51,12 +53,4 @@ storm 1.0.0
     someone else do the dirty work.
   * StrongARM and other exotics too if someone is willing to help out.
   * Fix all FIXMEs, and all bugs.
-
-storm X.Y.Z
-------------
-
-  * Optimize for SSE, 3DNow! and Enhanced 3DNow! Fix the MMX code.
-  * Implement support for hierarchical thread-system:
-     * process (program).
-     * cluster (collection of threads sharing only process' code).
-     * thread (threads sharing the cluster's data).
+  * Go to Disneyland.

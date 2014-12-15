@@ -1,4 +1,4 @@
-/* $Id: dataarea.h,v 1.1.1.1 2000/09/26 19:08:17 plundis Exp $ */
+/* $Id: dataarea.h,v 1.2 2001/02/10 21:26:19 jojo Exp $ */
 /* Abstract: Definition of the data area which is used for
    communication between the startup code and the kernel. */
 /* Author: Per Lundberg <plundis@chaosdev.org> */

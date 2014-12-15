@@ -7,8 +7,8 @@ port.o: port.c ../include/storm/state.h ../include/storm/generic/bit.h \
  ../include/storm/generic/limits.h ../include/storm/limits.h \
  ../include/storm/generic/mutex.h \
  ../include/storm/current-arch/mutex.h \
- ../include/storm/generic/capability.h ../include/storm/generic/irq.h \
- ../include/storm/current-arch/irq.h \
+ ../include/storm/generic/capability.h ../include/storm/ia32/fpu.h \
+ ../include/storm/generic/irq.h ../include/storm/current-arch/irq.h \
  ../include/storm/generic/process.h ../include/storm/process.h \
  ../include/storm/generic/memory_virtual.h \
  ../include/storm/generic/avl.h ../include/storm/ia32/types.h \

@@ -1,5 +1,4 @@
-
-/* Generated automatically by system_calls.pl */
+/* Generated automatically by system_calls.pl. Don't change. */
 
 #include <storm/ia32/defines.h>
 #include <storm/ia32/wrapper.h>
@@ -12,7 +11,7 @@ void wrapper_init (void)
                 /* Push all arguments. This is pretty smart... */
 
 
-                call	init
+                call	system_call_init
 
                 addl	$4 * 0, %esp
 
@@ -46,7 +45,7 @@ void wrapper_kernelfs_entry_read (void)
 
                 pushl  32 + 4 + 1 * 4(%esp)
 
-                call	kernelfs_entry_read
+                call	system_call_kernelfs_entry_read
 
                 addl	$4 * 1, %esp
 
@@ -84,7 +83,7 @@ void wrapper_mailbox_create (void)
                 pushl  32 + 4 + 5 * 4(%esp)
                 pushl  32 + 4 + 5 * 4(%esp)
 
-                call	mailbox_create
+                call	system_call_mailbox_create
 
                 addl	$4 * 5, %esp
 
@@ -118,7 +117,7 @@ void wrapper_mailbox_destroy (void)
 
                 pushl  32 + 4 + 1 * 4(%esp)
 
-                call	mailbox_destroy
+                call	system_call_mailbox_destroy
 
                 addl	$4 * 1, %esp
 
@@ -152,7 +151,7 @@ void wrapper_mailbox_flush (void)
 
                 pushl  32 + 4 + 1 * 4(%esp)
 
-                call	mailbox_flush
+                call	system_call_mailbox_flush
 
                 addl	$4 * 1, %esp
 
@@ -187,7 +186,7 @@ void wrapper_mailbox_send (void)
                 pushl  32 + 4 + 2 * 4(%esp)
                 pushl  32 + 4 + 2 * 4(%esp)
 
-                call	mailbox_send
+                call	system_call_mailbox_send
 
                 addl	$4 * 2, %esp
 
@@ -222,7 +221,7 @@ void wrapper_mailbox_receive (void)
                 pushl  32 + 4 + 2 * 4(%esp)
                 pushl  32 + 4 + 2 * 4(%esp)
 
-                call	mailbox_receive
+                call	system_call_mailbox_receive
 
                 addl	$4 * 2, %esp
 
@@ -258,7 +257,7 @@ void wrapper_service_create (void)
                 pushl  32 + 4 + 3 * 4(%esp)
                 pushl  32 + 4 + 3 * 4(%esp)
 
-                call	service_create
+                call	system_call_service_create
 
                 addl	$4 * 3, %esp
 
@@ -292,7 +291,7 @@ void wrapper_service_destroy (void)
 
                 pushl  32 + 4 + 1 * 4(%esp)
 
-                call	service_destroy
+                call	system_call_service_destroy
 
                 addl	$4 * 1, %esp
 
@@ -328,7 +327,7 @@ void wrapper_service_get (void)
                 pushl  32 + 4 + 3 * 4(%esp)
                 pushl  32 + 4 + 3 * 4(%esp)
 
-                call	service_get
+                call	system_call_service_get
 
                 addl	$4 * 3, %esp
 
@@ -353,6 +352,75 @@ void wrapper_service_get (void)
   ");
 }
 
+void wrapper_service_protocol_get (void)
+{
+  asm ("
+                pushal
+
+                /* Push all arguments. This is pretty smart... */
+
+                pushl  32 + 4 + 2 * 4(%esp)
+                pushl  32 + 4 + 2 * 4(%esp)
+
+                call	system_call_service_protocol_get
+
+                addl	$4 * 2, %esp
+
+		/* Simulate a popa, without overwriting EAX. */
+
+		popl	%edi
+		popl	%esi
+		popl	%ebp
+
+		/* ESP can't be popped for obvious reasons. */
+
+		addl	$4, %esp
+		popl	%ebx
+		popl	%edx
+		popl	%ecx
+
+		/* EAX shall not be changed, since it is our return
+          	  value. */
+
+		addl	$4, %esp
+		lret	$4 * 2
+  ");
+}
+
+void wrapper_service_protocol_get_amount (void)
+{
+  asm ("
+                pushal
+
+                /* Push all arguments. This is pretty smart... */
+
+                pushl  32 + 4 + 1 * 4(%esp)
+
+                call	system_call_service_protocol_get_amount
+
+                addl	$4 * 1, %esp
+
+		/* Simulate a popa, without overwriting EAX. */
+
+		popl	%edi
+		popl	%esi
+		popl	%ebp
+
+		/* ESP can't be popped for obvious reasons. */
+
+		addl	$4, %esp
+		popl	%ebx
+		popl	%edx
+		popl	%ecx
+
+		/* EAX shall not be changed, since it is our return
+          	  value. */
+
+		addl	$4, %esp
+		lret	$4 * 1
+  ");
+}
+
 void wrapper_dma_transfer (void)
 {
   asm ("
@@ -366,7 +434,7 @@ void wrapper_dma_transfer (void)
                 pushl  32 + 4 + 5 * 4(%esp)
                 pushl  32 + 4 + 5 * 4(%esp)
 
-                call	dma_transfer
+                call	system_call_dma_transfer
 
                 addl	$4 * 5, %esp
 
@@ -400,7 +468,7 @@ void wrapper_dma_transfer_cancel (void)
 
                 pushl  32 + 4 + 1 * 4(%esp)
 
-                call	dma_transfer_cancel
+                call	system_call_dma_transfer_cancel
 
                 addl	$4 * 1, %esp
 
@@ -435,7 +503,7 @@ void wrapper_dma_register (void)
                 pushl  32 + 4 + 2 * 4(%esp)
                 pushl  32 + 4 + 2 * 4(%esp)
 
-                call	dma_register
+                call	system_call_dma_register
 
                 addl	$4 * 2, %esp
 
@@ -469,7 +537,7 @@ void wrapper_dma_unregister (void)
 
                 pushl  32 + 4 + 1 * 4(%esp)
 
-                call	dma_unregister
+                call	system_call_dma_unregister
 
                 addl	$4 * 1, %esp
 
@@ -504,7 +572,7 @@ void wrapper_irq_register (void)
                 pushl  32 + 4 + 2 * 4(%esp)
                 pushl  32 + 4 + 2 * 4(%esp)
 
-                call	irq_register
+                call	system_call_irq_register
 
                 addl	$4 * 2, %esp
 
@@ -538,7 +606,7 @@ void wrapper_irq_unregister (void)
 
                 pushl  32 + 4 + 1 * 4(%esp)
 
-                call	irq_unregister
+                call	system_call_irq_unregister
 
                 addl	$4 * 1, %esp
 
@@ -572,7 +640,7 @@ void wrapper_irq_wait (void)
 
                 pushl  32 + 4 + 1 * 4(%esp)
 
-                call	irq_wait
+                call	system_call_irq_wait
 
                 addl	$4 * 1, %esp
 
@@ -606,7 +674,7 @@ void wrapper_irq_acknowledge (void)
 
                 pushl  32 + 4 + 1 * 4(%esp)
 
-                call	irq_acknowledge
+                call	system_call_irq_acknowledge
 
                 addl	$4 * 1, %esp
 
@@ -642,7 +710,7 @@ void wrapper_memory_allocate (void)
                 pushl  32 + 4 + 3 * 4(%esp)
                 pushl  32 + 4 + 3 * 4(%esp)
 
-                call	memory_allocate
+                call	system_call_memory_allocate
 
                 addl	$4 * 3, %esp
 
@@ -676,7 +744,7 @@ void wrapper_memory_deallocate (void)
 
                 pushl  32 + 4 + 1 * 4(%esp)
 
-                call	memory_deallocate
+                call	system_call_memory_deallocate
 
                 addl	$4 * 1, %esp
 
@@ -712,7 +780,7 @@ void wrapper_memory_reserve (void)
                 pushl  32 + 4 + 3 * 4(%esp)
                 pushl  32 + 4 + 3 * 4(%esp)
 
-                call	memory_reserve
+                call	system_call_memory_reserve
 
                 addl	$4 * 3, %esp
 
@@ -737,43 +805,6 @@ void wrapper_memory_reserve (void)
   ");
 }
 
-void wrapper_memory_virtual_map (void)
-{
-  asm ("
-                pushal
-
-                /* Push all arguments. This is pretty smart... */
-
-                pushl  32 + 4 + 4 * 4(%esp)
-                pushl  32 + 4 + 4 * 4(%esp)
-                pushl  32 + 4 + 4 * 4(%esp)
-                pushl  32 + 4 + 4 * 4(%esp)
-
-                call	memory_virtual_map
-
-                addl	$4 * 4, %esp
-
-		/* Simulate a popa, without overwriting EAX. */
-
-		popl	%edi
-		popl	%esi
-		popl	%ebp
-
-		/* ESP can't be popped for obvious reasons. */
-
-		addl	$4, %esp
-		popl	%ebx
-		popl	%edx
-		popl	%ecx
-
-		/* EAX shall not be changed, since it is our return
-          	  value. */
-
-		addl	$4, %esp
-		lret	$4 * 4
-  ");
-}
-
 void wrapper_memory_get_physical_address (void)
 {
   asm ("
@@ -784,7 +815,7 @@ void wrapper_memory_get_physical_address (void)
                 pushl  32 + 4 + 2 * 4(%esp)
                 pushl  32 + 4 + 2 * 4(%esp)
 
-                call	memory_get_physical_address
+                call	system_call_memory_get_physical_address
 
                 addl	$4 * 2, %esp
 
@@ -820,7 +851,7 @@ void wrapper_port_range_register (void)
                 pushl  32 + 4 + 3 * 4(%esp)
                 pushl  32 + 4 + 3 * 4(%esp)
 
-                call	port_range_register
+                call	system_call_port_range_register
 
                 addl	$4 * 3, %esp
 
@@ -854,41 +885,7 @@ void wrapper_port_range_unregister (void)
 
                 pushl  32 + 4 + 1 * 4(%esp)
 
-                call	port_range_unregister
-
-                addl	$4 * 1, %esp
-
-		/* Simulate a popa, without overwriting EAX. */
-
-		popl	%edi
-		popl	%esi
-		popl	%ebp
-
-		/* ESP can't be popped for obvious reasons. */
-
-		addl	$4, %esp
-		popl	%ebx
-		popl	%edx
-		popl	%ecx
-
-		/* EAX shall not be changed, since it is our return
-          	  value. */
-
-		addl	$4, %esp
-		lret	$4 * 1
-  ");
-}
-
-void wrapper_debug_print_simple (void)
-{
-  asm ("
-                pushal
-
-                /* Push all arguments. This is pretty smart... */
-
-                pushl  32 + 4 + 1 * 4(%esp)
-
-                call	debug_print_simple
+                call	system_call_port_range_unregister
 
                 addl	$4 * 1, %esp
 
@@ -922,7 +919,7 @@ void wrapper_process_create (void)
 
                 pushl  32 + 4 + 1 * 4(%esp)
 
-                call	process_create
+                call	system_call_process_create
 
                 addl	$4 * 1, %esp
 
@@ -956,7 +953,7 @@ void wrapper_process_name_set (void)
 
                 pushl  32 + 4 + 1 * 4(%esp)
 
-                call	process_name_set
+                call	system_call_process_name_set
 
                 addl	$4 * 1, %esp
 
@@ -989,7 +986,7 @@ void wrapper_process_parent_unblock (void)
                 /* Push all arguments. This is pretty smart... */
 
 
-                call	process_parent_unblock
+                call	system_call_process_parent_unblock
 
                 addl	$4 * 0, %esp
 
@@ -1022,7 +1019,7 @@ void wrapper_thread_create (void)
                 /* Push all arguments. This is pretty smart... */
 
 
-                call	thread_create
+                call	system_call_thread_create
 
                 addl	$4 * 0, %esp
 
@@ -1058,7 +1055,7 @@ void wrapper_thread_control (void)
                 pushl  32 + 4 + 3 * 4(%esp)
                 pushl  32 + 4 + 3 * 4(%esp)
 
-                call	thread_control
+                call	system_call_thread_control
 
                 addl	$4 * 3, %esp
 
@@ -1092,7 +1089,7 @@ void wrapper_thread_name_set (void)
 
                 pushl  32 + 4 + 1 * 4(%esp)
 
-                call	thread_name_set
+                call	system_call_thread_name_set
 
                 addl	$4 * 1, %esp
 
@@ -1126,7 +1123,7 @@ void wrapper_timer_read (void)
 
                 pushl  32 + 4 + 1 * 4(%esp)
 
-                call	timer_read
+                call	system_call_timer_read
 
                 addl	$4 * 1, %esp
 
@@ -1159,7 +1156,7 @@ void wrapper_dispatch_next (void)
                 /* Push all arguments. This is pretty smart... */
 
 
-                call	dispatch_next
+                call	system_call_dispatch_next
 
                 addl	$4 * 0, %esp
 
@@ -1181,5 +1178,284 @@ void wrapper_dispatch_next (void)
 
 		addl	$4, %esp
 		lret	$4 * 0
+  ");
+}
+
+void wrapper_event_queue_create (void)
+{
+  asm ("
+                pushal
+
+                /* Push all arguments. This is pretty smart... */
+
+                pushl  32 + 4 + 2 * 4(%esp)
+                pushl  32 + 4 + 2 * 4(%esp)
+
+                call	system_call_event_queue_create
+
+                addl	$4 * 2, %esp
+
+		/* Simulate a popa, without overwriting EAX. */
+
+		popl	%edi
+		popl	%esi
+		popl	%ebp
+
+		/* ESP can't be popped for obvious reasons. */
+
+		addl	$4, %esp
+		popl	%ebx
+		popl	%edx
+		popl	%ecx
+
+		/* EAX shall not be changed, since it is our return
+          	  value. */
+
+		addl	$4, %esp
+		lret	$4 * 2
+  ");
+}
+
+void wrapper_event_queue_destroy (void)
+{
+  asm ("
+                pushal
+
+                /* Push all arguments. This is pretty smart... */
+
+                pushl  32 + 4 + 1 * 4(%esp)
+
+                call	system_call_event_queue_destroy
+
+                addl	$4 * 1, %esp
+
+		/* Simulate a popa, without overwriting EAX. */
+
+		popl	%edi
+		popl	%esi
+		popl	%ebp
+
+		/* ESP can't be popped for obvious reasons. */
+
+		addl	$4, %esp
+		popl	%ebx
+		popl	%edx
+		popl	%ecx
+
+		/* EAX shall not be changed, since it is our return
+          	  value. */
+
+		addl	$4, %esp
+		lret	$4 * 1
+  ");
+}
+
+void wrapper_event_queue_flush (void)
+{
+  asm ("
+                pushal
+
+                /* Push all arguments. This is pretty smart... */
+
+                pushl  32 + 4 + 1 * 4(%esp)
+
+                call	system_call_event_queue_flush
+
+                addl	$4 * 1, %esp
+
+		/* Simulate a popa, without overwriting EAX. */
+
+		popl	%edi
+		popl	%esi
+		popl	%ebp
+
+		/* ESP can't be popped for obvious reasons. */
+
+		addl	$4, %esp
+		popl	%ebx
+		popl	%edx
+		popl	%ecx
+
+		/* EAX shall not be changed, since it is our return
+          	  value. */
+
+		addl	$4, %esp
+		lret	$4 * 1
+  ");
+}
+
+void wrapper_event_queue_get_info (void)
+{
+  asm ("
+                pushal
+
+                /* Push all arguments. This is pretty smart... */
+
+                pushl  32 + 4 + 2 * 4(%esp)
+                pushl  32 + 4 + 2 * 4(%esp)
+
+                call	system_call_event_queue_get_info
+
+                addl	$4 * 2, %esp
+
+		/* Simulate a popa, without overwriting EAX. */
+
+		popl	%edi
+		popl	%esi
+		popl	%ebp
+
+		/* ESP can't be popped for obvious reasons. */
+
+		addl	$4, %esp
+		popl	%ebx
+		popl	%edx
+		popl	%ecx
+
+		/* EAX shall not be changed, since it is our return
+          	  value. */
+
+		addl	$4, %esp
+		lret	$4 * 2
+  ");
+}
+
+void wrapper_event_queue_register_listener (void)
+{
+  asm ("
+                pushal
+
+                /* Push all arguments. This is pretty smart... */
+
+                pushl  32 + 4 + 2 * 4(%esp)
+                pushl  32 + 4 + 2 * 4(%esp)
+
+                call	system_call_event_queue_register_listener
+
+                addl	$4 * 2, %esp
+
+		/* Simulate a popa, without overwriting EAX. */
+
+		popl	%edi
+		popl	%esi
+		popl	%ebp
+
+		/* ESP can't be popped for obvious reasons. */
+
+		addl	$4, %esp
+		popl	%ebx
+		popl	%edx
+		popl	%ecx
+
+		/* EAX shall not be changed, since it is our return
+          	  value. */
+
+		addl	$4, %esp
+		lret	$4 * 2
+  ");
+}
+
+void wrapper_event_queue_unregister_listener (void)
+{
+  asm ("
+                pushal
+
+                /* Push all arguments. This is pretty smart... */
+
+                pushl  32 + 4 + 1 * 4(%esp)
+
+                call	system_call_event_queue_unregister_listener
+
+                addl	$4 * 1, %esp
+
+		/* Simulate a popa, without overwriting EAX. */
+
+		popl	%edi
+		popl	%esi
+		popl	%ebp
+
+		/* ESP can't be popped for obvious reasons. */
+
+		addl	$4, %esp
+		popl	%ebx
+		popl	%edx
+		popl	%ecx
+
+		/* EAX shall not be changed, since it is our return
+          	  value. */
+
+		addl	$4, %esp
+		lret	$4 * 1
+  ");
+}
+
+void wrapper_event_queue_generate_event (void)
+{
+  asm ("
+                pushal
+
+                /* Push all arguments. This is pretty smart... */
+
+                pushl  32 + 4 + 3 * 4(%esp)
+                pushl  32 + 4 + 3 * 4(%esp)
+                pushl  32 + 4 + 3 * 4(%esp)
+
+                call	system_call_event_queue_generate_event
+
+                addl	$4 * 3, %esp
+
+		/* Simulate a popa, without overwriting EAX. */
+
+		popl	%edi
+		popl	%esi
+		popl	%ebp
+
+		/* ESP can't be popped for obvious reasons. */
+
+		addl	$4, %esp
+		popl	%ebx
+		popl	%edx
+		popl	%ecx
+
+		/* EAX shall not be changed, since it is our return
+          	  value. */
+
+		addl	$4, %esp
+		lret	$4 * 3
+  ");
+}
+
+void wrapper_event_queue_wait_event (void)
+{
+  asm ("
+                pushal
+
+                /* Push all arguments. This is pretty smart... */
+
+                pushl  32 + 4 + 3 * 4(%esp)
+                pushl  32 + 4 + 3 * 4(%esp)
+                pushl  32 + 4 + 3 * 4(%esp)
+
+                call	system_call_event_queue_wait_event
+
+                addl	$4 * 3, %esp
+
+		/* Simulate a popa, without overwriting EAX. */
+
+		popl	%edi
+		popl	%esi
+		popl	%ebp
+
+		/* ESP can't be popped for obvious reasons. */
+
+		addl	$4, %esp
+		popl	%ebx
+		popl	%edx
+		popl	%ecx
+
+		/* EAX shall not be changed, since it is our return
+          	  value. */
+
+		addl	$4, %esp
+		lret	$4 * 3
   ");
 }

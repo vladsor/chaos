@@ -1,4 +1,4 @@
-/* $Id: dispatch.c,v 1.3 2000/10/15 11:17:51 plundis Exp $ */
+/* $Id: dispatch.c,v 1.2 2001/02/10 21:25:55 jojo Exp $ */
 /* Abstract: Functions for the task dispatch. */
 /* Authors: Henrik Hallin <hal@chaosdev.org>
             Per Lundberg <plundis@chaosdev.org> */
@@ -172,9 +172,13 @@ static int update_data (void)
     }
   }
 #endif
+  
+//  fpu_save_state ((u8 *) &current_tss_node->tss->fpu_state);
 
   current_tss_node = tss_node;
   current_tss = current_tss_node->tss;
+
+//  fpu_restore_state ((u8 *) &current_tss_node->tss->fpu_state);
 
   /* Update information about the current process. */
  

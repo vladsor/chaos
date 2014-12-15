@@ -1,4 +1,4 @@
-/* $Id: avl_debug.c,v 1.2 2000/10/19 21:22:03 plundis Exp $ */
+/* $Id: avl_debug.c,v 1.2 2001/02/10 21:25:48 jojo Exp $ */
 /* Abstract: AVL debugging functions. */
 /* Author: Henrik Hallin <hal@chaosdev.org> */
 

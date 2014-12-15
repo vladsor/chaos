@@ -1,4 +1,4 @@
-/* $Id: time.h,v 1.1.1.1 2000/09/26 19:08:17 plundis Exp $ */
+/* $Id: time.h,v 1.2 2001/02/10 21:26:26 jojo Exp $ */
 /* Abstract: Time management. */
 /* Author: Per Lundberg <plundis@chaosdev.org> */
 
@@ -23,8 +23,15 @@
 #define __STORM_GENERIC_TIME_H__
 
 #include <storm/current-arch/types.h>
+#include <storm/current-arch/timer.h>
+
+/* External variables. */
 
 extern time_type time;
+extern volatile time_type uptime;
+extern u32 hz;
+
+/* Function prototypes. */
 
 extern void time_init (void);
 

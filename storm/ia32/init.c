@@ -1,4 +1,4 @@
-/* $Id: init.c,v 1.1.1.1 2000/09/26 19:08:16 plundis Exp $ */
+/* $Id: init.c,v 1.2 2001/02/10 21:25:57 jojo Exp $ */
 /* Abstract: Set up the GDT, stack, selectors and pass control to the
    kernel. */
 /* Author: Per Lundberg <plundis@chaosdev.org>

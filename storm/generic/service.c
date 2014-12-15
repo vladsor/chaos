@@ -1,4 +1,4 @@
-/* $Id: service.c,v 1.2 2000/10/22 14:59:39 plundis Exp $ */
+/* $Id: service.c,v 1.2 2001/02/10 21:25:53 jojo Exp $ */
 /* Abstract: Support for services. */
 /* Author: Per Lundberg <plundis@chaosdev.org> */
 
@@ -49,41 +49,6 @@
 
 static protocol_type *root = NULL;
 
-static void tree_dump (protocol_type *node)
-{
-  if (node == NULL)
-  {
-    return;
-  }
-
-  debug_print ("%s: node->name: %s", __FUNCTION__, node->name);
-
-  if (node->less != NULL)
-  {
-    debug_print (" node->less->name: %s",
-                 ((protocol_type *) node->less)->name);
-  }
-  else
-  {
-    debug_print (" node->less: (null)");
-  }
-
-  if (node->more != NULL)
-  {
-    debug_print (" node->more->name: %s",
-                 ((protocol_type *) node->more)->name);
-  }
-  else
-  {
-    debug_print (" node->more: (null)");
-  }
-
-  debug_print ("\n");
-
-  tree_dump ((protocol_type *) node->less);
-  tree_dump ((protocol_type *) node->more);
-}
-
 /* Inserts the given protocol into its place in the tree. */
 
 static void protocol_insert (protocol_type *protocol)
@@ -131,43 +96,39 @@ static void protocol_insert (protocol_type *protocol)
   }
 }
 
-/* Returns TRUE or FALSE depending on whether the protocol exists in
-   the tree. */
+/* Get a pointer to the given protocol, if it exists, or NULL
+   otherwise. */
 
-static bool protocol_exists (const char *protocol_name)
+static protocol_type *protocol_get (const char *protocol_name)
 {
-  protocol_type *node = root;
+  protocol_type *protocol = root;
   
-  //  debug_print ("%s: %x\n", __FUNCTION__, node);
-
-  while (node != NULL)
+  while (protocol != NULL)
   {
-    int return_value = string_compare (protocol_name, node->name);
-
-    //    debug_print ("%s: %s == %s\n", __FUNCTION__, protocol_name, node->name);
-
+    int return_value = string_compare (protocol_name, protocol->name);
+    
     if (return_value < 0)
     {
-      node = (protocol_type *) node->less;
+      protocol = (protocol_type *) protocol->less;
     }
     else if (return_value > 0)
     {
-      node = (protocol_type *) node->more;
+      protocol = (protocol_type *) protocol->more;
     }
     else
     {
-      return TRUE;
+      break;
     }
   }
 
-  return FALSE;
+  return protocol;
 }
 
 /* Create a new service. */
 
-return_type service_create (const char *protocol_name,
-                            mailbox_id_type *mailbox_id,
-                            tag_type *identification)
+return_type service_create
+  (const char *protocol_name, mailbox_id_type *mailbox_id,
+   tag_type *identification)
 {
   protocol_type *protocol = NULL;
   service_type *service;
@@ -175,9 +136,11 @@ return_type service_create (const char *protocol_name,
 
   mutex_kernel_wait (&tss_tree_mutex);
 
+  protocol = protocol_get (protocol_name);
+
   /* Check if this protocol exists. */
 
-  if (!protocol_exists (protocol_name))
+  if (protocol == NULL)
   {
     /* No. We have to allocate memory for a new node in the tree. */
 
@@ -197,40 +160,6 @@ return_type service_create (const char *protocol_name,
     /* Insert it into the tree. */
 
     protocol_insert (protocol);
-  }
-  else
-  {
-    protocol_type *node = root;
-    
-    while (node != NULL)
-    {
-      int return_value = string_compare (protocol_name, node->name);
-
-      //      debug_print ("protocol_name = %s, node->name = %s\n", protocol_name,
-      //                   node->name);
-      //      debug_print ("%s: %x, %x\n", __FUNCTION__, node->less, node->more);
-      
-      if (return_value < 0)
-      {
-        node = (protocol_type *) node->less;
-      }
-      else if (return_value > 0)
-      {
-        node = (protocol_type *) node->more;
-      }
-      else
-      {
-        protocol = node;
-        break;
-      }
-    }
-
-    /* If the tree was broken, abort. */
-
-    if (node == NULL)
-    {
-      DEBUG_HALT ("node == NULL");
-    }
   }
 
   /* Create a service structure. */
@@ -298,40 +227,14 @@ return_type service_get (const char *protocol_name,
 
   /* Make sure the protocol exists. */
 
-  if (!protocol_exists (protocol_name))
-  {
-    DEBUG_MESSAGE (FALSE, "STORM_RETURN_PROTOCOL_UNAVAILABLE (%s)", 
-                   protocol_name);
-    mutex_kernel_signal (&tss_tree_mutex);
-    return STORM_RETURN_PROTOCOL_UNAVAILABLE;
-  }
-
-  /* Get the protocol for this. */
-
-  while (protocol != NULL)
-  {
-    int return_value = string_compare (protocol_name, protocol->name);
-    
-    if (return_value < 0)
-    {
-      protocol = (protocol_type *) protocol->less;
-    }
-    else if (return_value > 0)
-    {
-      protocol = (protocol_type *) protocol->more;
-    }
-    else
-    {
-      break;
-    }
-  }
-
-  /* If node is NULL, the tree is broken. Better fail now than
-     later. */
+  protocol = protocol_get (protocol_name);
 
   if (protocol == NULL)
   {
-    DEBUG_HALT ("Tree broken");
+    DEBUG_MESSAGE (DEBUG, "STORM_RETURN_PROTOCOL_UNAVAILABLE (%s)", 
+                   protocol_name);
+    mutex_kernel_signal (&tss_tree_mutex);
+    return STORM_RETURN_PROTOCOL_UNAVAILABLE;
   }
 
   /* Okay, everything seems just fine. Let's get down to business! */
@@ -368,9 +271,57 @@ return_type service_get (const char *protocol_name,
   return STORM_RETURN_SUCCESS;
 }
 
-/* Destroy a service which we no longer will provide. */
+/* Destroy a service which we no longer provide. */
 
 return_type service_destroy (mailbox_id_type mailbox_id __attribute__ ((unused)))
 {
+  return STORM_RETURN_SUCCESS;
+}
+
+/* Get the number of protocols currently supported. */
+
+return_type service_protocol_get_amount (unsigned int *number_of_protocols)
+{
+  *number_of_protocols = 0;
+  return STORM_RETURN_SUCCESS;
+}
+
+/* This is a recursive function that is called from
+   service_protocol_get. */
+/* FIXME: Find a better name for this. */
+
+static void protocol_get_all
+  (service_protocol_type *protocol_info, unsigned int *index,
+   protocol_type *node, unsigned int max)
+{
+  if (node == NULL)
+  {
+    return;
+  }
+
+  if (*index == max)
+  {
+    return;
+  }
+
+  protocol_get_all (protocol_info, index, (protocol_type *) node->less, max);
+  protocol_get_all (protocol_info, index, (protocol_type *) node->more, max);
+  
+  string_copy_max (protocol_info[*index].name, node->name, 
+                   MAX_PROTOCOL_NAME_LENGTH);
+  protocol_info[*index].number_of_services = node->number_of_services;
+  (*index)++;
+}
+
+/* Get a list of all the protocols currently supported. */
+
+return_type service_protocol_get
+  (unsigned int *maximum_protocols, service_protocol_type *protocol_info)
+{
+  unsigned int index = 0;
+
+  protocol_get_all (protocol_info, &index, root, *maximum_protocols);
+  *maximum_protocols = index;
+
   return STORM_RETURN_SUCCESS;
 }

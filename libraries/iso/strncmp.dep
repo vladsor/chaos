@@ -1,1 +1,0 @@
-strncmp.o: strncmp.S DEFS.h

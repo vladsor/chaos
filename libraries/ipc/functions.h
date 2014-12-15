@@ -1,4 +1,4 @@
-/* $Id: functions.h,v 1.2 2000/09/29 21:08:47 hal Exp $ */
+/* $Id: functions.h,v 1.2 2001/02/10 21:22:40 jojo Exp $ */
 /* Abstract: IPC library functions. */
 /* Author: Per Lundberg <plundis@chaosdev.org> */
 

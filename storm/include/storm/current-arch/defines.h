@@ -1,4 +1,4 @@
-/* $Id: defines.h,v 1.1.1.1 2000/09/26 19:08:18 plundis Exp $ */
+/* $Id: defines.h,v 1.2 2001/02/10 21:26:28 jojo Exp $ */
 /* Abstract: IA32 specific defines. */
 /* Authors: Per Lundberg <plundis@chaosdev.org> 
             Henrik Hallin <hal@chaosdev.org> 
@@ -65,6 +65,7 @@
 #define SIZE_MODULE_NAME                (4 * KB)
 #define SIZE_UPPER                      ((1024 - 640) * KB)
 #define SIZE_DMA                        ((64 * 8) * KB)
+#define SIZE_KERNEL                     ((u32) &_end - BASE_KERNEL)
 
 /* Process virtual addresses. */
 

@@ -1,4 +1,4 @@
-/* $Id: ethernet.h,v 1.2 2000/09/29 21:08:47 hal Exp $ */
+/* $Id: ethernet.h,v 1.2 2001/02/10 21:22:39 jojo Exp $ */
 /* Abstract: Protocol used by Ethernet servers. */
 /* Author: Per Lundberg <plundis@chaosdev.org> */
 

@@ -1,4 +1,4 @@
-/* $Id: log.h,v 1.2 2000/09/29 21:08:47 hal Exp $ */
+/* $Id: log.h,v 1.2 2001/02/10 21:22:41 jojo Exp $ */
 /* Abstract: Log protocol. */
 /* Author: Per Lundberg <plundis@chaosdev.org> */
 
@@ -35,22 +35,6 @@ enum
      ipc_log_print_type. */
 
   IPC_LOG_PRINT = (IPC_PROTOCOL_LOG << 16),
-  
-  IPC_LOG_ENABLE_URGENCY_EMERGENCY,
-  IPC_LOG_DISABLE_URGENCY_EMERGENCY,
-  
-  IPC_LOG_ENABLE_URGENCY_ERROR,
-  IPC_LOG_DISABLE_URGENCY_ERROR,
-
-  IPC_LOG_ENABLE_URGENCY_WARNING,
-  IPC_LOG_DISABLE_URGENCY_WARNING,
-
-  IPC_LOG_ENABLE_URGENCY_INFORMATIVE,
-  IPC_LOG_DISABLE_URGENCY_INFORMATIVE,
-
-  IPC_LOG_ENABLE_URGENCY_DEBUG,
-  IPC_LOG_DISABLE_URGENCY_DEBUG,
-
 };
 
 /* Type definitions. */

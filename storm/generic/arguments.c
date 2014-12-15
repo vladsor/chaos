@@ -1,4 +1,4 @@
-/* $Id: arguments.c,v 1.1.1.1 2000/09/26 19:08:16 plundis Exp $ */
+/* $Id: arguments.c,v 1.2 2001/02/10 21:25:47 jojo Exp $ */
 /* Abstract: Routines for parsing command line arguments. */
 
 /* Copyright 1999-2000 chaos development. */

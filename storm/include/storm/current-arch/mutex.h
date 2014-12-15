@@ -1,4 +1,4 @@
-/* $Id: mutex.h,v 1.1.1.1 2000/09/26 19:08:18 plundis Exp $ */
+/* $Id: mutex.h,v 1.2 2001/02/10 21:26:30 jojo Exp $ */
 /* Abstract: IA32-specific mutex code. */
 /* Author: Per Lundberg <plundis@chaosdev.org> */
 
@@ -21,6 +21,8 @@
 
 #ifndef __STORM_IA32_MUTEX_H__
 #define __STORM_IA32_MUTEX_H__
+
+#include <storm/generic/mutex.h>
 
 /* Inlines. */
 

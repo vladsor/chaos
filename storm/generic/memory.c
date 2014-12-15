@@ -1,4 +1,4 @@
-/* $Id: memory.c,v 1.3 2000/10/22 14:59:39 plundis Exp $ */
+/* $Id: memory.c,v 1.1 2001/02/10 22:58:41 jojo Exp $ */
 /* Abstract: Functions for memory operations. */
 /* Authors: Per Lundberg <plundis@chaosdev.org>
             Henrik Hallin <hal@chaosdev.org> */
@@ -145,24 +145,4 @@ return_type memory_deallocate (void **address)
       DEBUG_HALT ("Unknown return code.");
     }
   }
-}
-
-/* Reserve a physical memory region (used for memory-mapped I/O). */
-/* FIXME: Add capability checking. Right now, this is a _huge_
-   security hole. */
-
-return_type memory_reserve (address_type start, unsigned int size,
-                            void **virtual_address)
-{
-  u32 virtual_page_number;
-
-  mutex_kernel_wait (&memory_mutex);
-  memory_virtual_allocate (&virtual_page_number, SIZE_IN_PAGES (size));
-  memory_virtual_map (virtual_page_number,
-                      GET_PAGE_NUMBER (start), SIZE_IN_PAGES (size),
-                      PAGE_WRITABLE | PAGE_NON_PRIVILEGED | 
-                      PAGE_CACHE_DISABLE);
-  mutex_kernel_signal (&memory_mutex);
-  *virtual_address = (void *) (virtual_page_number * SIZE_PAGE);
-  return STORM_RETURN_SUCCESS;
 }

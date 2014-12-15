@@ -1,4 +1,4 @@
-/* $Id: time.c,v 1.1.1.1 2000/09/26 19:08:16 plundis Exp $ */
+/* $Id: time.c,v 1.2 2001/02/10 21:25:54 jojo Exp $ */
 /* Abstract: Time management. */
 /* Author: Per Lundberg <plundis@chaosdev.org> */
 

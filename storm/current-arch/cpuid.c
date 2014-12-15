@@ -1,4 +1,4 @@
-/* $Id: cpuid.c,v 1.1.1.1 2000/09/26 19:08:16 plundis Exp $ */
+/* $Id: cpuid.c,v 1.2 2001/02/10 21:25:54 jojo Exp $ */
 /* Abstract: CPU identification. Parts borrowed from the Linux
    kernel. */
 /* Author: Per Lundberg <plundis@chaosdev.org>
@@ -21,6 +21,7 @@
    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
    USA. */
 
+#include <storm/ia32/timer.h>
 #include <storm/ia32/types.h>
 #include <storm/ia32/defines.h>
 #include <storm/ia32/cpuid.h>
@@ -28,7 +29,6 @@
 #include <storm/ia32/flags.h>
 #include <storm/ia32/memory.h>
 #include <storm/ia32/port.h>
-#include <storm/ia32/timer.h>
 #include <storm/ia32/string.h>
 
 #define DEBUG FALSE

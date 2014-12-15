@@ -1,4 +1,4 @@
-/* $Id: string.c,v 1.1.1.1 2000/09/26 19:08:16 plundis Exp $ */
+/* $Id: string.c,v 1.2 2001/02/10 21:26:05 jojo Exp $ */
 /* Abstract: String routines. */
 /* Author: Per Lundberg <plundis@chaosdev.org> */
 

@@ -1,4 +1,4 @@
-/* $Id: return_values.h,v 1.2 2000/09/29 21:08:47 hal Exp $ */
+/* $Id: return_values.h,v 1.2 2001/02/10 21:22:43 jojo Exp $ */
 /* Abstract: IPC library return values. */
 /* Author: Per Lundberg <plundis@chaosdev.org> */
 
@@ -85,8 +85,15 @@ enum
      was full. */
 
   IPC_RETURN_MAILBOX_FULL,
+  
+  /* We got an unknown IPC command and could thus not proceed. */
 
-  IPC_RETURN_EVENT_BREAK,
+  IPC_RETURN_UNKNOWN_COMMAND,
+
+  /* Something went wrong, and we could not figure out what. (probably
+     because of an unimplemented kernel return value). */
+
+  IPC_RETURN_UNKNOWN_ERROR,
 };
 
 #endif /* !__LIBRARY_IPC_RETURN_VALUES__ */

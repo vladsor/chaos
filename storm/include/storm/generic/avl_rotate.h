@@ -1,4 +1,4 @@
-/* $Id: avl_rotate.h,v 1.1.1.1 2000/09/26 19:08:17 plundis Exp $ */
+/* $Id: avl_rotate.h,v 1.2 2001/02/10 21:26:16 jojo Exp $ */
 /* Abstract: AVL rotation functions. ONLY used by avl.c */
 /* Author: Henrik Hallin <hal@chaosdev.org> */
 

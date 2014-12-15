@@ -1,10 +1,10 @@
-/* $Id: main.c,v 1.3 2000/10/19 21:22:04 plundis Exp $ */
-/* Abstract: This is the startup point of the storm. It is executed
-   right after the assembly language init code has set up the GDT,
-   kernel stack, etc. Here, we initialise everything in the storm,
-   like IRQ/exception handling, the timer hardware, the memory
-   facilities of the host CPU and multitasking. It is also responsible
-   for starting the servers loaded by the Multiboot compliant boot
+/* $Id: main.c,v 1.2 2001/02/10 21:25:59 jojo Exp $ */
+/* Abstract: This is the startup point of storm. It is executed right
+   after the assembly language init code has set up the GDT, kernel
+   stack, etc. Here, we initialise everything in the storm, like
+   IRQ/exception handling, the timer hardware, the memory facilities
+   of the host CPU and multitasking. It is also responsible for
+   starting the servers loaded by the Multiboot compliant boot
    loader. */
 /* Authors: Per Lundberg <plundis@chaosdev.org>
             Henrik Hallin <hal@chaosdev.org> */
@@ -40,6 +40,10 @@
 #include <storm/generic/irq.h>
 #include <storm/generic/limits.h>
 #include <storm/generic/mailbox.h>
+
+#include <storm/generic/event_queue.h>
+#include <storm/generic/log.h>
+
 #include <storm/generic/memory_global.h>
 #include <storm/generic/memory_physical.h>
 #include <storm/generic/memory_virtual.h>
@@ -53,6 +57,9 @@
 #include <storm/generic/types.h>
 
 #include <storm/ia32/cpuid.h>
+
+#include <storm/ia32/fpu.h>
+
 #include <storm/ia32/dma.h>
 #include <storm/ia32/system_calls.h>
 #include <storm/ia32/timer.h>
@@ -60,12 +67,12 @@
 #include <storm/ia32/tss.h>
 #include <config.h>
 
-/* Globals. */
+/* Global variables. */
 
 bool initialised = FALSE;
 dataarea_type dataarea;
 
-/* Locals. */
+/* Local variables. */
 
 static u32 server_process_id INIT_DATA;
 static bool help INIT_DATA = FALSE;
@@ -174,6 +181,8 @@ return_type main (int arguments, char *argument[])
 
   cpuid_init ();
 
+  fpu_init ();
+
   parse_arguments (arguments, argument);
   debug_init ();
 
@@ -280,6 +289,10 @@ return_type main (int arguments, char *argument[])
   /* Initialise the mailbox system. */
 
   mailbox_init ();
+
+  event_queue_init ();
+
+  log_init ();
 
   /* Initialise the thread code. Must be done before any threads are
      started. */

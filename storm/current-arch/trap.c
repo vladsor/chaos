@@ -23,12 +23,13 @@
 
 /* Define this when debugging this module. */
 
-#define DEBUG FALSE
+#define DEBUG TRUE
 
 /* Define this if you want to halt the system whenever an unhandled
    trap occurs. (Sometimes, the system will triple fault otherwise) */
 
 #define HALT_ON_ERROR
+//#define GROWING_STACK
 
 #include <storm/state.h>
 #include <storm/generic/cpu.h>
@@ -52,148 +53,295 @@ static descriptor_type trap_descriptor;
 tss_type *trap_tss;
 static void *trap_stack;
 
+typedef union
+{
+  unsigned int error_code;
+  page_error_type page_error;
+  segment_error_type segment_error;
+} ecode_type;
+
+ecode_type ecode;
+
+void trap_divide_error_fault (void);
+void trap_debug_trap (void);
+void trap_nmi (void);
+void trap_breakpoint_trap (void);
+void trap_overflow_trap (void);
+void trap_bound_range_exceeded_fault (void);
+void trap_invalid_opcode_fault (void);
+void trap_device_not_available_fault (void);
+void trap_double_fault (void);
+void trap_coprocessor_segment_overrun_abort (void);
+void trap_invalid_tss_fault (void);
+void trap_segment_not_present_fault (void);
+void trap_stack_fault (void);
+void trap_general_protection_fault (void);
+void trap_page_fault (void);
+void trap_reserved (void);
+void trap_floating_point_error_fault (void);
+void trap_alignment_check_fault (void);
+void trap_machine_check_abort (void);
+void trap_streaming_simd_extensions_fault (void);
+
+/* Display a exception screen. */
+
+static void exception_screen (const char *class, 
+                       const char *description,
+                       const char *reason,
+                       u8 error_code_type,
+                       volatile storm_tss_type *dump_tss/*,
+                       u8 handler_type */)
+{
+  debug_print ("Source: ");   
+  if (dump_tss->eip >= BASE_KERNEL && dump_tss->eip < BASE_KERNEL + SIZE_KERNEL)
+  {
+    debug_print ("Kernel\n");   
+  }
+  else
+  {
+    debug_print ("Unknown\n");   
+  }
+
+
+//  debug_print ("Kernel:\n");
+  debug_print ("  Exception class : %s\n", class);
+  debug_print ("    Description: %s\n", description);
+  debug_print ("    Possible reason: %s\n", reason);
+  if (error_code_type != EXCEPTION_CODE_NONE)
+  {
+    debug_print ("    Error code: 0x%x\n", ecode);
+
+    switch (error_code_type)
+    {
+      case EXCEPTION_CODE_PAGE:
+      {
+        debug_print ("    Page Error: ");
+
+        if (ecode.page_error.RSVD)
+        {
+          debug_print ("RSVD,");
+        }
+
+        if (ecode.page_error.U_S)
+        {
+          debug_print ("Supervisor ");
+        }
+        else
+        {
+          debug_print ("User ");
+        }
+        debug_print ("Page, ");
+
+        if (ecode.page_error.W_R)
+        {
+          debug_print ("Write ");
+        }
+        else
+        {
+          debug_print ("Read ");
+        }
+
+        debug_print ("Operation, ");
+
+        if (ecode.page_error.P)
+        {
+          debug_print ("Page Not Present");
+        }
+        debug_print ("\n");
+
+	break;
+      }
+      case EXCEPTION_CODE_SEGMENT:
+      {
+        debug_print ("    Segment Error: ");
+
+        debug_print ("Selector Index: %u,", 
+                     ecode.segment_error.segment_selector_index);
+		       
+        if (ecode.segment_error.TI & !ecode.segment_error.IDT)
+        {
+          debug_print ("in LDT,");
+        }
+        else if (!ecode.segment_error.TI & !ecode.segment_error.IDT)
+        {
+          debug_print ("in GDT,");
+        }
+        else if (ecode.segment_error.IDT)
+        {
+          debug_print ("in IDT,");
+        }
+	  
+        if (ecode.segment_error.EXT)
+        {
+          debug_print ("External Event,");
+        }
+        else
+        {
+          debug_print ("Internal Event,");
+        }
+        debug_print ("\n");
+
+	break;
+      }
+    }
+  }
+
+  debug_print ("Causing process:\n");
+
+  debug_print ("  Process: %s (PROCESS ID %u).\n",
+               ((process_info_type *) dump_tss-> process_info)->name,
+               dump_tss->process_id);
+  debug_print ("  Thread: %s (THREAD ID %u).\n",
+               dump_tss->thread_name, dump_tss->thread_id);
+  debug_print ("  Process was dispatched %u times.\n", dump_tss->timeslices);
+  debug_print ("  Exception occured at address %x:%x\n",
+               dump_tss->cs, dump_tss->eip);
+  debug_print ("Registers:\n");
+
+  debug_print ("  EAX: 0x%x EBX: 0x%x ECX: 0x%x EDX: 0x%x\n",
+               dump_tss->eax, dump_tss->ebx, dump_tss->ecx, dump_tss->edx);
+  debug_print ("  ESP: 0x%x EBP: 0x%x ESI: 0x%x EDI: 0x%x\n",
+               dump_tss->esp, dump_tss->ebp, dump_tss->esi, dump_tss->edi);
+  debug_print ("   DS: 0x%x  ES: 0x%x  FS: 0x%x  GS: 0x%x\n",
+               dump_tss->ds, dump_tss->es, dump_tss->fs, dump_tss->gs);
+  debug_print ("  CR2: 0x%x CR3: 0x%x              EFLAGS: 0x%x\n",
+               cpu_get_cr2 (), dump_tss->cr3, dump_tss->eflags);
+
+  debug_print ("  STACK SS:ESP 0x%x : 0x%x\n",
+               dump_tss->ss, dump_tss->esp);
+}
+
 /* Now, it's time for some exception handlers. */
 
-static void trap_divide_error_fault (void)
+void trap_divide_error_fault (void)
 {
-  while (TRUE)
-  {
-    debug_crash_screen ("Divide error fault", current_tss);
-    current_tss->state = STATE_ZOMBIE;
-    dispatch_next ();
-  }
+  exception_screen ("Fault", "Divide Error", 
+                    "DIV and IDIV instructions.",
+                    EXCEPTION_CODE_NONE, current_tss);
+  current_tss->state = STATE_ZOMBIE;
+  dispatch_next ();
 }
 
-static void trap_debug_trap (void)
+void trap_debug_trap (void)
 {
-  while (TRUE)
-  {
-    debug_crash_screen ("Debug trap/fault", current_tss);
-    current_tss->state = STATE_ZOMBIE;
-    dispatch_next ();
-  }
+  exception_screen ("Fault/Trap", "Debug",
+                    "Any code or data reference or the INT 1 instruction.",
+                    EXCEPTION_CODE_NONE, current_tss);
+  debug_run ();
 }
 
-static void trap_nmi (void)
+void trap_nmi (void)
 {
-  debug_crash_screen ("NMI received", current_tss);
+  exception_screen ("Interrupt", "NMI Interrupt",
+                    "Nonmaskable external interrupt.", 
+                    EXCEPTION_CODE_NONE, current_tss);
   DEBUG_HALT ("System halted.");
 }
 
-static void trap_breakpoint_trap (void)
+void trap_breakpoint_trap (void)
 {
-  while (TRUE)
-  {
-    debug_crash_screen ("Breakpoint trap", current_tss);
-    current_tss->state = STATE_ZOMBIE;
-    dispatch_next ();
-  }
+  exception_screen ("Trap", "Breakpoint", 
+                    "INT 3 instruction.",
+                    EXCEPTION_CODE_NONE, current_tss);
+  debug_run ();
 }
 
-static void trap_overflow_trap (void)
+void trap_overflow_trap (void)
 {
-  while (TRUE)
-  {
-    debug_crash_screen ("Overflow trap", current_tss);
-    current_tss->state = STATE_ZOMBIE;
-    dispatch_next ();
-  }
+  exception_screen ("Trap", "Overflow",
+                    "INTO instruction.",
+                    EXCEPTION_CODE_NONE, current_tss);
+  current_tss->state = STATE_ZOMBIE;
+  dispatch_next ();
 }
 
-static void trap_bound_range_exceeded_fault (void)
+void trap_bound_range_exceeded_fault (void)
 {
   /* FIXME: What do we do here? */
-
-  while (TRUE)
-  {
-    debug_crash_screen ("Bound range exceeded fault", current_tss);
-    current_tss->state = STATE_ZOMBIE;
-    dispatch_next ();
-  }
+  exception_screen ("Fault", "BOUND Range Exceeded",
+                    "BOUND instruction.", 
+                    EXCEPTION_CODE_NONE, current_tss);
+  current_tss->state = STATE_ZOMBIE;
+  dispatch_next ();
 }
 
-static void trap_invalid_opcode_fault (void)
+void trap_invalid_opcode_fault (void)
 {
-  while (TRUE)
-  {
-    debug_crash_screen ("Invalid opcode fault", current_tss);
-    current_tss->state = STATE_ZOMBIE;
-    dispatch_next ();
-  }
+  exception_screen ("Fault", "Invalid Opcode (Undefined Opcode)",
+                    "UD2 instruction or reserved opcode.", 
+                    EXCEPTION_CODE_NONE, current_tss);
+  current_tss->state = STATE_ZOMBIE;
+  dispatch_next ();
 }
 
-static void trap_device_not_available_fault (void)
+void trap_device_not_available_fault (void)
 {
-  while (TRUE)
-  {
-    debug_crash_screen ("Device not available fault", current_tss);
-    current_tss->state = STATE_ZOMBIE;
-    dispatch_next ();
-  }
+  exception_screen ("Fault", "Device Not Available (No Math Coprocessor)",
+                    "Floating-point or WAIT/FWAIT instruction.", 
+                    EXCEPTION_CODE_NONE, current_tss);
+  current_tss->state = STATE_ZOMBIE;
+  dispatch_next ();
 }
 
-static void trap_double_fault (void)
+void trap_double_fault (void)
 {
-  while (TRUE)
-  {
-    debug_crash_screen ("Double fault (probably due to a kernel bug)",
-                        current_tss);
-    cpu_halt ();
-  }
-}
-
-static void trap_coprocessor_segment_overrun_abort (void)
-{
-  while (TRUE)
-  {
-    debug_crash_screen ("Coprocessor segment overrun abort", current_tss);
-    current_tss->state = STATE_ZOMBIE;
-    dispatch_next ();
-  }
-}
-
-static void trap_invalid_tss_fault (void)
-{
-  debug_crash_screen ("Invalid TSS fault", current_tss);
+  exception_screen ("Abort", "Double Fault", 
+                    "Any instruction that can generate an exception, an NMI,"
+                    " or an INTR (probably due to a kernel bug).",
+                    EXCEPTION_CODE_SEGMENT, current_tss);
   DEBUG_HALT ("System halted.");
 }
 
-static void trap_segment_not_present_fault (void)
+void trap_coprocessor_segment_overrun_abort (void)
 {
-  while (TRUE)
-  {
-    debug_crash_screen ("Segment not present fault", current_tss);
-    current_tss->state = STATE_ZOMBIE;
-    dispatch_next ();
-  }
+  exception_screen ("Fault", "Coprocessor Segment Overrun",
+                    "Floating-point instruction.", 
+                    EXCEPTION_CODE_NONE, current_tss);
+  current_tss->state = STATE_ZOMBIE;
+  dispatch_next ();
 }
 
-static void trap_stack_fault (void)
+void trap_invalid_tss_fault (void)
 {
-  while (TRUE)
-  {
-    debug_crash_screen ("Stack fault", current_tss);
-    current_tss->state = STATE_ZOMBIE;
-    dispatch_next ();
-  }
+  exception_screen ("Fault", "Invalid TSS",
+                    "Task switch or TSS access.", 
+                    EXCEPTION_CODE_SEGMENT, current_tss);
+  DEBUG_HALT ("System halted.");
 }
 
-static void trap_general_protection_fault (void)
+void trap_segment_not_present_fault (void)
 {
-  while (TRUE)
-  {
-    debug_crash_screen ("General protection fault", current_tss);
-    current_tss->state = STATE_ZOMBIE;
-    dispatch_next ();
-  }
+  exception_screen ("Fault", "Segment Not Present",
+                    "Loading segment registers or accessing system segments.",
+                    EXCEPTION_CODE_SEGMENT, current_tss);
+  current_tss->state = STATE_ZOMBIE;
+  dispatch_next ();
 }
 
-static void trap_page_fault (void)
+void trap_stack_fault (void)
 {
-  u32 address;
+  exception_screen ("Fault", "Stack-Segment Fault",
+                    "Stack operations and SS register loads.", 
+                    EXCEPTION_CODE_SEGMENT, current_tss);
+  current_tss->state = STATE_ZOMBIE;
+  dispatch_next ();
+}
 
-  while (TRUE)
+void trap_general_protection_fault (void)
+{
+  exception_screen ("Fault", "General Protection",
+                    "Any memory reference and other protection checks.", 
+                    EXCEPTION_CODE_SEGMENT, current_tss);
+  current_tss->state = STATE_ZOMBIE;
+  dispatch_next ();
+}
+
+void trap_page_fault (void)
+{
+#ifdef GROWING_STACK
+//  while (TRUE)
   {
+    u32 address;
     /* We need to check if this is a fault caused by the stack. */
     
     address = cpu_get_cr2 ();
@@ -203,18 +351,11 @@ static void trap_page_fault (void)
     
     if (address >= BASE_PROCESS_STACK)
     {
-      /* FIXME: This code should not really be here, but right now, it's good
-         for debugging... */
 
-      debug_crash_screen ("Stack overflow", current_tss);
-      current_tss->state = STATE_ZOMBIE;
-      //      if (current_task == TASK_ID_KERNEL)
-      //      {
-        //        cpu_halt ();
-      //      }
-      dispatch_next ();
-
-      /* FIXME: End of temporary code. */
+       if (current_tss->process_id == TASK_ID_KERNEL)
+       {
+         cpu_halt ();
+       }
 
       DEBUG_MESSAGE (DEBUG, "Stack is growing (was %u pages)",
                      current_tss->stack_pages);
@@ -260,51 +401,74 @@ static void trap_page_fault (void)
     
     else
     {
-      debug_crash_screen ("Illegal page fault", current_tss);
+      while(TRUE){
+      
+      exception_screen ("Fault", "Page Fault",
+                        "Any memory reference.",
+                        EXCEPTION_CODE_PAGE, current_tss);
       current_tss->state = STATE_ZOMBIE;
-
 #ifdef HALT_ON_ERROR
       debug_run ();
 #endif
-
       dispatch_next ();
+      }
     }
-
-    asm volatile ("iret");
+  DEBUG_MESSAGE (DEBUG, "Leaving handler.");
   }
+#else
+  exception_screen ("Fault", "Page Fault",
+                    "Any memory reference.",
+                    EXCEPTION_CODE_PAGE, current_tss);
+  current_tss->state = STATE_ZOMBIE;
+  debug_run ();
+  dispatch_next ();  
+#endif
 }  
 
-static void trap_klotis_fault (void)
+
+void trap_reserved (void)
 {
-  debug_crash_screen ("Buggy CPU non-fault", current_tss);
+  exception_screen ("XXXX", "(Intel Reserved)", 
+                    "Buggy CPU non-fault",
+                    EXCEPTION_CODE_NONE, current_tss);
   DEBUG_HALT ("System halted.");
 }
 
-static void trap_floating_point_error_fault (void)
+void trap_floating_point_error_fault (void)
 {
-  while (TRUE)
-  {
-    debug_crash_screen ("Floating point error fault", current_tss);
-    current_tss->state = STATE_ZOMBIE;
-    dispatch_next ();
-  }
+  exception_screen ("Fault", "Floating-Point Error (Math Fault)",
+                    "Floating-point or WAIT/FWAIT instruction.", 
+                    EXCEPTION_CODE_NONE, current_tss);
+  current_tss->state = STATE_ZOMBIE;
+  dispatch_next ();
 }
 
-static void trap_alignment_check_fault (void)
+void trap_alignment_check_fault (void)
 {
-  while (TRUE)
-  {
-    debug_crash_screen ("Alignment check fault", current_tss);
-    current_tss->state = STATE_ZOMBIE;
-    dispatch_next ();
-  }
+  exception_screen ("Fault", "Alignment Check",
+                    "Any data reference in memory.",
+                    EXCEPTION_CODE_SEGMENT, current_tss);
+  current_tss->state = STATE_ZOMBIE;
+  dispatch_next ();
 }
 
-static void trap_machine_check_abort (void)
+void trap_machine_check_abort (void)
 {
-  debug_crash_screen ("Machine check abort", current_tss);
+  exception_screen ("Abort", "Machine Check",
+                    "Error codes (if any) and source are model dependent.", 
+                    EXCEPTION_CODE_NONE, current_tss);
   DEBUG_HALT ("System halted.");
 }
+
+void trap_streaming_simd_extensions_fault (void)
+{
+  exception_screen ("Fault", "Streaming SIMD Extensions",
+                    "SIMD floating-point instructions.", 
+                    EXCEPTION_CODE_NONE, current_tss);
+  current_tss->state = STATE_ZOMBIE;
+  dispatch_next ();
+}
+
 
 /* Initialise traps. (Well, exceptions really, but they're called traps
    on Motorola. ;) */
@@ -353,7 +517,8 @@ static void trap_setup_handler (u32 number, tss_type *setup_tss,
   /* Add it to the GDT and IDT. */
 
   gdt_add_entry (GDT_BASE_EXCEPTIONS + number, &trap_descriptor);
-  idt_setup_task_gate (number, GDT (GDT_BASE_EXCEPTIONS + number, 0), 0);
+  idt_setup_task_gate (number, GDT (GDT_BASE_EXCEPTIONS + number, 0), 3);
+//  idt_setup_interrupt_gate (number, SELECTOR_KERNEL_CODE, trap_pointer, 3);
 }
 
 /* Initialise traps. */
@@ -361,7 +526,6 @@ static void trap_setup_handler (u32 number, tss_type *setup_tss,
 void trap_init (void)
 {
   u32 physical_page;
-  //  u32 counter;
 
   /* Allocate a page for the trap TSS:es. */
 
@@ -394,23 +558,49 @@ void trap_init (void)
 
   /* Setup exception handlers for all exceptions. */
 
-  trap_setup_handler (0, &trap_tss[0], trap_divide_error_fault);
-  trap_setup_handler (1, &trap_tss[1], trap_debug_trap);
-  trap_setup_handler (2, &trap_tss[2], trap_nmi);
-  trap_setup_handler (3, &trap_tss[3], trap_breakpoint_trap);
-  trap_setup_handler (4, &trap_tss[4], trap_overflow_trap);
-  trap_setup_handler (5, &trap_tss[5], trap_bound_range_exceeded_fault);
-  trap_setup_handler (6, &trap_tss[6], trap_invalid_opcode_fault);
-  trap_setup_handler (7, &trap_tss[7], trap_device_not_available_fault);
-  trap_setup_handler (8, &trap_tss[8], trap_double_fault);
-  trap_setup_handler (9, &trap_tss[9], trap_coprocessor_segment_overrun_abort);
-  trap_setup_handler (10, &trap_tss[10], trap_invalid_tss_fault);
-  trap_setup_handler (11, &trap_tss[11], trap_segment_not_present_fault);
-  trap_setup_handler (12, &trap_tss[12], trap_stack_fault);
-  trap_setup_handler (13, &trap_tss[13], trap_general_protection_fault);
-  trap_setup_handler (14, &trap_tss[14], trap_page_fault);
-  trap_setup_handler (15, &trap_tss[15], trap_klotis_fault);
+  trap_setup_handler (0, &trap_tss[0], trap0_handler);
+
+//  trap_setup_handler (1, &trap_tss[1], trap1_handler);
+  idt_setup_interrupt_gate (1, SELECTOR_KERNEL_CODE, trap1_handler, 3);
+
+  trap_setup_handler (2, &trap_tss[2], trap2_handler);
+
+//  trap_setup_handler (3, &trap_tss[3], trap3_handler);
+  idt_setup_interrupt_gate (3, SELECTOR_KERNEL_CODE, trap3_handler, 3);
+
+  trap_setup_handler (4, &trap_tss[4], trap4_handler);
+  trap_setup_handler (5, &trap_tss[5], trap5_handler);
+  trap_setup_handler (6, &trap_tss[6], trap6_handler);
+  trap_setup_handler (7, &trap_tss[7], trap7_handler);
+  trap_setup_handler (8, &trap_tss[8], trap8_handler);
+  trap_setup_handler (9, &trap_tss[9], trap9_handler);
+  trap_setup_handler (10, &trap_tss[10], trap10_handler);
+  trap_setup_handler (11, &trap_tss[11], trap11_handler);
+  trap_setup_handler (12, &trap_tss[12], trap12_handler);
+
+//  trap_setup_handler (13, &trap_tss[13], trap13_handler);
+  idt_setup_interrupt_gate (13, SELECTOR_KERNEL_CODE, trap13_handler, 3);
+
+//  trap_setup_handler (14, &trap_tss[14], trap14_handler);
+  idt_setup_interrupt_gate (14, SELECTOR_KERNEL_CODE, trap14_handler, 3);
+
+  trap_setup_handler (15, &trap_tss[15], trap_reserved_handler);
+
   trap_setup_handler (16, &trap_tss[16], trap_floating_point_error_fault);
   trap_setup_handler (17, &trap_tss[17], trap_alignment_check_fault);
   trap_setup_handler (18, &trap_tss[18], trap_machine_check_abort);
+  trap_setup_handler (19, &trap_tss[19], trap_streaming_simd_extensions_fault);
+
+  trap_setup_handler (20, &trap_tss[20], trap_reserved_handler);
+  trap_setup_handler (21, &trap_tss[21], trap_reserved_handler);
+  trap_setup_handler (22, &trap_tss[22], trap_reserved_handler);
+  trap_setup_handler (23, &trap_tss[23], trap_reserved_handler);
+  trap_setup_handler (24, &trap_tss[24], trap_reserved_handler);
+  trap_setup_handler (25, &trap_tss[25], trap_reserved_handler);
+  trap_setup_handler (26, &trap_tss[26], trap_reserved_handler);
+  trap_setup_handler (27, &trap_tss[27], trap_reserved_handler);
+  trap_setup_handler (28, &trap_tss[28], trap_reserved_handler);
+  trap_setup_handler (29, &trap_tss[29], trap_reserved_handler);
+  trap_setup_handler (30, &trap_tss[30], trap_reserved_handler);
+  trap_setup_handler (31, &trap_tss[31], trap_reserved_handler);
 }

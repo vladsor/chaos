@@ -1,4 +1,4 @@
-/* $Id: debug.c,v 1.2 2000/10/12 06:25:09 plundis Exp $ */
+/* $Id: debug.c,v 1.2 2001/02/10 21:25:55 jojo Exp $ */
 /* Abstract: Various functions and macros. */
 /* Author: Per Lundberg <plundis@chaosdev.org> */
 

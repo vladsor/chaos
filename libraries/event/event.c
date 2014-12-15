@@ -28,10 +28,13 @@ return_type event_generate(
   event_queue_id_type event_queue_id,
   event_parameter_type *event_parameter)
 {
-  return_type return_value = system_call_event_queue_send (event_queue_id,
-                                                           event_parameter);
+  return_type return_value = system_call_event_queue_generate_event (
+    event_queue_id, event_parameter, 0);
+    
   if(return_value == STORM_RETURN_SUCCESS)
+  {
     return EVENT_RETURN_SUCCESS;
+  }
   return EVENT_RETURN_EVENT_BREAK;
 }
 
@@ -39,31 +42,33 @@ return_type event_wait(
   event_queue_id_type event_queue_id,
   event_parameter_type *event_parameter)
 {
-  return_type return_value = system_call_event_queue_receive (event_queue_id,
-                                                              event_parameter);
-  if(return_value == STORM_RETURN_SUCCESS)
+  return_type return_value = system_call_event_queue_wait_event (
+    event_queue_id, event_parameter, 0);
+    
+  if (return_value == STORM_RETURN_SUCCESS)
     return EVENT_RETURN_SUCCESS;
   return EVENT_RETURN_EVENT_BREAK;
 }
 
-return_type event_set_handler(event_handler_type event_handler,
-  event_queue_id_type event_queue_id,
+return_type event_set_handler(event_queue_id_type event_queue_id,
+  event_handler_type event_handler,
   event_parameter_type *event_parameter)
 {
+
   if (system_thread_create () == SYSTEM_RETURN_THREAD_NEW)
   {
     return_type return_value;
     system_thread_name_set ("event handler");
+    system_call_event_queue_register_listener (event_queue_id, 0);
+    event_parameter->event_class = EVENT_CLASS_NONE;
+
     while(TRUE)
     {
-      event_parameter->event_class = 0;
-      event_parameter->data = NULL;
-      event_parameter->length = 0;
-
       return_value = event_wait(event_queue_id, event_parameter);  
 
-      event_handler();
+      event_handler (event_parameter);
     }
   }
+
   return EVENT_RETURN_SUCCESS;
 }

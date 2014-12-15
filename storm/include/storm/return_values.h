@@ -1,4 +1,4 @@
-/* $Id: return_values.h,v 1.1.1.1 2000/09/26 19:08:16 plundis Exp $ */
+/* $Id: return_values.h,v 1.2 2001/02/10 21:26:12 jojo Exp $ */
 /* Abstract: Return values */
 /* Authors: Per Lundberg <plundis@chaosdev.org> 
             Henrik Hallin <hal@chaosdev.org> 
@@ -108,6 +108,14 @@ enum
      process addressing space. */
 
   STORM_RETURN_SECTION_MISPLACED,
+  
+  STORM_RETURN_TIME_OUT,
+  
+  STORM_RETURN_RESOURCE_UNAVAILABLE,
+  
+  STORM_RETURN_ALREADY_DONE,
+  
+  STORM_RETURN_OUT_OF_ID_POOL,
 };
 
 #endif /* !__STORM_RETURN_VALUES_H__ */

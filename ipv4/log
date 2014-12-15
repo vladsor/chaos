@@ -1,0 +1,43 @@
+
+  Compiling server: ipv4...
+
+Compiling ipv4.c...
+ipv4.c: In function `main':
+ipv4.c:687: parse error before `='
+cc1: warnings being treated as errors
+ipv4.c:662: warning: unused variable `done'
+ipv4.c:657: warning: unused variable `ipc_structure'
+ipv4.c:713: warning: control reaches end of non-void function
+ipv4.c: At top level:
+ipv4.c:717: parse error before string constant
+ipv4.c:717: warning: type defaults to `int' in declaration of `system_thread_name_set'
+ipv4.c:717: warning: function declaration isn't a prototype
+ipv4.c:717: warning: redundant redeclaration of `system_thread_name_set' in same scope
+/mnt/chaos/data/programming/c/headers/system/functions.h:33: warning: previous declaration of `system_thread_name_set'
+ipv4.c:717: warning: data definition has no type or storage class
+ipv4.c:729: warning: type defaults to `int' in declaration of `system_call_process_parent_unblock'
+ipv4.c:729: warning: function declaration isn't a prototype
+ipv4.c:729: warning: redundant redeclaration of `system_call_process_parent_unblock' in same scope
+/mnt/chaos/data/programming/c/headers/system/system_calls.h:313: warning: previous declaration of `system_call_process_parent_unblock'
+ipv4.c:729: warning: data definition has no type or storage class
+ipv4.c:731: parse error before `while'
+ipv4.c:735: parse error before `&'
+ipv4.c:735: warning: type defaults to `int' in declaration of `ipc_service_connection_wait'
+ipv4.c:735: warning: function declaration isn't a prototype
+ipv4.c:735: warning: redundant redeclaration of `ipc_service_connection_wait' in same scope
+/mnt/chaos/data/programming/c/headers/ipc/functions.h:41: warning: previous declaration of `ipc_service_connection_wait'
+ipv4.c:735: warning: data definition has no type or storage class
+ipv4.c:736: warning: type defaults to `int' in declaration of `reply_mailbox_id'
+ipv4.c:736: `ipc_structure' undeclared here (not in a function)
+ipv4.c:736: warning: data definition has no type or storage class
+ipv4.c:738: parse error before `if'
+ipv4.c:741: warning: type defaults to `int' in declaration of `handle_connection'
+ipv4.c:741: warning: parameter names (without types) in function declaration
+ipv4.c:741: conflicting types for `handle_connection'
+ipv4.c:228: previous declaration of `handle_connection'
+ipv4.c:741: warning: redundant redeclaration of `handle_connection' in same scope
+ipv4.c:228: warning: previous declaration of `handle_connection'
+ipv4.c:741: warning: data definition has no type or storage class
+ipv4.c:742: parse error before `}'
+ipv4.c:741: warning: `handle_connection' defined but not used
+make: *** [ipv4.o] Ошибка 1

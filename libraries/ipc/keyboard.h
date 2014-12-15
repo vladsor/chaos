@@ -1,4 +1,4 @@
-/* $Id: keyboard.h,v 1.2 2000/09/29 21:08:47 hal Exp $ */
+/* $Id: keyboard.h,v 1.2 2001/02/10 21:22:41 jojo Exp $ */
 /* Abstract: Protocol used when communicating with keyboard
    servers. */
 /* Authors: Per Lundberg <plundis@chaosdev.org>
@@ -33,6 +33,10 @@ enum
   IPC_KEYBOARD_REGISTER_TARGET = (IPC_PROTOCOL_KEYBOARD << 16),
   IPC_KEYBOARD_UNREGISTER_TARGET,
   IPC_KEYBOARD_EVENT,
+  IPC_KEYBOARD_MAP_AMOUNT,
+  IPC_KEYBOARD_MAP_INFO,
+  IPC_KEYBOARD_MAP_SET,
+  IPC_KEYBOARD_MAP_GET,
 };
 
 /* "Special keys" are keys that don't generate printable UTF-8

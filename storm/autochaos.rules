@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
-<!-- $Id: autochaos.rules,v 1.6 2000/10/22 14:59:39 plundis Exp $ -->
+<!-- $Id: autochaos.rules,v 1.2 2001/02/10 21:25:44 jojo Exp $ -->
 
 <autochaos>
   <package name="storm" version="0.5.0" type="kernel" license="GPL">
@@ -15,6 +15,9 @@
     <directory name="ia32" type="source">
       <source>cluster.c</source>
       <source>cpuid.c</source>
+
+      <source>fpu.c</source>
+
       <source>debug.c</source>
       <source>dispatch.c</source>
       <source>dma.c</source>
@@ -41,7 +44,10 @@
       <source>thread.c</source>
       <source>time.c</source>
       <source>timer.c</source>
+
       <source>trap.c</source>
+      <source>trap_handlers.S</source>
+
       <source>wrapper.c</source>
     </directory>
 
@@ -58,9 +64,17 @@
       <source>kernelfs.c</source>
       <source>log.c</source>
       <source>mailbox.c</source>
+
+      <source>id_avl.c</source>
+      <source>id_avl_util.c</source>
+      <source>id_pool.c</source>
+      <source>hash_table.c</source>
+      <source>event_queue.c</source>
+
       <source>memory.c</source>
       <source>service.c</source>
       <source>slab.c</source>
+      <source>system_call.c</source>
       <source>tag.c</source>
       <source>time.c</source>
     </directory>
@@ -75,6 +89,9 @@
       <header>kernelfs.h</header>
       <header>limits.h</header>
       <header>mailbox.h</header>
+
+      <header>event_queue.h</header>
+
       <header>process.h</header>
       <header>thread.h</header>
       <header>types.h</header>
@@ -88,6 +105,9 @@
     <directory name="include/storm/ia32" type="headers">
       <header>cluster.h</header>
       <header>cpu.h</header>
+
+      <header>fpu.h</header>
+
       <header>cpuid.h</header>
       <header>debug.h</header>
       <header>defines.h</header>
@@ -133,6 +153,12 @@
       <header>log.h</header>
       <header>limits.h</header>
       <header>mailbox.h</header>
+
+      <header>avl_pool.h</header>
+      <header>id_pool.h</header>
+      <header>hash_table.h</header>
+      <header>event_queue.h</header>
+
       <header>memory.h</header>
       <header>multiboot.h</header>
       <header>mutex.h</header>
@@ -145,6 +171,7 @@
       <header>service.h</header>
       <header>slab.h</header>
       <header>string.h</header>
+      <header>system_call.h</header>
       <header>tag.h</header>
       <header>thread.h</header>
       <header>time.h</header>

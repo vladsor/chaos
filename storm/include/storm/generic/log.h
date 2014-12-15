@@ -1,4 +1,4 @@
-/* $Id: log.h,v 1.1.1.1 2000/09/26 19:08:17 plundis Exp $ */
+/* $Id: log.h,v 1.2 2001/02/10 21:26:22 jojo Exp $ */
 /* Abstract: Kernel logging functions. */
 /* Author: Henrik Hallin <hal@chaosdev.org> */
 
@@ -29,5 +29,8 @@ typedef struct
 } log_list_type;
 
 extern log_list_type *log_list;
+
+extern void log_init (void);
+extern void log_print (char *string);
 
 #endif /* !__STORM_GENERIC_LOG_H__ */

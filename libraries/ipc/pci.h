@@ -49,6 +49,8 @@ enum
   /* Set PCI configuration state. */
 
   IPC_PCI_DEVICE_SET_STATE,
+
+  IPC_PCI_DEVICE_CLASS_EXISTS,
 };
 
 /* Return values. */
@@ -73,12 +75,12 @@ enum
 #define PCI_ROM_RESOURCE 6
 #define PCI_BRIDGE_RESOURCES 7
 
-#define PCI_BASE_ADDRESS_0	0x10	/* 32 bits */
-#define PCI_BASE_ADDRESS_1	0x14	/* 32 bits [htype 0,1 only] */
-#define PCI_BASE_ADDRESS_2	0x18	/* 32 bits [htype 0 only] */
-#define PCI_BASE_ADDRESS_3	0x1c	/* 32 bits */
-#define PCI_BASE_ADDRESS_4	0x20	/* 32 bits */
-#define PCI_BASE_ADDRESS_5	0x24	/* 32 bits */
+//#define PCI_BASE_ADDRESS_0	0x10	/* 32 bits */
+//#define PCI_BASE_ADDRESS_1	0x14	/* 32 bits [htype 0,1 only] */
+//#define PCI_BASE_ADDRESS_2	0x18	/* 32 bits [htype 0 only] */
+//#define PCI_BASE_ADDRESS_3	0x1c	/* 32 bits */
+//#define PCI_BASE_ADDRESS_4	0x20	/* 32 bits */
+//#define PCI_BASE_ADDRESS_5	0x24	/* 32 bits */
 
 
 /* IO resources have these defined flags. */
@@ -116,6 +118,13 @@ typedef struct
   u16 device_id;
 } pci_device_probe_type;
 
+typedef struct
+{
+  u8 class_id;
+  u8 subclass_id;
+  u8 interface_id;
+} pci_device_class_type;
+
 /* Resources are tree-like, allowing nesting etc.. */
 
 typedef struct 
@@ -137,5 +146,10 @@ typedef struct
   
   pci_resource_type resource[PCI_NUMBER_OF_RESOURCES];
 } pci_device_info_type;
+
+typedef struct
+{
+  u8 data[256];
+} pci_configuration_space_type;
 
 #endif /* !__LIBRARY_IPC_PCI_H__ */

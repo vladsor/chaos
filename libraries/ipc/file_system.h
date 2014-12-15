@@ -1,4 +1,4 @@
-/* $Id: file_system.h,v 1.2 2000/09/29 21:08:47 hal Exp $ */
+/* $Id: file_system.h,v 1.2 2001/02/10 21:22:39 jojo Exp $ */
 /* Abstract: File system protocol. */
 /* Author: Per Lundberg <plundis@chaosdev.org> */
 
@@ -21,12 +21,6 @@
 
 #ifndef __LIBRARY_IPC_FILE_SYSTEM_H__
 #define __LIBRARY_IPC_FILE_SYSTEM_H__
-
-/* Limits. */
-/* FIXME: Remove these. */
-
-#define MAX_PATH_NAME_LENGTH    1024
-#define MAX_FILE_NAME_LENGTH    256
 
 enum
 {

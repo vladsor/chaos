@@ -1,4 +1,4 @@
-/* $Id: idt.h,v 1.2 2000/10/15 11:17:51 plundis Exp $ */
+/* $Id: idt.h,v 1.2 2001/02/10 21:26:29 jojo Exp $ */
 /* Abstract: Function prototypes for IDT routines. */
 /* Authors: Per Lundberg <plundis@chaosdev.org>
             Henrik Hallin <hal@chaosdev.org> */

@@ -1,4 +1,4 @@
-/* $Id: sound.h,v 1.1 2000/10/10 20:04:13 plundis Exp $ */
+/* $Id: sound.h,v 1.1 2001/02/10 22:58:06 jojo Exp $ */
 /* Abstract: sound server IPC message types. */
 /* Author: Erik Moren <nemo@chaosdev.org> */
 

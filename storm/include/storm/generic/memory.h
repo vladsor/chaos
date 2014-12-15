@@ -1,4 +1,4 @@
-/* $Id: memory.h,v 1.4 2000/10/22 14:59:39 plundis Exp $ */
+/* $Id: memory.h,v 1.2 2001/02/10 21:26:22 jojo Exp $ */
 /* Abstract: Functions for memory operations. */
 /* Author: Per Lundberg <plundis@chaosdev.org> */
 
@@ -37,8 +37,5 @@ extern return_type memory_deallocate (void **address);
 
 extern return_type memory_get_physical_address 
   (void *virtual_address, void **physical_address);
-
-extern return_type memory_reserve 
-  (address_type start, unsigned int size, void **virtual_address);
 
 #endif /* !__STORM_GENERIC_MEMORY_H__ */

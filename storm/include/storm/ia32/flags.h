@@ -1,4 +1,4 @@
-/* $Id: flags.h,v 1.1.1.1 2000/09/26 19:08:18 plundis Exp $ */
+/* $Id: flags.h,v 1.2 2001/02/10 21:26:29 jojo Exp $ */
 /* Abstract: Definitions of the bits in the flag field. */
 /* Author: Per Lundberg <plundis@chaosdev.org> */
 

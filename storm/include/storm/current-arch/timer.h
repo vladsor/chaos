@@ -1,4 +1,4 @@
-/* $Id: timer.h,v 1.2 2000/09/29 20:05:07 plundis Exp $ */
+/* $Id: timer.h,v 1.2 2001/02/10 21:26:32 jojo Exp $ */
 /* Abstract: Function prototypes and structure definitions of the
    timer support. */
 /* Authors: Per Lundberg <plundis@chaosdev.org>
@@ -25,14 +25,15 @@
 #define __STORM_IA32_TIMER_H__
 
 #include <storm/generic/limits.h>
+#include <storm/generic/time.h>
 #include <storm/ia32/tss.h>
 
 /* Function prototypes. */
 
 extern void timer_init (void) INIT_CODE;
-extern void timer_add_event (time_type milliseconds, u32 action, storm_tss_type *tss);
+extern void timer_add_event
+  (time_type milliseconds, u32 action, storm_tss_type *tss);
 extern void timer_check_events (void);
-extern return_type timer_read (time_type *timer);
 
 /* Typedefs. */
 
@@ -45,10 +46,6 @@ typedef struct
   storm_tss_type *tss;
 } __attribute__ ((packed)) timer_event_type;
 
-/* External variables. */
-
-extern volatile time_type uptime;
-extern u32 hz;
 
 /* Defines/enums. */
 /* Events. */

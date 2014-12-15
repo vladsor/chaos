@@ -1,4 +1,4 @@
-/* $Id: virtual_file_system.h,v 1.2 2000/09/29 21:08:47 hal Exp $ */
+/* $Id: virtual_file_system.h,v 1.2 2001/02/10 21:22:43 jojo Exp $ */
 /* Abstract: Virtual file system protocol. */
 /* Author: Per Lundberg <plundis@chaosdev.org> */
 
@@ -100,10 +100,6 @@ enum
 
 typedef struct
 {
-  /* The mailbox ID for the volume to mount. */
-
-  mailbox_id_type mailbox_id;
-
   /* The location where we want this volume to be mounted. */
 
   char location[MAX_PATH_NAME_LENGTH];

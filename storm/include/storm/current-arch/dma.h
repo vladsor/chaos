@@ -1,4 +1,4 @@
-/* $Id: dma.h,v 1.2 2000/10/10 20:18:29 plundis Exp $ */
+/* $Id: dma.h,v 1.2 2001/02/10 21:26:28 jojo Exp $ */
 /* Abstract: Function prototypes for DMA support. */
 /* Author: Anders Ohrt <doa@chaosdev.org>
            Per Lundberg <plundis@chaosdev.org> */
@@ -23,6 +23,7 @@
 #ifndef __STORM_IA32_DMA_H__
 #define __STORM_IA32_DMA_H__
 
+#include <storm/ia32/defines.h>
 #include <storm/ia32/mutex.h>
 #include <storm/ia32/types.h>
 #include <storm/dma.h>

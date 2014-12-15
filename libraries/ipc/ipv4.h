@@ -1,4 +1,4 @@
-/* $Id: ipv4.h,v 1.2 2000/09/29 21:08:47 hal Exp $ */
+/* $Id: ipv4.h,v 1.2 2001/02/10 21:22:41 jojo Exp $ */
 /* Abstract: IPv4 protocol */
 /* Author: Per Lundberg <plundis@chaosdev.org> */
 
@@ -22,37 +22,6 @@
 #ifndef __LIBRARY_IPC_IPV4_H__
 #define __LIBRARY_IPC_IPV4_H__
 
-/* This file is a little ugly; we have to include network/network.h in
-   the middle, because it needs some of us and we need some of
-   it... FIXME: This should be resolved. */
-
-typedef unsigned int ipv4_socket_id_type;
-
-typedef struct
-{
-  ipv4_socket_id_type socket_id;
-  unsigned int length;
-  u8 data[0];
-} ipv4_send_type;
-
-typedef struct
-{
-  u32 address;
-  u16 port;
-  unsigned int protocol;
-} ipv4_connect_type;
-
-typedef struct
-{
-  /* FIXME: We can't use the define yet... but we should, in some
-     way. */
-
-  u8 ethernet_address[6];
-  u32 ip_address;
-} ipv4_arp_entry_type;
-
-#include <network/network.h>
-
 enum
 {
   IPC_IPV4_INTERFACE_CONFIGURE = (IPC_PROTOCOL_IPV4 << 16),
@@ -61,6 +30,7 @@ enum
   /* FIXME: Think about how this should really work. */
   
   IPC_IPV4_CONNECT,
+  IPC_IPV4_RECONNECT,
   IPC_IPV4_LISTEN,
   IPC_IPV4_SEND,
   IPC_IPV4_RECEIVE,
@@ -86,30 +56,5 @@ enum
 {
   IPC_IPV4_FLAG_FORWARD = (1 << 0),
 };
-
-/* FIXME: Use a tag item for this one. */
-
-#define IPV4_HOST_NAME_LENGTH 32
-
-#define IPV4_INTERFACE_IDENTIFICATION_LENGTH 32
-
-/* IP configuration. */
-
-typedef struct
-{
-  char identification[IPV4_INTERFACE_IDENTIFICATION_LENGTH];
-
-  /* Is the specified interface up? */
-
-  bool up;
-
-  /* Is the specified interface using DHCP? */
-
-  bool dhcp;
-  u32 ip_address;
-  u32 netmask;
-  u32 gateway;
-  u8 hardware_address[NETWORK_ETHERNET_ADDRESS_LENGTH];
-} ipv4_interface_type;
 
 #endif /* !__LIBRARY_IPC_IPV4_H__ */

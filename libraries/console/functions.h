@@ -1,4 +1,4 @@
-/* $Id: functions.h,v 1.2 2000/09/29 21:08:25 hal Exp $ */
+/* $Id: functions.h,v 1.2 2001/02/10 21:22:32 jojo Exp $ */
 /* Abstract: Function definitions for the console library. */
 /* Author: Per Lundberg <plundis@chaosdev.org> */
 
@@ -48,42 +48,36 @@ extern return_type console_print
    const char *string);
 
 extern return_type console_print_formatted
-  (console_structure_type *console_structure, 
-   const char *string, ...);
+  (console_structure_type *console_structure, const char *string, ...);
 // __attribute__ ((format (printf, 1, 2)));
 
 extern return_type console_print_at
   (console_structure_type *console_structure, int x, int y,
    const char *string);
+
+extern return_type console_print_charset 
+  (console_structure_type *console_structure);
+
 /*
 extern return_type console_print_formatted_at
   (console_structure_type *console_structure, int x, int y,
    const char *string, ...);
 */
+
+
 extern return_type console_clear (console_structure_type *console_structure);
 
 extern return_type console_cursor_move
   (console_structure_type *console_structure, unsigned int x, unsigned int y);
-
 extern return_type console_attribute_set
   (console_structure_type *console_structure, int foreground, int background,
    int attributes);
-
-extern return_type console_keyboard_cursor_set
-  (console_structure_type *console_structure, bool visibility);
-
-extern return_type console_mouse_cursor_set
-  (console_structure_type *console_structure, bool visibility);
-
-extern return_type console_scroll_set
-  (console_structure_type *console_structure, bool which);
-
+extern return_type console_cursor_appearance_set
+  (console_structure_type *console_structure, bool visibility, bool block);
 extern return_type console_use_keyboard
   (console_structure_type *console_structure, bool which, int type);
-
 extern return_type console_use_mouse
   (console_structure_type *console_structure, bool which);
-
 extern return_type console_event_wait
   (console_structure_type *console_structure, void *event_data, int *type,
    bool block);

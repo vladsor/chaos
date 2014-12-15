@@ -1,4 +1,4 @@
-/* $Id: irq.h,v 1.2 2000/10/16 17:06:48 plundis Exp $ */
+/* $Id: irq.h,v 1.2 2001/02/10 21:26:21 jojo Exp $ */
 /* Abstract: Interrupt and IRQ related function prototypes and
    structure definitions. */
 /* Authors: Per Lundberg <plundis@chaosdev.org>

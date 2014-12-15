@@ -1,4 +1,4 @@
-/* $Id: debug.h,v 1.3 2000/10/19 21:22:04 plundis Exp $ */
+/* $Id: debug.h,v 1.2 2001/02/10 21:26:20 jojo Exp $ */
 /* Abstract: Debug functions. */
 /* Author: Per Lundberg <plundis@chaosdev.org> */
 
@@ -121,6 +121,17 @@ extern void debug_run (void);
     ((process_info_type *) current_tss->process_info)->name, \
     current_tss->process_id, current_tss->thread_name, \
     current_tss->thread_id); \
+    irq_enable (0); \
+  }
+
+#define IDEBUG_MESSAGE(debug, message...) \
+  if (debug) \
+  { \
+    irq_disable (0); \
+    debug_print ("%s: ", __FUNCTION__); \
+    debug_print (## message); \
+    debug_print (" (%s:%u)\n", \
+    __FILE__, __LINE__); \
     irq_enable (0); \
   }
 

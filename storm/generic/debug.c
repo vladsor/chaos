@@ -1,4 +1,4 @@
-/* $Id: debug.c,v 1.4 2000/10/21 00:09:40 plundis Exp $ */
+/* $Id: debug.c,v 1.2 2001/02/10 21:25:49 jojo Exp $ */
 /* Abstract: Functions used primarily when debugging the kernel. */
 /* Authors: Per Lundberg <plundis@chaosdev.org> 
             Henrik Hallin <hal@chaosdev.org> */

@@ -1,4 +1,4 @@
-/* $Id: service.h,v 1.2 2000/10/22 14:59:39 plundis Exp $ */
+/* $Id: service.h,v 1.2 2001/02/10 21:26:25 jojo Exp $ */
 /* Abstract: Function prototypes for the service system. */
 /* Author: Per Lundberg <plundis@chaosdev.org> */
 
@@ -50,18 +50,20 @@ typedef struct
 
 /* Create a new service. */
 
-extern return_type service_create (const char *protocol_name,
-                                   mailbox_id_type *mailbox_id,
-                                   tag_type *identification);
+extern return_type service_create
+  (const char *protocol_name,  mailbox_id_type *mailbox_id,
+   tag_type *identification);
 
-/* Destroy a service. */
+extern return_type service_destroy (mailbox_id_type mailbox_id);
 
-return_type service_destroy (mailbox_id_type mailbox_id);
+extern return_type service_get 
+  (const char *protocol_name, service_parameter_type *service_parameter,
+   tag_type *identification_mask);
 
-/* Get all the services for the given protocol. */
+extern return_type service_protocol_get_amount 
+  (unsigned int *number_of_protocols);
 
-extern return_type service_get (const char *protocol_name,
-                                service_parameter_type *service_parameter,
-                                tag_type *identification_mask);
+extern return_type service_protocol_get
+  (unsigned int *maximum_protocols, service_protocol_type *protocol_info);
 
 #endif /* !__STORM_GENERIC_SERVICE_H__ */

@@ -1,4 +1,4 @@
-/* $Id: multiboot.c,v 1.1.1.1 2000/09/26 19:08:16 plundis Exp $ */
+/* $Id: multiboot.c,v 1.2 2001/02/10 21:26:03 jojo Exp $ */
 /* Abstract: Parse some of the Multiboot data. */
 /* Author: Per Lundberg <plundis@chaosdev.org> */
 

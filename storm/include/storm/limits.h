@@ -1,4 +1,4 @@
-/* $Id: limits.h,v 1.3 2000/10/22 14:59:39 plundis Exp $ */
+/* $Id: limits.h,v 1.2 2001/02/10 21:26:11 jojo Exp $ */
 /* Abstract: Limitations on the kernel level. */
 /* Authors: Per Lundberg <plundis@chaosdev.org>
             Henrik Hallin <hal@chaosdev.org> */
@@ -31,6 +31,9 @@
 #define MAX_U16                         ((u16) -1)
 #define MAX_U32                         ((u32) -1)
 #define MAX_TIME                        ((time_type) -1)
+
+#define MAX_ID                          ((id_type) -1)
+#define MAX_UINT                        ((unsigned int) -1)
 
 /* Other limitations. */
 

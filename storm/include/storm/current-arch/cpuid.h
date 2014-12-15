@@ -1,4 +1,4 @@
-/* $Id: cpuid.h,v 1.1.1.1 2000/09/26 19:08:18 plundis Exp $ */
+/* $Id: cpuid.h,v 1.2 2001/02/10 21:26:27 jojo Exp $ */
 /* Abstract: Function prototypes and structure definitions for CPU
    identification routines. */
 

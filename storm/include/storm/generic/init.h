@@ -1,4 +1,4 @@
-/* $Id: init.h,v 1.1.1.1 2000/09/26 19:08:17 plundis Exp $ */
+/* $Id: init.h,v 1.2 2001/02/10 21:26:21 jojo Exp $ */
 /* Abstract: Function prototypes. */
 /* Authors: Per Lundberg <plundis@chaosdev.org>
             Henrik Hallin <hal@chaosdev.org> */

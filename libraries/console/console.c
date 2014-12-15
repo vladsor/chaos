@@ -1,4 +1,4 @@
-/* $Id: console.c,v 1.3 2000/09/30 10:28:15 plundis Exp $ */
+/* $Id: console.c,v 1.2 2001/02/10 21:22:30 jojo Exp $ */
 /* Abstract: Console library. */
 /* Author: Per Lundberg <plundis@chaosdev.org> */
 
@@ -48,7 +48,6 @@ return_type console_init (console_structure_type *console_structure,
   if (ipc_service_resolve ("console", mailbox_id, &services, 5, tag) != 
       IPC_RETURN_SUCCESS)
   {
-    system_call_debug_print_simple ("II");
     return CONSOLE_RETURN_SERVICE_UNAVAILABLE;
   }
 
@@ -59,7 +58,6 @@ return_type console_init (console_structure_type *console_structure,
   if (ipc_service_connection_request (&console_structure->ipc_structure) != 
       IPC_RETURN_SUCCESS)
   {
-    system_call_debug_print_simple ("III");
     return CONSOLE_RETURN_SERVICE_UNAVAILABLE;
   }
 
@@ -264,6 +262,28 @@ return_type console_print (console_structure_type *console_structure,
   return CONSOLE_RETURN_SUCCESS;
 }
 
+return_type console_print_charset (console_structure_type *console_structure)
+{
+  message_parameter_type message_parameter;
+
+  if (!console_structure->initialised)
+  {
+    return CONSOLE_RETURN_SERVICE_UNAVAILABLE;
+  }
+
+  message_parameter.protocol = IPC_PROTOCOL_CONSOLE;
+  message_parameter.message_class = IPC_CONSOLE_PRINT_CHARSET;
+  message_parameter.length = 0;
+  message_parameter.data = NULL;
+  message_parameter.block = TRUE;
+
+  system_call_mailbox_send (console_structure->ipc_structure.output_mailbox_id,
+                            &message_parameter);
+
+  return CONSOLE_RETURN_SUCCESS;
+}
+
+
 /* Prints the given data to the console, a la printf and friends. */
 
 return_type console_print_formatted (console_structure_type *console_structure,
@@ -304,12 +324,12 @@ return_type console_print_at
     return CONSOLE_RETURN_SERVICE_UNAVAILABLE;
   }
   
-  data_length = string_length (string) + (sizeof(int) << 1) + 1;
+  data_length = string_length (string) + (sizeof(int) * 2) + 1;
   memory_allocate( (void **)&data, data_length );
 
   data[0] = x;
   data[1] = y;
-  string_copy( (char *)&data[2], string );
+  string_copy ((char *) &data[2], string);
 
   message_parameter.protocol = IPC_PROTOCOL_CONSOLE;
   message_parameter.length = data_length;
@@ -358,62 +378,35 @@ return_type console_attribute_set (console_structure_type *console_structure,
                                   background + 40);
 }
 
-return_type console_scroll_set 
-  (console_structure_type *console_structure, bool which)
+/* Set the cursor appearance. */
+
+return_type console_cursor_appearance_set
+  (console_structure_type *console_structure, bool visibility, bool block)
 {
-  message_parameter_type message_parameter;
+  /* FIXME: Add ANSI commands for setting the console appearance. We
+     can not really _add_ ANSI commands, can we? ;) */
 
-  message_parameter.block = TRUE;
-  message_parameter.protocol = IPC_PROTOCOL_CONSOLE;
-  message_parameter.message_class = which ? IPC_CONSOLE_ENABLE_SCROLL :
-    IPC_CONSOLE_DISABLE_SCROLL ;
-  message_parameter.length = 0;
-  message_parameter.data = NULL;
-  system_call_mailbox_send (console_structure->ipc_structure.output_mailbox_id,
-                            &message_parameter);
-  return CONSOLE_RETURN_SUCCESS;
-}
+  if (!visibility)
+  {
+    /* Hide the cursor. */
 
-/* Customisize keyboard cursor. */
+  }
+  else if (block)
+  {
+    /* Make it a block one. */
 
-return_type console_keyboard_cursor_set
-  (console_structure_type *console_structure, bool visibility)
-{
-  unsigned int data = visibility;
-  message_parameter_type message_parameter;
+  }
+  else
+  {
+    /* Make it a thin line. */
 
-  message_parameter.protocol = IPC_PROTOCOL_CONSOLE;
-  message_parameter.length = sizeof(data);
-  message_parameter.message_class =   IPC_CONSOLE_KEYBOARD_CURSOR_SET;
-  message_parameter.data = (void *) &data;
-  message_parameter.block = TRUE;
+  }
 
-  system_call_mailbox_send (console_structure->ipc_structure.output_mailbox_id,
-                            &message_parameter);
+  console_structure = console_structure;
 
   return CONSOLE_RETURN_SUCCESS;
 }
 
-/* Customisize mouse cursor. */
-
-return_type console_mouse_cursor_set
-  (console_structure_type *console_structure, bool visibility)
-{
-  unsigned int data = visibility;
-  message_parameter_type message_parameter;
-
-  message_parameter.protocol = IPC_PROTOCOL_CONSOLE;
-  message_parameter.length = sizeof(data);
-  message_parameter.message_class =   IPC_CONSOLE_MOUSE_CURSOR_SET;
-  message_parameter.data = (void *) &data;
-  message_parameter.block = TRUE;
-
-  system_call_mailbox_send (console_structure->ipc_structure.output_mailbox_id,
-                            &message_parameter);
-
-  return CONSOLE_RETURN_SUCCESS;
-}
-  
 /* Wait or check for an event on the console. Mouse or keyboard. */
 
 return_type console_event_wait (console_structure_type *console_structure,

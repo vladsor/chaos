@@ -10,8 +10,8 @@ PACKAGE = event
 
 CFLAGS = -Wall -W -Wshadow -Wpointer-arith -Waggregate-return \
 -Wstrict-prototypes -Wredundant-decls -Winline -Wmissing-prototypes \
--Werror -Wcast-align -Wbad-function-cast -Wmissing-noreturns -Wsign-compare \
--Wmissing-declarations -pipe \
+-Werror -Wcast-align -Wbad-function-cast -Wsign-compare \
+-Wmissing-declarations -Wmissing-noreturns -pipe \
 -Wnested-externs -O3 -fno-builtin -funsigned-char -g $(EXTRA_CFLAGS) $(DEFINES)
 
 INCLUDES = \
@@ -66,7 +66,7 @@ GZIP = gzip -f
 %.o: %.asm
 	$(NASM) -o $(@) $< -f elf
 
-.PHONY: splash all clean install package-source
+.PHONY: splash all clean install package-source package-check package
 
 all: splash makefile library_event.a
 
@@ -94,17 +94,18 @@ library_event.a: $(OBJECTS)
 	@$(RANLIB) $(@)
 
 install: all
-	mkdir -p $(PREFIX)/data/programming/libraries/static
-	cp library_event.a $(PREFIX)/data/programming/libraries/static
-	mkdir -p $(PREFIX)/data/programming/c/headers/$(PACKAGE)
-	for header in $(HEADERS) ; do cp $$header $(PREFIX)/data/programming/c/headers/$(PACKAGE) ; done
+	@echo "Installing..."
+	@mkdir -p $(PREFIX)/data/programming/libraries/static
+	@cp library_event.a $(PREFIX)/data/programming/libraries/static
+	@mkdir -p $(PREFIX)/data/programming/c/headers/$(PACKAGE)
+	@for header in $(HEADERS) ; do cp $$header $(PREFIX)/data/programming/c/headers/$(PACKAGE) ; done
 
 package-source:
-	mkdir -p /root/Development/chaos/libraries/event/package-source/.
-	-cp -f autochaos.rules changelog configure README AUTHORS TODO INSTALL /root/Development/chaos/libraries/event/package-source/.
-	-cp -f makefile.template $(EXTRA_FILES) /root/Development/chaos/libraries/event/package-source/.
-	for header in $(HEADERS) ; do cp $$header /root/Development/chaos/libraries/event/package-source/. ; done
-	for source in $(SOURCES) ; do cp $$source /root/Development/chaos/libraries/event/package-source/. ; done
+	mkdir -p /root/Development/chaos.n2/libraries/event/package-source/.
+	-cp -f autochaos.rules changelog configure COPYING README AUTHORS TODO INSTALL /root/Development/chaos.n2/libraries/event/package-source/.
+	-cp -f makefile.template $(EXTRA_FILES) /root/Development/chaos.n2/libraries/event/package-source/.
+	for header in $(HEADERS) ; do cp $$header /root/Development/chaos.n2/libraries/event/package-source/. || exit ; done
+	for source in $(SOURCES) ; do cp $$source /root/Development/chaos.n2/libraries/event/package-source/. || exit ; done
 package-check: package-source
 	     cd package-source && ./configure $(ALL_ARGUMENTS) && $(MAKE) && $(MAKE) clean
 	     find package-source -name makefile -exec rm {} ';'

@@ -1,4 +1,4 @@
-/* $Id: avl_delete.h,v 1.1 2000/10/15 21:18:18 doa Exp $ */
+/* $Id: avl_delete.h,v 1.1 2001/02/10 22:58:43 jojo Exp $ */
 /* Copyright 2000 chaos development */
 
 /* This program is free software; you can redistribute it and/or

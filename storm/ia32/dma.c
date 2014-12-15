@@ -1,4 +1,4 @@
-/* $Id: dma.c,v 1.2 2000/10/10 20:18:29 plundis Exp $ */
+/* $Id: dma.c,v 1.2 2001/02/10 21:25:55 jojo Exp $ */
 /* Abstract: Management of the DMA hardware. It is used for
    transferring memory blocks to and from hardware. */
 /* Author: Anders Ohrt <doa@chaosdev.org> */

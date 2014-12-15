@@ -1,4 +1,4 @@
-/* $Id: ipc.h,v 1.2 2000/09/29 21:08:47 hal Exp $ */
+/* $Id: ipc.h,v 1.2 2001/02/10 21:22:41 jojo Exp $ */
 /* Abstract: IPC library interface. */
 /* Author: Per Lundberg <plundis@chaosdev.org> */
 

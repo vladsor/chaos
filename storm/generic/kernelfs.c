@@ -1,4 +1,4 @@
-/* $Id: kernelfs.c,v 1.3 2000/10/09 21:06:42 plundis Exp $ */
+/* $Id: kernelfs.c,v 1.2 2001/02/10 21:25:51 jojo Exp $ */
 /* Abstract: The kernel virtual file system. In this filesystem,
    information about the kernel and the rest of the system is made
    easily available to regular user processes. */
@@ -104,6 +104,14 @@ return_type kernelfs_entry_read (kernelfs_generic_type *kernelfs_generic)
               {
                 string_copy_max (thread_info->state,
                                  "Blocked on a mailbox (receiving)",
+                                 MAX_STATE_NAME_LENGTH - 1);
+                break;
+              }    
+
+              case STATE_WAIT_EVENT:
+              {
+                string_copy_max (thread_info->state,
+                                 "Waiting event",
                                  MAX_STATE_NAME_LENGTH - 1);
                 break;
               }    
@@ -223,7 +231,7 @@ return_type kernelfs_entry_read (kernelfs_generic_type *kernelfs_generic)
                          tss_node->tss->thread_name);
 
             thread_info->thread_id = tss_node->tss->thread_id;
-            thread_info->timeslices = tss_node->tss->timeslices;
+            thread_info->uptime = tss_node->tss->timeslices / hz;
             thread_info->main_memory = (tss_node->tss->allocated_pages *
                                         SIZE_PAGE);
             thread_info->stack_memory = (tss_node->tss->stack_pages *
@@ -235,7 +243,7 @@ return_type kernelfs_entry_read (kernelfs_generic_type *kernelfs_generic)
                see which threads are currently getting most of the
                time. */
 
-            tss_node->tss->timeslices = 0;
+//            tss_node->tss->timeslices = 0;
             break;
           }
 
@@ -314,9 +322,10 @@ return_type kernelfs_entry_read (kernelfs_generic_type *kernelfs_generic)
 
     case KERNELFS_CLASS_UPTIME_INFO:
     {
-      u32 *uptime_info = (u32 *) kernelfs_generic;
-
-      *uptime_info = uptime;
+      kernelfs_time_type *kernelfs_uptime =
+        (kernelfs_time_type *) kernelfs_generic;
+      
+      kernelfs_uptime->time = uptime;
       break;
     }
 

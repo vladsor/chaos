@@ -1,9 +1,0 @@
-
-  Compiling server: acpi...
-
-Compiling acpi.c...
-Linking...
-mkdir -p /mnt/chaos/system/servers
-cp acpi /mnt/chaos/system/servers
-strip -R .note -R .comment -R .eh_frame /mnt/chaos/system/servers/acpi
-gzip -f /mnt/chaos/system/servers/acpi # > /mnt/chaos/system/servers/acpi.gz

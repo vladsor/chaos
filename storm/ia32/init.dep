@@ -8,8 +8,8 @@ init.o: init.c ../include/storm/generic/arguments.h \
  ../include/storm/generic/dispatch.h \
  ../include/storm/current-arch/tss.h ../include/storm/generic/mutex.h \
  ../include/storm/current-arch/mutex.h \
- ../include/storm/generic/capability.h ../include/storm/generic/irq.h \
- ../include/storm/current-arch/irq.h \
+ ../include/storm/generic/capability.h ../include/storm/ia32/fpu.h \
+ ../include/storm/generic/irq.h ../include/storm/current-arch/irq.h \
  ../include/storm/generic/multiboot.h ../include/storm/generic/bit.h \
  ../include/storm/generic/port.h ../include/storm/current-arch/port.h \
  ../include/storm/ia32/gdt.h ../include/storm/ia32/defines.h \

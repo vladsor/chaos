@@ -1,4 +1,4 @@
-/* $Id: schedule.c,v 1.1.1.1 2000/09/26 19:08:16 plundis Exp $ */
+/* $Id: schedule.c,v 1.2 2001/02/10 21:26:05 jojo Exp $ */
 /* Abstract: The scheduler. Round robbin for now. */
 
 /* Copyright 1999 chaos development. */

@@ -1,4 +1,4 @@
-/* $Id: kernelfs.h,v 1.2 2000/09/29 20:05:07 plundis Exp $ */
+/* $Id: kernelfs.h,v 1.2 2001/02/10 21:26:10 jojo Exp $ */
 /* Abstract: Function prorotypes for the kernel file system. */
 /* Authors: Per Lundberg <plundis@chaosdev.org>
             Henrik Hallin <hal@chaosdev.org> */
@@ -118,7 +118,7 @@ typedef struct
 
   /* The number of timeslices this thread has been given. */
 
-  time_type timeslices;
+  time_type uptime;
 
   /* The number of memory bytes this process is using. */
 

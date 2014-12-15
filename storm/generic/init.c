@@ -1,4 +1,4 @@
-/* $Id: init.c,v 1.1.1.1 2000/09/26 19:08:16 plundis Exp $ */
+/* $Id: init.c,v 1.2 2001/02/10 21:25:51 jojo Exp $ */
 /* Abstract: Initialise the state of a new process. */
 /* Authors: Per Lundberg <plundis@chaosdev.org>
             Henrik Hallin <hal@chaosdev.org> */

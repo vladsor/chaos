@@ -1,1 +1,0 @@
-irq_handlers.o: irq_handlers.S

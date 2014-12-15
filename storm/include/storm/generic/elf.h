@@ -1,4 +1,4 @@
-/* $Id: elf.h,v 1.1.1.1 2000/09/26 19:08:17 plundis Exp $ */
+/* $Id: elf.h,v 1.2 2001/02/10 21:26:20 jojo Exp $ */
 /* Abstract: Function prototypes and structure definitions for ELF
    support. */
 /* Author: Per Lundberg <plundis@chaosdev.org> */

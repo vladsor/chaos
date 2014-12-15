@@ -7,8 +7,8 @@ elf.o: elf.c ../include/storm/generic/cpu.h \
  ../include/storm/generic/debug.h ../include/storm/generic/dispatch.h \
  ../include/storm/current-arch/tss.h ../include/storm/generic/mutex.h \
  ../include/storm/current-arch/mutex.h \
- ../include/storm/generic/capability.h ../include/storm/generic/irq.h \
- ../include/storm/current-arch/irq.h \
+ ../include/storm/generic/capability.h ../include/storm/ia32/fpu.h \
+ ../include/storm/generic/irq.h ../include/storm/current-arch/irq.h \
  ../include/storm/generic/process.h ../include/storm/process.h \
  ../include/storm/generic/memory_virtual.h \
  ../include/storm/generic/avl.h ../include/storm/ia32/types.h \

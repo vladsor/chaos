@@ -1,4 +1,4 @@
-/* $Id: memory.h,v 1.3 2000/10/22 14:59:39 plundis Exp $ */
+/* $Id: memory.h,v 1.2 2001/02/10 21:26:30 jojo Exp $ */
 /* Abstract: Functions for memory operations. */
 /* Author: Per Lundberg <plundis@chaosdev.org> */
 

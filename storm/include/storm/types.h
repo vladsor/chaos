@@ -1,4 +1,4 @@
-/* $Id: types.h,v 1.2 2000/10/22 14:59:39 plundis Exp $ */
+/* $Id: types.h,v 1.2 2001/02/10 21:26:13 jojo Exp $ */
 /* Abstract: Standard types used in the chaos operating system. */
 
 /* Copyright 1998-2000 chaos development. */
@@ -59,6 +59,8 @@ typedef u32 state_type;
 #error "Your host is not supported."
 #endif /* __i386__ */
 
+typedef unsigned int id_type;
+typedef id_type event_queue_id_type;
 typedef unsigned int mailbox_id_type;
 typedef unsigned int mutex_id_type;
 typedef volatile int spinlock_type;

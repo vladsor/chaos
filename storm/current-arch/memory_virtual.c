@@ -1,4 +1,4 @@
-/* $Id: memory_virtual.c,v 1.3 2000/10/22 14:59:39 plundis Exp $ */
+/* $Id: memory_virtual.c,v 1.2 2001/02/10 21:26:02 jojo Exp $ */
 /* Abstract: Provides functions for managing the virtual memory (MMU)
    mechanisms of the IA32 architecture. */
 /* Authors: Per Lundberg <plundis@chaosdev.org> 

@@ -1,4 +1,4 @@
-/* $Id: thread.h,v 1.1.1.1 2000/09/26 19:08:18 plundis Exp $ */
+/* $Id: thread.h,v 1.2 2001/02/10 21:26:26 jojo Exp $ */
 /* Abstract: Thread functions. */
 /* Authors: Henrik Hallin <hal@chaosdev.org>,
             Per Lundberg <plundis@chaosdev.org> */
@@ -44,7 +44,6 @@ extern return_type thread_control (thread_id_type thread_id,
                                    unsigned int class,
                                    unsigned int parameter);
 extern return_type thread_create (void);
-extern return_type thread_name_set (u8 *name);
 extern storm_tss_type *thread_get_tss (thread_id_type thread_id);
 extern tss_list_type *thread_link (storm_tss_type *tss);
 extern void thread_unlink (thread_id_type thread_id);

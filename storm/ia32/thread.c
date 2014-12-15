@@ -1,4 +1,4 @@
-/* $Id: thread.c,v 1.4 2000/10/21 18:26:20 plundis Exp $ */
+/* $Id: thread.c,v 1.2 2001/02/10 21:26:06 jojo Exp $ */
 /* Abstract: Thread routines. Part of the process system. Responsible for
    adding and removing threads under a cluster. */
 /* Authors: Henrik Hallin <hal@chaosdev.org>,
@@ -100,6 +100,8 @@ tss_list_type *thread_link_list (tss_list_type **list,
   tss_list_node->next = (struct tss_list_type *) (*list);
   tss_list_node->previous = NULL;
   tss_list_node->tss = tss;
+
+  tss_list_node->tss->timeslices = 0;
 
   /* If this is the first entry, presume it is the idle thread. A
      little ugly... but it works. ;) */
@@ -486,17 +488,6 @@ static return_type thread_delete (storm_tss_type *tss)
   return RETURN_SUCCESS;
 }
 
-/* Set the name of a thread. */
-
-return_type thread_name_set (u8 *name)
-{
-  memory_set_u8 (current_tss->thread_name, 0, MAX_THREAD_NAME_LENGTH);
-  string_copy_max (current_tss->thread_name, name,
-                   MAX_THREAD_NAME_LENGTH - 1);
-
-  return STORM_RETURN_SUCCESS;
-}
-
 /* Control the state of a thread. */
 
 return_type thread_control (thread_id_type thread_id, unsigned int class,
@@ -684,30 +675,6 @@ void thread_unblock_mailbox_receive (mailbox_id_type mailbox_id)
   {
     if (tss_node->tss->state == STATE_MAILBOX_RECEIVE &&
         tss_node->tss->mailbox_id == mailbox_id)
-    {
-      DEBUG_MESSAGE (DEBUG, "Unlocking thread %u", tss_node->thread_id);
-      tss_node->tss->state = STATE_DISPATCH;
-      break;
-    }
-
-    tss_node = (tss_list_type *) tss_node->next;
-  }
-}
-
-/* Unblock a thread which is blocked on a mailbox receive. */
-
-void thread_unblock_event_receive (event_queue_id_type event_queue_id) 
-{
-  tss_list_type *tss_node;
-
-  tss_node = tss_list;
-
-  DEBUG_MESSAGE (DEBUG, "Unlocking thread locked on event's queue ID %u", event_queue_id);
-
-  while (tss_node != NULL)
-  {
-    if (tss_node->tss->state == STATE_EVENT_RECEIVE &&
-        tss_node->tss->event_queue_id == event_queue_id)
     {
       DEBUG_MESSAGE (DEBUG, "Unlocking thread %u", tss_node->thread_id);
       tss_node->tss->state = STATE_DISPATCH;

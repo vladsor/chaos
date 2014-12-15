@@ -1,4 +1,4 @@
-/* $Id: limits.h,v 1.2 2000/09/29 20:05:07 plundis Exp $ */
+/* $Id: limits.h,v 1.2 2001/02/10 21:26:21 jojo Exp $ */
 /* Abstract: Limitations on the kernel level. */
 /* Author: Per Lundberg <plundis@chaosdev.org> */
 
@@ -35,6 +35,7 @@ extern limit_type limit_global_nodes;
 extern limit_type limit_global_heap;
 extern limit_type limit_memory;
 extern limit_type limit_mailbox_hash_entries;
+extern limit_type limit_event_queue_hash_entries;
 extern limit_type limit_thread_hash_entries;
 extern limit_type limit_process_hash_entries;
 

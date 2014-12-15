@@ -1,4 +1,4 @@
-/* $Id: kernelfs.h,v 1.1.1.1 2000/09/26 19:08:17 plundis Exp $ */
+/* $Id: kernelfs.h,v 1.2 2001/02/10 21:26:21 jojo Exp $ */
 /* Abstract: Function prorotypes for the kernel file system. */
 
 /* Copyright 1999-2000 chaos development. */

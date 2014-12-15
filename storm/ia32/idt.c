@@ -1,4 +1,4 @@
-/* $Id: idt.c,v 1.3 2000/10/15 11:17:51 plundis Exp $ */
+/* $Id: idt.c,v 1.2 2001/02/10 21:25:57 jojo Exp $ */
 /* Abstract: IDT management. */
 /* Authors: Per Lundberg <plundis@chaosdev.org>
             Henrik Hallin <hal@chaosdev.org> */

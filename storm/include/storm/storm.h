@@ -1,4 +1,4 @@
-/* $Id: storm.h,v 1.3 2000/10/10 20:04:13 plundis Exp $ */
+/* $Id: storm.h,v 1.2 2001/02/10 21:26:13 jojo Exp $ */
 /* Abstract: storm external header file. */
 /* Authors: Per Lundberg <plundis@chaosdev.org>
             Henrik Hallin <hal@chaosdev.org> */           
@@ -27,6 +27,7 @@
 #include <storm/defines.h>
 #include <storm/dma.h>
 #include <storm/mailbox.h>
+#include <storm/event_queue.h>
 #include <storm/return_values.h>
 #include <storm/kernelfs.h>
 #include <storm/limits.h>

@@ -1,4 +1,4 @@
-/* $Id: console.h,v 1.3 2000/09/30 10:28:15 plundis Exp $ */
+/* $Id: console.h,v 1.2 2001/02/10 21:22:39 jojo Exp $ */
 /* Abstract: Console server IPC message types. */
 /* Author: Per Lundberg <plundis@chaosdev.org> */
 
@@ -21,6 +21,8 @@
 
 #ifndef __LIBRARY_IPC_CONSOLE_H__
 #define __LIBRARY_IPC_CONSOLE_H__
+
+#include "keyboard.h"
 
 /* Message types. */
 
@@ -47,18 +49,18 @@ enum
   /* A mouse event. */
 
   IPC_CONSOLE_MOUSE_EVENT,
-
-  IPC_CONSOLE_KEYBOARD_CURSOR_SET,
-
-  IPC_CONSOLE_MOUSE_CURSOR_SET,
   
+  IPC_CONSOLE_KEYBOARD_CURSOR_SET,
+  IPC_CONSOLE_MOUSE_CURSOR_SET,
+  IPC_CONSOLE_GET_HOT_KEYS_AMOUNT,
+  IPC_CONSOLE_GET_HOT_KEYS_INFO,
+
   IPC_CONSOLE_OUTPUT_AT,
+
+  IPC_CONSOLE_PRINT_CHARSET,
   
   IPC_CONSOLE_ENABLE_SCROLL,
-  
   IPC_CONSOLE_DISABLE_SCROLL,
-  
-  IPC_CONSOLE_PRINT_CHAR_SET,
 };
 
 /* Connection classes. */
@@ -90,5 +92,15 @@ typedef struct
   unsigned int depth;
   unsigned int mode_type;
 } ipc_console_attribute_type;
+
+#define CONSOLE_HOT_KEY_DESCRIPTION_LENGTH 40
+
+typedef struct
+{
+  keyboard_packet_type keyboard_packet;
+  void (*hot_key_function)(void *);
+  void *parameter;
+  char description[CONSOLE_HOT_KEY_DESCRIPTION_LENGTH];
+} hot_key_record_type;
 
 #endif /* !__LIBRARY_IPC_CONSOLE_H__ */

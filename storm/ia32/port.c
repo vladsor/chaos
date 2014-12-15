@@ -1,4 +1,4 @@
-/* $Id: port.c,v 1.2 2000/10/22 14:59:39 plundis Exp $ */
+/* $Id: port.c,v 1.2 2001/02/10 21:26:03 jojo Exp $ */
 /* Abstract: Handle port I/O. */
 /* Authors: Per Lundberg <plundis@chaosdev.org>
             Henrik Hallin <hal@chaosdev.org> */

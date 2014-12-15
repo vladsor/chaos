@@ -1,4 +1,4 @@
-/* $Id: irq.c,v 1.4 2000/10/16 21:00:05 plundis Exp $ */
+/* $Id: irq.c,v 1.2 2001/02/10 21:25:58 jojo Exp $ */
 /* Abstract: Interrupt and IRQ management. */
 /* Authors: Per Lundberg <plundis@chaosdev.org>
             Henrik Hallin <hal@chaosdev.org> */
@@ -37,6 +37,9 @@
 #include <storm/generic/string.h>
 #include <storm/generic/thread.h>
 #include <storm/generic/types.h>
+
+#include <storm/event_queue.h>
+#include <storm/generic/event_queue.h>
 
 #define BASE_IRQ                        0x20
 #define IDT_ENTRY(a)                    (BASE_IRQ + a)
@@ -141,10 +144,14 @@ void irq_disable (unsigned int irq_number)
   }
 }
 
+event_queue_type *interrupt_queues[16];
+
 /* Initialise interrupts. */
 
 void irq_init (void)
 {
+  int i;
+  
   memory_set_u8 ((u8 *) irq, 0, sizeof (irq_type) * IRQ_LEVELS);
 
   /* Remap the IRQs to 20-2F. The defaults are Very Bad, since they
@@ -214,6 +221,16 @@ void irq_init (void)
   /* Enable interrupts. */
 
   cpu_interrupts_enable ();
+
+  mutex_kernel_wait (&tss_tree_mutex);
+
+  for (i = 0 ; i < 16 ; i++)
+  {
+    interrupt_queues[i] = event_queue_create_kernel (
+      SYSTEM_EVENT_QUEUE_INTERRUPTS_0 + i, 0, 0, 0, 0, 0);
+  }
+  
+  mutex_kernel_signal (&tss_tree_mutex);
 }
 
 /* Register an IRQ for use by a server. */
@@ -283,12 +300,29 @@ return_type irq_unregister (unsigned int irq_number)
   return STORM_RETURN_SUCCESS;
 }
 
+event_parameter_type event_parameter = { 0, 0, NULL};
+
 /* This function handles all interrupts except for the timer
    interrupt. */
 
 void irq_handler (unsigned int irq_number)
 {
   DEBUG_MESSAGE (DEBUG, "irq %u occured.", irq_number);
+
+/*
+  event_parameter.event_class = irq_number;
+
+  tss_tree_mutex = MUTEX_LOCKED;
+  event_queue_generate_event_kernel (interrupts_queue, &event_parameter, 0);
+  mutex_kernel_signal (&tss_tree_mutex);
+*/
+  event_parameter.event_class = IRQ_OCCURED;
+
+  tss_tree_mutex = MUTEX_LOCKED;
+  event_queue_generate_event_kernel (interrupt_queues[irq_number], 
+                                     &event_parameter, 0);
+  mutex_kernel_signal (&tss_tree_mutex);
+
 
   irq[irq_number].in_handler = TRUE;
   irq[irq_number].occurred++;

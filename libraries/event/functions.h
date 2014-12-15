@@ -24,7 +24,7 @@
 
 #include <system/system.h>
 
-typedef void (* event_handler_type) (void);
+typedef void (* event_handler_type) (event_parameter_type *event_parameter);
 
 extern return_type event_generate
   (event_queue_id_type event_queue_id,
@@ -35,8 +35,8 @@ extern return_type event_wait
   event_parameter_type *event_parameter);
 
 extern return_type event_set_handler
-  (event_handler_type event_handler,
-  event_queue_id_type event_queue_id,
-  event_parameter_type *event_parameter);
+  (event_queue_id_type event_queue_id,
+   event_handler_type event_handler,
+   event_parameter_type *event_parameter);
 
 #endif /* !__LIBRARY_EVENT_FUNCTIONS_H__ */

@@ -1,4 +1,4 @@
-/* $Id: gdt.h,v 1.1.1.1 2000/09/26 19:08:18 plundis Exp $ */
+/* $Id: gdt.h,v 1.2 2001/02/10 21:26:29 jojo Exp $ */
 /* Abstract: Function prototypes for GDT routines. */
 
 /* Copyright 1998-2000 chaos development. */

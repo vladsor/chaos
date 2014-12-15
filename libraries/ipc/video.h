@@ -1,4 +1,4 @@
-/* $Id: video.h,v 1.2 2000/09/29 21:08:47 hal Exp $ */
+/* $Id: video.h,v 1.2 2001/02/10 21:22:43 jojo Exp $ */
 /* Abstract: Video protocol. */
 /* Author: Per Lundberg <plundis@chaosdev.org> */
 

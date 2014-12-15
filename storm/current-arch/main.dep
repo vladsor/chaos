@@ -9,8 +9,8 @@ main.o: main.c ../include/storm/generic/avl_debug.h \
  ../include/storm/generic/debug.h ../include/storm/generic/dispatch.h \
  ../include/storm/current-arch/tss.h ../include/storm/generic/mutex.h \
  ../include/storm/current-arch/mutex.h \
- ../include/storm/generic/capability.h ../include/storm/generic/irq.h \
- ../include/storm/current-arch/irq.h \
+ ../include/storm/generic/capability.h ../include/storm/ia32/fpu.h \
+ ../include/storm/generic/irq.h ../include/storm/current-arch/irq.h \
  ../include/storm/generic/process.h ../include/storm/process.h \
  ../include/storm/generic/memory_virtual.h \
  ../include/storm/current-arch/memory_virtual.h \
@@ -21,6 +21,8 @@ main.o: main.c ../include/storm/generic/avl_debug.h \
  ../include/storm/current-arch/memory.h ../include/storm/ia32/idt.h \
  ../include/storm/generic/dataarea.h ../include/storm/generic/elf.h \
  ../include/storm/generic/mailbox.h ../include/storm/mailbox.h \
+ ../include/storm/generic/event_queue.h ../include/storm/event_queue.h \
+ ../include/storm/generic/hash_table.h ../include/storm/generic/log.h \
  ../include/storm/generic/memory_global.h \
  ../include/storm/generic/memory_physical.h \
  ../include/storm/generic/multiboot.h ../include/storm/generic/port.h \
@@ -30,8 +32,9 @@ main.o: main.c ../include/storm/generic/avl_debug.h \
  ../include/storm/current-arch/string.h \
  ../include/storm/generic/thread.h ../include/storm/thread.h \
  ../include/storm/current-arch/thread.h ../include/storm/ia32/flags.h \
- ../include/storm/generic/time.h ../include/storm/ia32/cpuid.h \
+ ../include/storm/generic/time.h ../include/storm/current-arch/timer.h \
+ ../include/storm/ia32/tss.h ../include/storm/ia32/cpuid.h \
  ../include/storm/ia32/dma.h ../include/storm/ia32/mutex.h \
  ../include/storm/dma.h ../include/storm/ia32/system_calls.h \
  ../include/storm/system_calls.h ../include/storm/ia32/timer.h \
- ../include/storm/ia32/tss.h ../include/storm/ia32/trap.h
+ ../include/storm/ia32/trap.h

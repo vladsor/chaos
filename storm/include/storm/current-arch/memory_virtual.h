@@ -1,4 +1,4 @@
-/* $Id: memory_virtual.h,v 1.1.1.1 2000/09/26 19:08:18 plundis Exp $ */
+/* $Id: memory_virtual.h,v 1.2 2001/02/10 21:26:30 jojo Exp $ */
 /* Abstract: Function prototypes and structures used by the virtual
    memory routines. */
 

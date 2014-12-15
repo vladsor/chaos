@@ -1,4 +1,4 @@
-/* $Id: system_calls.c,v 1.1.1.1 2000/09/26 19:08:16 plundis Exp $ */
+/* $Id: system_calls.c,v 1.2 2001/02/10 21:26:05 jojo Exp $ */
 /* Abstract: Functions for setting up the system calls. */
 /* Authors: Per Lundberg <plundis@chaosdev.org>
             Henrik Hallin <hal@chaosdev.org> */

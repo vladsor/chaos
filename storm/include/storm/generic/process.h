@@ -1,4 +1,4 @@
-/* $Id: process.h,v 1.2 2000/09/29 21:05:05 hal Exp $ */
+/* $Id: process.h,v 1.2 2001/02/10 21:26:24 jojo Exp $ */
 /* Abstract: Function prototypes and structures used by the process
    support. */
 /* Author: Per Lundberg <plundis@chaosdev.org> */
@@ -58,7 +58,7 @@ typedef struct
 
 extern void process_init (void) INIT_CODE;
 extern return_type process_create (process_create_type *process_data);
-extern return_type process_name_set (u8 *name);
+extern return_type process_name_set (char *name);
 extern return_type process_parent_unblock(void);
 extern process_info_type *process_find (process_id_type process_id);
 extern void process_link (process_info_type *process_info);

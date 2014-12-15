@@ -1,4 +1,4 @@
-/* $Id: avl.c,v 1.1.1.1 2000/09/26 19:08:16 plundis Exp $ */
+/* $Id: avl.c,v 1.2 2001/02/10 21:25:47 jojo Exp $ */
 /* Abstract: Functions used by the AVL tree functions. */
 /* Authors: Henrik Hallin <hal@chaosdev.org,
             Anders Öhrt <doa@chaosdev.org> */

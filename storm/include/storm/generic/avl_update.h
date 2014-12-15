@@ -1,4 +1,4 @@
-/* $Id: avl_update.h,v 1.1.1.1 2000/09/26 19:08:17 plundis Exp $ */
+/* $Id: avl_update.h,v 1.2 2001/02/10 21:26:17 jojo Exp $ */
 /* Abstract: Hifi-Eslöf specific functions. */
 /* Author: Henrik Hallin <hal@chaosdev.org> */
 

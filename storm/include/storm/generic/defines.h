@@ -1,4 +1,4 @@
-/* $Id: defines.h,v 1.1.1.1 2000/09/26 19:08:17 plundis Exp $ */
+/* $Id: defines.h,v 1.2 2001/02/10 21:26:20 jojo Exp $ */
 /* Abstract: Platform-independent defines local to storm. */
 /* Author: Per Lundberg <plundis@chaosdev.org> */
 
@@ -34,6 +34,10 @@
 
 #define MAX_OF_THREE(a,b,c)             (MAX_OF_TWO ((a), \
                                          MAX_OF_TWO ((b), (c))))
+
+#define MIN_OF_TWO(a,b)                 ((a) < (b) ? (a) : (b))
+
+#define ABS(a) ((a) >= 0 ? (a) : (-(a)))
 
 /* This is a symbol inserted by the linker which tells us where the
    end of the ELF file is located when it's loaded into memory. We use

@@ -1,4 +1,4 @@
-/* $Id: state.h,v 1.3 2000/10/08 15:05:59 plundis Exp $ */
+/* $Id: state.h,v 1.2 2001/02/10 21:26:12 jojo Exp $ */
 /* Abstract: Definitions of task states. */
 /* Authors: Henrik Hallin <hal@chaosdev.org>
             Per Lundberg <plundis@chaosdev.org> */
@@ -79,6 +79,8 @@ enum
   /* The thread is blocked during bootup. */
 
   STATE_BLOCKED_BOOT,
+  
+  STATE_WAIT_EVENT,
 };
 
 #endif /* !__STORM_STATE_H__ */

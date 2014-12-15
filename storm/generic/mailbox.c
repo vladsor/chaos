@@ -1,4 +1,4 @@
-/* $Id: mailbox.c,v 1.4 2000/10/22 14:59:39 plundis Exp $ */
+/* $Id: mailbox.c,v 1.3 2001/02/12 02:26:18 john Exp $ */
 /* Abstract: Mailbox functions for the LPC (local process
    communication). */
 /* Authors: Henrik Hallin <hal@chaosdev.org>
@@ -134,6 +134,10 @@ static bool mailbox_unlink (mailbox_id_type mailbox_id)
   int index;
   mailbox_type *mailbox, *previous_mailbox;
 
+  /* gcc complains that this is not initialised */
+
+  previous_mailbox = 0;
+  
   index = hash (mailbox_id);
   
   mailbox = mailbox_hash_table[index];
@@ -442,8 +446,9 @@ return_type mailbox_receive (mailbox_id_type mailbox_id,
 
   if (mailbox == NULL)
   {
+    DEBUG_SDB (DEBUG, "Mailbox was NULL");
     mutex_kernel_signal (&tss_tree_mutex);
-    DEBUG_HALT ("Mailbox was NULL");
+
     return STORM_RETURN_MAILBOX_UNAVAILABLE;
   }
 

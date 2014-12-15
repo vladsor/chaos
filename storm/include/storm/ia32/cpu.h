@@ -1,4 +1,4 @@
-/* $Id: cpu.h,v 1.4 2000/10/21 00:09:40 plundis Exp $ */
+/* $Id: cpu.h,v 1.2 2001/02/10 21:26:27 jojo Exp $ */
 /* Abstract: CPU detection and some lowlevel routines. */
 
 /* Copyright 1999-2000 chaos development. */
@@ -175,21 +175,36 @@ static inline void cpu_reset (void)
 }
 
 /* CR0 bits. */
-/* Paging enabled. */
-
-#define CPU_CR0_PG (BIT_VALUE (31))
-
 /* Protected mode flag. */
 
 #define CPU_CR0_PE (BIT_VALUE (0))
+
+#define CPU_CR0_MP (BIT_VALUE (1))
+
+#define CPU_CR0_EM (BIT_VALUE (2))
+
+#define CPU_CR0_TS (BIT_VALUE (3))
 
 /* Extension type. */
 
 #define CPU_CR0_ET (BIT_VALUE (4))
 
+#define CPU_CR0_NE (BIT_VALUE (5))
+
 /* Write protect (486+). */
 
 #define CPU_CR0_WP (BIT_VALUE (16))
+
+#define CPU_CR0_AM (BIT_VALUE (18))
+
+#define CPU_CR0_NW (BIT_VALUE (29))
+
+#define CPU_CR0_CD (BIT_VALUE (30))
+
+/* Paging enabled. */
+
+#define CPU_CR0_PG (BIT_VALUE (31))
+
 
 /* CR4 bits. */
 /* Enable global page directory entries. */

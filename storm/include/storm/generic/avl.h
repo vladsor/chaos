@@ -1,4 +1,4 @@
-/* $Id: avl.h,v 1.1.1.1 2000/09/26 19:08:17 plundis Exp $ */
+/* $Id: avl.h,v 1.2 2001/02/10 21:26:14 jojo Exp $ */
 /* Abstract: AVL function prototypes. */
 /* Copyright 2000 chaos development. */
 

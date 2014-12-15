@@ -1,4 +1,4 @@
-/* $Id: protocols.h,v 1.3 2000/10/10 20:04:13 plundis Exp $ */
+/* $Id: protocols.h,v 1.2 2001/02/10 21:22:42 jojo Exp $ */
 /* Abstract: Definition of the protocol types used in the chaos
    system. Also define all the message types those protocols
    support. */
@@ -46,14 +46,10 @@ enum
   IPC_PROTOCOL_ETHERNET,
   IPC_PROTOCOL_IPV4,
   IPC_PROTOCOL_BLOCK,
-  IPC_PROTOCOL_FILE_SYSTEM,
-  IPC_PROTOCOL_VIRTUAL_FILE_SYSTEM,
+  IPC_PROTOCOL_FILE,
   IPC_PROTOCOL_LOG,
   IPC_PROTOCOL_SERIAL,
-  IPC_PROTOCOL_SOUND,
-
-  IPC_PROTOCOL_CMOS,
-  IPC_PROTOCOL_ACPI,
+  IPC_PROTOCOL_SOUND
 };
 
 /* Ugly, but those rely on the previous defines... so we can't do in a
@@ -62,17 +58,15 @@ enum
 #include <ipc/block.h>
 #include <ipc/console.h>
 #include <ipc/ethernet.h>
-#include <ipc/file_system.h>
+#include <ipc/file.h>
 #include <ipc/general.h>
 #include <ipc/ipv4.h>
 #include <ipc/keyboard.h>
 #include <ipc/log.h>
 #include <ipc/mouse.h>
 #include <ipc/pci.h>
-#include <ipc/rtc.h>
 #include <ipc/serial.h>
 #include <ipc/sound.h>
 #include <ipc/video.h>
-#include <ipc/virtual_file_system.h>
 
 #endif /* !__LIBRARY_IPC_PROTOCOLS_H__ */

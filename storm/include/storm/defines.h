@@ -1,4 +1,4 @@
-/* $Id: defines.h,v 1.1.1.1 2000/09/26 19:08:16 plundis Exp $ */
+/* $Id: defines.h,v 1.2 2001/02/10 21:26:09 jojo Exp $ */
 /* Abstract: General definitions. */
 /* Authors: Per Lundberg <plundis@chaosdev.org> 
             Henrik Hallin <hal@chaosdev.org> 

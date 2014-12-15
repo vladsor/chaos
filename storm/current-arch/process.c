@@ -1,4 +1,4 @@
-/* $Id: process.c,v 1.7 2000/10/22 14:59:39 plundis Exp $ */
+/* $Id: process.c,v 1.2 2001/02/10 21:26:04 jojo Exp $ */
 /* Abstract: Process management. Responsible for starting and stopping
    processes and threads. */
 /* Authors: Henrik Hallin <hal@chaosdev.org>
@@ -592,6 +592,10 @@ return_type process_create (process_create_type *process_data)
   process_tss->state = STATE_DISPATCH;
   string_copy (process_tss->thread_name, "unnamed");
 
+//  asm ("fninit");
+//  fpu_save_state ((u8 *) &process_tss->fpu_state);
+
+
   /* Set up an I/O map with no size for now. It will be resized when
      the process registers and/or deregisters ports. */
 
@@ -687,7 +691,7 @@ return_type process_create (process_create_type *process_data)
 /* FIXME: Update process_name in all the TSS's belonging to this
    process. */
 
-return_type process_name_set (u8 *name)
+return_type process_name_set (char *name)
 {
   process_info_type *process_info = 
     (process_info_type *) current_tss->process_info;

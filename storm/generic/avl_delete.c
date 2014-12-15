@@ -1,4 +1,4 @@
-/* $Id: avl_delete.c,v 1.7 2000/10/15 19:27:40 doa Exp $ */
+/* $Id: avl_delete.c,v 1.1 2001/02/10 22:58:40 jojo Exp $ */
 /* Author: Anders Ohrt <doa@chaosdev.org> */
 /* Copyright 2000 chaos development */
 

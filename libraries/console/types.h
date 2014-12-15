@@ -1,4 +1,4 @@
-/* $Id: types.h,v 1.3 2000/09/30 10:28:15 plundis Exp $ */
+/* $Id: types.h,v 1.2 2001/02/10 21:22:32 jojo Exp $ */
 /* Abstract: Console library types. */
 /* Author: Per Lundberg <plundis@chaosdev.org> */
 

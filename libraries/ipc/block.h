@@ -1,4 +1,4 @@
-/* $Id: block.h,v 1.2 2000/09/29 21:08:47 hal Exp $ */
+/* $Id: block.h,v 1.2 2001/02/10 21:22:38 jojo Exp $ */
 /* Abstract: Protocol used for communicating with block devices. */
 /* Author: Per Lundberg <plundis@chaosdev.org> */
 
@@ -29,7 +29,6 @@ enum
   IPC_BLOCK_READ = (IPC_PROTOCOL_BLOCK << 16),
   IPC_BLOCK_WRITE,
   IPC_BLOCK_GET_INFO,
-  IPC_BLOCK_CONTROL,
 };
 
 /* This structure is passed into IPC_BLOCK_READ. */
@@ -39,13 +38,6 @@ typedef struct
   unsigned int start_block_number;
   unsigned int number_of_blocks;
 } ipc_block_read_type;
-
-typedef struct
-{
-  unsigned int start_block_number;
-  unsigned int number_of_blocks;
-  unsigned char data[0];
-} ipc_block_write_type;
 
 /* IPC_BLOCK_GET_INFO returns this structure. */
 

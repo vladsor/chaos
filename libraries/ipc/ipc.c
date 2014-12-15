@@ -1,4 +1,4 @@
-/* $Id: ipc.c,v 1.4 2000/10/09 21:06:42 plundis Exp $ */
+/* $Id: ipc.c,v 1.2 2001/02/10 21:22:40 jojo Exp $ */
 /* Abstract: IPC library. */
 /* Author: Per Lundberg <plundis@chaosdev.org> */
 
@@ -47,12 +47,12 @@ return_type ipc_service_create
     {
       return IPC_RETURN_SUCCESS;
     }
+
+    default:
+    {
+      return IPC_RETURN_UNKNOWN_ERROR;
+    }
   }
-
-  /* We should never get here, really... */
-
-  system_call_debug_print_simple (__FUNCTION__ " failed.");
-  while (TRUE);
 }
 
 /* Resolve the given service and put a maximum of
@@ -112,7 +112,6 @@ return_type ipc_service_resolve
 return_type ipc_service_connection_wait (ipc_structure_type *ipc_structure)
 {
   message_parameter_type message_parameter;
-  bool done = FALSE;
   u8 *buffer;
   unsigned int buffer_size = 1024;
 
@@ -128,14 +127,14 @@ return_type ipc_service_connection_wait (ipc_structure_type *ipc_structure)
   message_parameter.data = buffer;
   message_parameter.protocol = IPC_PROTOCOL_GENERAL;
   
-  while (!done)
+  while (TRUE)
   {
     message_parameter.message_class = IPC_CLASS_NONE;
     message_parameter.length = buffer_size;
     message_parameter.block = TRUE;
 
-    switch (system_call_mailbox_receive (ipc_structure->input_mailbox_id,
-                                         &message_parameter))
+    switch (ipc_receive (ipc_structure->input_mailbox_id,
+                         &message_parameter, NULL))
     {
       case STORM_RETURN_MAILBOX_UNAVAILABLE:
       case STORM_RETURN_ACCESS_DENIED:
@@ -166,7 +165,7 @@ return_type ipc_service_connection_wait (ipc_structure_type *ipc_structure)
             message_parameter.length = 0;
             message_parameter.block = TRUE;
 
-            system_call_mailbox_send (reply_mailbox_id, &message_parameter);
+            ipc_send (reply_mailbox_id, &message_parameter);
             break;
           }
 
@@ -198,26 +197,16 @@ return_type ipc_service_connection_wait (ipc_structure_type *ipc_structure)
             break;
           }
           
-          /* Unknown command; for now make sure this is acknowledged. */
+          /* Unknown command. Just ignore it for now. */
           
           default:
           {
-            char string[100];
-            
-            string_print (string, "Bad packet received (class = %x).",
-                          message_parameter.message_class);
-            system_call_debug_print_simple (string);
             break;
           }
         }
       }
     }
   }
-  
-  /* We should never get here, really... */
-
-  system_call_debug_print_simple (__FUNCTION__ " failed.");
-  while (TRUE);
 }
 
 /* Request a connection to a service. */
@@ -234,8 +223,9 @@ return_type ipc_service_connection_request (ipc_structure_type *ipc_structure)
       (&ipc_structure->input_mailbox_id, 1 * MB, PROCESS_ID_NONE,
        CLUSTER_ID_NONE, THREAD_ID_NONE) != STORM_RETURN_SUCCESS)
   {
-    system_call_debug_print_simple ("Failed to create a mailbox.");
-    while (TRUE);
+    /* FIXME: Handle the possible causes of this. */
+
+    return IPC_RETURN_UNKNOWN_ERROR;
   }
 
   message_parameter.length = sizeof (mailbox_id_type);
@@ -288,12 +278,12 @@ return_type ipc_service_connection_request (ipc_structure_type *ipc_structure)
         return IPC_RETURN_FAILED_MAILBOX_RECEIVE;
       }
     }
+    
+    default:
+    {
+      return IPC_RETURN_UNKNOWN_ERROR;
+    }
   }
-
-  /* We should never get here, really... */
-
-  system_call_debug_print_simple (__FUNCTION__ " failed.");
-  while (TRUE);
 }
 
 /* Establish the connection. */
@@ -311,8 +301,6 @@ return_type ipc_connection_establish (ipc_structure_type *ipc_structure)
        PROCESS_ID_NONE, CLUSTER_ID_NONE, THREAD_ID_NONE) !=
       STORM_RETURN_SUCCESS)
   {
-    system_call_debug_print_simple ("Failed to create a mailbox.");
-
     message_parameter.message_class = IPC_GENERAL_CONNECTION_REFUSED;
     message_parameter.length = 0;
     system_call_mailbox_send (ipc_structure->output_mailbox_id,
@@ -329,7 +317,6 @@ return_type ipc_connection_establish (ipc_structure_type *ipc_structure)
   if (system_call_mailbox_send (ipc_structure->output_mailbox_id,
                                 &message_parameter) != STORM_RETURN_SUCCESS)
   {
-    system_call_debug_print_simple ("Failed to establish the connection.");
     return IPC_RETURN_FAILED_MAILBOX_SEND;
   }
 
@@ -393,8 +380,8 @@ return_type ipc_receive
   (mailbox_id_type mailbox_id, message_parameter_type *message_parameter,
    unsigned int *buffer_size)
 {
-  return_type return_value = system_call_mailbox_receive (mailbox_id,
-                                                          message_parameter);
+  return_type return_value = system_call_mailbox_receive
+    (mailbox_id, message_parameter);
 
   switch (return_value)
   {
@@ -450,6 +437,13 @@ return_type ipc_receive
     }
   }
 }
+
+#if 0
+ipc_protocol_get (ipc_structure_type *ipc_structure)
+{
+}
+
+#endif
 
 /* Close a connection. */
 

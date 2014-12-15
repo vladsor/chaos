@@ -1,4 +1,4 @@
-/* $Id: mouse.h,v 1.2 2000/09/29 21:08:47 hal Exp $ */
+/* $Id: mouse.h,v 1.2 2001/02/10 21:22:42 jojo Exp $ */
 /* Abstract: Protocol used for communicating with mouse hardware
    servers. */
 /* Author: Per Lundberg <plundis@chaosdev.org> */
@@ -40,8 +40,8 @@ enum
 
 typedef struct
 {
-  int x;
-  int y;
+  unsigned int x;
+  unsigned int y;
   unsigned int button;
 } ipc_mouse_event_type;
 

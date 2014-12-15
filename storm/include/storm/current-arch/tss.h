@@ -1,4 +1,4 @@
-/* $Id: tss.h,v 1.3 2000/10/22 14:59:39 plundis Exp $ */
+/* $Id: tss.h,v 1.2 2001/02/10 21:26:32 jojo Exp $ */
 /* Abstract: TSS definition. */
 /* Authors: Henrik Hallin <hal@chaosdev.org>
             Per Lundberg <plundis@chaosdev.org> */
@@ -31,6 +31,8 @@
 #include <storm/generic/types.h> 
 #include <storm/generic/limits.h>
 #include <storm/generic/capability.h>
+
+#include <storm/ia32/fpu.h>
 
 /* TSS structure (with some extra cheese, but no pepperoni). */
 
@@ -100,6 +102,9 @@ typedef struct
   u16 iomap_base;
   
   /* End of CPU data. Start of storm internal data. */
+
+  i386_fpu_state fpu_state;
+
   /* Server or regular process. */
 
   unsigned int process_type;

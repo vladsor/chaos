@@ -1,4 +1,4 @@
-/* $Id: timer.c,v 1.1.1.1 2000/09/26 19:08:16 plundis Exp $ */
+/* $Id: timer.c,v 1.2 2001/02/10 21:26:07 jojo Exp $ */
 /* Abstract: Interrupt handler for the timer interrupt and associated
    stuff. */
 /* Authors: Per Lundberg <plundis@chaosdev.org>
@@ -196,13 +196,4 @@ void timer_check_events (void)
 
     event = (timer_event_type *) event->next;
   }
-}
-
-/* Read a timer. Returns the uptime in milliseconds. Its precision
-   depends on the task switch rate. */
-
-return_type timer_read (time_type *timer)
-{
-  *timer = (timeslice * 1000) / hz;
-  return STORM_RETURN_SUCCESS;
 }

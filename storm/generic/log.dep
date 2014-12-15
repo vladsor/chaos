@@ -1,6 +1,17 @@
-log.o: log.c ../include/storm/generic/defines.h \
- ../include/storm/generic/types.h ../include/storm/types.h \
+log.o: log.c ../include/storm/event_queue.h ../include/storm/limits.h \
+ ../include/storm/types.h ../include/storm/generic/defines.h \
+ ../include/storm/generic/types.h \
  ../include/storm/current-arch/types.h ../include/storm/defines.h \
  ../include/storm/current-arch/defines.h \
- ../include/storm/generic/limits.h ../include/storm/limits.h \
- ../include/storm/generic/log.h
+ ../include/storm/generic/limits.h ../include/storm/generic/log.h \
+ ../include/storm/generic/event_queue.h \
+ ../include/storm/generic/mutex.h \
+ ../include/storm/current-arch/mutex.h \
+ ../include/storm/generic/hash_table.h \
+ ../include/storm/current-arch/tss.h \
+ ../include/storm/generic/capability.h ../include/storm/ia32/fpu.h \
+ ../include/storm/generic/string.h \
+ ../include/storm/current-arch/string.h \
+ ../include/storm/generic/thread.h ../include/storm/thread.h \
+ ../include/storm/current-arch/thread.h ../include/storm/ia32/flags.h \
+ ../include/storm/generic/bit.h

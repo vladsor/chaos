@@ -1,2 +1,0 @@
-div.o: div.c stdlib.h features.h \
-

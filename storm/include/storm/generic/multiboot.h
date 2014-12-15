@@ -1,4 +1,4 @@
-/* $Id: multiboot.h,v 1.1.1.1 2000/09/26 19:08:18 plundis Exp $ */
+/* $Id: multiboot.h,v 1.2 2001/02/10 21:26:23 jojo Exp $ */
 /* Abstract: Function prototypes and structure definitions of the
    Multiboot stuff. */
 

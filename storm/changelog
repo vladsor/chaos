@@ -1,4 +1,20 @@
+2001-02-12  John Hennessy  <john@keynet.ie>
+	* altered system_calls.pl slightly to make it
+	explicity append a newline to system_calls.h This was creating
+	problems with compiling under slightly older versions of gcc.
+
+	* initialised variable in storm/generic/mailbox.c. Getting complaints
+	about previous_mailbox. It might go away with different version of gcc
+
 2000-10-22  Per Lundberg  <plundis@chaosdev.org>
+
+	* TODO: Moved some stuff around to match the current situation.
+
+	* generic/service.c (protocol_get): New function.
+	(protocol_exists): Removed function.
+
+	* ia32/system_calls.pl: New system call: service_protocol_get ().
+	Removed debug_print_simple ().
 
 	* README: Updated the information a little.
 	* autochaos.rules: Bumped the version to 0.5.0.

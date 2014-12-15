@@ -6,7 +6,7 @@ dma.o: dma.c ../include/storm/generic/defines.h \
  ../include/storm/generic/dispatch.h \
  ../include/storm/current-arch/tss.h ../include/storm/generic/mutex.h \
  ../include/storm/current-arch/mutex.h \
- ../include/storm/generic/capability.h \
+ ../include/storm/generic/capability.h ../include/storm/ia32/fpu.h \
  ../include/storm/generic/memory.h \
  ../include/storm/current-arch/memory.h \
  ../include/storm/generic/memory_physical.h \

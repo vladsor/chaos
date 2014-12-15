@@ -1,4 +1,4 @@
-/* $Id: irq_handlers.S,v 1.2 2000/10/16 17:06:48 plundis Exp $ */
+/* $Id: irq_handlers.S,v 1.2 2001/02/10 21:25:58 jojo Exp $ */
 /* Abstract: IRQ management. */
 /* Author: Per Lundberg <plundis@chaosdev.org> */
 	

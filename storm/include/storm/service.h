@@ -1,4 +1,4 @@
-/* $Id: service.h,v 1.2 2000/10/22 14:59:39 plundis Exp $ */
+/* $Id: service.h,v 1.2 2001/02/10 21:26:12 jojo Exp $ */
 /* Abstract: External service header. */
 /* Author: Per Lundberg <plundis@chaosdev.org> */
 
@@ -36,6 +36,7 @@ typedef struct
 typedef struct
 {
   char name[MAX_PROTOCOL_NAME_LENGTH];
+  unsigned int number_of_services;
 } service_protocol_type;
 
 /* This type is used to read out the names of the protocols currently
